@@ -31,7 +31,7 @@ class NetworkControllerTest extends AbstractSpec {
     void "schedule single NetworkService should produce successfully 1 Result for 1 testPlan"() {
 
         when:
-        def entity = postForEntity('/tng-vnv-lcm/api/v1/schedulers/services',
+        def entity = postForEntity('/tng-vnv-planner/api/v1/schedulers/services',
                 ["service_uuid": NETWORK_SERVICE_ID]
                 , Void.class)
 
@@ -60,7 +60,7 @@ class NetworkControllerTest extends AbstractSpec {
 
     void "retrieval of a single test suite's related testSuites should successfully all the tag related tests"() {
         when:
-        List tss = getForEntity('/tng-vnv-lcm/api/v1/schedulers/services/{serviceUuid}/tests', List, NETWORK_SERVICE_ID).body
+        List tss = getForEntity('/tng-vnv-planner/api/v1/schedulers/services/{serviceUuid}/tests', List, NETWORK_SERVICE_ID).body
         then:
 
         tss.size() == 1
@@ -72,7 +72,7 @@ class NetworkControllerTest extends AbstractSpec {
     void "schedule Service GOBETWEEN with tag: http-advanced should run once with TEST-HTTP-BENCHMARK-ADVANCED with 1 Result and 1 testPlan"() {
 
         when:
-        def entity = postForEntity('/tng-vnv-lcm/api/v1/schedulers/services',
+        def entity = postForEntity('/tng-vnv-planner/api/v1/schedulers/services',
                 ["service_uuid": NETWORK_SERVICE_HTTP_ADVANCED_ID]
                 , Void.class)
 
@@ -103,7 +103,7 @@ class NetworkControllerTest extends AbstractSpec {
     void "when one service is related with one test should run only once"() {
 
         when:
-        def entity = postForEntity('/tng-vnv-lcm/api/v1/schedulers/services',
+        def entity = postForEntity('/tng-vnv-planner/api/v1/schedulers/services',
                 ["service_uuid": NETWORK_SERVICE_HTTP_ADVANCED_ID]
                 , Void.class)
 

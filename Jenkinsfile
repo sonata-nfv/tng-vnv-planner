@@ -19,7 +19,7 @@ pipeline {
         stage('push') {
             steps {
                 timestamps {
-                    sh 'docker push registry.sonata-nfv.eu:5000/tng-vnv-lcm:latest'
+                    sh 'docker push registry.sonata-nfv.eu:5000/tng-vnv-planner:latest'
                 }
             }
         }
@@ -35,7 +35,7 @@ pipeline {
                 sh 'rm -rf tng-devops || true'
                 sh 'git clone https://github.com/sonata-nfv/tng-devops.git'
                 dir(path: 'tng-devops') {
-                  sh 'ansible-playbook roles/vnv.yml -i environments -e "target=pre-int-vnv-bcn.5gtango.eu" -e "component=lcm"'
+                  sh 'ansible-playbook roles/vnv.yml -i environments -e "target=pre-int-vnv-bcn.5gtango.eu" -e "component=planner"'
                 }
               }
             }
@@ -51,10 +51,10 @@ pipeline {
                 echo 'Promoting containers to integration'
               }
             }
-            stage('tng-vnv-lcm') {
+            stage('tng-vnv-planner') {
               steps {
-                sh 'docker tag registry.sonata-nfv.eu:5000/tng-rep:latest registry.sonata-nfv.eu:5000/tng-vnv-lcm:int'
-                sh 'docker push  registry.sonata-nfv.eu:5000/tng-vnv-lcm:int'
+                sh 'docker tag registry.sonata-nfv.eu:5000/tng-rep:latest registry.sonata-nfv.eu:5000/tng-vnv-planner:int'
+                sh 'docker push  registry.sonata-nfv.eu:5000/tng-vnv-planner:int'
               }
             }
           }

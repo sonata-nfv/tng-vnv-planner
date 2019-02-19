@@ -30,7 +30,7 @@ class CatalogueEventListenerTest extends AbstractSpec {
     void 'schedule single TestSuite and single NetworkService should produce successfully 2 Result for 2 testPlan'() {
 
         when:
-        def entity = postForEntity('/tng-vnv-lcm/api/v1/packages/on-change',
+        def entity = postForEntity('/tng-vnv-planner/api/v1/packages/on-change',
                 [
                         event_name: UUID.randomUUID().toString(),
                         package_id:  MULTIPLE_TEST_PLANS_PACKAGE_ID,
@@ -60,7 +60,7 @@ class CatalogueEventListenerTest extends AbstractSpec {
     void 'simple access on-change endpoint with empty package_id should produce BAD_REQUEST response'() {
 
         when:
-        def entity = postForEntity('/tng-vnv-lcm/api/v1/packages/on-change',
+        def entity = postForEntity('/tng-vnv-planner/api/v1/packages/on-change',
                 [
                         event_name: UUID.randomUUID().toString(),
                         package_id:  '04bd5fcf-0000-42e1-a34f-94c66557ae73',
@@ -84,7 +84,7 @@ class CatalogueEventListenerTest extends AbstractSpec {
     void 'simple access on-change endpoint with non existing package_id should produce successfully BAD_REQUEST response'() {
 
         when:
-        def entity = postForEntity('/tng-vnv-lcm/api/v1/packages/on-change',
+        def entity = postForEntity('/tng-vnv-planner/api/v1/packages/on-change',
                 [
                         event_name: UUID.randomUUID().toString(),
                         package_id:  BAD_REQUEST_PACKAGE_ID,

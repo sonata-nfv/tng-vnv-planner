@@ -24,7 +24,7 @@ class PackageControllerTest extends AbstractSpec {
     void "schedule single Package with 1 NetworkService and 2 TestSuite should produce successfully 1 Result for 1 testPlan"() {
 
         when:
-        def entity = postForEntity('/tng-vnv-lcm/api/v1/schedulers',
+        def entity = postForEntity('/tng-vnv-planner/api/v1/schedulers',
                 [
                         "uuid": "input0pa-75f5-4231-90c8-12ec80a7oi97",
                         "network_services":

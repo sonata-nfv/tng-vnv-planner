@@ -2,7 +2,7 @@
 # tng-vnv-planner
 5GTANGO V&amp;V Planner repository
 =======
-[![Build Status](http://jenkins.sonata-nfv.eu/buildStatus/icon?job=tng-vnv-lcm/master)](https://jenkins.sonata-nfv.eu/job/tng-vnv-lcm)
+[![Build Status](http://jenkins.sonata-nfv.eu/buildStatus/icon?job=tng-vnv-planner/master)](https://jenkins.sonata-nfv.eu/job/tng-vnv-planner)
 
 
 # Planner 5GTANGO Verification and Validation
@@ -16,7 +16,7 @@ This is a [5GTANGO](http://www.5gtango.eu) component to coordinate the verificat
 The Planner acts as the main executor for all V&V test activities. It is responsible for sequencing, executing and presenting corresponding test results. Although the LCM is responsible for overall test activity, execution of individual test plans is given over to the curator and executor.
 An outline of the old architecture is shown below.
 
-<p align="center"><img src="https://raw.githubusercontent.com/wiki/sonata-nfv/tng-vnv-lcm/images/v40-release-lcm.png" /></p>
+<p align="center"><img src="https://raw.githubusercontent.com/wiki/sonata-nfv/tng-vnv-planner/images/v40-release-planner.png" /></p>
 
 
 
@@ -46,7 +46,7 @@ For advanced build arguments, please checkout the [gradle-buildscript](https://g
 
 ```bash
 docker pull registry.sonata-nfv.eu:5000/tng-vnv-planner
-docker run -d --name tng-vnv-lcm -p 6100:6100 registry.sonata-nfv.eu:5000/tng-vnv-lcm
+docker run -d --name tng-vnv-planner -p 6100:6100 registry.sonata-nfv.eu:5000/tng-vnv-planner
 ```
 
 ### Health checking

@@ -62,7 +62,7 @@ class AsyncConfig {
         executor.setCorePoolSize(corePoolSize);
         executor.setMaxPoolSize(maxPoolSize);
         executor.setQueueCapacity(queueCapacity);
-        executor.setThreadNamePrefix("lcm-scheduler-");
+        executor.setThreadNamePrefix("vnv-planner-");
         executor.initialize();
         return executor;
     }

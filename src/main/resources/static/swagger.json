@@ -7,11 +7,11 @@
         "termsOfService": "https://5gtango.eu/",
         "license": {
             "name": "Apache License 2.0",
-            "url": "https://github.com/sonata-nfv/tng-vnv-lcm/blob/master/LICENSE"
+            "url": "https://github.com/sonata-nfv/tng-vnv-planner/blob/master/LICENSE"
         }
     },
-    "host": "tng-vnv-lcm:6100",
-    "basePath": "/tng-vnv-lcm",
+    "host": "tng-vnv-planner:6100",
+    "basePath": "/tng-vnv-planner",
     "tags": [
         {
             "name": "catalogue-event-listener",

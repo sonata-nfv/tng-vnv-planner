@@ -26,7 +26,7 @@ class TestSuiteControllerTest extends AbstractSpec {
     void "schedule single TestSuite should produce successfully 1 Result for 1 testPlan"() {
 
         when:
-        def entity = postForEntity('/tng-vnv-lcm/api/v1/schedulers/tests',
+        def entity = postForEntity('/tng-vnv-planner/api/v1/schedulers/tests',
                 ["test_uuid": TEST_SUITE_ID]
                 , Void.class)
 
@@ -52,7 +52,7 @@ class TestSuiteControllerTest extends AbstractSpec {
 
     void "retrieval of a single network service's related NetworkServices should successfully all the tag related services "() {
         when:
-        List nss = getForEntity('/tng-vnv-lcm/api/v1/schedulers/tests/{testUuid}/services', List,TEST_SUITE_ID).body
+        List nss = getForEntity('/tng-vnv-planner/api/v1/schedulers/tests/{testUuid}/services', List,TEST_SUITE_ID).body
         then:
 
         nss.size() == 3

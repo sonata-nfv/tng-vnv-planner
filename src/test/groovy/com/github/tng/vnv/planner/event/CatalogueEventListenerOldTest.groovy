@@ -55,7 +55,7 @@ class CatalogueEventListenerOldTest extends AbstractSpec {
 
     void "catalogue should handle the package on change event without exception"() {
         when:
-        def entity = postForEntity('/tng-vnv-lcm/api/v1/packages/on-change',
+        def entity = postForEntity('/tng-vnv-planner/api/v1/packages/on-change',
                 [
                         event_name: 'CREATED',
                         package_id: testPackageId,
@@ -71,7 +71,7 @@ class CatalogueEventListenerOldTest extends AbstractSpec {
 
     void "catalogue should not execute tests on DELETE event"() {
         when:
-        def entity = postForEntity('/tng-vnv-lcm/api/v1/packages/on-change',
+        def entity = postForEntity('/tng-vnv-planner/api/v1/packages/on-change',
                 [
                         event_name: CatalogueEventListener.PACKAGE_DELETED,
                         package_id: testPackageId,
