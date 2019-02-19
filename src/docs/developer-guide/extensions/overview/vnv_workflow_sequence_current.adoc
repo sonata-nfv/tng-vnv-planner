@@ -1,0 +1,84 @@
+== V&V Workflow ("Current")
+
+[plantuml,tng-vnv-lcm]
+----
+
+@startuml
+autonumber
+
+actor "SDK" as SDK
+participant "V&V:Gatekeeper" as GKofVNV
+participant "Un-Packager" as PKG
+database "Catalogue" as CAT
+box "V&V LCM" #LightBlue
+    participant "Scheduler" as Scheduler
+    participant "Workflow Manager" as WFMGR
+    participant "TestPlatformManager" as TPMGR
+'     database "Local Catalogue" as LOCAT
+'     todo we need to add the flows around the LOCAT above
+end box
+
+box "V&V TEE" #LightBlue
+    participant "Test Execution Engine" as TEE
+    participant "Configuration Manager" as TEECM
+    participant "Test Driver" as TEETD
+    participant "Test Plugin" as TEETP
+    database "Repositories" as TRR
+end box
+
+box "Service Platform" #LightBlue
+    participant "Gatekeeper" as GKofSP
+    participant "SP" as SP
+end box
+
+SDK -> GKofVNV : upload package
+note right : transparent proxy requests via GK was not indicated in this diagram
+GKofVNV -> PKG : unpack package
+PKG -> CAT : create NS/Test
+note right : Catalog is shared between V&V and SP so that you only upload package once
+CAT --> PKG : NS/Test UUID
+PKG -> GKofVNV : package updated
+
+GKofVNV -> Scheduler : package updated
+opt if no package metadata passed in call back
+    'Scheduler.discoverAssociatedNssAndTests(PackageMetadata packageMetadata)
+    Scheduler -> CAT : read package metadata
+end
+loop for each NS
+      Scheduler -> CAT : get list of Tests applicable to NS
+end
+loop for each Test
+      Scheduler -> CAT : get list of NS applicable to Test
+end
+Scheduler --> Scheduler : build map of NS'es to Tests
+
+
+loop for each NS-Tests mapping
+        Scheduler -> WFMGR : execute test plan
+note right : See method execute(networkService, testSuites)
+        WFMGR -> TRR : save test plan: CREATED
+        WFMGR -> SP : deploy NS
+        WFMGR \\- SP : NS runtime config
+        WFMGR -> TRR : update test plan: NS_DEPLOYED
+        loop for each Test
+              WFMGR -> TRR : create test suite result
+              WFMGR -> TEE : run test request (templateId, nsiId)
+              TEE -->TEECM : generate config
+              TEE <--> TRR : retrieve Test and NSI information
+              TEE -> TEE : prepare test
+              TEE -> TEE : setup monitor
+              TEE -> TEETD : execute test
+              TEETD -> TEETP : run test with docker run
+              TEETD <-- TEETP : result SUCCESS|FAIL
+              TEETD --> TEE : result SUCCESS|FAIL
+              TEE -> TEE : gather and store test results
+              TEE --> WFMGR : test result: SUCCESS|FAIL
+              WFMGR -> TRR : update test plan: test result
+        end
+        WFMGR -> TRR : update test plan: SUCCESS|FAIL
+        WFMGR -> SP : teardown NS
+end
+
+@enduml
+
+----
