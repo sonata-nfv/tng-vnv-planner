@@ -8,7 +8,7 @@ import com.github.tng.vnv.planner.restmock.TestResultRepositoryMock
 import com.github.mrduguo.spring.test.AbstractSpec
 import org.springframework.beans.factory.annotation.Autowired
 
-class TestSuiteControllerTest extends AbstractSpec {
+class TestControllerTest extends AbstractSpec {
 
     final def TEST_SUITE_ID='input0ts-75f5-4ca1-90c8-12ec80a79821'
     @Autowired

@@ -34,26 +34,23 @@
 
 package com.github.tng.vnv.planner.model
 
-import com.fasterxml.jackson.annotation.JsonProperty
 import groovy.transform.EqualsAndHashCode
-import io.swagger.annotations.ApiModelProperty
-
-import javax.validation.constraints.NotNull
 
 @EqualsAndHashCode
-class TestSuite {
+class TestPlanOld {
     String uuid
-    String userUuid
-    List<TestPlan> testPlans = []
+    String packageId
+    List<NetworkServiceInstance> networkServiceInstances = []
+    List<TestSuiteResult> testSuiteResults = []
     String status
 
     @Override
     public String toString() {
-        final StringBuffer sb = new StringBuffer("TestSuite{");
+        final StringBuffer sb = new StringBuffer("\n - TestPlanOld{ \n");
         sb.append("uuid='").append(uuid).append('\'');
-        sb.append(", userUuid='").append(userUuid).append('\'');
-        sb.append(", testPlans.first.uuid=").append(testPlans.first().uuid);
         sb.append(", status='").append(status).append('\'');
+        sb.append(", \nnsi's(#${networkServiceInstances.size()})=").append(networkServiceInstances);
+        sb.append(", \ntsr's(#${testSuiteResults.size()})=").append(testSuiteResults);
         sb.append('}');
         return sb.toString();
     }

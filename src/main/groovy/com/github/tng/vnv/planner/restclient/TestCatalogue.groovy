@@ -37,7 +37,7 @@ package com.github.tng.vnv.planner.restclient
 
 import com.github.tng.vnv.planner.model.NetworkService
 import com.github.tng.vnv.planner.model.PackageMetadata
-import com.github.tng.vnv.planner.model.TestSuite
+import com.github.tng.vnv.planner.model.TestSuiteOld
 import groovy.util.logging.Log
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier
@@ -91,7 +91,7 @@ class TestCatalogue {
         rawPackageMetadata?.pd?.package_content.each{resource ->
             switch (resource.get('content-type')) {
                 case 'application/vnd.5gtango.tstd':
-                    TestSuite ts = callExternalEndpoint(restTemplateWithAuth.getForEntity(testMetadataEndpoint, TestSuite.class, resource.uuid),
+                    TestSuiteOld ts = callExternalEndpoint(restTemplateWithAuth.getForEntity(testMetadataEndpoint, TestSuiteOld.class, resource.uuid),
                             'TestCatalogue.findNssByTestTag','TestCatalogue.loadPackageMetadata',testMetadataEndpoint).body
                     log.info("##vnvlog res: testSuite: $ts")
                     log.info("##vnvlog agnostic obj " + callExternalEndpoint(
@@ -122,8 +122,8 @@ class TestCatalogue {
                 'TestCatalogue.findNetworkService',serviceMetadataEndpoint).body
     }
 
-    TestSuite findTestSuite(String testUuid) {
-        callExternalEndpoint(restTemplateWithAuth.getForEntity(testMetadataEndpoint, TestSuite, testUuid),
+    TestSuiteOld findTestSuite(String testUuid) {
+        callExternalEndpoint(restTemplateWithAuth.getForEntity(testMetadataEndpoint, TestSuiteOld, testUuid),
                 'TestCatalogue.findTestSuite',testMetadataEndpoint).body
     }
 
@@ -133,13 +133,13 @@ class TestCatalogue {
                 { ns -> ns.nsd.testingTags !=null && (ns.nsd.testingTags.contains(tag) )}
         }
 
-    List<TestSuite> findTssByTestTag(String tag) {
-        callExternalEndpoint(restTemplateWithAuth.getForEntity(testListEndpoint, TestSuite[]),
+    List<TestSuiteOld> findTssByTestTag(String tag) {
+        callExternalEndpoint(restTemplateWithAuth.getForEntity(testListEndpoint, TestSuiteOld[]),
                 'TestCatalogue.findTssByTestTag',testListEndpoint).body?.findAll
                 { ts -> ts.testd.testExecution.findAll { it.testTag.equalsIgnoreCase(tag) } }
     }
 
-    List<TestSuite> findTssByNetworkServiceUUid(String uuid) {
+    List<TestSuiteOld> findTssByNetworkServiceUUid(String uuid) {
         def tagHelperList = [] as ArrayList
         def tss  = [] as ArrayList
         findNetworkService(uuid)?.nsd.testingTags?.each { tag ->
@@ -174,8 +174,8 @@ class TestCatalogue {
     }
 
     //todo: this is a workaround solution to bypass the null packageId issue for test's
-    //todo-y2: remove the packageId from all the TestSuite,TestPlan,TestResult
-    def findPackageId(TestSuite testSuite){
+    //todo-y2: remove the packageId from all the TestSuiteOld,TestPlanOld,TestResult
+    def findPackageId(TestSuiteOld testSuite){
         callExternalEndpoint(restTemplateWithAuth.getForEntity(packageListEndpoint, Object[]),
                 'TestCatalogue.findPackageId', packageListEndpoint).body?.find { p ->
             p.pd.package_content?.find { pc ->

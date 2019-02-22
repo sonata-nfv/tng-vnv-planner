@@ -40,20 +40,23 @@ import io.swagger.annotations.ApiModelProperty
 
 import javax.validation.constraints.NotNull
 
-@EqualsAndHashCode
-class TestSuite {
-    String uuid
-    String userUuid
-    List<TestPlan> testPlans = []
-    String status
+@EqualsAndHashCode(includes = "uuid" )
+class TestSuiteOld {
+
+    @ApiModelProperty(required = true)
+    @NotNull
+    @JsonProperty("uuid")
+    String testUuid
+    String packageId
+    TestDescriptor testd
+
 
     @Override
     public String toString() {
-        final StringBuffer sb = new StringBuffer("TestSuite{");
-        sb.append("uuid='").append(uuid).append('\'');
-        sb.append(", userUuid='").append(userUuid).append('\'');
-        sb.append(", testPlans.first.uuid=").append(testPlans.first().uuid);
-        sb.append(", status='").append(status).append('\'');
+        final StringBuffer sb = new StringBuffer("TestSuiteOld{");
+        sb.append("uuid='").append(testUuid).append('\'');
+        sb.append(", packageId='").append(packageId).append('\'');
+        sb.append(", testd=").append(testd);
         sb.append('}');
         return sb.toString();
     }

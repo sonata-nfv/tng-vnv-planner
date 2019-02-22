@@ -35,7 +35,7 @@
 package com.github.tng.vnv.planner.restclient
 
 
-import com.github.tng.vnv.planner.model.TestPlan
+import com.github.tng.vnv.planner.model.TestPlanOld
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.beans.factory.annotation.Value
@@ -61,17 +61,17 @@ class TestResultRepository {
     @Value('${app.trr.test.plan.update.endpoint}')
     def testPlanUpdateEndpoint
 
-    TestPlan createTestPlan(TestPlan testPlan) {
+    TestPlanOld createTestPlan(TestPlanOld testPlan) {
         def headers = new HttpHeaders()
         headers.setContentType(MediaType.APPLICATION_JSON)
-        def entity = new HttpEntity<TestPlan>(testPlan ,headers)
-        callExternalEndpoint(restTemplate.postForEntity(testPlanCreateEndpoint,entity,TestPlan),'TestResultRepository.createTestPlan',testPlanCreateEndpoint).body
+        def entity = new HttpEntity<TestPlanOld>(testPlan ,headers)
+        callExternalEndpoint(restTemplate.postForEntity(testPlanCreateEndpoint,entity,TestPlanOld),'TestResultRepository.createTestPlan',testPlanCreateEndpoint).body
     }
 
-    TestPlan updatePlan(TestPlan testPlan) {
+    TestPlanOld updatePlan(TestPlanOld testPlan) {
         def headers = new HttpHeaders()
         headers.setContentType(MediaType.APPLICATION_JSON)
-        def entity = new HttpEntity<TestPlan>(testPlan ,headers)
-        callExternalEndpoint(restTemplate.exchange(testPlanUpdateEndpoint, HttpMethod.PUT, entity, TestPlan.class ,testPlan.uuid),'TestResultRepository.updatePlan',testPlanUpdateEndpoint).body
+        def entity = new HttpEntity<TestPlanOld>(testPlan ,headers)
+        callExternalEndpoint(restTemplate.exchange(testPlanUpdateEndpoint, HttpMethod.PUT, entity, TestPlanOld.class ,testPlan.uuid),'TestResultRepository.updatePlan',testPlanUpdateEndpoint).body
     }
 }

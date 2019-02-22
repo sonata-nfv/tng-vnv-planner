@@ -35,7 +35,7 @@
 package com.github.tng.vnv.planner.restclient
 
 
-import com.github.tng.vnv.planner.model.TestPlan
+import com.github.tng.vnv.planner.model.TestPlanOld
 import com.github.tng.vnv.planner.model.TestSuiteResult
 import groovy.util.logging.Log
 import org.springframework.beans.factory.annotation.Autowired
@@ -57,7 +57,7 @@ class TestExecutionEngine {
     @Value('${app.tee.suite.execute.endpoint}')
     def suiteExecuteEndpoint
 
-    TestPlan executeTests(TestPlan testPlan) {
+    TestPlanOld executeTests(TestPlanOld testPlan) {
         def planStatus = 'SUCCESS'
         def results=[]
         testPlan.testSuiteResults.each { testSuiteResult ->

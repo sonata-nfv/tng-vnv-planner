@@ -35,55 +35,42 @@
 package com.github.tng.vnv.planner.controller
 
 
-import com.github.tng.vnv.planner.model.TestSuite
-import com.github.tng.vnv.planner.service.TestSuiteService
+import com.github.tng.vnv.planner.scheduler.Scheduler
+import com.github.tng.vnv.planner.model.NetworkService
+import com.github.tng.vnv.planner.model.PackageMetadata
+import com.github.tng.vnv.planner.model.TestSuiteOld
+import com.github.tng.vnv.planner.model.TestSuiteRequest
+import com.github.tng.vnv.planner.restclient.TestCatalogue
 import io.swagger.annotations.ApiResponse
 import io.swagger.annotations.ApiResponses
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 import javax.validation.Valid
 
 @RestController
-@RequestMapping('/api/v1/test-suites')
-class TestSuiteController {
+class TestController {
 
     @Autowired
-    TestSuiteService testSuiteService
+    Scheduler scheduler
 
-    @GetMapping('')
-    List findAll() {
-        testSuiteService.findAll()
-    }
-
-    @GetMapping('{uuid}')
-    TestSuite findOne(@PathVariable String uuid) {
-        testSuiteService.findByUuid(uuid)
-    }
+    @Autowired
+    TestCatalogue testCatalogue
 
     @ApiResponses(value = [@ApiResponse(code = 400, message = 'Bad Request')])
-    @PostMapping('')
-    ResponseEntity<Void> save(@Valid @RequestBody TestSuite testSuite) {
-        testSuiteService.save(testSuite)
+    @PostMapping('/api/v1/schedulers/tests')
+    ResponseEntity<Void> scheduleTest(@Valid @RequestBody TestSuiteRequest request) {
+        scheduler.schedule(new PackageMetadata(testSuites: [new TestSuiteOld(testUuid: request.testUuid)]))
         ResponseEntity.ok().build()
     }
 
-    @PutMapping('{uuid}')
-    TestSuite update(@RequestBody TestSuite testSuite, @PathVariable String uuid) {
-        testSuiteService.update(testSuite, uuid)
-    }
-
-    @DeleteMapping('{uuid}')
-    TestSuite deleteById(@PathVariable String uuid) {
-        testSuiteService.deleteByUuid(uuid)
-
+    @GetMapping('/api/v1/schedulers/tests/{testUuid}/services')
+    List<NetworkService> listServicessByTestSuite(@PathVariable('testUuid') String uuid) {
+        testCatalogue.findNssByTestSuiteUuid(uuid)
     }
 }

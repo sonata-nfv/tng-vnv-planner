@@ -36,7 +36,7 @@ package com.github.tng.vnv.planner.model
 
 class PackageMetadata {
     List<NetworkService> networkServices=[]
-    List<TestSuite> testSuites=[]
+    List<TestSuiteOld> testSuites=[]
 
     String packageId
     String uuid

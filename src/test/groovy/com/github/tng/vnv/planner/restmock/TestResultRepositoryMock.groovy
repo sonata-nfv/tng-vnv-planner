@@ -35,7 +35,7 @@
 package com.github.tng.vnv.planner.restmock
 
 
-import com.github.tng.vnv.planner.model.TestPlan
+import com.github.tng.vnv.planner.model.TestPlanOld
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
@@ -46,7 +46,7 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 class TestResultRepositoryMock {
 
-    Map<String, TestPlan> testPlans = [:]
+    Map<String, TestPlanOld> testPlans = [:]
     def numOfCallsForTestPlanCreation = 0
     def numOfCallsForTestPlanUpdate = 0
 
@@ -60,14 +60,14 @@ class TestResultRepositoryMock {
     }
 
     @PostMapping('/mock/trr/test-plans')
-    TestPlan createTestPlan(@RequestBody TestPlan testPlan) {
+    TestPlanOld createTestPlan(@RequestBody TestPlanOld testPlan) {
         ++numOfCallsForTestPlanCreation
         testPlan.uuid = UUID.randomUUID().toString()
         testPlans[testPlan.uuid] = testPlan
     }
 
     @PutMapping('/mock/trr/test-plans/{testPlanId:.+}')
-    TestPlan updatePlan(@RequestBody TestPlan testPlan, @PathVariable('testPlanId') String testPlanId) {
+    TestPlanOld updatePlan(@RequestBody TestPlanOld testPlan, @PathVariable('testPlanId') String testPlanId) {
         ++numOfCallsForTestPlanUpdate
          testPlan.uuid = testPlanId
         testPlans[testPlan.uuid] = testPlan

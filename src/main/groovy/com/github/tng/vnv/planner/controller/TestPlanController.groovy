@@ -35,8 +35,8 @@
 package com.github.tng.vnv.planner.controller
 
 
-import com.github.tng.vnv.planner.model.TestSuite
-import com.github.tng.vnv.planner.service.TestSuiteService
+import com.github.tng.vnv.planner.model.TestPlan
+import com.github.tng.vnv.planner.service.TestPlanService
 import io.swagger.annotations.ApiResponse
 import io.swagger.annotations.ApiResponses
 import org.springframework.beans.factory.annotation.Autowired
@@ -53,37 +53,37 @@ import org.springframework.web.bind.annotation.RestController
 import javax.validation.Valid
 
 @RestController
-@RequestMapping('/api/v1/test-suites')
-class TestSuiteController {
+@RequestMapping('/api/v1/test-plans')
+class TestPlanController {
+
 
     @Autowired
-    TestSuiteService testSuiteService
+    TestPlanService testPlanService
 
     @GetMapping('')
     List findAll() {
-        testSuiteService.findAll()
+        testPlanService.findAll()
     }
 
     @GetMapping('{uuid}')
-    TestSuite findOne(@PathVariable String uuid) {
-        testSuiteService.findByUuid(uuid)
+    TestPlan findOne(@PathVariable String uuid) {
+        testPlanService.findByUuid(uuid)
     }
 
     @ApiResponses(value = [@ApiResponse(code = 400, message = 'Bad Request')])
     @PostMapping('')
-    ResponseEntity<Void> save(@Valid @RequestBody TestSuite testSuite) {
-        testSuiteService.save(testSuite)
+    ResponseEntity<Void> save(@Valid @RequestBody TestPlan testPlan) {
+        testPlanService.save(testPlan)
         ResponseEntity.ok().build()
     }
 
     @PutMapping('{uuid}')
-    TestSuite update(@RequestBody TestSuite testSuite, @PathVariable String uuid) {
-        testSuiteService.update(testSuite, uuid)
+    TestPlan update(@RequestBody TestPlan testPlan, @PathVariable String uuid) {
+        testPlanService.update(testPlan, uuid)
     }
 
     @DeleteMapping('{uuid}')
-    TestSuite deleteById(@PathVariable String uuid) {
-        testSuiteService.deleteByUuid(uuid)
-
+    TestPlan deleteById(@PathVariable String uuid) {
+        testPlanService.deleteByUuid(uuid)
     }
 }

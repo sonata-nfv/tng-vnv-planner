@@ -36,7 +36,7 @@ package com.github.tng.vnv.planner.restclient
 
 import com.github.tng.vnv.planner.model.NsRequest
 import com.github.tng.vnv.planner.model.NsResponse
-import com.github.tng.vnv.planner.model.TestPlan
+import com.github.tng.vnv.planner.model.TestPlanOld
 import groovy.util.logging.Log
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier
@@ -69,7 +69,7 @@ class TestPlatformManager {
     @Value('${app.tpm.ns.destroy.endpoint}')
     def nsDestroyEndpoint
 
-    TestPlan deployNsForTest(TestPlan testPlan) {
+    TestPlanOld deployNsForTest(TestPlanOld testPlan) {
         if(testPlan.networkServiceInstances?.first()?.instanceUuid == null) {
             testPlan.status = 'NS_DEPLOY_FAILED'
             testPlan
@@ -103,7 +103,7 @@ class TestPlatformManager {
         testPlan
     }
 
-    TestPlan destroyNsAfterTest(TestPlan testPlan) {
+    TestPlanOld destroyNsAfterTest(TestPlanOld testPlan) {
         def nsi = testPlan.networkServiceInstances.first()
         log.info("##vnvlog TestPlatformManager.destroyNsAfterTest: ($testPlan)")
         def terminateRequest = new NsRequest(instanceUuid: nsi.instanceUuid,

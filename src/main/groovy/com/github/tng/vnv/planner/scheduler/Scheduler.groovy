@@ -36,7 +36,7 @@ package com.github.tng.vnv.planner.scheduler
 
 
 import com.github.tng.vnv.planner.model.PackageMetadata
-import com.github.tng.vnv.planner.model.TestSuite
+import com.github.tng.vnv.planner.model.TestSuiteOld
 import com.github.tng.vnv.planner.restclient.TestCatalogue
 import com.github.tng.vnv.planner.workflow.WorkflowManager
 import groovy.util.logging.Log
@@ -132,8 +132,8 @@ class Scheduler {
         nsAndTestsMapping
     }
 
-    //todo: this is a workaround - to add the packageId to the TestSuite - until the packageId be removed from the source
-    def addPackageIdToTestSuit(PackageMetadata metadata, TestSuite ts) {
+    //todo: this is a workaround - to add the packageId to the TestSuiteOld - until the packageId be removed from the source
+    def addPackageIdToTestSuit(PackageMetadata metadata, TestSuiteOld ts) {
         ts.packageId = metadata.packageId?: testCatalogue.findPackageId(ts)
         ts
     }

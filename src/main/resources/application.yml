@@ -3,7 +3,7 @@ server:
   contextPath: /tng-vnv-planner
 spring.jackson.property-naming-strategy: SNAKE_CASE
 api:
-  name: 5GTANGO VnV Platform Lifecycle Manager
+  name: 5GTANGO VnV Planner
   description: An H2020 5GTANGO project
   version: 0.0.1
   host: tng-vnv-planner:6100

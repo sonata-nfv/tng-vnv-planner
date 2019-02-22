@@ -39,7 +39,7 @@ import com.github.tng.vnv.planner.scheduler.Scheduler
 import com.github.tng.vnv.planner.model.NetworkService
 import com.github.tng.vnv.planner.model.NetworkServiceRequest
 import com.github.tng.vnv.planner.model.PackageMetadata
-import com.github.tng.vnv.planner.model.TestSuite
+import com.github.tng.vnv.planner.model.TestSuiteOld
 import com.github.tng.vnv.planner.restclient.TestCatalogue
 import io.swagger.annotations.ApiResponse
 import io.swagger.annotations.ApiResponses
@@ -70,7 +70,7 @@ class NetworkServiceController {
     }
 
     @GetMapping('/api/v1/schedulers/services/{serviceUuid}/tests')
-    List<TestSuite> listTestsByService(@PathVariable('serviceUuid') String uuid) {
+    List<TestSuiteOld> listTestsByService(@PathVariable('serviceUuid') String uuid) {
         testCatalogue.findTssByNetworkServiceUUid(uuid)
     }
 }

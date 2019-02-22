@@ -37,8 +37,8 @@ package com.github.tng.vnv.planner.workflow
 
 import com.github.tng.vnv.planner.model.NetworkService
 import com.github.tng.vnv.planner.model.NetworkServiceInstance
-import com.github.tng.vnv.planner.model.TestPlan
-import com.github.tng.vnv.planner.model.TestSuite
+import com.github.tng.vnv.planner.model.TestPlanOld
+import com.github.tng.vnv.planner.model.TestSuiteOld
 import com.github.tng.vnv.planner.model.TestSuiteResult
 import com.github.tng.vnv.planner.restclient.TestExecutionEngine
 import com.github.tng.vnv.planner.restclient.TestPlatformManager
@@ -60,7 +60,7 @@ class WorkflowManager {
     @Autowired
     TestExecutionEngine testExecutionEngine
 
-    boolean execute(NetworkService networkService, Collection<TestSuite> testSuites) {
+    boolean execute(NetworkService networkService, Collection<TestSuiteOld> testSuites) {
         log.info('##vnvlog: before createTestPlan: [not created yet]')
         def testPlan = createTestPlan(networkService, testSuites)
         log.info("##vnvlog: after createTestPlan: ${testPlan.uuid}")
@@ -76,7 +76,7 @@ class WorkflowManager {
         false
     }
 
-    TestPlan createTestPlan(NetworkService networkService, Collection<TestSuite> testSuites) {
+    TestPlanOld createTestPlan(NetworkService networkService, Collection<TestSuiteOld> testSuites) {
         log.info("##vnvlog: (networkServiceId: $networkService.networkServiceId, testListSize: ${testSuites?.size()}, " +
                 "networkService.name: $networkService.nsd.name)")
         log.info("##vnvlog: issue!:testSuites.first()?.packageId: ${testSuites?.first()?.packageId}")
@@ -84,7 +84,7 @@ class WorkflowManager {
         def nsi = new NetworkServiceInstance(
                 name: "vnv-test-${networkService.nsd.name.toLowerCase().replaceAll(' ','-')}",
                 serviceUuid: networkService.networkServiceId)
-        def testPlan = new TestPlan(
+        def testPlan = new TestPlanOld(
                 uuid: testPlanUuid,
                 packageId: testSuites.first().packageId,
                 networkServiceInstances: [nsi],
@@ -102,17 +102,17 @@ class WorkflowManager {
         testResultRepository.createTestPlan(testPlan)
     }
 
-    TestPlan deployNsForTest(TestPlan testPlan) {
+    TestPlanOld deployNsForTest(TestPlanOld testPlan) {
         testPlan = testPlatformManager.deployNsForTest(testPlan)
         testResultRepository.updatePlan(testPlan)
     }
 
-    TestPlan executeTests(TestPlan testPlan) {
+    TestPlanOld executeTests(TestPlanOld testPlan) {
         testPlan = testExecutionEngine.executeTests(testPlan)
         testResultRepository.updatePlan(testPlan)
     }
 
-    TestPlan destroyNsAfterTest(TestPlan testPlan) {
+    TestPlanOld destroyNsAfterTest(TestPlanOld testPlan) {
         testPlan = testPlatformManager.destroyNsAfterTest(testPlan)
         testResultRepository.updatePlan(testPlan)
     }

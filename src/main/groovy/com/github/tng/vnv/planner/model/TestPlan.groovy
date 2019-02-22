@@ -34,23 +34,35 @@
 
 package com.github.tng.vnv.planner.model
 
+import com.fasterxml.jackson.annotation.JsonProperty
 import groovy.transform.EqualsAndHashCode
+import io.swagger.annotations.ApiModelProperty
+
+import javax.validation.constraints.NotNull
 
 @EqualsAndHashCode
 class TestPlan {
     String uuid
     String packageId
-    List<NetworkServiceInstance> networkServiceInstances = []
-    List<TestSuiteResult> testSuiteResults = []
+    String nsdUuid
+    String tdUuid
+    String index
+    NetworkServiceDescriptor networkServiceDescriptor
+    TestDescriptor testDescriptor
     String status
 
     @Override
     public String toString() {
         final StringBuffer sb = new StringBuffer("\n - TestPlan{ \n");
         sb.append("uuid='").append(uuid).append('\'');
+        sb.append(", index='").append(index).append('\'');
+        sb.append(", nsdUuid='").append(nsdUuid).append('\'');
+        sb.append(", tdUuid='").append(tdUuid).append('\'');
         sb.append(", status='").append(status).append('\'');
-        sb.append(", \nnsi's(#${networkServiceInstances.size()})=").append(networkServiceInstances);
-        sb.append(", \ntsr's(#${testSuiteResults.size()})=").append(testSuiteResults);
+        sb.append(", \nnsd.name='").append(networkServiceDescriptor.name)
+                .append(", nsd.version='").append(networkServiceDescriptor.version).append('\'');
+        sb.append(", \ntd.name='").append(testDescriptor.name)
+                .append(", td.version='").append(testDescriptor.version).append('\'');
         sb.append('}');
         return sb.toString();
     }

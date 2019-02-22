@@ -3,7 +3,7 @@
     "info": {
         "description": "An H2020 5GTANGO project",
         "version": "0.0.1",
-        "title": "5GTANGO VnV Platform Lifecycle Manager Dependencies' API",
+        "title": "5GTANGO VnV Planner Dependencies' API",
         "termsOfService": "https://5gtango.eu/",
         "license": {
             "name": "Apache License 2.0",
@@ -492,7 +492,7 @@
                         "description": "testPlan",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/TestPlan"
+                            "$ref": "#/definitions/TestPlanOld"
                         }
                     }
                 ],
@@ -500,7 +500,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/TestPlan"
+                            "$ref": "#/definitions/TestPlanOld"
                         }
                     },
                     "201": {
@@ -538,7 +538,7 @@
                         "description": "testPlan",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/TestPlan"
+                            "$ref": "#/definitions/TestPlanOld"
                         }
                     },
                     {
@@ -553,7 +553,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/TestPlan"
+                            "$ref": "#/definitions/TestPlanOld"
                         }
                     },
                     "201": {
@@ -667,7 +667,7 @@
             },
             "title": "Session"
         },
-        "TestPlan": {
+        "TestPlanOld": {
             "type": "object",
             "properties": {
                 "network_service_instances": {
@@ -692,7 +692,7 @@
                     "type": "string"
                 }
             },
-            "title": "TestPlan"
+            "title": "TestPlanOld"
         },
         "TestSuiteResult": {
             "type": "object",
