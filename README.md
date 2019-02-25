@@ -13,7 +13,7 @@ This is a [5GTANGO](http://www.5gtango.eu) component to coordinate the verificat
 
 ## What it is
 
-The Planner acts as the main executor for all V&V test activities. It is responsible for sequencing, executing and presenting corresponding test results. Although the LCM is responsible for overall test activity, execution of individual test plans is given over to the curator and executor.
+The Planner acts as the main manager for all V&V test requests. It is responsible for test plans management, sequencing, and trigger requests of the corresponding test results. Although the LCM is responsible for overall test activity, execution of individual test plans is given over to the curator and executor.
 An outline of the old architecture is shown below.
 
 <p align="center"><img src="https://raw.githubusercontent.com/wiki/sonata-nfv/tng-vnv-planner/images/v40-release-planner.png" /></p>
@@ -63,8 +63,8 @@ http://192.168.99.100:6100/tng-vnv-planner/health
 * pre integration 
     * http://pre-int-vnv-ave.5gtango.eu:6100/tng-vnv-planner/swagger-ui.html
 * local 
-    * http://192.168.99.100:6100/tng-vnv-planner/swagger-ui.html
-    * http://192.168.99.100:6100/tng-vnv-planner/swagger-ui.html?urls.primaryName=dependencies
+    * http://localhost:6100/tng-vnv-planner/swagger-ui.html
+    * http://localhost:6100/tng-vnv-planner/swagger-ui.html?urls.primaryName=dependencies
 
 
 
@@ -100,4 +100,4 @@ The following lead developers are responsible for this repository and have admin
 ## Feedback
 
 Please use the [GitHub issues](https://github.com/sonata-nfv/tng-vnv-planner/issues) and the 5GTANGO Verification and Validation group mailing list `5gtango-dev@list.atosresearch.eu` for feedback.
->>>>>>> 31f740a4a26c9c652ccf5827b15a8ea48d520c0e
+
