@@ -1,10 +1,3 @@
-<<<<<<< HEAD
-# tng-vnv-planner
-5GTANGO V&amp;V Planner repository
-=======
-[![Build Status](http://jenkins.sonata-nfv.eu/buildStatus/icon?job=tng-vnv-planner/master)](https://jenkins.sonata-nfv.eu/job/tng-vnv-planner)
-
-
 # Planner 5GTANGO Verification and Validation
 This is a [5GTANGO](http://www.5gtango.eu) component to coordinate the verification and validation activities of 5G Network Services.
 
@@ -16,7 +9,7 @@ This is a [5GTANGO](http://www.5gtango.eu) component to coordinate the verificat
 The Planner acts as the main manager for all V&V test requests. It is responsible for test plans management, sequencing, and trigger requests of the corresponding test results. Although the Planner is responsible for overall test activity, execution of individual test plans is given over to the curator and executor.
 An outline of the old architecture is shown below.
 
-<p align="center"><img src="https://raw.githubusercontent.com/wiki/sonata-nfv/tng-vnv-planner/images/v40-release-planner.png" /></p>
+<p align="center"><img src="https://github.com/allemaos/tng-vnv-planner/blob/transition-to-planner/5GTango%20V&V%20Platform-5.jpg" /></p>
 
 
 
