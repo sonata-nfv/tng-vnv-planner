@@ -6,7 +6,7 @@ This is a [5GTANGO](http://www.5gtango.eu) component to coordinate the verificat
 
 ## What it is
 
-The Planner acts as the main manager for all V&V test requests. It is responsible for test plans management, sequencing, and trigger requests of the corresponding test results. Although the Planner is responsible for overall test activity, execution of individual test plans is given over to the curator and executor.
+The Planner acts as the main manager for all V&V test requests. It is responsible for test plans management, sequencing, and triggering requests of the corresponding test results. Although the Planner is responsible for overall test activity, execution of individual test plans is given over to the curator and executor.
 An outline of the old architecture is shown below.
 
 <p align="center"><img src="https://raw.githubusercontent.com/wiki/sonata-nfv/tng-vnv-planner/images/v40-release-planner.png" /></p>
@@ -45,7 +45,7 @@ docker run -d --name tng-vnv-planner -p 6100:6100 registry.sonata-nfv.eu:5000/tn
 
 Once the component finish start, you can access (change IP depends on your docker setup) the component health endpoint at:
 
-http://192.168.99.100:6100/tng-vnv-planner/health
+http://locahost:6100/tng-vnv-planner/health
 
 ### Swagger UI
 
