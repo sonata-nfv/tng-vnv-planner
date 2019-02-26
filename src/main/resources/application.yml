@@ -1,0 +1,58 @@
+server:
+  port: 6100
+  contextPath: /tng-vnv-planner
+spring.jackson.property-naming-strategy: SNAKE_CASE
+api:
+  name: 5GTANGO VnV Planner
+  description: An H2020 5GTANGO project
+  version: 0.0.1
+  host: tng-vnv-planner:6100
+  terms.url: https://5gtango.eu/
+  license:
+    name: Apache License 2.0
+    url: https://github.com/sonata-nfv/tng-vnv-planner/blob/master/LICENSE
+app:
+  gk:
+    host: gk
+    base.url: http://qual-sp-bcn.5gtango.eu:32002/api/v3
+    session:
+      endpoint: ${app.gk.base.url}/sessions
+      username: sonata
+      password: 1234
+    service.list.endpoint: ${app.gk.base.url}/services
+    package.list.endpoint: ${app.gk.base.url}/packages
+    service.metadata.endpoint: ${app.gk.base.url}/services/{networkServiceId}
+    package.metadata.endpoint: ${app.gk.base.url}/packages/{packageId}
+  vnvgk:
+    host: tng-api-gtw
+    base.url: http://${app.vnvgk.host}:5000/api/v3
+    test.list.endpoint: ${app.vnvgk.base.url}/tests/descriptors
+    test.metadata.endpoint: ${app.vnvgk.base.url}/tests/descriptors/{testUuid}
+  cat:
+    host: tng-cat
+    base.url: http://${app.cat.host}:4011/api/catalogues/v2
+
+  trr:
+    host: tng-rep
+    base.url: http://${app.trr.host}:4012/trr
+    test.plan.create.endpoint: ${app.trr.base.url}/test-plans
+    test.plan.update.endpoint: ${app.trr.base.url}/test-plans/{uuid}
+  tpm:
+    host: tng-vnv-tpm
+    base.url: ${app.gk.base.url}
+    ns.deploy.endpoint: ${app.tpm.base.url}/requests
+    ns.status.endpoint: ${app.tpm.base.url}/requests/{requestId}
+    ns.status.timeout.in.seconds: 600
+    ns.status.ping.in.seconds: 30
+    ns.get.endpoint: ${app.tpm.base.url}/requests/{instanceUuid}
+    ns.destroy.endpoint: ${app.tpm.base.url}/requests
+  tee:
+    host: tng-vnv-tee
+    base.url: http://${app.tee.host}:6200/tng-vnv-tee/api/v1
+    suite.execute.endpoint: ${app.tee.base.url}/test-suite-results
+
+  queue.capacity: 500
+  pool:
+    size:
+      core: 10
+      max: 20
