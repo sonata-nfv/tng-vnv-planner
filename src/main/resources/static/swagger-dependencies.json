@@ -14,6 +14,14 @@
     "basePath": "/tng-vnv-planner",
     "tags": [
         {
+            "name": "curator-mock",
+            "description": "Curator Mock"
+        },
+        {
+            "name": "executor-mock",
+            "description": "Executor Mock"
+        },
+        {
             "name": "session-mock",
             "description": "Session Mock"
         },
@@ -22,16 +30,8 @@
             "description": "Test Catalogue Mock"
         },
         {
-            "name": "test-execution-engine-mock",
-            "description": "Test Execution Engine Mock"
-        },
-        {
-            "name": "test-platform-manager-mock",
-            "description": "Test Platform Manager Mock"
-        },
-        {
-            "name": "test-result-repository-mock",
-            "description": "Test Result Repository Mock"
+            "name": "test-plan-repository-mock",
+            "description": "Test Plan Repository Mock"
         }
     ],
     "paths": {
@@ -285,7 +285,7 @@
         "/mock/tee/test-suite-results": {
             "post": {
                 "tags": [
-                    "test-execution-engine-mock"
+                    "executor-mock"
                 ],
                 "summary": "executeTestAgainstNs",
                 "operationId": "executeTestAgainstNsUsingPOST",
@@ -331,7 +331,7 @@
         "/mock/tpm/requests": {
             "get": {
                 "tags": [
-                    "test-platform-manager-mock"
+                    "curator-mock"
                 ],
                 "summary": "getDeployedNs",
                 "operationId": "getDeployedNsUsingGET",
@@ -361,7 +361,7 @@
             },
             "post": {
                 "tags": [
-                    "test-platform-manager-mock"
+                    "curator-mock"
                 ],
                 "summary": "deployNsForTest",
                 "operationId": "deployNsForTestUsingPOST",
@@ -407,7 +407,7 @@
         "/mock/tpm/requests/{requestId}": {
             "get": {
                 "tags": [
-                    "test-platform-manager-mock"
+                    "curator-mock"
                 ],
                 "summary": "getNsForTest",
                 "operationId": "getNsForTestUsingGET",
@@ -445,7 +445,7 @@
         "/mock/trr/test-plans": {
             "get": {
                 "tags": [
-                    "test-result-repository-mock"
+                    "test-plan-repository-mock"
                 ],
                 "summary": "listTestPlans",
                 "operationId": "listTestPlansUsingGET",
@@ -475,7 +475,7 @@
             },
             "post": {
                 "tags": [
-                    "test-result-repository-mock"
+                    "test-plan-repository-mock"
                 ],
                 "summary": "createTestPlan",
                 "operationId": "createTestPlanUsingPOST",
@@ -521,7 +521,7 @@
         "/mock/trr/test-plans/{testPlanId}": {
             "put": {
                 "tags": [
-                    "test-result-repository-mock"
+                    "test-plan-repository-mock"
                 ],
                 "summary": "updatePlan",
                 "operationId": "updatePlanUsingPUT",

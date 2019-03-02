@@ -32,59 +32,49 @@
  * partner consortium (www.5gtango.eu).
  */
 
-package com.github.tng.vnv.planner.event
+package com.github.tng.vnv.planner.controller
 
-
-import com.github.mrduguo.spring.test.AbstractSpec
-import com.github.tng.vnv.planner.config.RestMonitor
-import com.github.tng.vnv.planner.restmock.TestResultRepositoryMock
+import com.github.tng.vnv.planner.model.PackageCallback
+import com.github.tng.vnv.planner.scheduler.Scheduler
+import com.github.tng.vnv.planner.model.PackageMetadata
+import groovy.util.logging.Log
+import io.swagger.annotations.ApiResponse
+import io.swagger.annotations.ApiResponses
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.beans.factory.annotation.Value
-import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RestController
 
-class CatalogueEventListenerOldTest extends AbstractSpec {
+import javax.validation.Valid
 
-    @Value('${app.test.package.id}')
-    def testPackageId
+@Log
+@RestController
+class CatalogueCallbackController {
+
+    static final String PACKAGE_DELETED = 'DELETED'
+    static final String PACKAGE_CREATED = 'CREATED'
 
     @Autowired
-    RestMonitor restMonitor
+    Scheduler scheduler
 
-    @Autowired
-    TestResultRepositoryMock testResultRepositoryMock
-
-    void "catalogue should handle the package on change event without exception"() {
-        when:
-        def entity = postForEntity('/tng-vnv-planner/api/v1/packages/on-change',
-                [
-                        event_name: 'CREATED',
-                        package_id: testPackageId,
-                ]
-                , Void.class)
-
-        then:
-        entity.statusCode == HttpStatus.OK
-        restMonitor.requests.last().args[0].eventName == 'CREATED'
-        restMonitor.requests.last().args[0].packageId == testPackageId
-    }
-
-
-    void "catalogue should not execute tests on DELETE event"() {
-        when:
-        def entity = postForEntity('/tng-vnv-planner/api/v1/packages/on-change',
-                [
-                        event_name: CatalogueEventListener.PACKAGE_DELETED,
-                        package_id: testPackageId,
-                ]
-                , Void.class)
-
-        then:
-        entity.statusCode == HttpStatus.OK
-        testResultRepositoryMock.testPlans.size()==0
-
-        cleanup:
-        testResultRepositoryMock.reset()
-
+    @ApiResponses(value = [
+            @ApiResponse(code = 400, message = 'Bad Request'),
+            @ApiResponse(code = 404, message = 'Could not find package with that package_id'),
+    ])
+    @PostMapping('/api/v1/packages/on-change')
+    ResponseEntity<Void> onChange(@Valid @RequestBody PackageCallback body) {
+        //todo-Y2:this endpoint is an on-change callback and is specific to the asynchronous nature of the unpackaging
+        log.info("##vnvlog Executor.executeTests request. ")
+        switch (body.eventName) {
+            case PACKAGE_DELETED:
+                break
+            case PACKAGE_CREATED:
+                break
+            default:
+               scheduler.schedule(new PackageMetadata(packageId: body.packageId))
+        }
+        ResponseEntity.ok().build()
     }
 
 }

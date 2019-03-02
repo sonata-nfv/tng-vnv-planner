@@ -34,34 +34,25 @@
 
 package com.github.tng.vnv.planner.model
 
-import groovy.transform.EqualsAndHashCode
 import io.swagger.annotations.ApiModelProperty
-
 import javax.validation.constraints.NotNull
 
-@EqualsAndHashCode
-class TestSuiteResult {
-    String packageId
-    String uuid
-    String testPlanId
-    String instanceUuid
-    String serviceUuid
+class PackageCallback {
+
+    @ApiModelProperty(
+            value = 'Event Name',
+            allowEmptyValue = true,
+            example = 'UPDATED',
+            required = true
+    )
+    @NotNull
+    String eventName
 
     @ApiModelProperty(required = true)
     @NotNull
-    String testUuid
+    String packageId
 
-    String status
+    String packageLocation
 
 
-    @Override
-    public String toString() {
-        final StringBuffer sb = new StringBuffer("\n \tTestSuiteResult{");
-        sb.append("uuid='").append(uuid).append('\'');
-        sb.append(", serviceUuid='").append(serviceUuid).append('\'');
-        sb.append(", testUuid='").append(testUuid).append('\'');
-        sb.append(", status='").append(status).append('\'');
-        sb.append('}');
-        return sb.toString();
-    }
 }

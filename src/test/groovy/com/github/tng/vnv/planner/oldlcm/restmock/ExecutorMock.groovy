@@ -32,20 +32,32 @@
  * partner consortium (www.5gtango.eu).
  */
 
-package com.github.tng.vnv.planner.model
+package com.github.tng.vnv.planner.oldlcm.restmock
 
-import groovy.transform.ToString
 
-@ToString(includes = 'instanceUuid, status')
-class NetworkServiceInstance {
+import com.github.tng.vnv.planner.oldlcm.model.TestSuiteResult
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RestController
 
-    String instanceUuid
+@RestController
+class ExecutorMock {
 
-    String serviceUuid
+    Map<String, TestSuiteResult> testSuiteResults = [:]
 
-    String name
+    def numOfExecutions = 0
 
-    String status
+    void reset() {
+        testSuiteResults.clear()
+    }
 
-    Map runtime
+    @PostMapping('/mock/tee/test-suite-results')
+    TestSuiteResult executeTestAgainstNs(@RequestBody TestSuiteResult testSuiteResult) {
+        ++numOfExecutions
+        testSuiteResult.uuid = UUID.randomUUID().toString()
+        testSuiteResult.status = 'SUCCESS'
+        testSuiteResults[testSuiteResult.uuid] = testSuiteResult
+        testSuiteResult
+    }
+
 }

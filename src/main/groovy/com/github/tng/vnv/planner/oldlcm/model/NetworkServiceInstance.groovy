@@ -32,32 +32,20 @@
  * partner consortium (www.5gtango.eu).
  */
 
-package com.github.tng.vnv.planner.controller
+package com.github.tng.vnv.planner.oldlcm.model
 
+import groovy.transform.ToString
 
-import com.github.tng.vnv.planner.model.PackageMetadata
-import com.github.tng.vnv.planner.scheduler.Scheduler
-import io.swagger.annotations.ApiResponse
-import io.swagger.annotations.ApiResponses
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RestController
+@ToString(includes = 'instanceUuid, status')
+class NetworkServiceInstance {
 
-import javax.validation.Valid
+    String instanceUuid
 
-@RestController
-class PackageController {
+    String serviceUuid
 
-    @Autowired
-    Scheduler scheduler
+    String name
 
-    @ApiResponses(value = [@ApiResponse(code = 400, message = 'Bad Request')])
-    @PostMapping('/api/v1/schedulers')
-    ResponseEntity<Void> scheduleTest(@Valid @RequestBody PackageMetadata metadata) {
-        //todo: this endpoint will be probably deleted after the successful IT's.
-        scheduler.schedule(metadata)
-        ResponseEntity.ok().build()
-    }
+    String status
+
+    Map runtime
 }

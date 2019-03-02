@@ -14,20 +14,12 @@
     "basePath": "/tng-vnv-planner",
     "tags": [
         {
-            "name": "catalogue-event-listener",
-            "description": "Catalogue Event Listener"
+            "name": "catalogue-callback-controller",
+            "description": "Catalogue Callback Controller"
         },
         {
             "name": "network-service-controller",
             "description": "Network Service Controller"
-        },
-        {
-            "name": "package-controller",
-            "description": "Package Controller"
-        },
-        {
-            "name": "test-controller",
-            "description": "Test Controller"
         },
         {
             "name": "test-plan-controller",
@@ -42,7 +34,7 @@
         "/api/v1/packages/on-change": {
             "post": {
                 "tags": [
-                    "catalogue-event-listener"
+                    "catalogue-callback-controller"
                 ],
                 "summary": "onChange",
                 "operationId": "onChangeUsingPOST",
@@ -55,11 +47,11 @@
                 "parameters": [
                     {
                         "in": "body",
-                        "name": "onPackageChangeEvent",
-                        "description": "onPackageChangeEvent",
+                        "name": "body",
+                        "description": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/OnPackageChangeEvent"
+                            "$ref": "#/definitions/PackageCallback"
                         }
                     }
                 ],
@@ -81,52 +73,6 @@
                     },
                     "404": {
                         "description": "Could not find package with that package_id"
-                    }
-                }
-            }
-        },
-        "/api/v1/schedulers": {
-            "post": {
-                "tags": [
-                    "package-controller"
-                ],
-                "summary": "scheduleTest",
-                "operationId": "scheduleTestUsingPOST_1",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "*/*"
-                ],
-                "parameters": [
-                    {
-                        "in": "body",
-                        "name": "metadata",
-                        "description": "metadata",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/PackageMetadata"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK"
-                    },
-                    "201": {
-                        "description": "Created"
-                    },
-                    "400": {
-                        "description": "Bad Request"
-                    },
-                    "401": {
-                        "description": "Unauthorized"
-                    },
-                    "403": {
-                        "description": "Forbidden"
-                    },
-                    "404": {
-                        "description": "Not Found"
                     }
                 }
             }
@@ -218,13 +164,13 @@
                 }
             }
         },
-        "/api/v1/schedulers/tests": {
+        "/api/v1/test-plans": {
             "post": {
                 "tags": [
-                    "test-controller"
+                    "test-plan-controller"
                 ],
-                "summary": "scheduleTest",
-                "operationId": "scheduleTestUsingPOST_2",
+                "summary": "save",
+                "operationId": "saveUsingPOST",
                 "consumes": [
                     "application/json"
                 ],
@@ -234,11 +180,11 @@
                 "parameters": [
                     {
                         "in": "body",
-                        "name": "request",
-                        "description": "request",
+                        "name": "body",
+                        "description": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/TestSuiteRequest"
+                            "$ref": "#/definitions/TestSuite"
                         }
                     }
                 ],
@@ -264,34 +210,42 @@
                 }
             }
         },
-        "/api/v1/schedulers/tests/{testUuid}/services": {
-            "get": {
+        "/api/v1/test-plans/services": {
+            "post": {
                 "tags": [
-                    "test-controller"
+                    "test-plan-controller"
                 ],
-                "summary": "listServicessByTestSuite",
-                "operationId": "listServicessByTestSuiteUsingGET",
+                "summary": "createTestPlansByServiceDescriptor",
+                "operationId": "createTestPlansByServiceDescriptorUsingPOST",
+                "consumes": [
+                    "application/json"
+                ],
                 "produces": [
                     "*/*"
                 ],
                 "parameters": [
                     {
-                        "name": "testUuid",
-                        "in": "path",
-                        "description": "testUuid",
+                        "in": "body",
+                        "name": "body",
+                        "description": "body",
                         "required": true,
-                        "type": "string"
+                        "schema": {
+                            "$ref": "#/definitions/NetworkServiceDescriptor"
+                        }
                     }
                 ],
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/NetworkService"
-                            }
+                            "$ref": "#/definitions/TestSuite"
                         }
+                    },
+                    "201": {
+                        "description": "Created"
+                    },
+                    "400": {
+                        "description": "Bad Request"
                     },
                     "401": {
                         "description": "Unauthorized"
@@ -305,43 +259,13 @@
                 }
             }
         },
-        "/api/v1/test-plans": {
-            "get": {
-                "tags": [
-                    "test-plan-controller"
-                ],
-                "summary": "findAll",
-                "operationId": "findAllUsingGET",
-                "produces": [
-                    "*/*"
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "type": "object"
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized"
-                    },
-                    "403": {
-                        "description": "Forbidden"
-                    },
-                    "404": {
-                        "description": "Not Found"
-                    }
-                }
-            },
+        "/api/v1/test-plans/tests": {
             "post": {
                 "tags": [
                     "test-plan-controller"
                 ],
-                "summary": "save",
-                "operationId": "saveUsingPOST",
+                "summary": "createTestPlansByTestDescriptor",
+                "operationId": "createTestPlansByTestDescriptorUsingPOST",
                 "consumes": [
                     "application/json"
                 ],
@@ -351,17 +275,20 @@
                 "parameters": [
                     {
                         "in": "body",
-                        "name": "testPlan",
-                        "description": "testPlan",
+                        "name": "body",
+                        "description": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/TestPlan"
+                            "$ref": "#/definitions/TestDescriptor"
                         }
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "OK"
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/TestSuite"
+                        }
                     },
                     "201": {
                         "description": "Created"
@@ -404,7 +331,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/TestPlan"
+                            "$ref": "#/definitions/TestSuite"
                         }
                     },
                     "401": {
@@ -433,11 +360,11 @@
                 "parameters": [
                     {
                         "in": "body",
-                        "name": "testPlan",
-                        "description": "testPlan",
+                        "name": "request",
+                        "description": "request",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/TestPlan"
+                            "$ref": "#/definitions/TestSuite"
                         }
                     },
                     {
@@ -452,7 +379,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/TestPlan"
+                            "$ref": "#/definitions/TestSuite"
                         }
                     },
                     "201": {
@@ -491,7 +418,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/TestPlan"
+                            "$ref": "#/definitions/TestSuite"
                         }
                     },
                     "204": {
@@ -507,36 +434,6 @@
             }
         },
         "/api/v1/test-suites": {
-            "get": {
-                "tags": [
-                    "test-suite-controller"
-                ],
-                "summary": "findAll",
-                "operationId": "findAllUsingGET_1",
-                "produces": [
-                    "*/*"
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "type": "object"
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized"
-                    },
-                    "403": {
-                        "description": "Forbidden"
-                    },
-                    "404": {
-                        "description": "Not Found"
-                    }
-                }
-            },
             "post": {
                 "tags": [
                     "test-suite-controller"
@@ -552,8 +449,8 @@
                 "parameters": [
                     {
                         "in": "body",
-                        "name": "testSuite",
-                        "description": "testSuite",
+                        "name": "body",
+                        "description": "body",
                         "required": true,
                         "schema": {
                             "$ref": "#/definitions/TestSuite"
@@ -709,21 +606,6 @@
         }
     },
     "definitions": {
-        "NetworkService": {
-            "type": "object",
-            "properties": {
-                "nsd": {
-                    "$ref": "#/definitions/NetworkServiceDescriptor"
-                },
-                "status": {
-                    "type": "string"
-                },
-                "uuid": {
-                    "type": "string"
-                }
-            },
-            "title": "NetworkService"
-        },
         "NetworkServiceDescriptor": {
             "type": "object",
             "properties": {
@@ -754,7 +636,7 @@
             },
             "title": "NetworkServiceRequest"
         },
-        "OnPackageChangeEvent": {
+        "PackageCallback": {
             "type": "object",
             "required": [
                 "event_name",
@@ -775,31 +657,7 @@
                     "type": "string"
                 }
             },
-            "title": "OnPackageChangeEvent"
-        },
-        "PackageMetadata": {
-            "type": "object",
-            "properties": {
-                "network_services": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/NetworkService"
-                    }
-                },
-                "package_id": {
-                    "type": "string"
-                },
-                "test_suites": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/TestSuiteOld"
-                    }
-                },
-                "uuid": {
-                    "type": "string"
-                }
-            },
-            "title": "PackageMetadata"
+            "title": "PackageCallback"
         },
         "TestDescriptor": {
             "type": "object",
@@ -897,19 +755,6 @@
                 }
             },
             "title": "TestSuiteOld"
-        },
-        "TestSuiteRequest": {
-            "type": "object",
-            "required": [
-                "test_uuid"
-            ],
-            "properties": {
-                "test_uuid": {
-                    "type": "string",
-                    "allowEmptyValue": false
-                }
-            },
-            "title": "TestSuiteRequest"
         },
         "TestTag": {
             "type": "object",

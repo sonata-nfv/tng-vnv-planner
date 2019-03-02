@@ -34,6 +34,8 @@
 
 package com.github.tng.vnv.planner.model
 
+import com.github.tng.vnv.planner.oldlcm.model.TestSuiteOld
+
 class PackageMetadata {
     List<NetworkService> networkServices=[]
     List<TestSuiteOld> testSuites=[]

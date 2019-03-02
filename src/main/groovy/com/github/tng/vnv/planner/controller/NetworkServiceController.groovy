@@ -39,8 +39,8 @@ import com.github.tng.vnv.planner.scheduler.Scheduler
 import com.github.tng.vnv.planner.model.NetworkService
 import com.github.tng.vnv.planner.model.NetworkServiceRequest
 import com.github.tng.vnv.planner.model.PackageMetadata
-import com.github.tng.vnv.planner.model.TestSuiteOld
-import com.github.tng.vnv.planner.restclient.TestCatalogue
+import com.github.tng.vnv.planner.oldlcm.model.TestSuiteOld
+import com.github.tng.vnv.planner.oldlcm.restclient.CatalogueOld
 import io.swagger.annotations.ApiResponse
 import io.swagger.annotations.ApiResponses
 import org.springframework.beans.factory.annotation.Autowired
@@ -60,7 +60,7 @@ class NetworkServiceController {
     Scheduler scheduler
 
     @Autowired
-    TestCatalogue testCatalogue
+    CatalogueOld testCatalogue
 
     @ApiResponses(value = [@ApiResponse(code = 400, message = 'Bad Request')])
     @PostMapping('/api/v1/schedulers/services')

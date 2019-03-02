@@ -36,7 +36,7 @@ package com.github.tng.vnv.planner.restclient
 
 import com.github.tng.vnv.planner.model.NsRequest
 import com.github.tng.vnv.planner.model.NsResponse
-import com.github.tng.vnv.planner.model.TestPlanOld
+import com.github.tng.vnv.planner.oldlcm.model.TestPlanOld
 import groovy.util.logging.Log
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier
@@ -48,7 +48,7 @@ import static com.github.tng.vnv.planner.helper.DebugHelper.callExternalEndpoint
 
 @Component
 @Log
-class TestPlatformManager {
+class Curator {
 
     @Autowired
     @Qualifier('restTemplateWithAuth')
@@ -75,25 +75,25 @@ class TestPlatformManager {
             testPlan
         }
         log.info("##vnvlog: testPlan: [packageId: ${testPlan.packageId}, nsiList.size: ${testPlan.networkServiceInstances.size()}, tsResults.size: ${testPlan.testSuiteResults.size()}]")
-        log.info("##vnvlog TestPlatformManager.deployNsForTest - testPlan.networkServiceInstances.first().serviceUuid? ${testPlan.networkServiceInstances?.first().serviceUuid}")
+        log.info("##vnvlog Curator.deployNsForTest - testPlan.networkServiceInstances.first().serviceUuid? ${testPlan.networkServiceInstances?.first().serviceUuid}")
         def createRequest = new NsRequest(
                 serviceUuid: testPlan.networkServiceInstances.first().serviceUuid,
                 requestType: 'CREATE_SERVICE',
         )
-        NsResponse response = callExternalEndpoint(restTemplate.postForEntity(nsDeployEndpoint, createRequest, NsResponse),'TestPlatformManager.deployNsForTest',nsDeployEndpoint).body
+        NsResponse response = callExternalEndpoint(restTemplate.postForEntity(nsDeployEndpoint, createRequest, NsResponse),'Curator.deployNsForTest',nsDeployEndpoint).body
         def numberOfRetries = nsStatusTimeoutInSeconds / nsStatusPingInSeconds
         for (int i = 0; i < numberOfRetries; i++) {
             if (['ERROR', 'READY'].contains(response.status)) {
                 break
             }
-            response = callExternalEndpoint(restTemplate.getForEntity(nsStatusEndpoint, NsResponse, response.id),'TestPlatformManager.deployNsForTest',nsStatusEndpoint).body
+            response = callExternalEndpoint(restTemplate.getForEntity(nsStatusEndpoint, NsResponse, response.id),'Curator.deployNsForTest',nsStatusEndpoint).body
             Thread.sleep(nsStatusPingInSeconds * 1000)
         }
 
-        log.info("##vnvlog TestPlatformManager.deployNsForTest - testPlan.networkServiceInstances.first().status? ${testPlan.networkServiceInstances.first().status}")
+        log.info("##vnvlog Curator.deployNsForTest - testPlan.networkServiceInstances.first().status? ${testPlan.networkServiceInstances.first().status}")
         testPlan.networkServiceInstances.first().status = response.status
         if (response.status == 'READY') {
-            log.info("##vnvlog TestPlatformManager.deployNsForTest - testPlan.networkServiceInstances.first().instanceUuid? ${testPlan.networkServiceInstances.first().instanceUuid}")
+            log.info("##vnvlog Curator.deployNsForTest - testPlan.networkServiceInstances.first().instanceUuid? ${testPlan.networkServiceInstances.first().instanceUuid}")
             testPlan.networkServiceInstances.first().instanceUuid = response.instanceUuid
             testPlan.status = 'NS_DEPLOYED'
         } else {
@@ -105,11 +105,11 @@ class TestPlatformManager {
 
     TestPlanOld destroyNsAfterTest(TestPlanOld testPlan) {
         def nsi = testPlan.networkServiceInstances.first()
-        log.info("##vnvlog TestPlatformManager.destroyNsAfterTest: ($testPlan)")
+        log.info("##vnvlog Curator.destroyNsAfterTest: ($testPlan)")
         def terminateRequest = new NsRequest(instanceUuid: nsi.instanceUuid,
                 requestType: 'TERMINATE_SERVICE',
         )
-        NsResponse response = callExternalEndpoint(restTemplate.postForEntity(nsDestroyEndpoint, terminateRequest, NsResponse),'TestPlatformManager.destroyNsAfterTest',nsDestroyEndpoint).body
+        NsResponse response = callExternalEndpoint(restTemplate.postForEntity(nsDestroyEndpoint, terminateRequest, NsResponse),'Curator.destroyNsAfterTest',nsDestroyEndpoint).body
         nsi.status = 'TERMINATED'
         nsi.instanceUuid = null
         testPlan.networkServiceInstances = [nsi]

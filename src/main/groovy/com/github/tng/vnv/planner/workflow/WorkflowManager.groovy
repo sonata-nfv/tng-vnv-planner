@@ -36,13 +36,13 @@ package com.github.tng.vnv.planner.workflow
 
 
 import com.github.tng.vnv.planner.model.NetworkService
-import com.github.tng.vnv.planner.model.NetworkServiceInstance
-import com.github.tng.vnv.planner.model.TestPlanOld
-import com.github.tng.vnv.planner.model.TestSuiteOld
-import com.github.tng.vnv.planner.model.TestSuiteResult
-import com.github.tng.vnv.planner.restclient.TestExecutionEngine
-import com.github.tng.vnv.planner.restclient.TestPlatformManager
-import com.github.tng.vnv.planner.restclient.TestResultRepository
+import com.github.tng.vnv.planner.oldlcm.model.NetworkServiceInstance
+import com.github.tng.vnv.planner.oldlcm.model.TestPlanOld
+import com.github.tng.vnv.planner.oldlcm.model.TestSuiteOld
+import com.github.tng.vnv.planner.oldlcm.model.TestSuiteResult
+import com.github.tng.vnv.planner.repository.TestPlanRepository
+import com.github.tng.vnv.planner.oldlcm.restclient.Executor
+import com.github.tng.vnv.planner.restclient.Curator
 import groovy.util.logging.Log
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
@@ -52,13 +52,13 @@ import org.springframework.stereotype.Component
 class WorkflowManager {
 
     @Autowired
-    TestResultRepository testResultRepository
+    TestPlanRepository testPlanRepository
 
     @Autowired
-    TestPlatformManager testPlatformManager
+    Curator curator
 
     @Autowired
-    TestExecutionEngine testExecutionEngine
+    Executor executor
 
     boolean execute(NetworkService networkService, Collection<TestSuiteOld> testSuites) {
         log.info('##vnvlog: before createTestPlan: [not created yet]')
@@ -99,21 +99,22 @@ class WorkflowManager {
                 },
                 status: 'CREATED',
         )
-        testResultRepository.createTestPlan(testPlan)
+        TestPlanOld tpo = testPlanRepository.createTestPlan(testPlan)
+        tpo
     }
 
     TestPlanOld deployNsForTest(TestPlanOld testPlan) {
-        testPlan = testPlatformManager.deployNsForTest(testPlan)
-        testResultRepository.updatePlan(testPlan)
+        testPlan = curator.deployNsForTest(testPlan)
+        testPlanRepository.updateTestPlan(testPlan)
     }
 
     TestPlanOld executeTests(TestPlanOld testPlan) {
-        testPlan = testExecutionEngine.executeTests(testPlan)
-        testResultRepository.updatePlan(testPlan)
+        testPlan = executor.executeTests(testPlan)
+        testPlanRepository.updateTestPlan(testPlan)
     }
 
     TestPlanOld destroyNsAfterTest(TestPlanOld testPlan) {
-        testPlan = testPlatformManager.destroyNsAfterTest(testPlan)
-        testResultRepository.updatePlan(testPlan)
+        testPlan = curator.destroyNsAfterTest(testPlan)
+        testPlanRepository.updateTestPlan(testPlan)
     }
 }

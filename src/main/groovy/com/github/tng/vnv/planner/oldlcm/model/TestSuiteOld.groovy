@@ -32,9 +32,10 @@
  * partner consortium (www.5gtango.eu).
  */
 
-package com.github.tng.vnv.planner.model
+package com.github.tng.vnv.planner.oldlcm.model
 
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.github.tng.vnv.planner.model.TestDescriptor
 import groovy.transform.EqualsAndHashCode
 import io.swagger.annotations.ApiModelProperty
 

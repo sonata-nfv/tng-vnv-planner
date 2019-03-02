@@ -32,45 +32,44 @@
  * partner consortium (www.5gtango.eu).
  */
 
-package com.github.tng.vnv.planner.controller
+package com.github.tng.vnv.planner.restmock
 
 
-import com.github.tng.vnv.planner.scheduler.Scheduler
-import com.github.tng.vnv.planner.model.NetworkService
-import com.github.tng.vnv.planner.model.PackageMetadata
-import com.github.tng.vnv.planner.model.TestSuiteOld
-import com.github.tng.vnv.planner.model.TestSuiteRequest
-import com.github.tng.vnv.planner.restclient.TestCatalogue
-import io.swagger.annotations.ApiResponse
-import io.swagger.annotations.ApiResponses
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.http.ResponseEntity
+import com.github.tng.vnv.planner.oldlcm.model.TestPlanOld
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RestController
 
-import javax.validation.Valid
-
 @RestController
-class TestController {
+class TestPlanRepositoryMock {
 
-    @Autowired
-    Scheduler scheduler
+    Map<String, TestPlanOld> testPlans = [:]
+    def numOfCallsForTestPlanCreation = 0
+    def numOfCallsForTestPlanUpdate = 0
 
-    @Autowired
-    TestCatalogue testCatalogue
-
-    @ApiResponses(value = [@ApiResponse(code = 400, message = 'Bad Request')])
-    @PostMapping('/api/v1/schedulers/tests')
-    ResponseEntity<Void> scheduleTest(@Valid @RequestBody TestSuiteRequest request) {
-        scheduler.schedule(new PackageMetadata(testSuites: [new TestSuiteOld(testUuid: request.testUuid)]))
-        ResponseEntity.ok().build()
+    void reset() {
+        testPlans.clear()
     }
 
-    @GetMapping('/api/v1/schedulers/tests/{testUuid}/services')
-    List<NetworkService> listServicessByTestSuite(@PathVariable('testUuid') String uuid) {
-        testCatalogue.findNssByTestSuiteUuid(uuid)
+    @GetMapping('/mock/trr/test-plans')
+    List listTestPlans() {
+        new ArrayList(testPlans.values())
+    }
+
+    @PostMapping('/mock/trr/test-plans')
+    TestPlanOld createTestPlan(@RequestBody TestPlanOld testPlan) {
+        ++numOfCallsForTestPlanCreation
+        testPlan.uuid = UUID.randomUUID().toString()
+        testPlans[testPlan.uuid] = testPlan
+    }
+
+    @PutMapping('/mock/trr/test-plans/{testPlanId:.+}')
+    TestPlanOld updatePlan(@RequestBody TestPlanOld testPlan, @PathVariable('testPlanId') String testPlanId) {
+        ++numOfCallsForTestPlanUpdate
+         testPlan.uuid = testPlanId
+        testPlans[testPlan.uuid] = testPlan
     }
 }
