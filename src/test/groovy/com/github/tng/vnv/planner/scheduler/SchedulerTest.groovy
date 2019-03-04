@@ -37,9 +37,9 @@ package com.github.tng.vnv.planner.scheduler
 
 import com.github.tng.vnv.planner.model.PackageMetadata
 import com.github.tng.vnv.planner.restmock.TestCatalogueMock
-import com.github.tng.vnv.planner.restmock.TestExecutionEngineMock
-import com.github.tng.vnv.planner.restmock.TestPlatformManagerMock
-import com.github.tng.vnv.planner.restmock.TestResultRepositoryMock
+import com.github.tng.vnv.planner.oldlcm.restmock.ExecutorMock
+import com.github.tng.vnv.planner.restmock.CuratorMock
+import com.github.tng.vnv.planner.restmock.TestPlanRepositoryMock
 import com.github.mrduguo.spring.test.AbstractSpec
 import org.springframework.beans.factory.annotation.Autowired
 
@@ -53,16 +53,16 @@ class SchedulerTest extends AbstractSpec {
     Scheduler scheduler
 
     @Autowired
-    TestPlatformManagerMock testPlatformManagerMock
+    CuratorMock curatorMock
 
     @Autowired
-    TestExecutionEngineMock testExecutionEngineMock
+    ExecutorMock executorMock
 
     @Autowired
     TestCatalogueMock testCatalogueMock
 
     @Autowired
-    TestResultRepositoryMock testResultRepositoryMock
+    TestPlanRepositoryMock testPlanRepositoryMock
 
     void 'schedule multiple test plans should produce success result'() {
 
@@ -71,24 +71,24 @@ class SchedulerTest extends AbstractSpec {
 
         then:
         Thread.sleep(10000L);
-        while (testExecutionEngineMock.testSuiteResults.values().last().status!='SUCCESS')
+        while (executorMock.testSuiteResults.values().last().status!='SUCCESS')
             Thread.sleep(1000L);
         out.get() == true
-        testPlatformManagerMock.networkServiceInstances.size()==3
-        testExecutionEngineMock.testSuiteResults.size()==3
-        testExecutionEngineMock.testSuiteResults.values().last().status=='SUCCESS'
+        curatorMock.networkServiceInstances.size()==3
+        executorMock.testSuiteResults.size()==3
+        executorMock.testSuiteResults.values().last().status=='SUCCESS'
 
-        testResultRepositoryMock.testPlans.size()==3
-        testResultRepositoryMock.testPlans.values().last().status=='SUCCESS'
-        testResultRepositoryMock.testPlans.values().last().networkServiceInstances.size()==1
-        testResultRepositoryMock.testPlans.values().each{testPlan ->
+        testPlanRepositoryMock.testPlans.size()==3
+        testPlanRepositoryMock.testPlans.values().last().status=='SUCCESS'
+        testPlanRepositoryMock.testPlans.values().last().networkServiceInstances.size()==1
+        testPlanRepositoryMock.testPlans.values().each{testPlan ->
             testPlan.testSuiteResults.size()==2
         }
-        testResultRepositoryMock.testPlans.values().last().testSuiteResults.last().status=='SUCCESS'
+        testPlanRepositoryMock.testPlans.values().last().testSuiteResults.last().status=='SUCCESS'
 
         cleanup:
-        testPlatformManagerMock.reset()
-        testExecutionEngineMock.reset()
-        testResultRepositoryMock.reset()
+        curatorMock.reset()
+        executorMock.reset()
+        testPlanRepositoryMock.reset()
     }
 }

@@ -36,8 +36,9 @@ package com.github.tng.vnv.planner.scheduler
 
 
 import com.github.tng.vnv.planner.model.PackageMetadata
-import com.github.tng.vnv.planner.model.TestSuiteOld
-import com.github.tng.vnv.planner.restclient.TestCatalogue
+import com.github.tng.vnv.planner.oldlcm.model.TestSuiteOld
+import com.github.tng.vnv.planner.restclient.Catalogue
+import com.github.tng.vnv.planner.oldlcm.restclient.CatalogueOld
 import com.github.tng.vnv.planner.workflow.WorkflowManager
 import groovy.util.logging.Log
 import org.springframework.beans.factory.annotation.Autowired
@@ -53,7 +54,10 @@ import static com.github.tng.vnv.planner.helper.DebugHelper.nsAndTestsMappingToS
 class Scheduler {
 
     @Autowired
-    TestCatalogue testCatalogue
+    CatalogueOld catalogueOld
+
+    @Autowired
+    Catalogue Catalogue
 
     @Autowired
     WorkflowManager workflowManager
@@ -61,7 +65,7 @@ class Scheduler {
     @Async
     CompletableFuture<Boolean> schedule(PackageMetadata packageMetadata) {
         packageMetadata = (packageMetadata != null && packageMetadata.packageId == null) ?
-                packageMetadata : testCatalogue.loadPackageMetadata(packageMetadata.packageId)
+                packageMetadata : catalogue.loadPackageMetadata(packageMetadata.packageId)
 
         def map = discoverAssociatedNssAndTests(loadByMetadata(packageMetadata))
         Boolean out = (map == null) ? false : map.every {networkService,testSuites ->
@@ -75,13 +79,13 @@ class Scheduler {
         PackageMetadata metadata = new PackageMetadata();
 
         packageMetadata.networkServices?.each { ns ->
-                def s = testCatalogue.findNetworkService(ns.networkServiceId)
+                def s = catalogueOld.findNetworkService(ns.networkServiceId)
                 if(s) metadata.networkServices << s
 
         }
 
         packageMetadata.testSuites?.each { ts ->
-                def t = testCatalogue.findTestSuite(ts.testUuid)
+                def t = catalogueOld.findTestSuite(ts.testUuid)
                 if(t) metadata.testSuites << t
         }
 
@@ -97,7 +101,7 @@ class Scheduler {
         //notes: loadByPackageId the nsAndTestsMapping with all the given services
         packageMetadata.networkServices?.each { ns ->
                 ns.nsd.testingTags?.each { tag ->
-                        testCatalogue.findTssByTestTag(tag)?.each { ts ->
+                        catalogueOld.findTssByTestTag(tag)?.each { ts ->
                             ts = addPackageIdToTestSuit(packageMetadata,ts)
                             tss << ts
                         }
@@ -112,7 +116,7 @@ class Scheduler {
         //notes: loadByPackageId the nsAndTestsMapping with all the associated services according to the given tests
         packageMetadata.testSuites?.each { ts -> ts.testd.testExecution?.each { tag ->
                 if(!tag.testTag.isEmpty()) {
-                    testCatalogue.findNssByTestTag(tag.testTag)?.each { ns ->
+                    catalogueOld.findNssByTestTag(tag.testTag)?.each { ns ->
                         ts = addPackageIdToTestSuit(packageMetadata,ts)
                         if(!nsAndTestsMapping.containsKey(ns))
                             nsAndTestsMapping.put(ns, tss = [] << ts)
@@ -134,7 +138,7 @@ class Scheduler {
 
     //todo: this is a workaround - to add the packageId to the TestSuiteOld - until the packageId be removed from the source
     def addPackageIdToTestSuit(PackageMetadata metadata, TestSuiteOld ts) {
-        ts.packageId = metadata.packageId?: testCatalogue.findPackageId(ts)
+        ts.packageId = metadata.packageId?: catalogueOld.findPackageId(ts)
         ts
     }
 }

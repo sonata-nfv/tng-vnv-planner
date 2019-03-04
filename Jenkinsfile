@@ -53,7 +53,7 @@ pipeline {
             }
             stage('tng-vnv-planner') {
               steps {
-                sh 'docker tag registry.sonata-nfv.eu:5000/tng-rep:latest registry.sonata-nfv.eu:5000/tng-vnv-planner:int'
+                sh 'docker tag registry.sonata-nfv.eu:5000/tng-vnv-planner:latest registry.sonata-nfv.eu:5000/tng-vnv-planner:int'
                 sh 'docker push  registry.sonata-nfv.eu:5000/tng-vnv-planner:int'
               }
             }

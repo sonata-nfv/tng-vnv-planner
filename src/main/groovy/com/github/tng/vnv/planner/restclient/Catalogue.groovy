@@ -37,7 +37,7 @@ package com.github.tng.vnv.planner.restclient
 
 import com.github.tng.vnv.planner.model.NetworkService
 import com.github.tng.vnv.planner.model.PackageMetadata
-import com.github.tng.vnv.planner.model.TestSuiteOld
+import com.github.tng.vnv.planner.oldlcm.model.TestSuiteOld
 import groovy.util.logging.Log
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier
@@ -49,7 +49,7 @@ import static com.github.tng.vnv.planner.helper.DebugHelper.callExternalEndpoint
 
 @Log
 @Component
-class TestCatalogue {
+class Catalogue {
 
     @Autowired
     @Qualifier('restTemplateWithAuth')
@@ -62,21 +62,11 @@ class TestCatalogue {
     @Value('${app.gk.package.metadata.endpoint}')
     def packageMetadataEndpoint
 
-    @Value('${app.gk.package.list.endpoint}')
-    def packageListEndpoint
-
     @Value('${app.vnvgk.test.metadata.endpoint}')
     def testMetadataEndpoint
 
-    @Value('${app.vnvgk.test.list.endpoint}')
-    def testListEndpoint
-
     @Value('${app.gk.service.metadata.endpoint}')
     def serviceMetadataEndpoint
-
-    @Value('${app.gk.service.list.endpoint}')
-    def serviceListEndpoint
-
 
     PackageMetadata loadPackageMetadata(String packageId) {
         if(packageId == null || packageId.length() == 0){
@@ -115,72 +105,5 @@ class TestCatalogue {
             }
         }
         packageMetadata
-    }
-
-    NetworkService findNetworkService(String networkServiceId) {
-        callExternalEndpoint(restTemplateWithAuth.getForEntity(serviceMetadataEndpoint, NetworkService, networkServiceId),
-                'TestCatalogue.findNetworkService',serviceMetadataEndpoint).body
-    }
-
-    TestSuiteOld findTestSuite(String testUuid) {
-        callExternalEndpoint(restTemplateWithAuth.getForEntity(testMetadataEndpoint, TestSuiteOld, testUuid),
-                'TestCatalogue.findTestSuite',testMetadataEndpoint).body
-    }
-
-    List<NetworkService> findNssByTestTag(String tag) {
-        callExternalEndpoint(restTemplateWithAuth.getForEntity(serviceListEndpoint, NetworkService[]),
-                'TestCatalogue.findNssByTestTag',serviceListEndpoint).body?.findAll
-                { ns -> ns.nsd.testingTags !=null && (ns.nsd.testingTags.contains(tag) )}
-        }
-
-    List<TestSuiteOld> findTssByTestTag(String tag) {
-        callExternalEndpoint(restTemplateWithAuth.getForEntity(testListEndpoint, TestSuiteOld[]),
-                'TestCatalogue.findTssByTestTag',testListEndpoint).body?.findAll
-                { ts -> ts.testd.testExecution.findAll { it.testTag.equalsIgnoreCase(tag) } }
-    }
-
-    List<TestSuiteOld> findTssByNetworkServiceUUid(String uuid) {
-        def tagHelperList = [] as ArrayList
-        def tss  = [] as ArrayList
-        findNetworkService(uuid)?.nsd.testingTags?.each { tag ->
-            if(!tagHelperList.contains(tag)) {
-                findTssByTestTag(tag)?.each { ts ->
-                    if(!tss.contains(ts)){
-                        tss << ts
-                    }
-                }
-                tagHelperList << tag
-            }
-        }
-        tss
-    }
-
-    List<NetworkService> findNssByTestSuiteUuid(String uuid){
-        def tagHelperList = [] as ArrayList
-        def nss  = [] as ArrayList
-        def scannedByTag
-        findTestSuite(uuid)?.testd.testExecution?.each { tag ->
-            if(!tag.testTag.isEmpty() && !(tagHelperList.contains(tag.testTag))) {
-                findNssByTestTag(tag.testTag)?.each { ns ->
-                    if(!nss.contains(ns))
-                        nss << ns
-                }
-                scannedByTag = true
-                if(!(tagHelperList.join(",").contains(tag.testTag)))
-                    tagHelperList << tag.testTag
-            }
-        }
-        nss
-    }
-
-    //todo: this is a workaround solution to bypass the null packageId issue for test's
-    //todo-y2: remove the packageId from all the TestSuiteOld,TestPlanOld,TestResult
-    def findPackageId(TestSuiteOld testSuite){
-        callExternalEndpoint(restTemplateWithAuth.getForEntity(packageListEndpoint, Object[]),
-                'TestCatalogue.findPackageId', packageListEndpoint).body?.find { p ->
-            p.pd.package_content?.find { pc ->
-                pc.get('content-type') == "application/vnd.5gtango.tstd"
-            }?.get("uuid") == testSuite.testUuid
-        }?.get("uuid")
     }
 }

@@ -7,7 +7,7 @@ This is a [5GTANGO](http://www.5gtango.eu) component to coordinate the verificat
 ## What it is
 
 The Planner acts as the main manager for all V&V test requests. It is responsible for test plans management, sequencing, and triggering requests of the corresponding test results. Although the Planner is responsible for overall test activity, execution of individual test plans is given over to the curator and executor.
-An outline of the old architecture is shown below.
+An outline of the architecture is shown below.
 
 <p align="center"><img src="https://user-images.githubusercontent.com/173755/53358658-d5cd7e00-3928-11e9-8acb-bc535fd7df18.png" /></p>
 

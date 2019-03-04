@@ -32,27 +32,27 @@
  * partner consortium (www.5gtango.eu).
  */
 
-package com.github.tng.vnv.planner.event
+package com.github.tng.vnv.planner.oldlcm.model
 
-import io.swagger.annotations.ApiModelProperty
-import javax.validation.constraints.NotNull
 
-class OnPackageChangeEvent {
+import groovy.transform.EqualsAndHashCode
 
-    @ApiModelProperty(
-            value = 'Event Name',
-            allowEmptyValue = true,
-            example = 'UPDATED',
-            required = true
-    )
-    @NotNull
-    String eventName
-
-    @ApiModelProperty(required = true)
-    @NotNull
+@EqualsAndHashCode
+class TestPlanOld {
+    String uuid
     String packageId
+    List<NetworkServiceInstance> networkServiceInstances = []
+    List<TestSuiteResult> testSuiteResults = []
+    String status
 
-    String packageLocation
-
-
+    @Override
+    public String toString() {
+        final StringBuffer sb = new StringBuffer("\n - TestPlanOld{ \n");
+        sb.append("uuid='").append(uuid).append('\'');
+        sb.append(", status='").append(status).append('\'');
+        sb.append(", \nnsi's(#${networkServiceInstances.size()})=").append(networkServiceInstances);
+        sb.append(", \ntsr's(#${testSuiteResults.size()})=").append(testSuiteResults);
+        sb.append('}');
+        return sb.toString();
+    }
 }

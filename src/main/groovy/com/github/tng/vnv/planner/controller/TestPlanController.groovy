@@ -34,21 +34,16 @@
 
 package com.github.tng.vnv.planner.controller
 
-
-import com.github.tng.vnv.planner.model.TestPlan
+import com.github.tng.vnv.planner.model.NetworkServiceDescriptor
+import com.github.tng.vnv.planner.model.TestDescriptor
+import com.github.tng.vnv.planner.model.TestSuite
 import com.github.tng.vnv.planner.service.TestPlanService
+import com.github.tng.vnv.planner.service.TestSuiteService
 import io.swagger.annotations.ApiResponse
 import io.swagger.annotations.ApiResponses
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.DeleteMapping
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.PutMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 
 import javax.validation.Valid
 
@@ -58,32 +53,42 @@ class TestPlanController {
 
 
     @Autowired
+    TestSuiteService testSuiteService
+
+    @Autowired
     TestPlanService testPlanService
 
-    @GetMapping('')
-    List findAll() {
-        testPlanService.findAll()
-    }
-
     @GetMapping('{uuid}')
-    TestPlan findOne(@PathVariable String uuid) {
+    TestSuite findOne(@PathVariable String uuid) {
         testPlanService.findByUuid(uuid)
     }
 
     @ApiResponses(value = [@ApiResponse(code = 400, message = 'Bad Request')])
     @PostMapping('')
-    ResponseEntity<Void> save(@Valid @RequestBody TestPlan testPlan) {
-        testPlanService.save(testPlan)
+    ResponseEntity<Void> save(@Valid @RequestBody TestSuite body) {
+        testPlanService.save(body)
         ResponseEntity.ok().build()
     }
 
     @PutMapping('{uuid}')
-    TestPlan update(@RequestBody TestPlan testPlan, @PathVariable String uuid) {
-        testPlanService.update(testPlan, uuid)
+    TestSuite update(@RequestBody TestSuite request, @PathVariable String uuid) {
+        testPlanService.update(request, uuid)
     }
 
     @DeleteMapping('{uuid}')
-    TestPlan deleteById(@PathVariable String uuid) {
+    TestSuite deleteById(@PathVariable String uuid) {
         testPlanService.deleteByUuid(uuid)
+    }
+
+    @ApiResponses(value = [@ApiResponse(code = 400, message = 'Bad Request')])
+    @PostMapping('/services')
+    TestSuite createTestPlansByServiceDescriptor(@Valid @RequestBody NetworkServiceDescriptor body) {
+        testPlanService.findByService(body)
+    }
+
+    @ApiResponses(value = [@ApiResponse(code = 400, message = 'Bad Request')])
+    @PostMapping('/tests')
+    TestSuite createTestPlansByTestDescriptor(@Valid @RequestBody TestDescriptor body) {
+        testPlanService.findByTest(body)
     }
 }

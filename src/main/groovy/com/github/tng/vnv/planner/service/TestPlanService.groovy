@@ -1,18 +1,11 @@
 package com.github.tng.vnv.planner.service
 
-import groovy.util.logging.Log
-import org.springframework.stereotype.Component
+import com.github.tng.vnv.planner.model.NetworkServiceDescriptor
+import com.github.tng.vnv.planner.model.TestDescriptor
 
-@Log
-@Component
-class TestPlanService {
-    def findByUuid(String uuid) {}
+interface TestPlanService {
 
-    def save(def testPlan) {}
+    def findByService(NetworkServiceDescriptor nsd)
 
-    def update(def testPlan, String uuid) {}
-
-    def deleteByUuid(String uuid) {}
-
-
+    def findByTest(TestDescriptor td)
 }

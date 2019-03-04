@@ -41,14 +41,7 @@ import io.swagger.annotations.ApiResponse
 import io.swagger.annotations.ApiResponses
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.DeleteMapping
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.PutMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 
 import javax.validation.Valid
 
@@ -59,11 +52,6 @@ class TestSuiteController {
     @Autowired
     TestSuiteService testSuiteService
 
-    @GetMapping('')
-    List findAll() {
-        testSuiteService.findAll()
-    }
-
     @GetMapping('{uuid}')
     TestSuite findOne(@PathVariable String uuid) {
         testSuiteService.findByUuid(uuid)
@@ -71,8 +59,8 @@ class TestSuiteController {
 
     @ApiResponses(value = [@ApiResponse(code = 400, message = 'Bad Request')])
     @PostMapping('')
-    ResponseEntity<Void> save(@Valid @RequestBody TestSuite testSuite) {
-        testSuiteService.save(testSuite)
+    ResponseEntity<Void> save(@Valid @RequestBody TestSuite body) {
+        testSuiteService.save(body)
         ResponseEntity.ok().build()
     }
 

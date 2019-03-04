@@ -32,46 +32,50 @@
  * partner consortium (www.5gtango.eu).
  */
 
-package com.github.tng.vnv.planner.restclient
+package com.github.tng.vnv.planner.oldlcm.restclient
 
 
-import com.github.tng.vnv.planner.model.TestPlanOld
+import com.github.tng.vnv.planner.oldlcm.model.TestPlanOld
+import com.github.tng.vnv.planner.oldlcm.model.TestSuiteResult
+import groovy.util.logging.Log
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.beans.factory.annotation.Value
-import org.springframework.http.HttpEntity
-import org.springframework.http.HttpHeaders
-import org.springframework.http.HttpMethod
-import org.springframework.http.MediaType
 import org.springframework.stereotype.Component
 import org.springframework.web.client.RestTemplate
 
 import static com.github.tng.vnv.planner.helper.DebugHelper.callExternalEndpoint
 
+@Log
 @Component
-class TestResultRepository {
+class Executor {
 
     @Autowired
     @Qualifier('restTemplateWithAuth')
     RestTemplate restTemplate
 
-    @Value('${app.trr.test.plan.create.endpoint}')
-    def testPlanCreateEndpoint
+    @Value('${app.tee.suite.execute.endpoint}')
+    def suiteExecuteEndpoint
 
-    @Value('${app.trr.test.plan.update.endpoint}')
-    def testPlanUpdateEndpoint
-
-    TestPlanOld createTestPlan(TestPlanOld testPlan) {
-        def headers = new HttpHeaders()
-        headers.setContentType(MediaType.APPLICATION_JSON)
-        def entity = new HttpEntity<TestPlanOld>(testPlan ,headers)
-        callExternalEndpoint(restTemplate.postForEntity(testPlanCreateEndpoint,entity,TestPlanOld),'TestResultRepository.createTestPlan',testPlanCreateEndpoint).body
-    }
-
-    TestPlanOld updatePlan(TestPlanOld testPlan) {
-        def headers = new HttpHeaders()
-        headers.setContentType(MediaType.APPLICATION_JSON)
-        def entity = new HttpEntity<TestPlanOld>(testPlan ,headers)
-        callExternalEndpoint(restTemplate.exchange(testPlanUpdateEndpoint, HttpMethod.PUT, entity, TestPlanOld.class ,testPlan.uuid),'TestResultRepository.updatePlan',testPlanUpdateEndpoint).body
+    TestPlanOld executeTests(TestPlanOld testPlan) {
+        def planStatus = 'SUCCESS'
+        def results=[]
+        testPlan.testSuiteResults.each { testSuiteResult ->
+            testSuiteResult.testPlanId=testPlan.uuid
+            log.info("##vnvlog Executor.executeTests: ($testPlan)")
+            log.info("##vnvlog Executor.executeTests - testPlan.networkServiceInstances.first().instanceUuid: ${testPlan.networkServiceInstances.first().instanceUuid}")
+            testSuiteResult.instanceUuid=testPlan.networkServiceInstances.first().instanceUuid
+            log.info("##vnvlog Executor.executeTests - testPlan.networkServiceInstances.first().serviceUuid: ${testPlan.networkServiceInstances.first().serviceUuid}")
+            testSuiteResult.serviceUuid=testPlan.networkServiceInstances.first().serviceUuid
+            log.info("##vnvlog-v.2 Executor.executeTests - begin POST_request_to_TEE with testSuiteResult: $testSuiteResult")
+            testSuiteResult = callExternalEndpoint(restTemplate.postForEntity(suiteExecuteEndpoint, testSuiteResult, TestSuiteResult),
+                    'Executor.executeTests',suiteExecuteEndpoint).body
+            log.info("##vnvlog-v.2 Executor.executeTests - end POST_request_to_TEE with testSuiteResult.uuid: ${testSuiteResult.uuid}")
+            planStatus = planStatus == 'SUCCESS' ? testSuiteResult.status : planStatus
+            results << testSuiteResult
+        }
+        testPlan.testSuiteResults=results
+        testPlan.status = planStatus
+        testPlan
     }
 }
