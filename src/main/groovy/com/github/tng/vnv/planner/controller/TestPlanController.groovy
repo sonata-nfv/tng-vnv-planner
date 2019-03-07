@@ -62,7 +62,12 @@ class TestPlanController {
     TestSuite findOne(@PathVariable String uuid) {
         testPlanService.findByUuid(uuid)
     }
-
+	
+	@GetMapping('{tags}')
+	TestSuite findByTestingTags( @RequestParam("tags") String tags) {
+		testPlanService.findTestSuiteByTestingTags(tags)
+	}
+	
     @ApiResponses(value = [@ApiResponse(code = 400, message = 'Bad Request')])
     @PostMapping('')
     ResponseEntity<Void> save(@Valid @RequestBody TestSuite body) {

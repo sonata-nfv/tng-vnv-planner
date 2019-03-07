@@ -38,6 +38,7 @@ package com.github.tng.vnv.planner.scheduler
 import com.github.tng.vnv.planner.model.PackageMetadata
 import com.github.tng.vnv.planner.oldlcm.model.TestSuiteOld
 import com.github.tng.vnv.planner.restclient.Catalogue
+import com.github.tng.vnv.planner.service.TestPlanService
 import com.github.tng.vnv.planner.oldlcm.restclient.CatalogueOld
 import com.github.tng.vnv.planner.workflow.WorkflowManager
 import groovy.util.logging.Log
@@ -61,6 +62,9 @@ class Scheduler {
 
     @Autowired
     WorkflowManager workflowManager
+	
+	@Autowired
+	TestPlanService testPlanService
 
     @Async
     CompletableFuture<Boolean> schedule(PackageMetadata packageMetadata) {
@@ -95,41 +99,27 @@ class Scheduler {
 
     Map discoverAssociatedNssAndTests(PackageMetadata packageMetadata) {
         if(!packageMetadata) return
-        def nsAndTestsMapping = [:] as HashMap
         def tss = [] as Set
-
+        def nsAndTestsMapping = [:] as HashMap
         //notes: loadByPackageId the nsAndTestsMapping with all the given services
         packageMetadata.networkServices?.each { ns ->
-                ns.nsd.testingTags?.each { tag ->
-                        catalogueOld.findTssByTestTag(tag)?.each { ts ->
-                            ts = addPackageIdToTestSuit(packageMetadata,ts)
-                            tss << ts
-                        }
-                }
-            if(!nsAndTestsMapping.containsKey(ns))
-                nsAndTestsMapping.put(ns,tss)
-            else
-                nsAndTestsMapping.put(ns, tss << nsAndTestsMapping.get(ns))
-            tss = []
+			    tps=testPlanService.findByService(ns.nsd)
+			    if(!nsAndTestsMapping.containsKey(ns))
+	                nsAndTestsMapping.put(ns,tss  = [] << ts)
+				else
+					nsAndTestsMapping.put(ns, tss << nsAndTestsMapping.get(ns) << tps)
+	            
+				tss = []
         }
 
         //notes: loadByPackageId the nsAndTestsMapping with all the associated services according to the given tests
-        packageMetadata.testSuites?.each { ts -> ts.testd.testExecution?.each { tag ->
-                if(!tag.testTag.isEmpty()) {
-                    catalogueOld.findNssByTestTag(tag.testTag)?.each { ns ->
-                        ts = addPackageIdToTestSuit(packageMetadata,ts)
-                        if(!nsAndTestsMapping.containsKey(ns))
-                            nsAndTestsMapping.put(ns, tss = [] << ts)
-                        else
-                            nsAndTestsMapping.put(ns, tss = nsAndTestsMapping.get(ns) << ts)
-                    }
-                }
-            }
-        }
-        if(nsAndTestsMapping.keySet().size() == 0
-                || nsAndTestsMapping.values().first() == null
-                || nsAndTestsMapping.values()?.first().size() == 0 ) {
-            return
+        packageMetadata.testSuites?.each { ts ->
+			tps=testPlanService.findByTest(ts.testd)
+			if(!nsAndTestsMapping.containsKey(ns))
+                nsAndTestsMapping.put(ns, tss = [] << ts)
+            else
+                nsAndTestsMapping.put(ns, tss = nsAndTestsMapping.get(ns) << tps)
+            tss = []   
         }
         log.info(nsAndTestsMappingToString(nsAndTestsMapping))
 

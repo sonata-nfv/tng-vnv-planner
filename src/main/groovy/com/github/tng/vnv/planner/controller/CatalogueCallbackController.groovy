@@ -36,14 +36,19 @@ package com.github.tng.vnv.planner.controller
 
 import com.github.tng.vnv.planner.model.PackageCallback
 import com.github.tng.vnv.planner.scheduler.Scheduler
+import com.github.tng.vnv.planner.service.TestPlanService
 import com.github.tng.vnv.planner.model.PackageMetadata
+import com.github.tng.vnv.planner.model.TestSuite
+
 import groovy.util.logging.Log
 import io.swagger.annotations.ApiResponse
 import io.swagger.annotations.ApiResponses
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
 import javax.validation.Valid
@@ -57,6 +62,9 @@ class CatalogueCallbackController {
 
     @Autowired
     Scheduler scheduler
+	
+	@Autowired
+	TestPlanService testPlanService
 
     @ApiResponses(value = [
             @ApiResponse(code = 400, message = 'Bad Request'),
@@ -76,5 +84,6 @@ class CatalogueCallbackController {
         }
         ResponseEntity.ok().build()
     }
+	
 
 }
