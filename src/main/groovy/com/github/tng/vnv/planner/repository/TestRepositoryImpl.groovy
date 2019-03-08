@@ -32,40 +32,37 @@
  * partner consortium (www.5gtango.eu).
  */
 
-package com.github.tng.vnv.planner.service
+package com.github.tng.vnv.planner.repository
 
-import com.github.tng.vnv.planner.model.NetworkServiceDescriptor
+import com.github.tng.vnv.planner.helper.DebugHelper
 import com.github.tng.vnv.planner.model.TestDescriptor
-import com.github.tng.vnv.planner.model.TestPlan
-import com.github.tng.vnv.planner.repository.TestPlanRepository
+import com.github.tng.vnv.planner.oldlcm.model.TestSuiteOld
 import groovy.util.logging.Log
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.stereotype.Service
+import org.springframework.beans.factory.annotation.Qualifier
+import org.springframework.beans.factory.annotation.Value
+import org.springframework.http.HttpEntity
+import org.springframework.http.HttpHeaders
+import org.springframework.http.HttpMethod
+import org.springframework.http.MediaType
+import org.springframework.stereotype.Repository
+import org.springframework.web.client.RestTemplate
+
+import static com.github.tng.vnv.planner.helper.DebugHelper.callExternalEndpoint
 
 @Log
-@Service("TestPlanService")
-class TestPlanServiceImpl implements TestPlanService {
+@Repository("TestRepository")
+class TestRepositoryImpl implements TestRepository {
 
     @Autowired
-    TestPlanRepository testPlanRepository
+    @Qualifier('restTemplateWithAuth')
+    RestTemplate restTemplateWithAuth
 
-    def findByService(NetworkServiceDescriptor nsd) {
-        List<TestPlan> tps = [] as ArrayList
-        nsd.testingTags?.each { tt ->
-            testPlanRepository.findTssByTestTag(tt)?.each { td ->
-                tps << new TestPlan(networkServiceDescriptor:nsd, testDescriptor:td)
-            }
-        }
-        tps
-    }
+    @Value('${app.vnvgk.test.list.by.tag.endpoint}')
+    def testListByTagEndpoint
 
-    def findByTest(TestDescriptor td) {
-        List<TestPlan> tps = [] as ArrayList
-        td.testExecution?.each { tt ->
-            testPlanRepository.findNssByTestTag(tt)?.each { nsd ->
-                tps <<  new TestPlan(networkServiceDescriptor:nsd, testDescriptor:td)
-            }
-        }
-        tps
+    List<TestDescriptor> findTssByTestTag(String tag) {
+        DebugHelper.callExternalEndpoint(restTemplateWithAuth.getForEntity(testListByTagEndpoint, TestDescriptor[], tag),
+                'TestPlanRepositoryImpl.findTssByTestTag',testListByTagEndpoint).body
     }
 }
