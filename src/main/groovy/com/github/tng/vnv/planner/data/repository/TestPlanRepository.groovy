@@ -32,14 +32,12 @@
  * partner consortium (www.5gtango.eu).
  */
 
-package com.github.tng.vnv.planner.scheduler
-
-import com.github.tng.vnv.planner.Applicant
-import groovy.util.logging.Log
-import org.springframework.stereotype.Component
+package com.github.tng.vnv.planner.data.repository
 
 
-@Log
-@Component
-class Scheduler extends Applicant {
+import com.github.tng.vnv.planner.oldlcm.model.TestPlanOld
+
+interface TestPlanRepository {
+    def createTestPlan(TestPlanOld testPlan)
+    def updateTestPlan(TestPlanOld testPlan)
 }

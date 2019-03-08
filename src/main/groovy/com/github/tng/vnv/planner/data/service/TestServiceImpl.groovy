@@ -32,14 +32,29 @@
  * partner consortium (www.5gtango.eu).
  */
 
-package com.github.tng.vnv.planner.scheduler
+package com.github.tng.vnv.planner.data.service
 
-import com.github.tng.vnv.planner.Applicant
+import com.github.tng.vnv.planner.model.NetworkServiceDescriptor
+import com.github.tng.vnv.planner.model.TestDescriptor
+import com.github.tng.vnv.planner.data.repository.TestRepository
 import groovy.util.logging.Log
-import org.springframework.stereotype.Component
-
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.stereotype.Service
 
 @Log
-@Component
-class Scheduler extends Applicant {
+@Service("TestService")
+class TestServiceImpl implements TestService {
+
+    @Autowired
+    TestRepository testRepository
+
+    def findByService(NetworkServiceDescriptor nsd) {
+        List<TestDescriptor> tdList = [] as ArrayList
+        nsd.testingTags?.each { tt ->
+            testRepository.findTssByTestTag(tt)?.each { td ->
+                tdList << td
+            }
+        }
+        tps
+    }
 }

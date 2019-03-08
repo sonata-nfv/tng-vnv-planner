@@ -32,14 +32,8 @@
  * partner consortium (www.5gtango.eu).
  */
 
-package com.github.tng.vnv.planner.repository
+package com.github.tng.vnv.planner.data.service
 
-interface TestSuiteRepository {
+interface TestSuiteService {
     def findByUuid(String uuid)
-
-    def save(def testSuite)
-
-    def update(def testSuite, String uuid)
-
-    def deleteByUuid(String l)
 }

@@ -32,12 +32,10 @@
  * partner consortium (www.5gtango.eu).
  */
 
-package com.github.tng.vnv.planner.repository
+package com.github.tng.vnv.planner.data.repository
 
-import com.github.tng.vnv.planner.helper.DebugHelper
-import com.github.tng.vnv.planner.model.NetworkService
+
 import com.github.tng.vnv.planner.oldlcm.model.TestPlanOld
-import com.github.tng.vnv.planner.oldlcm.model.TestSuiteOld
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.beans.factory.annotation.Value
@@ -87,16 +85,5 @@ class TestPlanRepositoryImpl implements TestPlanRepository {
         headers.setContentType(MediaType.APPLICATION_JSON)
         def entity = new HttpEntity<TestPlanOld>(testPlan ,headers)
         callExternalEndpoint(restTemplate.exchange(testPlanUpdateEndpoint, HttpMethod.PUT, entity, TestPlanOld.class ,testPlan.uuid),'TestResultRepository.updatePlan',testPlanUpdateEndpoint).body
-    }
-
-
-    List<NetworkService> findNssByTestTag(String tag) {
-        DebugHelper.callExternalEndpoint(restTemplateWithAuth.getForEntity(serviceListByTagEndpoint, NetworkService[], tag),
-                'TestPlanRepositoryImpl.findNssByTestTag',serviceListByTagEndpoint).body
-    }
-
-    List<TestSuiteOld> findTssByTestTag(String tag) {
-        DebugHelper.callExternalEndpoint(restTemplateWithAuth.getForEntity(testListByTagEndpoint, TestSuiteOld[], tag),
-                'TestPlanRepositoryImpl.findTssByTestTag',testListByTagEndpoint).body
     }
 }

@@ -32,19 +32,14 @@
  * partner consortium (www.5gtango.eu).
  */
 
-package com.github.tng.vnv.planner.repository
+package com.github.tng.vnv.planner.provider
 
+import com.github.tng.vnv.planner.Applicant
 import groovy.util.logging.Log
-import org.springframework.stereotype.Repository
+import org.springframework.stereotype.Component
+
 
 @Log
-@Repository("TestSuiteRepository")
-class TestSuiteRepositoryImpl implements TestSuiteRepository{
-    def findByUuid(String uuid) {}
-
-    def save(def testSuite) {}
-
-    def update(def testSuite, String uuid) {}
-
-    def deleteByUuid(String l) {}
+@Component
+class Provider extends Applicant {
 }

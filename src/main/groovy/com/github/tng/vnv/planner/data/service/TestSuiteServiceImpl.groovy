@@ -32,14 +32,16 @@
  * partner consortium (www.5gtango.eu).
  */
 
-package com.github.tng.vnv.planner.scheduler
+package com.github.tng.vnv.planner.data.service
 
-import com.github.tng.vnv.planner.Applicant
 import groovy.util.logging.Log
-import org.springframework.stereotype.Component
-
+import org.springframework.stereotype.Service
 
 @Log
-@Component
-class Scheduler extends Applicant {
+@Service("TestSuiteService")
+class TestSuiteServiceImpl implements TestSuiteService{
+
+
+    def findByUuid(String uuid) {}
+
 }

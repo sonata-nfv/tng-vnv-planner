@@ -32,8 +32,14 @@
  * partner consortium (www.5gtango.eu).
  */
 
-package com.github.tng.vnv.planner.service
+package com.github.tng.vnv.planner.data.repository
 
-interface TestSuiteService {
+interface NetworkServiceRepository {
+
     def findByUuid(String uuid)
+
+    def printAgnosticObjByUuid(String uuid)
+
+    def findNssByTestTag(String tag)
+
 }

@@ -32,14 +32,38 @@
  * partner consortium (www.5gtango.eu).
  */
 
-package com.github.tng.vnv.planner.scheduler
+package com.github.tng.vnv.planner.client
 
-import com.github.tng.vnv.planner.Applicant
-import groovy.util.logging.Log
+
+import com.github.tng.vnv.planner.model.Session
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Qualifier
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
+import org.springframework.web.client.RestTemplate
 
-
-@Log
 @Component
-class Scheduler extends Applicant {
+class UserSessionManager {
+
+    @Autowired
+    @Qualifier('restTemplateWithoutAuth')
+    RestTemplate restTemplate
+
+    @Value('${app.gk.session.endpoint}')
+    def sessionEndpoint
+
+    @Value('${app.gk.session.username}')
+    def username
+
+    @Value('${app.gk.session.password}')
+    def password
+
+    Session session
+
+    synchronized String retrieveValidBearerToken() {
+        if (session == null || session.invalid()) {
+            session = restTemplate.postForEntity(sessionEndpoint, [username: username, password: password], Session.class).body
+        }
+        session.token.access_token
+    }
 }

@@ -32,14 +32,14 @@
  * partner consortium (www.5gtango.eu).
  */
 
-package com.github.tng.vnv.planner.scheduler
+package com.github.tng.vnv.planner.data.repository
 
-import com.github.tng.vnv.planner.Applicant
-import groovy.util.logging.Log
-import org.springframework.stereotype.Component
+interface TestRepository {
 
+    def findByUuid(String uuid)
 
-@Log
-@Component
-class Scheduler extends Applicant {
+    def printAgnosticObjByUuid(String uuid)
+
+    def findTssByTestTag(String tag)
+
 }

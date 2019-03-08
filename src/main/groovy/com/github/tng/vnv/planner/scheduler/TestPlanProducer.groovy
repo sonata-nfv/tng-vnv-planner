@@ -34,12 +34,11 @@
 
 package com.github.tng.vnv.planner.scheduler
 
-import com.github.tng.vnv.planner.Applicant
 import groovy.util.logging.Log
 import org.springframework.stereotype.Component
 
 
 @Log
 @Component
-class Scheduler extends Applicant {
+class TestPlanProducer {
 }

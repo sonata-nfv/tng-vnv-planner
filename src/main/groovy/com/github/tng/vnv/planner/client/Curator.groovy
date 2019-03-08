@@ -32,7 +32,7 @@
  * partner consortium (www.5gtango.eu).
  */
 
-package com.github.tng.vnv.planner.restclient
+package com.github.tng.vnv.planner.client
 
 import com.github.tng.vnv.planner.model.NsRequest
 import com.github.tng.vnv.planner.model.NsResponse

@@ -32,14 +32,13 @@
  * partner consortium (www.5gtango.eu).
  */
 
-package com.github.tng.vnv.planner.repository
+package com.github.tng.vnv.planner.data.service
 
 
-import com.github.tng.vnv.planner.oldlcm.model.TestPlanOld
+import com.github.tng.vnv.planner.model.TestDescriptor
 
-interface TestPlanRepository {
-    def findNssByTestTag(String tag)
-    def findTssByTestTag(String tag)
-    def createTestPlan(TestPlanOld testPlan)
-    def updateTestPlan(TestPlanOld testPlan)
+interface NetworkServiceService {
+
+    def findByTest(TestDescriptor td)
+
 }

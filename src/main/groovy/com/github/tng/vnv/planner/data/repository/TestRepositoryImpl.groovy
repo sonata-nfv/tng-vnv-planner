@@ -32,38 +32,57 @@
  * partner consortium (www.5gtango.eu).
  */
 
-package com.github.tng.vnv.planner.restclient
+package com.github.tng.vnv.planner.data.repository
 
-
-import com.github.tng.vnv.planner.model.Session
+import com.github.tng.vnv.planner.helper.DebugHelper
+import com.github.tng.vnv.planner.model.TestDescriptor
+import com.github.tng.vnv.planner.model.TestPlan
+import com.github.tng.vnv.planner.oldlcm.model.TestSuiteOld
+import groovy.util.logging.Log
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.beans.factory.annotation.Value
-import org.springframework.stereotype.Component
+import org.springframework.stereotype.Repository
 import org.springframework.web.client.RestTemplate
 
-@Component
-class UserSessionManager {
+import static com.github.tng.vnv.planner.helper.DebugHelper.callExternalEndpoint
+
+@Log
+@Repository("TestRepository")
+class TestRepositoryImpl implements TestRepository {
 
     @Autowired
-    @Qualifier('restTemplateWithoutAuth')
-    RestTemplate restTemplate
+    @Qualifier('restTemplateWithAuth')
+    RestTemplate restTemplateWithAuth
 
-    @Value('${app.gk.session.endpoint}')
-    def sessionEndpoint
+    @Value('${app.vnvgk.test.metadata.endpoint}')
+    def testMetadataEndpoint
 
-    @Value('${app.gk.session.username}')
-    def username
+    @Value('${app.vnvgk.test.list.by.tag.endpoint}')
+    def testListByTagEndpoint
 
-    @Value('${app.gk.session.password}')
-    def password
+    @Value('${app.gk.service.metadata.endpoint}')
+    def serviceMetadataEndpoint
 
-    Session session
 
-    synchronized String retrieveValidBearerToken() {
-        if (session == null || session.invalid()) {
-            session = restTemplate.postForEntity(sessionEndpoint, [username: username, password: password], Session.class).body
-        }
-        session.token.access_token
+    @Override
+    TestSuiteOld findByUuid(String uuid) {
+        TestSuiteOld ts = callExternalEndpoint(restTemplateWithAuth.getForEntity(testMetadataEndpoint, TestSuiteOld.class, uuid),
+                'TestCatalogue.findNssByTestTag','TestCatalogue.loadPackageMetadata',testMetadataEndpoint).body
+
     }
+
+    String printAgnosticObjByUuid(String uuid) {
+        callExternalEndpoint(
+                restTemplateWithAuth.getForEntity(testMetadataEndpoint, Object.class, uuid),
+                'TestCatalogue.loadPackageMetadata','TestCatalogue.loadPackageMetadata',
+                testMetadataEndpoint).body.each {println it}
+    }
+
+    List<TestDescriptor> findTssByTestTag(String tag) {
+        DebugHelper.callExternalEndpoint(restTemplateWithAuth.getForEntity(testListByTagEndpoint, TestDescriptor[], tag),
+                'TestPlanRepositoryImpl.findTssByTestTag',testListByTagEndpoint).body
+    }
+
+
 }

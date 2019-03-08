@@ -32,14 +32,13 @@
  * partner consortium (www.5gtango.eu).
  */
 
-package com.github.tng.vnv.planner.service
+package com.github.tng.vnv.planner.provider
 
-import com.github.tng.vnv.planner.model.NetworkServiceDescriptor
-import com.github.tng.vnv.planner.model.TestDescriptor
+import groovy.util.logging.Log
+import org.springframework.stereotype.Component
 
-interface TestPlanService {
 
-    def findByService(NetworkServiceDescriptor nsd)
-
-    def findByTest(TestDescriptor td)
+@Log
+@Component
+class TestSuiteConsumer {
 }

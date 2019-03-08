@@ -35,7 +35,7 @@
 package com.github.tng.vnv.planner.controller
 
 import com.github.tng.vnv.planner.model.PackageCallback
-import com.github.tng.vnv.planner.scheduler.Scheduler
+import com.github.tng.vnv.planner.oldlcm.scheduler.SchedulerOld
 import com.github.tng.vnv.planner.model.PackageMetadata
 import groovy.util.logging.Log
 import io.swagger.annotations.ApiResponse
@@ -56,7 +56,7 @@ class CatalogueCallbackController {
     static final String PACKAGE_CREATED = 'CREATED'
 
     @Autowired
-    Scheduler scheduler
+    SchedulerOld scheduler
 
     @ApiResponses(value = [
             @ApiResponse(code = 400, message = 'Bad Request'),
