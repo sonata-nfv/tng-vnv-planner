@@ -32,14 +32,13 @@
  * partner consortium (www.5gtango.eu).
  */
 
-package com.github.tng.vnv.planner.scheduler
-
-import com.github.tng.vnv.planner.Applicant
-import groovy.util.logging.Log
-import org.springframework.stereotype.Component
+package com.github.tng.vnv.planner.data.service
 
 
-@Log
-@Component
-class Scheduler extends Applicant {
+import com.github.tng.vnv.planner.model.TestDescriptor
+
+interface NetworkServiceService {
+
+    def findByTest(TestDescriptor td)
+
 }

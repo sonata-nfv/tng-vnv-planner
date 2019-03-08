@@ -32,45 +32,48 @@
  * partner consortium (www.5gtango.eu).
  */
 
-package com.github.tng.vnv.planner.controller
+package com.github.tng.vnv.planner.data.repository
 
-
-import com.github.tng.vnv.planner.oldlcm.scheduler.SchedulerOld
+import com.github.tng.vnv.planner.helper.DebugHelper
 import com.github.tng.vnv.planner.model.NetworkService
-import com.github.tng.vnv.planner.model.NetworkServiceRequest
-import com.github.tng.vnv.planner.model.PackageMetadata
-import com.github.tng.vnv.planner.oldlcm.model.TestSuiteOld
-import com.github.tng.vnv.planner.oldlcm.restclient.CatalogueOld
-import io.swagger.annotations.ApiResponse
-import io.swagger.annotations.ApiResponses
+import com.github.tng.vnv.planner.model.NetworkServiceDescriptor
+import groovy.util.logging.Log
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.beans.factory.annotation.Qualifier
+import org.springframework.beans.factory.annotation.Value
+import org.springframework.stereotype.Repository
+import org.springframework.web.client.RestTemplate
 
-import javax.validation.Valid
+import static com.github.tng.vnv.planner.helper.DebugHelper.callExternalEndpoint
 
-@RestController
-class NetworkServiceController {
-
-    @Autowired
-    SchedulerOld scheduler
+@Log
+@Repository("NetworkServiceRepository")
+class NetworkServiceRepositoryImpl implements NetworkServiceRepository {
 
     @Autowired
-    CatalogueOld testCatalogue
+    @Qualifier('restTemplateWithAuth')
+    RestTemplate restTemplateWithAuth
 
-    @ApiResponses(value = [@ApiResponse(code = 400, message = 'Bad Request')])
-    @PostMapping('/api/v1/schedulers/services')
-    ResponseEntity<Void> scheduleTest(@Valid @RequestBody NetworkServiceRequest request) {
-        scheduler.schedule(new PackageMetadata(networkServices:[new NetworkService(networkServiceId: request.networkServiceId)]))
-        ResponseEntity.ok().build()
+    @Value('${app.gk.service.list.by.tag.endpoint}')
+    def serviceListByTagEndpoint
+
+    @Value('${app.gk.service.metadata.endpoint}')
+    def serviceMetadataEndpoint
+
+
+    NetworkService findByUuid(String uuid) {
+        callExternalEndpoint(restTemplateWithAuth.getForEntity(serviceMetadataEndpoint,
+                NetworkService.class, uuid),'TestCatalogue.loadPackageMetadata',
+                serviceMetadataEndpoint).body
     }
 
-    @GetMapping('/api/v1/schedulers/services/{serviceUuid}/tests')
-    List<TestSuiteOld> listTestsByService(@PathVariable('serviceUuid') String uuid) {
-        testCatalogue.findTssByNetworkServiceUUid(uuid)
+    String printAgnosticObjByUuid(String uuid) {
+        callExternalEndpoint(restTemplateWithAuth.getForEntity(serviceMetadataEndpoint, Object.class, uuid),
+                'TestCatalogue.loadPackageMetadata',serviceMetadataEndpoint).body.each {println it}
+    }
+
+    List<NetworkServiceDescriptor> findNssByTestTag(String tag) {
+        DebugHelper.callExternalEndpoint(restTemplateWithAuth.getForEntity(serviceListByTagEndpoint, NetworkServiceDescriptor[], tag),
+                'TestPlanRepositoryImpl.findNssByTestTag',serviceListByTagEndpoint).body
     }
 }

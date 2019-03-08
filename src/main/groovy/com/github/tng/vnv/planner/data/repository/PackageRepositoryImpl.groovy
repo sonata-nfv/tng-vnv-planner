@@ -32,14 +32,35 @@
  * partner consortium (www.5gtango.eu).
  */
 
-package com.github.tng.vnv.planner.scheduler
+package com.github.tng.vnv.planner.data.repository
 
-import com.github.tng.vnv.planner.Applicant
+import com.github.tng.vnv.planner.helper.DebugHelper
+import com.github.tng.vnv.planner.model.NetworkServiceDescriptor
 import groovy.util.logging.Log
-import org.springframework.stereotype.Component
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Qualifier
+import org.springframework.beans.factory.annotation.Value
+import org.springframework.stereotype.Repository
+import org.springframework.web.client.RestTemplate
 
+import static com.github.tng.vnv.planner.helper.DebugHelper.callExternalEndpoint
 
 @Log
-@Component
-class Scheduler extends Applicant {
+@Repository("PackageRepository")
+class PackageRepositoryImpl implements PackageRepository {
+
+    @Value('${app.gk.package.metadata.endpoint}')
+    def packageMetadataEndpoint
+
+    @Override
+    def getRawPackageMetadata(String packageId){
+        if(packageId == null || packageId.length() == 0){
+            log.info("##vnvlog packageId is empty or null")
+            return
+        } else {
+            log.info("##vnvlog packageId: $packageId")
+        }
+        callExternalEndpoint(restTemplate.getForEntity(packageMetadataEndpoint,Object.class,packageId),
+                'TestCatalogue.loadPackageMetadata',packageMetadataEndpoint).body
+    }
 }
