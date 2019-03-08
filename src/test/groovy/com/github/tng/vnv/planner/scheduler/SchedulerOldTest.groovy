@@ -36,6 +36,7 @@ package com.github.tng.vnv.planner.scheduler
 
 
 import com.github.tng.vnv.planner.model.PackageMetadata
+import com.github.tng.vnv.planner.oldlcm.scheduler.SchedulerOld
 import com.github.tng.vnv.planner.restmock.TestCatalogueMock
 import com.github.tng.vnv.planner.oldlcm.restmock.ExecutorMock
 import com.github.tng.vnv.planner.restmock.CuratorMock
@@ -45,12 +46,12 @@ import org.springframework.beans.factory.annotation.Autowired
 
 import java.util.concurrent.CompletableFuture
 
-class SchedulerTest extends AbstractSpec {
+class SchedulerOldTest extends AbstractSpec {
 
     public static final String MULTIPLE_TEST_PLANS_PACKAGE_ID ='multiple_scheduler:test:0.0.1'
 
     @Autowired
-    Scheduler scheduler
+    SchedulerOld scheduler
 
     @Autowired
     CuratorMock curatorMock

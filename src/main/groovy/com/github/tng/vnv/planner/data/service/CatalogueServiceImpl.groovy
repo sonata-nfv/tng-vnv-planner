@@ -32,24 +32,32 @@
  * partner consortium (www.5gtango.eu).
  */
 
-package com.github.tng.vnv.planner.restclient
+package com.github.tng.vnv.planner.data.service
 
-
+import com.github.tng.vnv.planner.data.repository.PackageRepository
+import com.github.tng.vnv.planner.data.repository.TestRepository
 import com.github.tng.vnv.planner.model.NetworkService
+import com.github.tng.vnv.planner.model.NetworkServiceDescriptor
 import com.github.tng.vnv.planner.model.PackageMetadata
+import com.github.tng.vnv.planner.model.TestDescriptor
+import com.github.tng.vnv.planner.data.repository.NetworkServiceRepository
 import com.github.tng.vnv.planner.oldlcm.model.TestSuiteOld
 import groovy.util.logging.Log
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.beans.factory.annotation.Value
-import org.springframework.stereotype.Component
+import org.springframework.stereotype.Service
 import org.springframework.web.client.RestTemplate
 
 import static com.github.tng.vnv.planner.helper.DebugHelper.callExternalEndpoint
+import static com.github.tng.vnv.planner.helper.DebugHelper.callExternalEndpoint
+import static com.github.tng.vnv.planner.helper.DebugHelper.callExternalEndpoint
+import static com.github.tng.vnv.planner.helper.DebugHelper.callExternalEndpoint
+import static com.github.tng.vnv.planner.helper.DebugHelper.callExternalEndpoint
 
 @Log
-@Component
-class Catalogue {
+@Service("CatalogueService")
+class CatalogueServiceImpl implements CatalogueService {
 
     @Autowired
     @Qualifier('restTemplateWithAuth')
@@ -59,8 +67,14 @@ class Catalogue {
     @Qualifier('restTemplateWithoutAuth')
     RestTemplate restTemplate
 
-    @Value('${app.gk.package.metadata.endpoint}')
-    def packageMetadataEndpoint
+    @Autowired
+    PackageRepository packageRepository
+
+    @Autowired
+    TestRepository testRepository
+
+    @Autowired
+    NetworkServiceRepository networkServiceRepository
 
     @Value('${app.vnvgk.test.metadata.endpoint}')
     def testMetadataEndpoint
@@ -68,37 +82,27 @@ class Catalogue {
     @Value('${app.gk.service.metadata.endpoint}')
     def serviceMetadataEndpoint
 
+    @Value('${app.gk.package.metadata.endpoint}')
+    def packageMetadataEndpoint
+
     PackageMetadata loadPackageMetadata(String packageId) {
-        if(packageId == null || packageId.length() == 0){
-            log.info("##vnvlog packageId is empty or null")
-            return
-        } else {
-            log.info("##vnvlog packageId: $packageId")
-        }
         def rawPackageMetadata= callExternalEndpoint(restTemplate.getForEntity(packageMetadataEndpoint,Object.class,packageId),
                 'TestCatalogue.loadPackageMetadata',packageMetadataEndpoint).body
+
         PackageMetadata packageMetadata=new PackageMetadata(packageId: packageId)
         rawPackageMetadata?.pd?.package_content.each{resource ->
             switch (resource.get('content-type')) {
                 case 'application/vnd.5gtango.tstd':
-                    TestSuiteOld ts = callExternalEndpoint(restTemplateWithAuth.getForEntity(testMetadataEndpoint, TestSuiteOld.class, resource.uuid),
-                            'TestCatalogue.findNssByTestTag','TestCatalogue.loadPackageMetadata',testMetadataEndpoint).body
+                    TestSuiteOld ts = testRepository.findByUuid(resource.uuid)
                     log.info("##vnvlog res: testSuite: $ts")
-                    log.info("##vnvlog agnostic obj " + callExternalEndpoint(
-                            restTemplateWithAuth.getForEntity(testMetadataEndpoint, Object.class, resource.uuid),
-                            'TestCatalogue.loadPackageMetadata','TestCatalogue.loadPackageMetadata',
-                            testMetadataEndpoint).body.each {println it})
+                    log.info("##vnvlog agnostic obj " + testRepository.printAgnosticObjByUuid(resource.uuid))
                     if(ts.testUuid)
                         packageMetadata.testSuites << ts
                     break
                 case 'application/vnd.5gtango.nsd':
-                    NetworkService ns =  callExternalEndpoint(restTemplateWithAuth.getForEntity(serviceMetadataEndpoint,
-                            NetworkService.class, resource.uuid),'TestCatalogue.loadPackageMetadata',
-                            serviceMetadataEndpoint).body
+                    NetworkService ns =  networkServiceRepository.findByUuid(resource.uuid)
                     log.info("##vnvlog Request: res: networkService: $ns")
-                    log.info("##vnvlog agnostic obj: " + callExternalEndpoint(
-                            restTemplateWithAuth.getForEntity(serviceMetadataEndpoint, Object.class, resource.uuid),
-                            'TestCatalogue.loadPackageMetadata',serviceMetadataEndpoint).body.each {println it})
+                    log.info("##vnvlog agnostic obj: " + networkServiceRepository.printAgnosticObjByUuid(resource.uuid))
                     if(ns.networkServiceId)
                         packageMetadata.networkServices << ns
                     break

@@ -36,6 +36,8 @@ package com.github.tng.vnv.planner.controller
 
 import com.github.tng.vnv.planner.model.PackageCallback
 import com.github.tng.vnv.planner.scheduler.Scheduler
+import com.github.tng.vnv.planner.oldlcm.scheduler.SchedulerOld
+import com.github.tng.vnv.planner.scheduler.Scheduler
 import com.github.tng.vnv.planner.service.TestPlanService
 import com.github.tng.vnv.planner.model.PackageMetadata
 import com.github.tng.vnv.planner.model.TestSuite
@@ -61,10 +63,7 @@ class CatalogueCallbackController {
     static final String PACKAGE_CREATED = 'CREATED'
 
     @Autowired
-    Scheduler scheduler
-	
-	@Autowired
-	TestPlanService testPlanService
+    SchedulerOld scheduler
 
     @ApiResponses(value = [
             @ApiResponse(code = 400, message = 'Bad Request'),
@@ -84,6 +83,5 @@ class CatalogueCallbackController {
         }
         ResponseEntity.ok().build()
     }
-	
 
 }

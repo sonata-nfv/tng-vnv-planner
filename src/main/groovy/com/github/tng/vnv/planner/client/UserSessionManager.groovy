@@ -32,46 +32,38 @@
  * partner consortium (www.5gtango.eu).
  */
 
-package com.github.tng.vnv.planner.controller
+package com.github.tng.vnv.planner.client
 
 
-import com.github.tng.vnv.planner.model.TestSuite
-import com.github.tng.vnv.planner.data.service.TestSuiteService
-import io.swagger.annotations.ApiResponse
-import io.swagger.annotations.ApiResponses
+import com.github.tng.vnv.planner.model.Session
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.*
+import org.springframework.beans.factory.annotation.Qualifier
+import org.springframework.beans.factory.annotation.Value
+import org.springframework.stereotype.Component
+import org.springframework.web.client.RestTemplate
 
-import javax.validation.Valid
-
-@RestController
-@RequestMapping('/api/v1/test-suites')
-class TestSuiteController {
+@Component
+class UserSessionManager {
 
     @Autowired
-    TestSuiteService testSuiteService
+    @Qualifier('restTemplateWithoutAuth')
+    RestTemplate restTemplate
 
-    @GetMapping('{uuid}')
-    TestSuite findOne(@PathVariable String uuid) {
-        testSuiteService.findByUuid(uuid)
-    }
+    @Value('${app.gk.session.endpoint}')
+    def sessionEndpoint
 
-    @ApiResponses(value = [@ApiResponse(code = 400, message = 'Bad Request')])
-    @PostMapping('')
-    ResponseEntity<Void> save(@Valid @RequestBody TestSuite body) {
-        testSuiteService.save(body)
-        ResponseEntity.ok().build()
-    }
+    @Value('${app.gk.session.username}')
+    def username
 
-    @PutMapping('{uuid}')
-    TestSuite update(@RequestBody TestSuite testSuite, @PathVariable String uuid) {
-        testSuiteService.update(testSuite, uuid)
-    }
+    @Value('${app.gk.session.password}')
+    def password
 
-    @DeleteMapping('{uuid}')
-    TestSuite deleteById(@PathVariable String uuid) {
-        testSuiteService.deleteByUuid(uuid)
+    Session session
 
+    synchronized String retrieveValidBearerToken() {
+        if (session == null || session.invalid()) {
+            session = restTemplate.postForEntity(sessionEndpoint, [username: username, password: password], Session.class).body
+        }
+        session.token.access_token
     }
 }

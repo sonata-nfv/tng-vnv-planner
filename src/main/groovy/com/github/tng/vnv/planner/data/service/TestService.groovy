@@ -32,38 +32,12 @@
  * partner consortium (www.5gtango.eu).
  */
 
-package com.github.tng.vnv.planner.restclient
+package com.github.tng.vnv.planner.data.service
 
+import com.github.tng.vnv.planner.model.NetworkServiceDescriptor
 
-import com.github.tng.vnv.planner.model.Session
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.beans.factory.annotation.Qualifier
-import org.springframework.beans.factory.annotation.Value
-import org.springframework.stereotype.Component
-import org.springframework.web.client.RestTemplate
+interface TestService {
 
-@Component
-class UserSessionManager {
+    def findByService(NetworkServiceDescriptor nsd)
 
-    @Autowired
-    @Qualifier('restTemplateWithoutAuth')
-    RestTemplate restTemplate
-
-    @Value('${app.gk.session.endpoint}')
-    def sessionEndpoint
-
-    @Value('${app.gk.session.username}')
-    def username
-
-    @Value('${app.gk.session.password}')
-    def password
-
-    Session session
-
-    synchronized String retrieveValidBearerToken() {
-        if (session == null || session.invalid()) {
-            session = restTemplate.postForEntity(sessionEndpoint, [username: username, password: password], Session.class).body
-        }
-        session.token.access_token
-    }
 }

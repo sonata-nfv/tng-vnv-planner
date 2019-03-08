@@ -32,7 +32,7 @@
  * partner consortium (www.5gtango.eu).
  */
 
-package com.github.tng.vnv.planner.workflow
+package com.github.tng.vnv.planner.oldlcm.workflow
 
 
 import com.github.tng.vnv.planner.model.NetworkService
@@ -40,16 +40,16 @@ import com.github.tng.vnv.planner.oldlcm.model.NetworkServiceInstance
 import com.github.tng.vnv.planner.oldlcm.model.TestPlanOld
 import com.github.tng.vnv.planner.oldlcm.model.TestSuiteOld
 import com.github.tng.vnv.planner.oldlcm.model.TestSuiteResult
-import com.github.tng.vnv.planner.repository.TestPlanRepository
+import com.github.tng.vnv.planner.data.repository.TestPlanRepository
 import com.github.tng.vnv.planner.oldlcm.restclient.Executor
-import com.github.tng.vnv.planner.restclient.Curator
+import com.github.tng.vnv.planner.client.Curator
 import groovy.util.logging.Log
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 
 @Log
 @Component
-class WorkflowManager {
+class WorkflowManagerOld {
 
     @Autowired
     TestPlanRepository testPlanRepository

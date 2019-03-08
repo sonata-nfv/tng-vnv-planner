@@ -69,7 +69,7 @@ No specific libraries are required for building this project. The following tool
 
 
 ## Contributing
-Contributing to the Gatekeeper is really easy. You must:
+Contributing to the Planner is really easy. You must:
 
 1. Clone [this repository](http://github.com/sonata-nfv/tng-vnv-planner);
 1. Work on your proposed changes, preferably through submiting [issues](https://github.com/sonata-nfv/tng-vnv-planner/issues);

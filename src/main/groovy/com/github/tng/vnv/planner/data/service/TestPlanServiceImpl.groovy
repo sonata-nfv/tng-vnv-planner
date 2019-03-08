@@ -32,46 +32,43 @@
  * partner consortium (www.5gtango.eu).
  */
 
-package com.github.tng.vnv.planner.controller
+package com.github.tng.vnv.planner.data.service
 
-
-import com.github.tng.vnv.planner.model.TestSuite
-import com.github.tng.vnv.planner.data.service.TestSuiteService
-import io.swagger.annotations.ApiResponse
-import io.swagger.annotations.ApiResponses
+import com.github.tng.vnv.planner.model.NetworkServiceDescriptor
+import com.github.tng.vnv.planner.model.TestDescriptor
+import com.github.tng.vnv.planner.model.TestPlan
+import com.github.tng.vnv.planner.data.repository.NetworkServiceRepository
+import com.github.tng.vnv.planner.data.repository.TestRepository
+import groovy.util.logging.Log
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.*
+import org.springframework.stereotype.Service
 
-import javax.validation.Valid
-
-@RestController
-@RequestMapping('/api/v1/test-suites')
-class TestSuiteController {
+@Log
+@Service("TestPlanService")
+class TestPlanServiceImpl implements TestPlanService {
 
     @Autowired
-    TestSuiteService testSuiteService
+    TestRepository testRepository
+    @Autowired
+    NetworkServiceRepository networkServiceRepository
 
-    @GetMapping('{uuid}')
-    TestSuite findOne(@PathVariable String uuid) {
-        testSuiteService.findByUuid(uuid)
+    def findByService(NetworkServiceDescriptor nsd) {
+        List<TestPlan> tps = [] as ArrayList
+        nsd.testingTags?.each { tt ->
+            testRepository.findTssByTestTag(tt)?.each { td ->
+                tps << new TestPlan(networkServiceDescriptor:nsd, testDescriptor:td)
+            }
+        }
+        tps
     }
 
-    @ApiResponses(value = [@ApiResponse(code = 400, message = 'Bad Request')])
-    @PostMapping('')
-    ResponseEntity<Void> save(@Valid @RequestBody TestSuite body) {
-        testSuiteService.save(body)
-        ResponseEntity.ok().build()
-    }
-
-    @PutMapping('{uuid}')
-    TestSuite update(@RequestBody TestSuite testSuite, @PathVariable String uuid) {
-        testSuiteService.update(testSuite, uuid)
-    }
-
-    @DeleteMapping('{uuid}')
-    TestSuite deleteById(@PathVariable String uuid) {
-        testSuiteService.deleteByUuid(uuid)
-
+    def findByTest(TestDescriptor td) {
+        List<TestPlan> tps = [] as ArrayList
+        td.testExecution?.each { tt ->
+            networkServiceRepository.findNssByTestTag(tt)?.each { nsd ->
+                tps <<  new TestPlan(networkServiceDescriptor:nsd, testDescriptor:td)
+            }
+        }
+        tps
     }
 }

@@ -34,101 +34,12 @@
 
 package com.github.tng.vnv.planner.scheduler
 
-
-import com.github.tng.vnv.planner.model.PackageMetadata
-import com.github.tng.vnv.planner.oldlcm.model.TestSuiteOld
-import com.github.tng.vnv.planner.restclient.Catalogue
-import com.github.tng.vnv.planner.service.TestPlanService
-import com.github.tng.vnv.planner.oldlcm.restclient.CatalogueOld
-import com.github.tng.vnv.planner.workflow.WorkflowManager
+import com.github.tng.vnv.planner.Applicant
 import groovy.util.logging.Log
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Component
 
-import java.util.concurrent.CompletableFuture
-
-import static com.github.tng.vnv.planner.helper.DebugHelper.nsAndTestsMappingToString
 
 @Log
 @Component
-class Scheduler {
-
-    @Autowired
-    CatalogueOld catalogueOld
-
-    @Autowired
-    Catalogue Catalogue
-
-    @Autowired
-    WorkflowManager workflowManager
-	
-	@Autowired
-	TestPlanService testPlanService
-
-    @Async
-    CompletableFuture<Boolean> schedule(PackageMetadata packageMetadata) {
-        packageMetadata = (packageMetadata != null && packageMetadata.packageId == null) ?
-                packageMetadata : catalogue.loadPackageMetadata(packageMetadata.packageId)
-
-        def map = discoverAssociatedNssAndTests(loadByMetadata(packageMetadata))
-        Boolean out = (map == null) ? false : map.every {networkService,testSuites ->
-            workflowManager.execute(networkService,testSuites) == true
-        }
-        CompletableFuture.completedFuture(out)
-    }
-
-    PackageMetadata loadByMetadata(PackageMetadata packageMetadata) {
-        if(!packageMetadata) return
-        PackageMetadata metadata = new PackageMetadata();
-
-        packageMetadata.networkServices?.each { ns ->
-                def s = catalogueOld.findNetworkService(ns.networkServiceId)
-                if(s) metadata.networkServices << s
-
-        }
-
-        packageMetadata.testSuites?.each { ts ->
-                def t = catalogueOld.findTestSuite(ts.testUuid)
-                if(t) metadata.testSuites << t
-        }
-
-        log.info("##vnvlog: \nnetworkServices: ${metadata.networkServices}, \ntestSuites: ${metadata.testSuites}")
-        metadata
-    }
-
-    Map discoverAssociatedNssAndTests(PackageMetadata packageMetadata) {
-        if(!packageMetadata) return
-        def tss = [] as Set
-        def nsAndTestsMapping = [:] as HashMap
-        //notes: loadByPackageId the nsAndTestsMapping with all the given services
-        packageMetadata.networkServices?.each { ns ->
-			    tps=testPlanService.findByService(ns.nsd)
-			    if(!nsAndTestsMapping.containsKey(ns))
-	                nsAndTestsMapping.put(ns,tss  = [] << ts)
-				else
-					nsAndTestsMapping.put(ns, tss << nsAndTestsMapping.get(ns) << tps)
-	            
-				tss = []
-        }
-
-        //notes: loadByPackageId the nsAndTestsMapping with all the associated services according to the given tests
-        packageMetadata.testSuites?.each { ts ->
-			tps=testPlanService.findByTest(ts.testd)
-			if(!nsAndTestsMapping.containsKey(ns))
-                nsAndTestsMapping.put(ns, tss = [] << ts)
-            else
-                nsAndTestsMapping.put(ns, tss = nsAndTestsMapping.get(ns) << tps)
-            tss = []   
-        }
-        log.info(nsAndTestsMappingToString(nsAndTestsMapping))
-
-        nsAndTestsMapping
-    }
-
-    //todo: this is a workaround - to add the packageId to the TestSuiteOld - until the packageId be removed from the source
-    def addPackageIdToTestSuit(PackageMetadata metadata, TestSuiteOld ts) {
-        ts.packageId = metadata.packageId?: catalogueOld.findPackageId(ts)
-        ts
-    }
+class Scheduler extends Applicant {
 }

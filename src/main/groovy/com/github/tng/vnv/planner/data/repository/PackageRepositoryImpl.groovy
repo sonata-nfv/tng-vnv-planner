@@ -32,46 +32,35 @@
  * partner consortium (www.5gtango.eu).
  */
 
-package com.github.tng.vnv.planner.controller
+package com.github.tng.vnv.planner.data.repository
 
-
-import com.github.tng.vnv.planner.model.TestSuite
-import com.github.tng.vnv.planner.data.service.TestSuiteService
-import io.swagger.annotations.ApiResponse
-import io.swagger.annotations.ApiResponses
+import com.github.tng.vnv.planner.helper.DebugHelper
+import com.github.tng.vnv.planner.model.NetworkServiceDescriptor
+import groovy.util.logging.Log
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.*
+import org.springframework.beans.factory.annotation.Qualifier
+import org.springframework.beans.factory.annotation.Value
+import org.springframework.stereotype.Repository
+import org.springframework.web.client.RestTemplate
 
-import javax.validation.Valid
+import static com.github.tng.vnv.planner.helper.DebugHelper.callExternalEndpoint
 
-@RestController
-@RequestMapping('/api/v1/test-suites')
-class TestSuiteController {
+@Log
+@Repository("PackageRepository")
+class PackageRepositoryImpl implements PackageRepository {
 
-    @Autowired
-    TestSuiteService testSuiteService
+    @Value('${app.gk.package.metadata.endpoint}')
+    def packageMetadataEndpoint
 
-    @GetMapping('{uuid}')
-    TestSuite findOne(@PathVariable String uuid) {
-        testSuiteService.findByUuid(uuid)
-    }
-
-    @ApiResponses(value = [@ApiResponse(code = 400, message = 'Bad Request')])
-    @PostMapping('')
-    ResponseEntity<Void> save(@Valid @RequestBody TestSuite body) {
-        testSuiteService.save(body)
-        ResponseEntity.ok().build()
-    }
-
-    @PutMapping('{uuid}')
-    TestSuite update(@RequestBody TestSuite testSuite, @PathVariable String uuid) {
-        testSuiteService.update(testSuite, uuid)
-    }
-
-    @DeleteMapping('{uuid}')
-    TestSuite deleteById(@PathVariable String uuid) {
-        testSuiteService.deleteByUuid(uuid)
-
+    @Override
+    def getRawPackageMetadata(String packageId){
+        if(packageId == null || packageId.length() == 0){
+            log.info("##vnvlog packageId is empty or null")
+            return
+        } else {
+            log.info("##vnvlog packageId: $packageId")
+        }
+        callExternalEndpoint(restTemplate.getForEntity(packageMetadataEndpoint,Object.class,packageId),
+                'TestCatalogue.loadPackageMetadata',packageMetadataEndpoint).body
     }
 }
