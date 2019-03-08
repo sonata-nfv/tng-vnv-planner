@@ -32,7 +32,7 @@
  * partner consortium (www.5gtango.eu).
  */
 
-package com.github.tng.vnv.planner.service
+package com.github.tng.vnv.planner.data.service
 
 import com.github.tng.vnv.planner.model.NetworkServiceDescriptor
 import com.github.tng.vnv.planner.model.TestDescriptor
@@ -48,12 +48,14 @@ import org.springframework.stereotype.Service
 class TestPlanServiceImpl implements TestPlanService {
 
     @Autowired
-    TestPlanRepository testPlanRepository
+    TestRepository testRepository
+    @Autowired
+    NetworkServiceRepository networkServiceRepository
 
     def findByService(NetworkServiceDescriptor nsd) {
         List<TestPlan> tps = [] as ArrayList
         nsd.testingTags?.each { tt ->
-            testPlanRepository.findTssByTestTag(tt)?.each { td ->
+            testRepository.findTssByTestTag(tt)?.each { td ->
                 tps << new TestPlan(networkServiceDescriptor:nsd, testDescriptor:td)
             }
         }
@@ -63,7 +65,7 @@ class TestPlanServiceImpl implements TestPlanService {
     def findByTest(TestDescriptor td) {
         List<TestPlan> tps = [] as ArrayList
         td.testExecution?.each { tt ->
-            testPlanRepository.findNssByTestTag(tt)?.each { nsd ->
+            networkServiceRepository.findNssByTestTag(tt)?.each { nsd ->
                 tps <<  new TestPlan(networkServiceDescriptor:nsd, testDescriptor:td)
             }
         }
