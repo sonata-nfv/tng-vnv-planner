@@ -80,7 +80,9 @@ class TestRepositoryImpl implements TestRepository {
     }
 
     List<TestDescriptor> findTssByTestTag(String tag) {
-        DebugHelper.callExternalEndpoint(restTemplateWithAuth.getForEntity(testListByTagEndpoint, TestDescriptor[], tag),
+		Map <String, Object> params = new HashMap <String, Object>()
+		params.put("testing_tag", tag)
+        DebugHelper.callExternalEndpoint(restTemplateWithAuth.getForEntity(testListByTagEndpoint, TestDescriptor[], params),
                 'TestPlanRepositoryImpl.findTssByTestTag',testListByTagEndpoint).body
     }
 

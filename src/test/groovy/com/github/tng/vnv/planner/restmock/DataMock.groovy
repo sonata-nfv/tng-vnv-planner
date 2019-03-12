@@ -67,4 +67,9 @@ class DataMock {
         File file = ResourceUtils.getFile(resourceLocation)
         (file.exists()) ? new JsonSlurper().parseText(file.text) :  null
     }
+	
+	static def getTestByTag(String tag) {
+		getTests().find{it.testd.test_execution.contains(tag)}
+	}
+
 }

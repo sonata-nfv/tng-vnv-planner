@@ -73,7 +73,9 @@ class NetworkServiceRepositoryImpl implements NetworkServiceRepository {
     }
 
     List<NetworkServiceDescriptor> findNssByTestTag(String tag) {
-        DebugHelper.callExternalEndpoint(restTemplateWithAuth.getForEntity(serviceListByTagEndpoint, NetworkServiceDescriptor[], tag),
+		Map <String, Object> params = new HashMap <String, Object>()
+		params.put("testing_tag", tag)
+        DebugHelper.callExternalEndpoint(restTemplateWithAuth.getForEntity(serviceListByTagEndpoint, NetworkServiceDescriptor[], params),
                 'TestPlanRepositoryImpl.findNssByTestTag',serviceListByTagEndpoint).body
     }
 }

@@ -34,12 +34,15 @@
 
 package com.github.tng.vnv.planner.controller
 
+import com.github.tng.vnv.planner.data.repository.NetworkServiceRepository
+import com.github.tng.vnv.planner.data.repository.TestRepository
 import com.github.tng.vnv.planner.model.PackageCallback
 import com.github.tng.vnv.planner.scheduler.Scheduler
+import com.github.tng.vnv.planner.oldlcm.model.TestSuiteOld
 import com.github.tng.vnv.planner.oldlcm.scheduler.SchedulerOld
 import com.github.tng.vnv.planner.scheduler.Scheduler
-import com.github.tng.vnv.planner.service.TestPlanService
 import com.github.tng.vnv.planner.model.PackageMetadata
+import com.github.tng.vnv.planner.model.TestDescriptor
 import com.github.tng.vnv.planner.model.TestSuite
 
 import groovy.util.logging.Log
@@ -48,6 +51,7 @@ import io.swagger.annotations.ApiResponses
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestParam
@@ -64,6 +68,13 @@ class CatalogueCallbackController {
 
     @Autowired
     SchedulerOld scheduler
+	
+	@Autowired
+	TestRepository testRepository
+	
+	@Autowired
+	NetworkServiceRepository nsRepository
+
 
     @ApiResponses(value = [
             @ApiResponse(code = 400, message = 'Bad Request'),
@@ -83,5 +94,27 @@ class CatalogueCallbackController {
         }
         ResponseEntity.ok().build()
     }
+	
+	@GetMapping('/api/v1/tests')
+	List<TestDescriptor> listTestsDescriptorTestingTags(@RequestParam('testingTags') String tags) {
+		def tds  = [] as Set
+		tags = tags.trim();
+		String[] tagsList = tags.substring(1, tags.length() - 1).trim().split("\\s*,\\s*");
+		tagsList.each { tag -> 
+			tds.addAll(testRepository.findTssByTestTag(tag))
+		}
+		tds
+	}
+	
+//	@GetMapping('/api/v1/tests')
+//	List<TestDescriptor> listTestsByService(@RequestParam('testingTags') String tags) {
+//		def tds  = [] as Set
+//		tags = tags.trim();
+//		String[] tagsList = tags.substring(1, tags.length() - 1).trim().split("\\s*,\\s*");
+//		tagsList.each { tag ->
+//			tds.addAll(testRepository.findTssByTestTag(tag))
+//		}
+//		tds
+//	}
 
 }

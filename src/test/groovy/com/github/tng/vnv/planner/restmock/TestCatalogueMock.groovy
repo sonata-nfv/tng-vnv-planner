@@ -36,6 +36,7 @@ package com.github.tng.vnv.planner.restmock
 
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
@@ -88,5 +89,17 @@ class TestCatalogueMock {
     def findTest(@PathVariable('testUuid') String testUuid) {
         DataMock.getTest(testUuid)
     }
+	
+	@GetMapping('/mock/gk/tests/')
+	def findTestByTags(@RequestParam('testingTags') String tags) {
+		log(tags)
+		tags = tags.trim();
+		String[] tagsList = tags.substring(1, tags.length() - 1).trim().split("\\s*,\\s*");
+		def tds  = [] as Set 
+		tagsList.each { tag ->
+			tds.addAll(DataMock.getTestByTag(tag))
+		}
+		tds
+	}
 }
 

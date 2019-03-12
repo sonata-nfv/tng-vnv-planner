@@ -40,6 +40,8 @@ import com.github.tng.vnv.planner.restmock.CuratorMock
 import com.github.tng.vnv.planner.restmock.TestPlanRepositoryMock
 import com.github.mrduguo.spring.test.AbstractSpec
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.web.client.TestRestTemplate
+import org.springframework.http.ResponseEntity
 
 class NetworkControllerTest extends AbstractSpec {
 
@@ -97,4 +99,5 @@ class NetworkControllerTest extends AbstractSpec {
         curatorMock.reset()
 
     }
+	
 }
