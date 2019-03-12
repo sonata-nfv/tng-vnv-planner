@@ -34,6 +34,8 @@
 
 package com.github.tng.vnv.planner.data.repository
 
+import com.github.tng.vnv.planner.model.TestPlan
+
 interface TestRepository {
 
     def findByUuid(String uuid)

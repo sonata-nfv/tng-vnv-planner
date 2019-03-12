@@ -60,3 +60,22 @@ class NetworkService {
         return sb.toString();
     }
 }
+
+class NetworkServiceDescriptor {
+    String uuid
+    String name
+    String vendor
+    String version
+    List<String> testingTags;
+
+
+    @Override
+    public String toString() {
+        final StringBuffer sb = new StringBuffer("nsd{");
+        sb.append("name=").append(name);
+        sb.append("testingTags=").append(testingTags);
+        sb.append("testingTags=").append(testingTags);
+        sb.append('}');
+        return sb.toString();
+    }
+}

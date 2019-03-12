@@ -34,6 +34,7 @@
 
 package com.github.tng.vnv.planner.data.service
 
+import com.github.tng.vnv.planner.data.repository.TestPlanRepository
 import com.github.tng.vnv.planner.model.NetworkServiceDescriptor
 import com.github.tng.vnv.planner.model.TestDescriptor
 import com.github.tng.vnv.planner.model.TestPlan
@@ -49,6 +50,10 @@ class TestPlanServiceImpl implements TestPlanService {
 
     @Autowired
     TestRepository testRepository
+
+    @Autowired
+    TestPlanRepository testPlanRepository
+
     @Autowired
     NetworkServiceRepository networkServiceRepository
 
@@ -71,4 +76,27 @@ class TestPlanServiceImpl implements TestPlanService {
         }
         tps
     }
+
+    @Override
+    def update(TestPlan tp, String id) {
+        return testPlanRepository.update(tp,id)
+    }
+
+    TestPlan createTestPlan(NetworkServiceDescriptor nsd, TestDescriptor td) {
+        def testPlanUuid = UUID.randomUUID().toString()
+        def testPlan = new TestPlan(
+                uuid: testPlanUuid,
+                packageId: testSuites.first().packageId,
+
+                nsdUuid: nsd.uuid,
+                tdUuid: td.uuid,
+                index: 0,
+                NetworkServiceDescriptor: nsd,
+                TestDescriptor: td,
+                status: 'CREATED',
+        )
+        TestPlan tpo = testPlanRepository.create(testPlan)
+        tpo
+    }
+
 }

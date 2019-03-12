@@ -32,20 +32,56 @@
  * partner consortium (www.5gtango.eu).
  */
 
-package com.github.tng.vnv.planner.oldlcm.model
+package com.github.tng.vnv.planner.model
 
-import groovy.transform.ToString
+import io.swagger.annotations.ApiModelProperty
 
-@ToString(includes = 'instanceUuid, status')
-class NetworkServiceInstance {
+import javax.validation.constraints.NotNull
 
-    String instanceUuid
+class TestPlanCallback {
 
-    String serviceUuid
+    @ApiModelProperty(
+            value = 'Event Actor',
+            allowEmptyValue = false,
+            example = 'Curator, Executor',
+            required = true
+    )
+    @NotNull
+    String eventActor
 
-    String name
+    @ApiModelProperty(
+            value = 'Test Plan Status',
+            allowEmptyValue = false,
+            example = 'PAUSED, CREATED, CRASHED, CANCELED, FINISHED, RESCHEDULED',
+            required = true
+    )
+    @NotNull
+    String testPlanStatus
 
-    String status
+    @ApiModelProperty(required = true)
+    @NotNull
+    String testPlanUuid
 
-    Map runtime
+    @ApiModelProperty(
+            value = 'Test Plan Repository URI',
+            allowEmptyValue = false,
+            example = 'tng-cat, catalog, or xx.xx',
+            required = false
+    )
+    @NotNull
+    String testPlanRepository
+
+    @ApiModelProperty(required = true)
+    @NotNull
+    String testResultsUuid
+
+    @ApiModelProperty(
+            value = 'Test Results Repository URI',
+            allowEmptyValue = false,
+            example = 'tng-res, results, or xx.xx',
+            required = false
+    )
+    @NotNull
+    String testResultsRepository
+
 }

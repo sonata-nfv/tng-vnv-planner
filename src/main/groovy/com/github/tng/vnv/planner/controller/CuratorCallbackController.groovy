@@ -34,9 +34,9 @@
 
 package com.github.tng.vnv.planner.controller
 
-import com.github.tng.vnv.planner.model.PackageCallback
+import com.github.tng.vnv.planner.collector.Collector
 import com.github.tng.vnv.planner.model.PackageMetadata
-import com.github.tng.vnv.planner.scheduler.Scheduler
+import com.github.tng.vnv.planner.model.TestPlanCallback
 import groovy.util.logging.Log
 import io.swagger.annotations.ApiResponse
 import io.swagger.annotations.ApiResponses
@@ -51,32 +51,51 @@ import javax.validation.Valid
 
 @Log
 @RestController
-@RequestMapping('/api/v1/packages')
-class CatalogueCallbackController {
+@RequestMapping('/api/v1/test-plans')
+class CuratorCallbackController {
 
-    static final String PACKAGE_DELETED = 'DELETED'
-    static final String PACKAGE_CREATED = 'CREATED'
+    static final String TEST_PLAN_APPROVED_STATUS = 'PAUSED'
+    static final String TEST_PLAN_CREATED = 'CREATED'
+    static final String TEST_PLAN_CRASHED = 'CRASHED'
+    static final String TEST_PLAN_CANCELED = 'CANCELED'
+    static final String TEST_PLAN_FINISHED = 'FINISHED'
+    static final String TEST_PLAN_RESCHEDULED = 'RESCHEDULED'
 
     @Autowired
-    Scheduler scheduler
+    Collector collector
 
     @ApiResponses(value = [
             @ApiResponse(code = 400, message = 'Bad Request'),
             @ApiResponse(code = 404, message = 'Could not find package with that package_id'),
     ])
     @PostMapping('/on-change')
-    ResponseEntity<Void> onChange(@Valid @RequestBody PackageCallback body) {
+    ResponseEntity<Void> onChange(@Valid @RequestBody TestPlanCallback body) {
         //todo-Y2:this endpoint is an on-change callback and is specific to the asynchronous nature of the unpackaging
         log.info("##vnvlog Executor.executeTests request. ")
-        switch (body.eventName) {
-            case PACKAGE_DELETED:
+        switch (body.testPlanStatus) {
+
+            //todo-gandreou: fix this part for every different schenario
+            case TEST_PLAN_PAUSED || TEST_PLAN_CREATED:
+                collector.update(body.testPlanUuid, body.testPlanStatus)
                 break
-            case PACKAGE_CREATED:
+            case TEST_PLAN_CREATED:
+                collector.update(body.testPlanUuid, body.testPlanStatus)
+                break
+            case TEST_PLAN_CRASHED:
+                collector.update(body.testPlanUuid, body.testPlanStatus)
+                break
+            case TEST_PLAN_CANCELED:
+                collector.update(body.testPlanUuid, body.testPlanStatus)
+                break
+            case TEST_PLAN_FINISHED:
+                collector.update(body.testPlanUuid, body.testPlanStatus)
+                break
+            case TEST_PLAN_POSTPONED:
+                collector.update(body.testPlanUuid, body.testPlanStatus)
                 break
             default:
-               scheduler.schedule(new PackageMetadata(packageId: body.packageId))
+                collector.update(body.testPlanUuid, body.testPlanStatus)
         }
         ResponseEntity.ok().build()
     }
-
 }

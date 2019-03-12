@@ -34,10 +34,7 @@
 
 package com.github.tng.vnv.planner.data.repository
 
-
-import com.github.tng.vnv.planner.oldlcm.model.TestPlanOld
-
 interface TestPlanRepository {
-    def createTestPlan(TestPlanOld testPlan)
-    def updateTestPlan(TestPlanOld testPlan)
+    def create(def testPlan)
+    def update(def testPlan, String id)
 }

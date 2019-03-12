@@ -2,7 +2,7 @@ package com.github.tng.vnv.planner.data.service
 
 import com.github.tng.vnv.planner.model.PackageMetadata
 
-interface CatalogueService {
+interface CatalogueHelperService {
 
-    def discoverAssociatedNssAndTests(PackageMetadata packageMetadata)
+    Map discoverAssociatedNssAndTests(PackageMetadata packageMetadata)
 }

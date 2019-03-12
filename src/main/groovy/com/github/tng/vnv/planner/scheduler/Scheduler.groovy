@@ -35,11 +35,52 @@
 package com.github.tng.vnv.planner.scheduler
 
 import com.github.tng.vnv.planner.Applicant
+import com.github.tng.vnv.planner.data.service.CatalogueService
+import com.github.tng.vnv.planner.data.service.TestPlanService
+import com.github.tng.vnv.planner.model.PackageMetadata
+import com.github.tng.vnv.planner.model.TestPlan
+import com.github.tng.vnv.planner.model.TestSuite
 import groovy.util.logging.Log
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Component
+
+import java.util.concurrent.CompletableFuture
 
 
 @Log
 @Component
 class Scheduler extends Applicant {
+
+    @Autowired
+    TestPlanProducer testPlanProducer
+
+    @Autowired
+    TestSuiteProducer testSuiteProducer
+
+    @Autowired
+    TestPlanService testPlanService
+
+    @Autowired
+    CatalogueService catalogueService
+
+    @Async
+    CompletableFuture<Boolean> schedule(PackageMetadata packageMetadata) {
+        def map = catalogueService.discoverAssociatedNssAndTests(packageMetadata)
+
+        Boolean out = (map == null) ? false : map.every {nsd,td ->
+            schedule(testPlanService.createTestPlan(networkServiceDescriptor: nsd, TestDescriptor: td) == true)
+        }
+        CompletableFuture.completedFuture(out)
+    }
+
+    def schedule(TestPlan testPlan) {
+        testPlanProducer.add(testPlan.uuid).to("TEST_PLAN_MESSAGE_QUEUE")
+        testPlanProducer.update(testPlan.uuid).to("TEST_SUITE_MESSAGE_QUEUE")
+    }
+
+    def schedule(TestSuite testSuite) {
+        testSuiteProducer.add(testPlan.uuid).to("TEST_PLAN_MESSAGE_QUEUE")
+        testSuiteProducer.update(testPlan.uuid).to("TEST_SUITE_MESSAGE_QUEUE")
+    }
 }

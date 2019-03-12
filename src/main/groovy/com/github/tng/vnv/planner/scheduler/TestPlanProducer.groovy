@@ -41,4 +41,26 @@ import org.springframework.stereotype.Component
 @Log
 @Component
 class TestPlanProducer {
+
+    String id
+    String messageQueue
+    String action
+
+    def add(String uuid) {
+        action = 'ADD'
+        id = uuid
+        this
+    }
+
+    def to(String mq) {
+        messageQueue = mq
+        //fixme-gandreou: clean up what (and how) will b kept from the MQ's and what not.
+        //case ADD
+        //todo-gandreou: return the result for the ADD of the item from the queue
+        //case REMOVE
+        //todo-gandreou: return the result for the REMOVE of the item from the queue
+        //case UPDATE
+        //todo-gandreou: return the result for the UPDATE of the item from the queue
+    }
+
 }

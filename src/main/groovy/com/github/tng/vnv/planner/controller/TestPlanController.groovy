@@ -72,7 +72,7 @@ class TestPlanController {
 
     @PutMapping('{uuid}')
     TestSuite update(@RequestBody TestSuite request, @PathVariable String uuid) {
-        testPlanService.update(request, uuid)
+        testPlanService.update(request)
     }
 
     @DeleteMapping('{uuid}')

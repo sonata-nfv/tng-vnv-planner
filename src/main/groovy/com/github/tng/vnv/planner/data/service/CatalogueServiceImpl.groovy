@@ -41,7 +41,6 @@ import com.github.tng.vnv.planner.model.NetworkServiceDescriptor
 import com.github.tng.vnv.planner.model.PackageMetadata
 import com.github.tng.vnv.planner.model.TestDescriptor
 import com.github.tng.vnv.planner.data.repository.NetworkServiceRepository
-import com.github.tng.vnv.planner.oldlcm.model.TestSuiteOld
 import groovy.util.logging.Log
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier
@@ -74,6 +73,9 @@ class CatalogueServiceImpl implements CatalogueService {
     TestRepository testRepository
 
     @Autowired
+    CatalogueHelperService catalogueHelperService
+
+    @Autowired
     NetworkServiceRepository networkServiceRepository
 
     @Value('${app.vnvgk.test.metadata.endpoint}')
@@ -85,29 +87,8 @@ class CatalogueServiceImpl implements CatalogueService {
     @Value('${app.gk.package.metadata.endpoint}')
     def packageMetadataEndpoint
 
-    PackageMetadata loadPackageMetadata(String packageId) {
-        def rawPackageMetadata= callExternalEndpoint(restTemplate.getForEntity(packageMetadataEndpoint,Object.class,packageId),
-                'TestCatalogue.loadPackageMetadata',packageMetadataEndpoint).body
-
-        PackageMetadata packageMetadata=new PackageMetadata(packageId: packageId)
-        rawPackageMetadata?.pd?.package_content.each{resource ->
-            switch (resource.get('content-type')) {
-                case 'application/vnd.5gtango.tstd':
-                    TestSuiteOld ts = testRepository.findByUuid(resource.uuid)
-                    log.info("##vnvlog res: testSuite: $ts")
-                    log.info("##vnvlog agnostic obj " + testRepository.printAgnosticObjByUuid(resource.uuid))
-                    if(ts.testUuid)
-                        packageMetadata.testSuites << ts
-                    break
-                case 'application/vnd.5gtango.nsd':
-                    NetworkService ns =  networkServiceRepository.findByUuid(resource.uuid)
-                    log.info("##vnvlog Request: res: networkService: $ns")
-                    log.info("##vnvlog agnostic obj: " + networkServiceRepository.printAgnosticObjByUuid(resource.uuid))
-                    if(ns.networkServiceId)
-                        packageMetadata.networkServices << ns
-                    break
-            }
-        }
-        packageMetadata
+    @Override
+    def discoverAssociatedNssAndTests(PackageMetadata packageMetadata) {
+        return catalogueHelperService.discoverAssociatedNssAndTests(packageMetadata)
     }
 }

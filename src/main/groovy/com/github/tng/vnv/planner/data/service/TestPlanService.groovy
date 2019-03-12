@@ -36,10 +36,15 @@ package com.github.tng.vnv.planner.data.service
 
 import com.github.tng.vnv.planner.model.NetworkServiceDescriptor
 import com.github.tng.vnv.planner.model.TestDescriptor
+import com.github.tng.vnv.planner.model.TestPlan
 
 interface TestPlanService {
 
     def findByService(NetworkServiceDescriptor nsd)
 
     def findByTest(TestDescriptor td)
+
+    def update(TestPlan tp, String id)
+
+    TestPlan createTestPlan(NetworkServiceDescriptor nsd, TestDescriptor td)
 }

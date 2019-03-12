@@ -85,6 +85,11 @@ app:
     base.url: http://${app.tee.host}:6200/tng-vnv-tee/api/v1
     suite.execute.endpoint: ${app.tee.base.url}/test-suite-results
 
+  curator:
+    host: tng-vnv-curator
+    base.url: http://${app.curator.host}:6200/api/v1
+    test.plan.curate.endpoint: ${app.curator.base.url}/curate-test-plan
+
   queue.capacity: 500
   pool:
     size:

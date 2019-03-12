@@ -36,8 +36,6 @@ package com.github.tng.vnv.planner.data.repository
 
 import com.github.tng.vnv.planner.helper.DebugHelper
 import com.github.tng.vnv.planner.model.TestDescriptor
-import com.github.tng.vnv.planner.model.TestPlan
-import com.github.tng.vnv.planner.oldlcm.model.TestSuiteOld
 import groovy.util.logging.Log
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier
@@ -66,8 +64,8 @@ class TestRepositoryImpl implements TestRepository {
 
 
     @Override
-    TestSuiteOld findByUuid(String uuid) {
-        TestSuiteOld ts = callExternalEndpoint(restTemplateWithAuth.getForEntity(testMetadataEndpoint, TestSuiteOld.class, uuid),
+    TestDescriptor findByUuid(String uuid) {
+        callExternalEndpoint(restTemplateWithAuth.getForEntity(testMetadataEndpoint, TestDescriptor.class, uuid),
                 'TestCatalogue.findNssByTestTag','TestCatalogue.loadPackageMetadata',testMetadataEndpoint).body
 
     }
@@ -83,6 +81,4 @@ class TestRepositoryImpl implements TestRepository {
         DebugHelper.callExternalEndpoint(restTemplateWithAuth.getForEntity(testListByTagEndpoint, TestDescriptor[], tag),
                 'TestPlanRepositoryImpl.findTssByTestTag',testListByTagEndpoint).body
     }
-
-
 }

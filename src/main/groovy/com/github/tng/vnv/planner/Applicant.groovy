@@ -34,13 +34,25 @@
 
 package com.github.tng.vnv.planner
 
+import com.github.tng.vnv.planner.data.service.TestPlanService
+import com.github.tng.vnv.planner.data.service.TestSuiteService
 import com.github.tng.vnv.planner.model.TestPlan
 import groovy.util.logging.Log
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 
 @Log
 @Component
 class Applicant {
 
-    def update(TestPlan testPlan) {}
+    @Autowired
+    TestPlanService testPlanService
+
+    @Autowired
+    TestSuiteService testSuiteService
+
+    def update(TestPlan testPlan) {
+        testPlanService.update(testPlan, testPlan.uuid)
+        //todo-gandreou: need to update the MQ, but how could the status reach this 'update' method?
+    }
 }

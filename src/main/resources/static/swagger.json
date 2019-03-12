@@ -18,6 +18,10 @@
             "description": "Catalogue Callback Controller"
         },
         {
+            "name": "curator-callback-controller",
+            "description": "Curator Callback Controller"
+        },
+        {
             "name": "network-service-controller",
             "description": "Network Service Controller"
         },
@@ -77,93 +81,6 @@
                 }
             }
         },
-        "/api/v1/schedulers/services": {
-            "post": {
-                "tags": [
-                    "network-service-controller"
-                ],
-                "summary": "scheduleTest",
-                "operationId": "scheduleTestUsingPOST",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "*/*"
-                ],
-                "parameters": [
-                    {
-                        "in": "body",
-                        "name": "request",
-                        "description": "request",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/NetworkServiceRequest"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK"
-                    },
-                    "201": {
-                        "description": "Created"
-                    },
-                    "400": {
-                        "description": "Bad Request"
-                    },
-                    "401": {
-                        "description": "Unauthorized"
-                    },
-                    "403": {
-                        "description": "Forbidden"
-                    },
-                    "404": {
-                        "description": "Not Found"
-                    }
-                }
-            }
-        },
-        "/api/v1/schedulers/services/{serviceUuid}/tests": {
-            "get": {
-                "tags": [
-                    "network-service-controller"
-                ],
-                "summary": "listTestsByService",
-                "operationId": "listTestsByServiceUsingGET",
-                "produces": [
-                    "*/*"
-                ],
-                "parameters": [
-                    {
-                        "name": "serviceUuid",
-                        "in": "path",
-                        "description": "serviceUuid",
-                        "required": true,
-                        "type": "string"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/TestSuiteOld"
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized"
-                    },
-                    "403": {
-                        "description": "Forbidden"
-                    },
-                    "404": {
-                        "description": "Not Found"
-                    }
-                }
-            }
-        },
         "/api/v1/test-plans": {
             "post": {
                 "tags": [
@@ -210,6 +127,52 @@
                 }
             }
         },
+        "/api/v1/test-plans/on-change": {
+            "post": {
+                "tags": [
+                    "curator-callback-controller"
+                ],
+                "summary": "onChange",
+                "operationId": "onChangeUsingPOST_1",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "*/*"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/TestPlanCallback"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "201": {
+                        "description": "Created"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Could not find package with that package_id"
+                    }
+                }
+            }
+        },
         "/api/v1/test-plans/services": {
             "post": {
                 "tags": [
@@ -246,6 +209,47 @@
                     },
                     "400": {
                         "description": "Bad Request"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                }
+            }
+        },
+        "/api/v1/test-plans/services/{serviceUuid}/tests": {
+            "get": {
+                "tags": [
+                    "network-service-controller"
+                ],
+                "summary": "listTestsByService",
+                "operationId": "listTestsByServiceUsingGET",
+                "produces": [
+                    "*/*"
+                ],
+                "parameters": [
+                    {
+                        "name": "serviceUuid",
+                        "in": "path",
+                        "description": "serviceUuid",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/TestDescriptor"
+                            }
+                        }
                     },
                     "401": {
                         "description": "Unauthorized"
@@ -618,6 +622,9 @@
                         "type": "string"
                     }
                 },
+                "uuid": {
+                    "type": "string"
+                },
                 "vendor": {
                     "type": "string"
                 },
@@ -626,15 +633,6 @@
                 }
             },
             "title": "NetworkServiceDescriptor"
-        },
-        "NetworkServiceRequest": {
-            "type": "object",
-            "properties": {
-                "service_uuid": {
-                    "type": "string"
-                }
-            },
-            "title": "NetworkServiceRequest"
         },
         "PackageCallback": {
             "type": "object",
@@ -677,6 +675,9 @@
                 "test_type": {
                     "type": "string"
                 },
+                "uuid": {
+                    "type": "string"
+                },
                 "vendor": {
                     "type": "string"
                 },
@@ -716,6 +717,50 @@
             },
             "title": "TestPlan"
         },
+        "TestPlanCallback": {
+            "type": "object",
+            "required": [
+                "event_actor",
+                "test_plan_status",
+                "test_plan_uuid",
+                "test_results_uuid"
+            ],
+            "properties": {
+                "event_actor": {
+                    "type": "string",
+                    "example": "Curator, Executor",
+                    "description": "Event Actor",
+                    "allowEmptyValue": false
+                },
+                "test_plan_repository": {
+                    "type": "string",
+                    "example": "tng-cat, catalog, or xx.xx",
+                    "description": "Test Plan Repository URI",
+                    "allowEmptyValue": false
+                },
+                "test_plan_status": {
+                    "type": "string",
+                    "example": "PAUSED, CREATED, CRASHED, CANCELED, FINISHED, RESCHEDULED",
+                    "description": "Test Plan Status",
+                    "allowEmptyValue": false
+                },
+                "test_plan_uuid": {
+                    "type": "string",
+                    "allowEmptyValue": false
+                },
+                "test_results_repository": {
+                    "type": "string",
+                    "example": "tng-res, results, or xx.xx",
+                    "description": "Test Results Repository URI",
+                    "allowEmptyValue": false
+                },
+                "test_results_uuid": {
+                    "type": "string",
+                    "allowEmptyValue": false
+                }
+            },
+            "title": "TestPlanCallback"
+        },
         "TestSuite": {
             "type": "object",
             "properties": {
@@ -736,25 +781,6 @@
                 }
             },
             "title": "TestSuite"
-        },
-        "TestSuiteOld": {
-            "type": "object",
-            "required": [
-                "uuid"
-            ],
-            "properties": {
-                "package_id": {
-                    "type": "string"
-                },
-                "testd": {
-                    "$ref": "#/definitions/TestDescriptor"
-                },
-                "uuid": {
-                    "type": "string",
-                    "allowEmptyValue": false
-                }
-            },
-            "title": "TestSuiteOld"
         },
         "TestTag": {
             "type": "object",

@@ -34,11 +34,9 @@
 
 package com.github.tng.vnv.planner.model
 
-import com.github.tng.vnv.planner.oldlcm.model.TestSuiteOld
-
 class PackageMetadata {
     List<NetworkService> networkServices=[]
-    List<TestSuiteOld> testSuites=[]
+    List<Test> tests=[]
 
     String packageId
     String uuid

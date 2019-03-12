@@ -35,7 +35,7 @@
 package com.github.tng.vnv.planner.data.repository
 
 
-import com.github.tng.vnv.planner.oldlcm.model.TestPlanOld
+import com.github.tng.vnv.planner.model.TestPlan
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.beans.factory.annotation.Value
@@ -73,17 +73,18 @@ class TestPlanRepositoryImpl implements TestPlanRepository {
     @Value('${app.gk.service.list.by.tag.endpoint}')
     def serviceListByTagEndpoint
 
-    TestPlanOld createTestPlan(TestPlanOld testPlan) {
+    def create(def testPlan) {
         def headers = new HttpHeaders()
         headers.setContentType(MediaType.APPLICATION_JSON)
-        def entity = new HttpEntity<TestPlanOld>(testPlan ,headers)
-        callExternalEndpoint(restTemplate.postForEntity(testPlanCreateEndpoint,entity,TestPlanOld),'TestResultRepository.createTestPlan',testPlanCreateEndpoint).body
+        def entity = new HttpEntity<TestPlan>(testPlan ,headers)
+        callExternalEndpoint(restTemplate.postForEntity(testPlanCreateEndpoint,entity,TestPlan),'TestResultRepository.createTestPlan',testPlanCreateEndpoint).body
     }
 
-    TestPlanOld updateTestPlan(TestPlanOld testPlan) {
+    def update(def testPlan,String id) {
+        //CleanCode-gandreou: there is no reason to have "id" input param
         def headers = new HttpHeaders()
         headers.setContentType(MediaType.APPLICATION_JSON)
-        def entity = new HttpEntity<TestPlanOld>(testPlan ,headers)
-        callExternalEndpoint(restTemplate.exchange(testPlanUpdateEndpoint, HttpMethod.PUT, entity, TestPlanOld.class ,testPlan.uuid),'TestResultRepository.updatePlan',testPlanUpdateEndpoint).body
+        def entity = new HttpEntity<TestPlan>(testPlan ,headers)
+        callExternalEndpoint(restTemplate.exchange(testPlanUpdateEndpoint, HttpMethod.PUT, entity, TestPlan.class ,testPlan.uuid),'TestResultRepository.updatePlan',testPlanUpdateEndpoint).body
     }
 }

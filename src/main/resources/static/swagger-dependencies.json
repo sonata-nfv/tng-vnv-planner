@@ -18,10 +18,6 @@
             "description": "Curator Mock"
         },
         {
-            "name": "executor-mock",
-            "description": "Executor Mock"
-        },
-        {
             "name": "session-mock",
             "description": "Session Mock"
         },
@@ -282,52 +278,6 @@
                 }
             }
         },
-        "/mock/tee/test-suite-results": {
-            "post": {
-                "tags": [
-                    "executor-mock"
-                ],
-                "summary": "executeTestAgainstNs",
-                "operationId": "executeTestAgainstNsUsingPOST",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "*/*"
-                ],
-                "parameters": [
-                    {
-                        "in": "body",
-                        "name": "testSuiteResult",
-                        "description": "testSuiteResult",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/TestSuiteResult"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/TestSuiteResult"
-                        }
-                    },
-                    "201": {
-                        "description": "Created"
-                    },
-                    "401": {
-                        "description": "Unauthorized"
-                    },
-                    "403": {
-                        "description": "Forbidden"
-                    },
-                    "404": {
-                        "description": "Not Found"
-                    }
-                }
-            }
-        },
         "/mock/tpm/requests": {
             "get": {
                 "tags": [
@@ -492,7 +442,7 @@
                         "description": "testPlan",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/TestPlanOld"
+                            "$ref": "#/definitions/TestPlan"
                         }
                     }
                 ],
@@ -500,7 +450,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/TestPlanOld"
+                            "$ref": "#/definitions/TestPlan"
                         }
                     },
                     "201": {
@@ -538,7 +488,7 @@
                         "description": "testPlan",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/TestPlanOld"
+                            "$ref": "#/definitions/TestPlan"
                         }
                     },
                     {
@@ -553,7 +503,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/TestPlanOld"
+                            "$ref": "#/definitions/TestPlan"
                         }
                     },
                     "201": {
@@ -585,26 +535,29 @@
             },
             "title": "Login"
         },
-        "NetworkServiceInstance": {
+        "NetworkServiceDescriptor": {
             "type": "object",
             "properties": {
-                "instance_uuid": {
-                    "type": "string"
-                },
                 "name": {
                     "type": "string"
                 },
-                "runtime": {
-                    "type": "object"
+                "testing_tags": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
                 },
-                "service_uuid": {
+                "uuid": {
                     "type": "string"
                 },
-                "status": {
+                "vendor": {
+                    "type": "string"
+                },
+                "version": {
                     "type": "string"
                 }
             },
-            "title": "NetworkServiceInstance"
+            "title": "NetworkServiceDescriptor"
         },
         "NsRequest": {
             "type": "object",
@@ -667,63 +620,77 @@
             },
             "title": "Session"
         },
-        "TestPlanOld": {
+        "TestDescriptor": {
             "type": "object",
             "properties": {
-                "network_service_instances": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/NetworkServiceInstance"
-                    }
-                },
-                "package_id": {
+                "description": {
                     "type": "string"
                 },
-                "status": {
+                "name": {
                     "type": "string"
                 },
-                "test_suite_results": {
+                "test_execution": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/TestSuiteResult"
+                        "$ref": "#/definitions/TestTag"
                     }
+                },
+                "test_type": {
+                    "type": "string"
                 },
                 "uuid": {
                     "type": "string"
+                },
+                "vendor": {
+                    "type": "string"
+                },
+                "version": {
+                    "type": "string"
                 }
             },
-            "title": "TestPlanOld"
+            "title": "TestDescriptor"
         },
-        "TestSuiteResult": {
+        "TestPlan": {
             "type": "object",
-            "required": [
-                "test_uuid"
-            ],
             "properties": {
-                "instance_uuid": {
+                "index": {
+                    "type": "string"
+                },
+                "network_service_descriptor": {
+                    "$ref": "#/definitions/NetworkServiceDescriptor"
+                },
+                "nsd_uuid": {
                     "type": "string"
                 },
                 "package_id": {
                     "type": "string"
                 },
-                "service_uuid": {
-                    "type": "string"
-                },
                 "status": {
                     "type": "string"
                 },
-                "test_plan_id": {
+                "td_uuid": {
                     "type": "string"
                 },
-                "test_uuid": {
-                    "type": "string",
-                    "allowEmptyValue": false
+                "test_descriptor": {
+                    "$ref": "#/definitions/TestDescriptor"
                 },
                 "uuid": {
                     "type": "string"
                 }
             },
-            "title": "TestSuiteResult"
+            "title": "TestPlan"
+        },
+        "TestTag": {
+            "type": "object",
+            "properties": {
+                "tag_id": {
+                    "type": "string"
+                },
+                "test_tag": {
+                    "type": "string"
+                }
+            },
+            "title": "TestTag"
         },
         "Token": {
             "type": "object",

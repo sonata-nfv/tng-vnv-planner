@@ -89,7 +89,7 @@ Scheduler --> Scheduler : build map of NS'es to Tests
 
 loop for each NS-Tests mapping
         Scheduler -> WFMGR : execute test plan
-note right : See method execute(networkService, testSuites)
+note right : See method execute(networkService, test)
         WFMGR -> TRR : save test plan: CREATED
         WFMGR -> SP : deploy NS
         WFMGR \\- SP : NS runtime config

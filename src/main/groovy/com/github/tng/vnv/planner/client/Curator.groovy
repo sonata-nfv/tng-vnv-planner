@@ -36,7 +36,7 @@ package com.github.tng.vnv.planner.client
 
 import com.github.tng.vnv.planner.model.NsRequest
 import com.github.tng.vnv.planner.model.NsResponse
-import com.github.tng.vnv.planner.oldlcm.model.TestPlanOld
+import com.github.tng.vnv.planner.model.TestPlan
 import groovy.util.logging.Log
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier
@@ -54,66 +54,15 @@ class Curator {
     @Qualifier('restTemplateWithAuth')
     RestTemplate restTemplate
 
-    @Value('${app.tpm.ns.deploy.endpoint}')
-    def nsDeployEndpoint
+    @Value('${app.curator.test.plan.curate.endpoint}')
+    def testPlanCurateEndpoint
 
-    @Value('${app.tpm.ns.status.endpoint}')
-    def nsStatusEndpoint
-
-    @Value('${app.tpm.ns.status.timeout.in.seconds}')
-    int nsStatusTimeoutInSeconds
-
-    @Value('${app.tpm.ns.status.ping.in.seconds}')
-    int nsStatusPingInSeconds
-
-    @Value('${app.tpm.ns.destroy.endpoint}')
-    def nsDestroyEndpoint
-
-    TestPlanOld deployNsForTest(TestPlanOld testPlan) {
-        if(testPlan.networkServiceInstances?.first()?.instanceUuid == null) {
-            testPlan.status = 'NS_DEPLOY_FAILED'
-            testPlan
-        }
-        log.info("##vnvlog: testPlan: [packageId: ${testPlan.packageId}, nsiList.size: ${testPlan.networkServiceInstances.size()}, tsResults.size: ${testPlan.testSuiteResults.size()}]")
-        log.info("##vnvlog Curator.deployNsForTest - testPlan.networkServiceInstances.first().serviceUuid? ${testPlan.networkServiceInstances?.first().serviceUuid}")
+    def proceedWith(TestPlan testPlan) {
         def createRequest = new NsRequest(
                 serviceUuid: testPlan.networkServiceInstances.first().serviceUuid,
                 requestType: 'CREATE_SERVICE',
         )
-        NsResponse response = callExternalEndpoint(restTemplate.postForEntity(nsDeployEndpoint, createRequest, NsResponse),'Curator.deployNsForTest',nsDeployEndpoint).body
-        def numberOfRetries = nsStatusTimeoutInSeconds / nsStatusPingInSeconds
-        for (int i = 0; i < numberOfRetries; i++) {
-            if (['ERROR', 'READY'].contains(response.status)) {
-                break
-            }
-            response = callExternalEndpoint(restTemplate.getForEntity(nsStatusEndpoint, NsResponse, response.id),'Curator.deployNsForTest',nsStatusEndpoint).body
-            Thread.sleep(nsStatusPingInSeconds * 1000)
-        }
-
-        log.info("##vnvlog Curator.deployNsForTest - testPlan.networkServiceInstances.first().status? ${testPlan.networkServiceInstances.first().status}")
-        testPlan.networkServiceInstances.first().status = response.status
-        if (response.status == 'READY') {
-            log.info("##vnvlog Curator.deployNsForTest - testPlan.networkServiceInstances.first().instanceUuid? ${testPlan.networkServiceInstances.first().instanceUuid}")
-            testPlan.networkServiceInstances.first().instanceUuid = response.instanceUuid
-            testPlan.status = 'NS_DEPLOYED'
-        } else {
-            log.warning("Deploy NS failed with status $response.status")
-            testPlan.status = 'NS_DEPLOY_FAILED'
-        }
-        testPlan
-    }
-
-    TestPlanOld destroyNsAfterTest(TestPlanOld testPlan) {
-        def nsi = testPlan.networkServiceInstances.first()
-        log.info("##vnvlog Curator.destroyNsAfterTest: ($testPlan)")
-        def terminateRequest = new NsRequest(instanceUuid: nsi.instanceUuid,
-                requestType: 'TERMINATE_SERVICE',
-        )
-        NsResponse response = callExternalEndpoint(restTemplate.postForEntity(nsDestroyEndpoint, terminateRequest, NsResponse),'Curator.destroyNsAfterTest',nsDestroyEndpoint).body
-        nsi.status = 'TERMINATED'
-        nsi.instanceUuid = null
-        testPlan.networkServiceInstances = [nsi]
-        testPlan.testSuiteResults.each {it.instanceUuid = null}
-        testPlan
+        NsResponse response = callExternalEndpoint(restTemplate.postForEntity(testPlanCurateEndpoint, createRequest, NsResponse),'Curator.proceedWith(TestPlan)',testPlanCurateEndpoint).body
+        response
     }
 }
