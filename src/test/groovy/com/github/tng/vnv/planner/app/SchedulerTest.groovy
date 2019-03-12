@@ -32,7 +32,7 @@
  * partner consortium (www.5gtango.eu).
  */
 
-package com.github.tng.vnv.planner.queue.scheduler
+package com.github.tng.vnv.planner.app
 
 import com.github.tng.vnv.planner.app.Scheduler
 import com.github.tng.vnv.planner.model.PackageMetadata

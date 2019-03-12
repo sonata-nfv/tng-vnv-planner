@@ -45,6 +45,7 @@ class NetworkServiceControllerTest extends AbstractSpec {
 
     final def NETWORK_SERVICE_ID = 'input0ns-f213-4fae-8d3f-04358e1e1445'
 
+/*
     @Autowired
     CuratorMock curatorMock
 
@@ -53,6 +54,7 @@ class NetworkServiceControllerTest extends AbstractSpec {
 
     @Autowired
     TestPlanRepositoryMock testPlanRepositoryMock
+*/
 
 /*
     @Ignore
@@ -89,7 +91,7 @@ class NetworkServiceControllerTest extends AbstractSpec {
     @Ignore
     void "retrieval of a single t st suite's related tests should successfully all the tag related tests"() {
         when:
-        List tss = getForEntity('/tng-vnv-planner/api/v1/schedulers/services/{serviceUuid}/tests', List, NETWORK_SERVICE_ID).body
+        List tss = getForEntity('/tng-vnv-planner/api/v1/services/{serviceUuid}/tests', List, NETWORK_SERVICE_ID).body
         System.out.println("")
         then:
 

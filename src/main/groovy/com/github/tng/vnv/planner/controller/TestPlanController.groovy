@@ -36,6 +36,7 @@ package com.github.tng.vnv.planner.controller
 
 import com.github.tng.vnv.planner.model.NetworkServiceDescriptor
 import com.github.tng.vnv.planner.model.TestDescriptor
+import com.github.tng.vnv.planner.model.TestPlan
 import com.github.tng.vnv.planner.model.TestSuite
 import com.github.tng.vnv.planner.service.TestPlanService
 import com.github.tng.vnv.planner.service.TestSuiteService
@@ -51,44 +52,43 @@ import javax.validation.Valid
 @RequestMapping('/api/v1/test-plans')
 class TestPlanController {
 
+    @Autowired
+    TestPlanService testPlanService
 
     @Autowired
     TestSuiteService testSuiteService
 
-    @Autowired
-    TestPlanService testPlanService
-
     @GetMapping('{uuid}')
-    TestSuite findOne(@PathVariable String uuid) {
-        testPlanService.findByUuid(uuid)
+    ResponseEntity<List<TestPlan>> findOne(@PathVariable String uuid) {
+        testSuiteService.findByUuid(uuid)
     }
 
     @ApiResponses(value = [@ApiResponse(code = 400, message = 'Bad Request')])
     @PostMapping('')
-    ResponseEntity<Void> save(@Valid @RequestBody TestSuite body) {
-        testPlanService.save(body)
+    ResponseEntity<Void> save(@Valid @RequestBody List<TestPlan> body) {
+        testSuiteService.save(body)
         ResponseEntity.ok().build()
     }
 
     @PutMapping('{uuid}')
-    TestSuite update(@RequestBody TestSuite request, @PathVariable String uuid) {
-        testPlanService.update(request)
+    ResponseEntity<List<TestPlan>> update(@RequestBody List<TestPlan> request, @PathVariable String uuid) {
+        testSuiteService.update(request)
     }
 
     @DeleteMapping('{uuid}')
-    TestSuite deleteById(@PathVariable String uuid) {
-        testPlanService.deleteByUuid(uuid)
+    ResponseEntity<Void> deleteById(@PathVariable String uuid) {
+        testSuiteService.deleteByUuid(uuid)
     }
 
     @ApiResponses(value = [@ApiResponse(code = 400, message = 'Bad Request')])
     @PostMapping('/services')
-    TestSuite createTestPlansByServiceDescriptor(@Valid @RequestBody NetworkServiceDescriptor body) {
+    ResponseEntity<List<TestPlan>> createTestPlansByServiceDescriptor(@Valid @RequestBody NetworkServiceDescriptor body) {
         testPlanService.findByService(body)
     }
 
     @ApiResponses(value = [@ApiResponse(code = 400, message = 'Bad Request')])
     @PostMapping('/tests')
-    TestSuite createTestPlansByTestDescriptor(@Valid @RequestBody TestDescriptor body) {
+    ResponseEntity<List<TestPlan>> createTestPlansByTestDescriptor(@Valid @RequestBody TestDescriptor body) {
         testPlanService.findByTest(body)
     }
 }
