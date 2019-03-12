@@ -57,6 +57,7 @@ class CatalogueCallbackControllerTest extends AbstractSpec {
     @Autowired
     TestPlanRepositoryMock testPlanRepositoryMock
 
+/*
     @Ignore
     void 'schedule single Test and single NetworkService should produce successfully 2 Result for 2 testPlan'() {
 
@@ -82,4 +83,5 @@ class CatalogueCallbackControllerTest extends AbstractSpec {
         curatorMock.reset()
         testPlanRepositoryMock.reset()
     }
+*/
 }

@@ -41,7 +41,7 @@ import com.github.mrduguo.spring.test.AbstractSpec
 import org.springframework.beans.factory.annotation.Autowired
 import spock.lang.Ignore
 
-class NetworkControllerTest extends AbstractSpec {
+class NetworkServiceControllerTest extends AbstractSpec {
 
     final def NETWORK_SERVICE_ID = 'input0ns-f213-4fae-8d3f-04358e1e1445'
 
@@ -54,21 +54,24 @@ class NetworkControllerTest extends AbstractSpec {
     @Autowired
     TestPlanRepositoryMock testPlanRepositoryMock
 
+/*
     @Ignore
     void "schedule single NetworkService should produce successfully 1 Result for 1 testPlan"() {
 
         when:
-        def entity = postForEntity('/tng-vnv-planner/api/v1/schedulers/services',
+        def entity = postForEntity('/tng-vnv-planner/api/v1/test-plans/services',
                 ["service_uuid": NETWORK_SERVICE_ID]
                 , Void.class)
 
 
         then:
         Thread.sleep(10000L);
+*/
 /*
         while (executorMock.testSuiteResults.values().last().status!='SUCCESS')
             Thread.sleep(1000L);
-*/
+*//*
+
         curatorMock.networkServiceInstances.size()==1
 
         testPlanRepositoryMock.testPlans.size()==1
@@ -81,11 +84,13 @@ class NetworkControllerTest extends AbstractSpec {
         curatorMock.reset()
         testPlanRepositoryMock.reset()
     }
+*/
 
     @Ignore
     void "retrieval of a single t st suite's related tests should successfully all the tag related tests"() {
         when:
         List tss = getForEntity('/tng-vnv-planner/api/v1/schedulers/services/{serviceUuid}/tests', List, NETWORK_SERVICE_ID).body
+        System.out.println("")
         then:
 
         tss.size() == 1

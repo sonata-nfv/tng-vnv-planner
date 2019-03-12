@@ -59,33 +59,7 @@ import static com.github.tng.vnv.planner.helper.DebugHelper.callExternalEndpoint
 class CatalogueServiceImpl implements CatalogueService {
 
     @Autowired
-    @Qualifier('restTemplateWithAuth')
-    RestTemplate restTemplateWithAuth
-
-    @Autowired
-    @Qualifier('restTemplateWithoutAuth')
-    RestTemplate restTemplate
-
-    @Autowired
-    PackageRepository packageRepository
-
-    @Autowired
-    TestRepository testRepository
-
-    @Autowired
     CatalogueHelperService catalogueHelperService
-
-    @Autowired
-    NetworkServiceRepository networkServiceRepository
-
-    @Value('${app.vnvgk.test.metadata.endpoint}')
-    def testMetadataEndpoint
-
-    @Value('${app.gk.service.metadata.endpoint}')
-    def serviceMetadataEndpoint
-
-    @Value('${app.gk.package.metadata.endpoint}')
-    def packageMetadataEndpoint
 
     @Override
     def discoverAssociatedNssAndTests(PackageMetadata packageMetadata) {
