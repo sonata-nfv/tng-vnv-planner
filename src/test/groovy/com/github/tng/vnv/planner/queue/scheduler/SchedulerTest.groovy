@@ -32,51 +32,64 @@
  * partner consortium (www.5gtango.eu).
  */
 
-package com.github.tng.vnv.planner.controller
+package com.github.tng.vnv.planner.queue.scheduler
 
-import com.github.tng.vnv.planner.model.PackageCallback
-import com.github.tng.vnv.planner.model.PackageMetadata
 import com.github.tng.vnv.planner.app.Scheduler
-import groovy.util.logging.Log
-import io.swagger.annotations.ApiResponse
-import io.swagger.annotations.ApiResponses
+import com.github.tng.vnv.planner.model.PackageMetadata
+import com.github.tng.vnv.planner.restmock.TestCatalogueMock
+import com.github.tng.vnv.planner.restmock.CuratorMock
+import com.github.tng.vnv.planner.restmock.TestPlanRepositoryMock
+import com.github.mrduguo.spring.test.AbstractSpec
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import spock.lang.Ignore
 
-import javax.validation.Valid
+import java.util.concurrent.CompletableFuture
 
-@Log
-@RestController
-@RequestMapping('/api/v1/packages')
-class CatalogueCallbackController {
+class SchedulerTest extends AbstractSpec {
 
-    static final String PACKAGE_DELETED = 'DELETED'
-    static final String PACKAGE_CREATED = 'CREATED'
+    public static final String MULTIPLE_TEST_PLANS_PACKAGE_ID ='multiple_scheduler:test:0.0.1'
 
     @Autowired
     Scheduler scheduler
 
-    @ApiResponses(value = [
-            @ApiResponse(code = 400, message = 'Bad Request'),
-            @ApiResponse(code = 404, message = 'Could not find package with that package_id'),
-    ])
-    @PostMapping('/on-change')
-    ResponseEntity<Void> onChange(@Valid @RequestBody PackageCallback body) {
-        //todo-Y2:this endpoint is an on-change callback and is specific to the asynchronous nature of the unpackaging
-        log.info("##vnvlog Executor.executeTests request. ")
-        switch (body.eventName) {
-            case PACKAGE_DELETED:
-                break
-            case PACKAGE_CREATED:
-                break
-            default:
-               scheduler.schedule(new PackageMetadata(packageId: body.packageId))
-        }
-        ResponseEntity.ok().build()
-    }
+    @Autowired
+    CuratorMock curatorMock
 
+    @Autowired
+    TestCatalogueMock testCatalogueMock
+
+    @Autowired
+    TestPlanRepositoryMock testPlanRepositoryMock
+
+    @Ignore
+    void 'schedule multiple test plans should produce success result'() {
+
+        when:
+        CompletableFuture<Boolean> out = scheduler.schedule(new PackageMetadata(packageId: MULTIPLE_TEST_PLANS_PACKAGE_ID))
+
+        then:
+        Thread.sleep(10000L);
+/*
+        while (executorMock.testSuiteResults.values().last().status!='SUCCESS')
+            Thread.sleep(1000L);
+*/
+        out.get() == true
+        curatorMock.networkServiceInstances.size()==3
+
+        testPlanRepositoryMock.testPlans.size()==3
+        testPlanRepositoryMock.testPlans.values().last().status=='SUCCESS'
+        testPlanRepositoryMock.testPlans.values().last().networkServiceInstances.size()==1
+/*
+        testPlanRepositoryMock.testPlans.values().each{testPlan ->
+            testPlan.testSuiteResults.size()==2
+        }
+*/
+/*
+        testPlanRepositoryMock.testPlans.values().last().testSuiteResults.last().status=='SUCCESS'
+*/
+
+        cleanup:
+        curatorMock.reset()
+        testPlanRepositoryMock.reset()
+    }
 }

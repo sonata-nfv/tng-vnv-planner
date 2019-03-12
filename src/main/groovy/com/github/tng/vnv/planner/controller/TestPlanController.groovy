@@ -37,8 +37,8 @@ package com.github.tng.vnv.planner.controller
 import com.github.tng.vnv.planner.model.NetworkServiceDescriptor
 import com.github.tng.vnv.planner.model.TestDescriptor
 import com.github.tng.vnv.planner.model.TestSuite
-import com.github.tng.vnv.planner.data.service.TestPlanService
-import com.github.tng.vnv.planner.data.service.TestSuiteService
+import com.github.tng.vnv.planner.service.TestPlanService
+import com.github.tng.vnv.planner.service.TestSuiteService
 import io.swagger.annotations.ApiResponse
 import io.swagger.annotations.ApiResponses
 import org.springframework.beans.factory.annotation.Autowired

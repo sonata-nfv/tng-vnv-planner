@@ -32,46 +32,48 @@
  * partner consortium (www.5gtango.eu).
  */
 
-package com.github.tng.vnv.planner.controller
+package com.github.tng.vnv.planner.queue
+
+import groovy.util.logging.Log
+import org.springframework.stereotype.Component
 
 
-import com.github.tng.vnv.planner.model.TestSuite
-import com.github.tng.vnv.planner.service.TestSuiteService
-import io.swagger.annotations.ApiResponse
-import io.swagger.annotations.ApiResponses
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.*
+@Log
+@Component
+class TestPlanConsumer {
+    String id
+    String messageQueue
+    String action
 
-import javax.validation.Valid
-
-@RestController
-@RequestMapping('/api/v1/test-suites')
-class TestSuiteController {
-
-    @Autowired
-    TestSuiteService testSuiteService
-
-    @GetMapping('{uuid}')
-    TestSuite findOne(@PathVariable String uuid) {
-        testSuiteService.findByUuid(uuid)
+    def add(String uuid) {
+        action = 'ADD'
+        id = uuid
+        this
+    }
+    def remove(String uuid) {
+        action = 'REMOVE'
+        id = uuid
+        this
     }
 
-    @ApiResponses(value = [@ApiResponse(code = 400, message = 'Bad Request')])
-    @PostMapping('')
-    ResponseEntity<Void> save(@Valid @RequestBody TestSuite body) {
-        testSuiteService.save(body)
-        ResponseEntity.ok().build()
+
+    def update(String uuid) {
+        action = 'UPDATE'
+        id = uuid
+        this
     }
 
-    @PutMapping('{uuid}')
-    TestSuite update(@RequestBody TestSuite testSuite, @PathVariable String uuid) {
-        testSuiteService.update(testSuite, uuid)
+    def to(String mq) {
+        messageQueue = mq
+        //case ADD
+        //todo-gandreou: return the result for the ADD of the item from the queue
+        //case REMOVE
+        //todo-gandreou: return the result for the REMOVE of the item from the queue
+        //case UPDATE
+        //todo-gandreou: return the result for the UPDATE of the item from the queue
     }
 
-    @DeleteMapping('{uuid}')
-    TestSuite deleteById(@PathVariable String uuid) {
-        testSuiteService.deleteByUuid(uuid)
-
+    def from(String mq) {
+        from(mq)
     }
 }

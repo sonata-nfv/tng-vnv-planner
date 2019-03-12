@@ -34,7 +34,7 @@
 
 package com.github.tng.vnv.planner.controller
 
-import com.github.tng.vnv.planner.collector.Collector
+import com.github.tng.vnv.planner.app.Collector
 import com.github.tng.vnv.planner.model.PackageMetadata
 import com.github.tng.vnv.planner.model.TestPlanCallback
 import groovy.util.logging.Log

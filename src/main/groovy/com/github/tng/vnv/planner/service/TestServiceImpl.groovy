@@ -32,46 +32,29 @@
  * partner consortium (www.5gtango.eu).
  */
 
-package com.github.tng.vnv.planner.controller
+package com.github.tng.vnv.planner.service
 
-
-import com.github.tng.vnv.planner.model.TestSuite
-import com.github.tng.vnv.planner.service.TestSuiteService
-import io.swagger.annotations.ApiResponse
-import io.swagger.annotations.ApiResponses
+import com.github.tng.vnv.planner.model.NetworkServiceDescriptor
+import com.github.tng.vnv.planner.model.TestDescriptor
+import com.github.tng.vnv.planner.repository.TestRepository
+import groovy.util.logging.Log
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.*
+import org.springframework.stereotype.Service
 
-import javax.validation.Valid
-
-@RestController
-@RequestMapping('/api/v1/test-suites')
-class TestSuiteController {
+@Log
+@Service("TestService")
+class TestServiceImpl implements TestService {
 
     @Autowired
-    TestSuiteService testSuiteService
+    TestRepository testRepository
 
-    @GetMapping('{uuid}')
-    TestSuite findOne(@PathVariable String uuid) {
-        testSuiteService.findByUuid(uuid)
-    }
-
-    @ApiResponses(value = [@ApiResponse(code = 400, message = 'Bad Request')])
-    @PostMapping('')
-    ResponseEntity<Void> save(@Valid @RequestBody TestSuite body) {
-        testSuiteService.save(body)
-        ResponseEntity.ok().build()
-    }
-
-    @PutMapping('{uuid}')
-    TestSuite update(@RequestBody TestSuite testSuite, @PathVariable String uuid) {
-        testSuiteService.update(testSuite, uuid)
-    }
-
-    @DeleteMapping('{uuid}')
-    TestSuite deleteById(@PathVariable String uuid) {
-        testSuiteService.deleteByUuid(uuid)
-
+    def findByService(NetworkServiceDescriptor nsd) {
+        List<TestDescriptor> tdList = [] as ArrayList
+        nsd.testingTags?.each { tt ->
+            testRepository.findTssByTestTag(tt)?.each { td ->
+                tdList << td
+            }
+        }
+        tps
     }
 }

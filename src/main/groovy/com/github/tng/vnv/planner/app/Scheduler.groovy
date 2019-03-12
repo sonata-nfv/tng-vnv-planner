@@ -32,46 +32,57 @@
  * partner consortium (www.5gtango.eu).
  */
 
-package com.github.tng.vnv.planner.controller
+package com.github.tng.vnv.planner.app
 
-
+import com.github.tng.vnv.planner.Applicant
+import com.github.tng.vnv.planner.service.CatalogueService
+import com.github.tng.vnv.planner.service.TestPlanService
+import com.github.tng.vnv.planner.model.PackageMetadata
+import com.github.tng.vnv.planner.model.TestPlan
 import com.github.tng.vnv.planner.model.TestSuite
-import com.github.tng.vnv.planner.service.TestSuiteService
-import io.swagger.annotations.ApiResponse
-import io.swagger.annotations.ApiResponses
+import com.github.tng.vnv.planner.queue.TestPlanProducer
+import com.github.tng.vnv.planner.queue.TestSuiteProducer
+import groovy.util.logging.Log
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.*
+import org.springframework.scheduling.annotation.Async
+import org.springframework.stereotype.Component
 
-import javax.validation.Valid
+import java.util.concurrent.CompletableFuture
 
-@RestController
-@RequestMapping('/api/v1/test-suites')
-class TestSuiteController {
+
+@Log
+@Component
+class Scheduler extends Applicant {
 
     @Autowired
-    TestSuiteService testSuiteService
+    TestPlanProducer testPlanProducer
 
-    @GetMapping('{uuid}')
-    TestSuite findOne(@PathVariable String uuid) {
-        testSuiteService.findByUuid(uuid)
+    @Autowired
+    TestSuiteProducer testSuiteProducer
+
+    @Autowired
+    TestPlanService testPlanService
+
+    @Autowired
+    CatalogueService catalogueService
+
+    @Async
+    CompletableFuture<Boolean> schedule(PackageMetadata packageMetadata) {
+        def map = catalogueService.discoverAssociatedNssAndTests(packageMetadata)
+
+        Boolean out = (map == null) ? false : map.every {nsd,td ->
+            schedule(testPlanService.createTestPlan(networkServiceDescriptor: nsd, TestDescriptor: td) == true)
+        }
+        CompletableFuture.completedFuture(out)
     }
 
-    @ApiResponses(value = [@ApiResponse(code = 400, message = 'Bad Request')])
-    @PostMapping('')
-    ResponseEntity<Void> save(@Valid @RequestBody TestSuite body) {
-        testSuiteService.save(body)
-        ResponseEntity.ok().build()
+    def schedule(TestPlan testPlan) {
+        testPlanProducer.add(testPlan.uuid).to("TEST_PLAN_MESSAGE_QUEUE")
+        testPlanProducer.update(testPlan.uuid).to("TEST_SUITE_MESSAGE_QUEUE")
     }
 
-    @PutMapping('{uuid}')
-    TestSuite update(@RequestBody TestSuite testSuite, @PathVariable String uuid) {
-        testSuiteService.update(testSuite, uuid)
-    }
-
-    @DeleteMapping('{uuid}')
-    TestSuite deleteById(@PathVariable String uuid) {
-        testSuiteService.deleteByUuid(uuid)
-
+    def schedule(TestSuite testSuite) {
+        testSuiteProducer.add(testPlan.uuid).to("TEST_PLAN_MESSAGE_QUEUE")
+        testSuiteProducer.update(testPlan.uuid).to("TEST_SUITE_MESSAGE_QUEUE")
     }
 }

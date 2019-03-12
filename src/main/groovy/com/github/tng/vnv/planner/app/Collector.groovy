@@ -1,3 +1,4 @@
+package com.github.tng.vnv.planner.app
 /*
  * Copyright (c) 2015 SONATA-NFV, 2017 5GTANGO [, ANY ADDITIONAL AFFILIATION]
  * ALL RIGHTS RESERVED.
@@ -32,46 +33,23 @@
  * partner consortium (www.5gtango.eu).
  */
 
-package com.github.tng.vnv.planner.controller
-
-
-import com.github.tng.vnv.planner.model.TestSuite
-import com.github.tng.vnv.planner.service.TestSuiteService
-import io.swagger.annotations.ApiResponse
-import io.swagger.annotations.ApiResponses
+import com.github.tng.vnv.planner.Applicant
+import com.github.tng.vnv.planner.service.TestPlanService
+import com.github.tng.vnv.planner.model.TestPlan
+import groovy.util.logging.Log
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.*
+import org.springframework.stereotype.Component
 
-import javax.validation.Valid
 
-@RestController
-@RequestMapping('/api/v1/test-suites')
-class TestSuiteController {
+@Log
+@Component
+class Collector extends Applicant {
 
     @Autowired
-    TestSuiteService testSuiteService
+    TestPlanService testPlanService
 
-    @GetMapping('{uuid}')
-    TestSuite findOne(@PathVariable String uuid) {
-        testSuiteService.findByUuid(uuid)
-    }
-
-    @ApiResponses(value = [@ApiResponse(code = 400, message = 'Bad Request')])
-    @PostMapping('')
-    ResponseEntity<Void> save(@Valid @RequestBody TestSuite body) {
-        testSuiteService.save(body)
-        ResponseEntity.ok().build()
-    }
-
-    @PutMapping('{uuid}')
-    TestSuite update(@RequestBody TestSuite testSuite, @PathVariable String uuid) {
-        testSuiteService.update(testSuite, uuid)
-    }
-
-    @DeleteMapping('{uuid}')
-    TestSuite deleteById(@PathVariable String uuid) {
-        testSuiteService.deleteByUuid(uuid)
-
+    @Override
+    def update(TestPlan testPlan) {
+        testPlanService.update(testPlan)
     }
 }

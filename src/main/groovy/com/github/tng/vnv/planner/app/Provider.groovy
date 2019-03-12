@@ -32,46 +32,34 @@
  * partner consortium (www.5gtango.eu).
  */
 
-package com.github.tng.vnv.planner.controller
+package com.github.tng.vnv.planner.app
 
-
-import com.github.tng.vnv.planner.model.TestSuite
-import com.github.tng.vnv.planner.service.TestSuiteService
-import io.swagger.annotations.ApiResponse
-import io.swagger.annotations.ApiResponses
+import com.github.tng.vnv.planner.Applicant
+import com.github.tng.vnv.planner.client.Curator
+import com.github.tng.vnv.planner.model.TestPlan
+import com.github.tng.vnv.planner.queue.TestPlanConsumer
+import groovy.util.logging.Log
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.*
+import org.springframework.stereotype.Component
 
-import javax.validation.Valid
 
-@RestController
-@RequestMapping('/api/v1/test-suites')
-class TestSuiteController {
+@Log
+@Component
+class Provider extends Applicant {
 
     @Autowired
-    TestSuiteService testSuiteService
+    Curator curator
 
-    @GetMapping('{uuid}')
-    TestSuite findOne(@PathVariable String uuid) {
-        testSuiteService.findByUuid(uuid)
-    }
+    @Autowired
+    TestPlanConsumer testPlanConsumer
 
-    @ApiResponses(value = [@ApiResponse(code = 400, message = 'Bad Request')])
-    @PostMapping('')
-    ResponseEntity<Void> save(@Valid @RequestBody TestSuite body) {
-        testSuiteService.save(body)
-        ResponseEntity.ok().build()
-    }
+    def delegate(TestPlan testPlan) {
+        def res = Curator.proceedWith(testPlan)
+        //if res is valid, set TestPlan status like "proceeded to curator"
+        update(TestPlan)
+        //todo-gandreou: remove from testPlan in testPlans queue or better update the testSuite (testPlans list) in testSuites queue
 
-    @PutMapping('{uuid}')
-    TestSuite update(@RequestBody TestSuite testSuite, @PathVariable String uuid) {
-        testSuiteService.update(testSuite, uuid)
-    }
-
-    @DeleteMapping('{uuid}')
-    TestSuite deleteById(@PathVariable String uuid) {
-        testSuiteService.deleteByUuid(uuid)
-
+        testPlanConsumer.remove(testPlan.uuid).from("TEST_PLAN_MESSAGE_QUEUE")
+        testPlanConsumer.update(testPlan.uuid).to("TEST_SUITE_MESSAGE_QUEUE")
     }
 }
