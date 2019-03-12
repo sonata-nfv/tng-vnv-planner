@@ -88,6 +88,7 @@ class NetworkServiceControllerTest extends AbstractSpec {
     }
 */
 
+    @Ignore
     void "retrieval of a single t st suite's related tests should successfully all the tag related tests"() {
         when:
         List tss = getForEntity('/tng-vnv-planner/api/v1/services/{serviceUuid}/tests', List, NETWORK_SERVICE_ID).body
