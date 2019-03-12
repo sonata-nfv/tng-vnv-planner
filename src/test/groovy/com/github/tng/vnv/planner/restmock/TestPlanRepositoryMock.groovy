@@ -54,19 +54,19 @@ class TestPlanRepositoryMock {
         testPlans.clear()
     }
 
-    @GetMapping('/mock/trr/test-plans')
+    @GetMapping('/mock/tpr/test-plans')
     List listTestPlans() {
         new ArrayList(testPlans.values())
     }
 
-    @PostMapping('/mock/trr/test-plans')
+    @PostMapping('/mock/tpr/test-plans')
     TestPlan createTestPlan(@RequestBody TestPlan testPlan) {
         ++numOfCallsForTestPlanCreation
         testPlan.uuid = UUID.randomUUID().toString()
         testPlans[testPlan.uuid] = testPlan
     }
 
-    @PutMapping('/mock/trr/test-plans/{testPlanId:.+}')
+    @PutMapping('/mock/tpr/test-plans/{testPlanId:.+}')
     TestPlan updatePlan(@RequestBody TestPlan testPlan, @PathVariable('testPlanId') String testPlanId) {
         ++numOfCallsForTestPlanUpdate
          testPlan.uuid = testPlanId

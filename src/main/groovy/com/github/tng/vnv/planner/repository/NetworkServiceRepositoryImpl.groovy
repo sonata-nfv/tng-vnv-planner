@@ -34,7 +34,7 @@
 
 package com.github.tng.vnv.planner.repository
 
-import com.github.tng.vnv.planner.helper.DebugHelper
+import com.github.tng.vnv.planner.utils.DebugHelper
 import com.github.tng.vnv.planner.model.NetworkService
 import com.github.tng.vnv.planner.model.NetworkServiceDescriptor
 import groovy.util.logging.Log
@@ -44,7 +44,7 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Repository
 import org.springframework.web.client.RestTemplate
 
-import static com.github.tng.vnv.planner.helper.DebugHelper.callExternalEndpoint
+import static com.github.tng.vnv.planner.utils.DebugHelper.callExternalEndpoint
 
 @Log
 @Repository("NetworkServiceRepository")

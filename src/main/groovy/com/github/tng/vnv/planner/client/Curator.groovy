@@ -34,8 +34,8 @@
 
 package com.github.tng.vnv.planner.client
 
-import com.github.tng.vnv.planner.model.NsRequest
-import com.github.tng.vnv.planner.model.NsResponse
+import com.github.tng.vnv.planner.model.TestPlanRequest
+import com.github.tng.vnv.planner.model.TestPlanResponse
 import com.github.tng.vnv.planner.model.TestPlan
 import groovy.util.logging.Log
 import org.springframework.beans.factory.annotation.Autowired
@@ -44,7 +44,7 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 import org.springframework.web.client.RestTemplate
 
-import static com.github.tng.vnv.planner.helper.DebugHelper.callExternalEndpoint
+import static com.github.tng.vnv.planner.utils.DebugHelper.callExternalEndpoint
 
 @Component
 @Log
@@ -58,11 +58,11 @@ class Curator {
     def testPlanCurateEndpoint
 
     def proceedWith(TestPlan testPlan) {
-        def createRequest = new NsRequest(
+        def createRequest = new TestPlanRequest(
                 serviceUuid: testPlan.networkServiceInstances.first().serviceUuid,
                 requestType: 'CREATE_SERVICE',
         )
-        NsResponse response = callExternalEndpoint(restTemplate.postForEntity(testPlanCurateEndpoint, createRequest, NsResponse),'Curator.proceedWith(TestPlan)',testPlanCurateEndpoint).body
+        TestPlanResponse response = callExternalEndpoint(restTemplate.postForEntity(testPlanCurateEndpoint, createRequest, TestPlanResponse),'Curator.proceedWith(TestPlan)',testPlanCurateEndpoint).body
         response
     }
 }

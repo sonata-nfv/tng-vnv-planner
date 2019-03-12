@@ -35,7 +35,6 @@
 package com.github.tng.vnv.planner
 
 import com.github.tng.vnv.planner.service.TestPlanService
-import com.github.tng.vnv.planner.service.TestSuiteService
 import com.github.tng.vnv.planner.model.TestPlan
 import groovy.util.logging.Log
 import org.springframework.beans.factory.annotation.Autowired
@@ -47,9 +46,6 @@ class Applicant {
 
     @Autowired
     TestPlanService testPlanService
-
-    @Autowired
-    TestSuiteService testSuiteService
 
     def update(TestPlan testPlan) {
         testPlanService.update(testPlan, testPlan.uuid)

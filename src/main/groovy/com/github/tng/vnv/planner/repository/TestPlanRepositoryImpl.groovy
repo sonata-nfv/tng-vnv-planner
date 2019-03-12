@@ -47,7 +47,7 @@ import org.springframework.stereotype.Repository
 import org.springframework.web.client.RestTemplate
 import groovy.util.logging.Log
 
-import static com.github.tng.vnv.planner.helper.DebugHelper.callExternalEndpoint
+import static com.github.tng.vnv.planner.utils.DebugHelper.callExternalEndpoint
 
 @Log
 @Repository("TestPlanRepository")
@@ -61,10 +61,10 @@ class TestPlanRepositoryImpl implements TestPlanRepository {
     @Qualifier('restTemplateWithAuth')
     RestTemplate restTemplateWithAuth
 
-    @Value('${app.trr.test.plan.create.endpoint}')
+    @Value('${app.tpr.test.plan.create.endpoint}')
     def testPlanCreateEndpoint
 
-    @Value('${app.trr.test.plan.update.endpoint}')
+    @Value('${app.tpr.test.plan.update.endpoint}')
     def testPlanUpdateEndpoint
 
     @Value('${app.vnvgk.test.list.by.tag.endpoint}')

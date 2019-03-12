@@ -34,9 +34,9 @@
 
 package com.github.tng.vnv.planner.app
 
-import com.github.tng.vnv.planner.app.Scheduler
+
 import com.github.tng.vnv.planner.model.PackageMetadata
-import com.github.tng.vnv.planner.restmock.TestCatalogueMock
+import com.github.tng.vnv.planner.restmock.CatalogueMock
 import com.github.tng.vnv.planner.restmock.CuratorMock
 import com.github.tng.vnv.planner.restmock.TestPlanRepositoryMock
 import com.github.mrduguo.spring.test.AbstractSpec
@@ -56,7 +56,7 @@ class SchedulerTest extends AbstractSpec {
     CuratorMock curatorMock
 
     @Autowired
-    TestCatalogueMock testCatalogueMock
+    CatalogueMock testCatalogueMock
 
     @Autowired
     TestPlanRepositoryMock testPlanRepositoryMock
@@ -74,11 +74,9 @@ class SchedulerTest extends AbstractSpec {
             Thread.sleep(1000L);
 */
         out.get() == true
-        curatorMock.networkServiceInstances.size()==3
 
         testPlanRepositoryMock.testPlans.size()==3
         testPlanRepositoryMock.testPlans.values().last().status=='SUCCESS'
-        testPlanRepositoryMock.testPlans.values().last().networkServiceInstances.size()==1
 /*
         testPlanRepositoryMock.testPlans.values().each{testPlan ->
             testPlan.testSuiteResults.size()==2

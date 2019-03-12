@@ -1,4 +1,4 @@
-package com.github.tng.vnv.planner.helper
+package com.github.tng.vnv.planner.utils
 
 import groovy.util.logging.Log
 import org.springframework.http.ResponseEntity

@@ -39,7 +39,7 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-class TestCatalogueMock {
+class CatalogueMock {
 
     private static String TEST_UUID='input0ts-75f5-4ca1-90c8-12ec80a79821'
     private static String SERVICE_UUID='input0ns-f213-4fae-8d3f-04358e1e1445'

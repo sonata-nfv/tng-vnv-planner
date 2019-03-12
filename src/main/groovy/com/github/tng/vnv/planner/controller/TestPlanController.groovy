@@ -37,9 +37,7 @@ package com.github.tng.vnv.planner.controller
 import com.github.tng.vnv.planner.model.NetworkServiceDescriptor
 import com.github.tng.vnv.planner.model.TestDescriptor
 import com.github.tng.vnv.planner.model.TestPlan
-import com.github.tng.vnv.planner.model.TestSuite
 import com.github.tng.vnv.planner.service.TestPlanService
-import com.github.tng.vnv.planner.service.TestSuiteService
 import io.swagger.annotations.ApiResponse
 import io.swagger.annotations.ApiResponses
 import org.springframework.beans.factory.annotation.Autowired
@@ -55,29 +53,26 @@ class TestPlanController {
     @Autowired
     TestPlanService testPlanService
 
-    @Autowired
-    TestSuiteService testSuiteService
-
     @GetMapping('{uuid}')
     ResponseEntity<List<TestPlan>> findOne(@PathVariable String uuid) {
-        testSuiteService.findByUuid(uuid)
+        testPlanService.findByUuid(uuid)
     }
 
     @ApiResponses(value = [@ApiResponse(code = 400, message = 'Bad Request')])
     @PostMapping('')
     ResponseEntity<Void> save(@Valid @RequestBody List<TestPlan> body) {
-        testSuiteService.save(body)
+        testPlanService.save(body)
         ResponseEntity.ok().build()
     }
 
     @PutMapping('{uuid}')
     ResponseEntity<List<TestPlan>> update(@RequestBody List<TestPlan> request, @PathVariable String uuid) {
-        testSuiteService.update(request)
+        testPlanService.update(request)
     }
 
     @DeleteMapping('{uuid}')
     ResponseEntity<Void> deleteById(@PathVariable String uuid) {
-        testSuiteService.deleteByUuid(uuid)
+        testPlanService.deleteByUuid(uuid)
     }
 
     @ApiResponses(value = [@ApiResponse(code = 400, message = 'Bad Request')])

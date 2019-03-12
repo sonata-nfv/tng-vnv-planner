@@ -39,9 +39,7 @@ import com.github.tng.vnv.planner.service.CatalogueService
 import com.github.tng.vnv.planner.service.TestPlanService
 import com.github.tng.vnv.planner.model.PackageMetadata
 import com.github.tng.vnv.planner.model.TestPlan
-import com.github.tng.vnv.planner.model.TestSuite
 import com.github.tng.vnv.planner.queue.TestPlanProducer
-import com.github.tng.vnv.planner.queue.TestSuiteProducer
 import groovy.util.logging.Log
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.scheduling.annotation.Async
@@ -56,9 +54,6 @@ class Scheduler extends Applicant {
 
     @Autowired
     TestPlanProducer testPlanProducer
-
-    @Autowired
-    TestSuiteProducer testSuiteProducer
 
     @Autowired
     TestPlanService testPlanService
@@ -81,8 +76,7 @@ class Scheduler extends Applicant {
         testPlanProducer.update(testPlan.uuid).to("TEST_SUITE_MESSAGE_QUEUE")
     }
 
-    def schedule(TestSuite testSuite) {
-        testSuiteProducer.add(testPlan.uuid).to("TEST_PLAN_MESSAGE_QUEUE")
-        testSuiteProducer.update(testPlan.uuid).to("TEST_SUITE_MESSAGE_QUEUE")
+    def schedule(List<TestPlan> testPlanList) {
+        testPlanList?.forEach({tp -> schedule(tp)})
     }
 }

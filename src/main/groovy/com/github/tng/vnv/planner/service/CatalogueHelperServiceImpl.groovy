@@ -35,7 +35,6 @@
 package com.github.tng.vnv.planner.service
 
 import com.github.tng.vnv.planner.repository.NetworkServiceRepository
-import com.github.tng.vnv.planner.repository.PackageRepository
 import com.github.tng.vnv.planner.repository.TestRepository
 import com.github.tng.vnv.planner.model.NetworkServiceDescriptor
 import com.github.tng.vnv.planner.model.PackageMetadata
@@ -48,8 +47,8 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import org.springframework.web.client.RestTemplate
 
-import static com.github.tng.vnv.planner.helper.DebugHelper.callExternalEndpoint
-import static com.github.tng.vnv.planner.helper.DebugHelper.nsAndTestsMappingToString
+import static com.github.tng.vnv.planner.utils.DebugHelper.callExternalEndpoint
+import static com.github.tng.vnv.planner.utils.DebugHelper.nsAndTestsMappingToString
 
 @Log
 @Service("CatalogueHelperService")
@@ -62,9 +61,6 @@ class CatalogueHelperServiceImpl implements CatalogueHelperService {
     @Autowired
     @Qualifier('restTemplateWithoutAuth')
     RestTemplate restTemplate
-
-    @Autowired
-    PackageRepository packageRepository
 
     @Autowired
     TestRepository testRepository

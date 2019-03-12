@@ -36,26 +36,26 @@ package com.github.tng.vnv.planner.controller
 
 
 import com.github.mrduguo.spring.test.AbstractSpec
-import com.github.tng.vnv.planner.restmock.TestCatalogueMock
-import com.github.tng.vnv.planner.restmock.CuratorMock
+import com.github.tng.vnv.planner.restmock.CatalogueMock
 import com.github.tng.vnv.planner.restmock.TestPlanRepositoryMock
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.http.HttpStatus
-import spock.lang.Ignore
 
 class CatalogueCallbackControllerTest extends AbstractSpec {
 
     public static final String MULTIPLE_TEST_PLANS_PACKAGE_ID ='multiple_scheduler:test:0.0.1'
     public static final String BAD_REQUEST_PACKAGE_ID ='error:test:0.0.1'
 
+/*
     @Autowired
     CuratorMock curatorMock
 
     @Autowired
-    TestCatalogueMock testCatalogueMock
+    CatalogueMock testCatalogueMock
 
     @Autowired
     TestPlanRepositoryMock testPlanRepositoryMock
+*/
+
 
 /*
     @Ignore

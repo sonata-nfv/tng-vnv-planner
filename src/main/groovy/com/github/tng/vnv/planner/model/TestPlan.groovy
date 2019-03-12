@@ -67,3 +67,16 @@ class TestPlan {
         return sb.toString();
     }
 }
+
+@EqualsAndHashCode
+class TestPlanRequest {
+    TestPlan testPlan
+    String requestType
+}
+
+@EqualsAndHashCode
+class TestPlanResponse {
+    String id
+    TestPlan testPlan
+    String status
+}
