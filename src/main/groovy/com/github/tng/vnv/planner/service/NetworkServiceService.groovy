@@ -63,7 +63,7 @@ class NetworkServiceService {
         }
         nsdList
     }
-	List<NetworkService> findNssByTestTag(String tag) {
+	def findNssByTestTag(String tag) {
 		networkServiceRepository.findNssByTestTag(tag)
 	}
 }

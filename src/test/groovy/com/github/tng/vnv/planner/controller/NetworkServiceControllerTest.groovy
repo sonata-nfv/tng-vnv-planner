@@ -72,14 +72,5 @@ class NetworkServiceControllerTest extends AbstractSpec {
 
     }
 	
-	void "retrieval of a Ns list by tag list"() {
-		when:
-		List tss = getForEntity('/tng-vnv-planner/api/v1/test-plans/services/testingTags/{testingTags}/tests', List, TAGS).body 
-		then:
 
-		tss.size() == 4
-		cleanup:
-		curatorMock.reset()
-
-	}
 }

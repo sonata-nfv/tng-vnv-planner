@@ -34,10 +34,12 @@
 
 package com.github.tng.vnv.planner.model
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonProperty
 import groovy.transform.EqualsAndHashCode
 
 @EqualsAndHashCode(includes = "networkServiceId")
+@JsonIgnoreProperties(ignoreUnknown = true)
 class NetworkService {
 
 //    @ApiModelProperty(required = true)
@@ -60,7 +62,7 @@ class NetworkService {
         return sb.toString();
     }
 }
-
+@JsonIgnoreProperties(ignoreUnknown = true)
 class NetworkServiceDescriptor {
     String uuid
     String name

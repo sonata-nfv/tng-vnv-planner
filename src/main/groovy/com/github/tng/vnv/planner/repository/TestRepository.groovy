@@ -79,7 +79,11 @@ class TestRepository {
     }
 
     List<Test> findTssByTestTag(String tag) {
-        DebugHelper.callExternalEndpoint(restTemplateWithAuth.getForEntity(testListByTagEndpoint, Test[], tag),
+		UriComponentsBuilder builder = UriComponentsBuilder
+		.fromUriString(testListByTagEndpoint)
+		.queryParam("test_tag", tag)
+		println builder.toUriString()
+        DebugHelper.callExternalEndpoint(restTemplateWithAuth.getForEntity(builder.toUriString(), Test[]),
                 'TestRepository.findTssByTestTag',testListByTagEndpoint).body
     }
 

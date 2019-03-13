@@ -61,14 +61,4 @@ class NetworkServiceController {
         )
     }
 	
-	@GetMapping('/services/testingTags/{testingTags}/tests')
-	List<NetworkService> listTestsDescriptorByTestingTags(@PathVariable('testingTags') String tags) {
-		def tds  = [] as Set
-		tags = tags.trim();
-		String[] tagsList = tags.substring(1, tags.length() - 1).trim().split("\\s*,\\s*");
-		tagsList.each { tag -> 
-			tds.addAll(networkServiceService.findNssByTestTag(tag))
-		}
-		tds
-	}
 }

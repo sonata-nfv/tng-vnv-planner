@@ -34,11 +34,16 @@
 
 package com.github.tng.vnv.planner.restmock
 
+import com.fasterxml.jackson.core.type.TypeReference
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.github.tng.vnv.planner.model.NetworkService
+import com.github.tng.vnv.planner.model.Test
+
 import groovy.json.JsonSlurper
 import org.springframework.util.ResourceUtils
 
 class DataMock {
-
+	static ObjectMapper mapper = new ObjectMapper();
     static def getTest(String uuid) {
         getTests().find{it.uuid == uuid}
     }
@@ -69,11 +74,31 @@ class DataMock {
     }
 	
 	static def getServiceByTag(String tag) {
-		getServices().find{it.nsd.testing_tags.contains(tag)}
+		def nss  = [] as Set
+		getServices().each{
+			println it.nsd.testing_tags
+			if (it.nsd.testing_tags!=null ) {//&& it.nsd.testing_tags.contains(tag)
+				nss.add(it)
+			}
+		}
+		println "***********************************"
+		println nss.size()
+		nss
 	}
 	
-	static def getTestByTag(String tag) {
-		getTests().find{it.testd.test_execution.contains(tag)}
+	static List<Test> getTestByTag(String tag) {
+		def tss  = [] as List<Test>
+		getTests().each{
+			it.testd.test_execution.each { 
+				if (it.test_tag == tag ) {//&& it.nsd.testing_tags.contains(tag)
+					tss.add(it)
+				}
+			}
+			
+		}
+		println "***********************************"
+		println tss.size()
+		tss
 	}
 
 }

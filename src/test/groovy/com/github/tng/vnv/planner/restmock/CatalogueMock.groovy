@@ -72,7 +72,7 @@ class CatalogueMock {
 
     @GetMapping('/mock/gk/services')
     def findServices() {
-        DataMock.services
+		return  DataMock.services
     }
 
     @GetMapping('/mock/gk/services/{networkServiceId:.+}')
@@ -81,8 +81,11 @@ class CatalogueMock {
     }
 
     @GetMapping('/mock/gk/tests/descriptors')
-    def findTests() {
-        DataMock.tests
+    def findTests(@RequestParam(value='test_tag',required=false) String tag) {
+		if(!tag) {
+			return  DataMock.tests
+		}
+		DataMock.getTestByTag(tag)
     }
 
     @GetMapping('/mock/gk/tests/descriptors/{testUuid:.+}')
@@ -90,16 +93,5 @@ class CatalogueMock {
         DataMock.getTest(testUuid)
     }
 	
-	@GetMapping('/mock/gk/services/testingTags/{testingTags}/tests/')
-	def findNsByTags(@PathVariable('testingTags') String tags) {
-		log(tags)
-		tags = tags.trim();
-		String[] tagsList = tags.substring(1, tags.length() - 1).trim().split("\\s*,\\s*");
-		def nss  = [] as Set 
-		tagsList.each { tag ->
-			nss.addAll(DataMock.getServiceByTag(tag))
-		}
-		nss
-	}
 }
 

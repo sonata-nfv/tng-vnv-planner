@@ -52,7 +52,7 @@ app:
       username: sonata
       password: 1234
     service.list.endpoint: ${app.gk.base.url}/services
-    service.list.by.tag.endpoint: ${app.gk.base.url}/services/testingTags/{testingTags}/tests
+    service.list.by.tag.endpoint: ${app.gk.base.url}/services
     package.list.endpoint: ${app.gk.base.url}/packages
     service.metadata.endpoint: ${app.gk.base.url}/services/{networkServiceId}
     package.metadata.endpoint: ${app.gk.base.url}/packages/{packageId}
@@ -60,8 +60,7 @@ app:
     host: tng-api-gtw
     base.url: http://${app.vnvgk.host}:5000/api/v3
     test.list.endpoint: ${app.vnvgk.base.url}/tests/descriptors
-    test.list.by.tag.endpoint: ${app.vnvgk.base.url}/tests
-    services.list.by.tag.endpoint: ${app.vnvgk.base.url}/services/testingTags/{testingTags}/tests
+    test.list.by.tag.endpoint: ${app.vnvgk.base.url}/tests/descriptors
     test.metadata.endpoint: ${app.vnvgk.base.url}/tests/descriptors/{testUuid}
   cat:
     host: tng-cat
