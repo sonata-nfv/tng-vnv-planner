@@ -47,6 +47,7 @@ class TestPlan {
     String nsdUuid
     String tdUuid
     String index
+    String status
     NetworkServiceDescriptor nsd
     TestDescriptor testd
 
@@ -71,8 +72,11 @@ class TestPlan {
 class TestPlanRequest {
     NetworkServiceDescriptor nsd
     TestDescriptor testd
-    Boolean lastTest
-    List<TestPlanCallback> testPlanCallbacks
+    Boolean lastTest = false
+    List<TestPlanCallback> testPlanCallbacks = [
+            new TestPlanCallback(eventActor: 'Curator', url: '/test-plans/on-change/completed', status:TEST_PLAN_STATUS.COMPLETED),
+            new TestPlanCallback(eventActor: 'Curator', url: '/test-plans/on-change'),
+    ]
 }
 
 @EqualsAndHashCode
@@ -96,7 +100,7 @@ class TestPlanCallback {
     @ApiModelProperty(
             value = 'Callback URL',
             allowEmptyValue = false,
-            example = '/on-change',
+            example = '/test-plans/on-change',
             required = true
     )
     @NotNull
@@ -136,4 +140,9 @@ class TestPlanCallback {
     )
     @NotNull
     String testResultsRepository
+}
+
+
+enum TEST_PLAN_STATUS{
+    STARTING('STARTING'), COMPLETED('COMPLETED'), CANCELLING('CANCELLING'), CANCELLED('CANCELLED'), ERROR('ERROR')
 }
