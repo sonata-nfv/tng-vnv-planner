@@ -89,7 +89,6 @@ class DataMock {
 	static def getTestByTag(String tag) {
 		List<Test> tList = [] as ArrayList
 		getTests().each { t ->
-				println t.dump()
 				if(t.testd.testExecution.any{ element ->
 					element.testTag.contains(tag) && !tList.contains(t)
 				})
