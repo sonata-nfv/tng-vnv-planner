@@ -116,16 +116,16 @@
                     "example": "Curator, Executor",
                     "type": "string"
                 },
+                "status": {
+                    "allowEmptyValue": false,
+                    "description": "Test Plan Status",
+                    "example": "STARTING, COMPLETED, CANCELLING, CANCELLED, ERROR",
+                    "type": "string"
+                },
                 "test_plan_repository": {
                     "allowEmptyValue": false,
                     "description": "Test Plan Repository URI",
                     "example": "tng-cat, catalog, or xx.xx",
-                    "type": "string"
-                },
-                "test_plan_status": {
-                    "allowEmptyValue": false,
-                    "description": "Test Plan Status",
-                    "example": "PAUSED, CREATED, CRASHED, CANCELED, FINISHED, RESCHEDULED",
                     "type": "string"
                 },
                 "test_plan_uuid": {
@@ -141,13 +141,20 @@
                 "test_results_uuid": {
                     "allowEmptyValue": false,
                     "type": "string"
+                },
+                "url": {
+                    "allowEmptyValue": false,
+                    "description": "Callback URL",
+                    "example": "/test-plans/on-change",
+                    "type": "string"
                 }
             },
             "required": [
                 "event_actor",
-                "test_plan_status",
+                "status",
                 "test_plan_uuid",
-                "test_results_uuid"
+                "test_results_uuid",
+                "url"
             ],
             "title": "TestPlanCallback",
             "type": "object"
@@ -272,7 +279,7 @@
                 ]
             }
         },
-        "/api/v1/test-plans/on-change": {
+        "/api/v1/test-plans/on-change/": {
             "post": {
                 "consumes": [
                     "application/json"
@@ -313,6 +320,52 @@
                     }
                 },
                 "summary": "onChange",
+                "tags": [
+                    "curator-callback-controller"
+                ]
+            }
+        },
+        "/api/v1/test-plans/on-change/completed": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "operationId": "onChangeCompletedUsingPOST",
+                "parameters": [
+                    {
+                        "description": "body",
+                        "in": "body",
+                        "name": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/TestPlanCallback"
+                        }
+                    }
+                ],
+                "produces": [
+                    "*/*"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "201": {
+                        "description": "Created"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Could not find package with that package_id"
+                    }
+                },
+                "summary": "onChangeCompleted",
                 "tags": [
                     "curator-callback-controller"
                 ]
