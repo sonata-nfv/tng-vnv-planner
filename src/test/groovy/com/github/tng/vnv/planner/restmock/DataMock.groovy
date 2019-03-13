@@ -68,6 +68,10 @@ class DataMock {
         (file.exists()) ? new JsonSlurper().parseText(file.text) :  null
     }
 	
+	static def getServiceByTag(String tag) {
+		getServices().find{it.nsd.testing_tags.contains(tag)}
+	}
+	
 	static def getTestByTag(String tag) {
 		getTests().find{it.testd.test_execution.contains(tag)}
 	}

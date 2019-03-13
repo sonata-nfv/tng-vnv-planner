@@ -34,35 +34,22 @@
 
 package com.github.tng.vnv.planner.controller
 
-import com.github.tng.vnv.planner.data.repository.NetworkServiceRepository
-import com.github.tng.vnv.planner.data.repository.TestRepository
-import com.github.tng.vnv.planner.model.PackageCallback
-import com.github.tng.vnv.planner.oldlcm.scheduler.SchedulerOld
-import com.github.tng.vnv.planner.model.PackageMetadata
-import com.github.tng.vnv.planner.model.Package
-import com.github.tng.vnv.planner.app.Scheduler
-import com.github.tng.vnv.planner.scheduler.Scheduler
-import com.github.tng.vnv.planner.oldlcm.model.TestSuiteOld
-import com.github.tng.vnv.planner.oldlcm.scheduler.SchedulerOld
-import com.github.tng.vnv.planner.scheduler.Scheduler
-import com.github.tng.vnv.planner.model.PackageMetadata
-import com.github.tng.vnv.planner.model.TestDescriptor
-import com.github.tng.vnv.planner.model.TestSuite
+import javax.validation.Valid
 
-import groovy.util.logging.Log
-import io.swagger.annotations.ApiResponse
-import io.swagger.annotations.ApiResponses
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
-
-import javax.validation.Valid
+import com.github.tng.vnv.planner.app.Scheduler
+import com.github.tng.vnv.planner.model.Package
+import com.github.tng.vnv.planner.model.PackageCallback
+import com.github.tng.vnv.planner.repository.NetworkServiceRepository
+import com.github.tng.vnv.planner.repository.TestRepository
+import groovy.util.logging.Log
+import io.swagger.annotations.ApiResponse
+import io.swagger.annotations.ApiResponses
 
 @Log
 @RestController

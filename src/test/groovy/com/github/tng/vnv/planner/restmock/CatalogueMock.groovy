@@ -90,16 +90,16 @@ class CatalogueMock {
         DataMock.getTest(testUuid)
     }
 	
-	@GetMapping('/mock/gk/tests/')
-	def findTestByTags(@RequestParam('testingTags') String tags) {
+	@GetMapping('/mock/gk/services/testingTags/{testingTags}/tests/')
+	def findNsByTags(@PathVariable('testingTags') String tags) {
 		log(tags)
 		tags = tags.trim();
 		String[] tagsList = tags.substring(1, tags.length() - 1).trim().split("\\s*,\\s*");
-		def tds  = [] as Set 
+		def nss  = [] as Set 
 		tagsList.each { tag ->
-			tds.addAll(DataMock.getTestByTag(tag))
+			nss.addAll(DataMock.getServiceByTag(tag))
 		}
-		tds
+		nss
 	}
 }
 

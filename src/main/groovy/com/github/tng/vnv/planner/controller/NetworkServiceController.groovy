@@ -53,11 +53,22 @@ class NetworkServiceController {
 
     @Autowired
     NetworkServiceService networkServiceService
-
+	
     @GetMapping('/services/{serviceUuid}/tests')
     List<TestDescriptor> listTestsByService(@PathVariable('serviceUuid') String uuid) {
         testService.findByService(
                 networkServiceService.findByUuid(uuid).nsd
         )
     }
+	
+	@GetMapping('/services/testingTags/{testingTags}/tests')
+	List<NetworkService> listTestsDescriptorByTestingTags(@PathVariable('testingTags') String tags) {
+		def tds  = [] as Set
+		tags = tags.trim();
+		String[] tagsList = tags.substring(1, tags.length() - 1).trim().split("\\s*,\\s*");
+		tagsList.each { tag -> 
+			tds.addAll(networkServiceService.findNssByTestTag(tag))
+		}
+		tds
+	}
 }
