@@ -1,46 +1,204 @@
 {
-    "swagger": "2.0",
-    "info": {
-        "description": "An H2020 5GTANGO project",
-        "version": "0.0.1",
-        "title": "5GTANGO VnV Planner Dependencies' API",
-        "termsOfService": "https://5gtango.eu/",
-        "license": {
-            "name": "Apache License 2.0",
-            "url": "https://github.com/sonata-nfv/tng-vnv-planner/blob/master/LICENSE"
+    "basePath": "/tng-vnv-planner",
+    "definitions": {
+        "Login": {
+            "properties": {
+                "password": {
+                    "type": "string"
+                },
+                "username": {
+                    "type": "string"
+                }
+            },
+            "title": "Login",
+            "type": "object"
+        },
+        "NetworkServiceDescriptor": {
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "testing_tags": {
+                    "items": {
+                        "type": "string"
+                    },
+                    "type": "array"
+                },
+                "uuid": {
+                    "type": "string"
+                },
+                "vendor": {
+                    "type": "string"
+                },
+                "version": {
+                    "type": "string"
+                }
+            },
+            "title": "NetworkServiceDescriptor",
+            "type": "object"
+        },
+        "Session": {
+            "properties": {
+                "session_began_at": {
+                    "format": "date-time",
+                    "type": "string"
+                },
+                "token": {
+                    "$ref": "#/definitions/Token"
+                },
+                "username": {
+                    "type": "string"
+                }
+            },
+            "title": "Session",
+            "type": "object"
+        },
+        "TestDescriptor": {
+            "properties": {
+                "description": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "test_execution": {
+                    "items": {
+                        "$ref": "#/definitions/TestTag"
+                    },
+                    "type": "array"
+                },
+                "test_type": {
+                    "type": "string"
+                },
+                "uuid": {
+                    "type": "string"
+                },
+                "vendor": {
+                    "type": "string"
+                },
+                "version": {
+                    "type": "string"
+                }
+            },
+            "title": "TestDescriptor",
+            "type": "object"
+        },
+        "TestPlan": {
+            "properties": {
+                "index": {
+                    "type": "string"
+                },
+                "nsd": {
+                    "$ref": "#/definitions/NetworkServiceDescriptor"
+                },
+                "nsd_uuid": {
+                    "type": "string"
+                },
+                "package_id": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "td_uuid": {
+                    "type": "string"
+                },
+                "testd": {
+                    "$ref": "#/definitions/TestDescriptor"
+                },
+                "uuid": {
+                    "type": "string"
+                }
+            },
+            "title": "TestPlan",
+            "type": "object"
+        },
+        "TestTag": {
+            "properties": {
+                "tag_id": {
+                    "type": "string"
+                },
+                "test_tag": {
+                    "type": "string"
+                }
+            },
+            "title": "TestTag",
+            "type": "object"
+        },
+        "Token": {
+            "properties": {
+                "access_token": {
+                    "type": "string"
+                },
+                "expires_in": {
+                    "format": "int32",
+                    "type": "integer"
+                }
+            },
+            "title": "Token",
+            "type": "object"
         }
     },
     "host": "tng-vnv-planner:6100",
-    "basePath": "/tng-vnv-planner",
-    "tags": [
-        {
-            "name": "curator-mock",
-            "description": "Curator Mock"
+    "info": {
+        "description": "An H2020 5GTANGO project",
+        "license": {
+            "name": "Apache License 2.0",
+            "url": "https://github.com/sonata-nfv/tng-vnv-planner/blob/master/LICENSE"
         },
-        {
-            "name": "executor-mock",
-            "description": "Executor Mock"
-        },
-        {
-            "name": "session-mock",
-            "description": "Session Mock"
-        },
-        {
-            "name": "test-catalogue-mock",
-            "description": "Test Catalogue Mock"
-        },
-        {
-            "name": "test-plan-repository-mock",
-            "description": "Test Plan Repository Mock"
-        }
-    ],
+        "termsOfService": "https://5gtango.eu/",
+        "title": "5GTANGO VnV Planner Dependencies' API",
+        "version": "0.0.1"
+    },
     "paths": {
+        "/mock/curator/curate-test-plan": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "operationId": "curateTestPlanUsingPOST",
+                "parameters": [
+                    {
+                        "description": "testPlan",
+                        "in": "body",
+                        "name": "testPlan",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/TestPlan"
+                        }
+                    }
+                ],
+                "produces": [
+                    "*/*"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/TestPlan"
+                        }
+                    },
+                    "201": {
+                        "description": "Created"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                },
+                "summary": "curateTestPlan",
+                "tags": [
+                    "curator-mock"
+                ]
+            }
+        },
         "/mock/gk/packages": {
             "get": {
-                "tags": [
-                    "test-catalogue-mock"
-                ],
-                "summary": "findPackages",
                 "operationId": "findPackagesUsingGET",
                 "produces": [
                     "*/*"
@@ -61,27 +219,27 @@
                     "404": {
                         "description": "Not Found"
                     }
-                }
+                },
+                "summary": "findPackages",
+                "tags": [
+                    "catalogue-mock"
+                ]
             }
         },
         "/mock/gk/packages/{packageId}": {
             "get": {
-                "tags": [
-                    "test-catalogue-mock"
-                ],
-                "summary": "loadPackageMetadata",
                 "operationId": "loadPackageMetadataUsingGET",
-                "produces": [
-                    "*/*"
-                ],
                 "parameters": [
                     {
-                        "name": "packageId",
-                        "in": "path",
                         "description": "packageId",
+                        "in": "path",
+                        "name": "packageId",
                         "required": true,
                         "type": "string"
                     }
+                ],
+                "produces": [
+                    "*/*"
                 ],
                 "responses": {
                     "200": {
@@ -99,15 +257,15 @@
                     "404": {
                         "description": "Not Found"
                     }
-                }
+                },
+                "summary": "loadPackageMetadata",
+                "tags": [
+                    "catalogue-mock"
+                ]
             }
         },
         "/mock/gk/services": {
             "get": {
-                "tags": [
-                    "test-catalogue-mock"
-                ],
-                "summary": "findServices",
                 "operationId": "findServicesUsingGET",
                 "produces": [
                     "*/*"
@@ -128,27 +286,27 @@
                     "404": {
                         "description": "Not Found"
                     }
-                }
+                },
+                "summary": "findServices",
+                "tags": [
+                    "catalogue-mock"
+                ]
             }
         },
         "/mock/gk/services/{networkServiceId}": {
             "get": {
-                "tags": [
-                    "test-catalogue-mock"
-                ],
-                "summary": "findService",
                 "operationId": "findServiceUsingGET",
-                "produces": [
-                    "*/*"
-                ],
                 "parameters": [
                     {
-                        "name": "networkServiceId",
-                        "in": "path",
                         "description": "networkServiceId",
+                        "in": "path",
+                        "name": "networkServiceId",
                         "required": true,
                         "type": "string"
                     }
+                ],
+                "produces": [
+                    "*/*"
                 ],
                 "responses": {
                     "200": {
@@ -166,32 +324,32 @@
                     "404": {
                         "description": "Not Found"
                     }
-                }
+                },
+                "summary": "findService",
+                "tags": [
+                    "catalogue-mock"
+                ]
             }
         },
         "/mock/gk/sessions": {
             "post": {
-                "tags": [
-                    "session-mock"
-                ],
-                "summary": "createSession",
-                "operationId": "createSessionUsingPOST",
                 "consumes": [
                     "application/json"
                 ],
-                "produces": [
-                    "*/*"
-                ],
+                "operationId": "createSessionUsingPOST",
                 "parameters": [
                     {
+                        "description": "login",
                         "in": "body",
                         "name": "login",
-                        "description": "login",
                         "required": true,
                         "schema": {
                             "$ref": "#/definitions/Login"
                         }
                     }
+                ],
+                "produces": [
+                    "*/*"
                 ],
                 "responses": {
                     "200": {
@@ -212,15 +370,15 @@
                     "404": {
                         "description": "Not Found"
                     }
-                }
+                },
+                "summary": "createSession",
+                "tags": [
+                    "session-mock"
+                ]
             }
         },
         "/mock/gk/tests/descriptors": {
             "get": {
-                "tags": [
-                    "test-catalogue-mock"
-                ],
-                "summary": "findTests",
                 "operationId": "findTestsUsingGET",
                 "produces": [
                     "*/*"
@@ -241,27 +399,27 @@
                     "404": {
                         "description": "Not Found"
                     }
-                }
+                },
+                "summary": "findTests",
+                "tags": [
+                    "catalogue-mock"
+                ]
             }
         },
         "/mock/gk/tests/descriptors/{testUuid}": {
             "get": {
-                "tags": [
-                    "test-catalogue-mock"
-                ],
-                "summary": "findTest",
                 "operationId": "findTestUsingGET",
-                "produces": [
-                    "*/*"
-                ],
                 "parameters": [
                     {
-                        "name": "testUuid",
-                        "in": "path",
                         "description": "testUuid",
+                        "in": "path",
+                        "name": "testUuid",
                         "required": true,
                         "type": "string"
                     }
+                ],
+                "produces": [
+                    "*/*"
                 ],
                 "responses": {
                     "200": {
@@ -279,175 +437,15 @@
                     "404": {
                         "description": "Not Found"
                     }
-                }
-            }
-        },
-        "/mock/tee/test-suite-results": {
-            "post": {
+                },
+                "summary": "findTest",
                 "tags": [
-                    "executor-mock"
-                ],
-                "summary": "executeTestAgainstNs",
-                "operationId": "executeTestAgainstNsUsingPOST",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "*/*"
-                ],
-                "parameters": [
-                    {
-                        "in": "body",
-                        "name": "testSuiteResult",
-                        "description": "testSuiteResult",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/TestSuiteResult"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/TestSuiteResult"
-                        }
-                    },
-                    "201": {
-                        "description": "Created"
-                    },
-                    "401": {
-                        "description": "Unauthorized"
-                    },
-                    "403": {
-                        "description": "Forbidden"
-                    },
-                    "404": {
-                        "description": "Not Found"
-                    }
-                }
+                    "catalogue-mock"
+                ]
             }
         },
-        "/mock/tpm/requests": {
+        "/mock/tpr/test-plans": {
             "get": {
-                "tags": [
-                    "curator-mock"
-                ],
-                "summary": "getDeployedNs",
-                "operationId": "getDeployedNsUsingGET",
-                "produces": [
-                    "*/*"
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/NsResponse"
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized"
-                    },
-                    "403": {
-                        "description": "Forbidden"
-                    },
-                    "404": {
-                        "description": "Not Found"
-                    }
-                }
-            },
-            "post": {
-                "tags": [
-                    "curator-mock"
-                ],
-                "summary": "deployNsForTest",
-                "operationId": "deployNsForTestUsingPOST",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "*/*"
-                ],
-                "parameters": [
-                    {
-                        "in": "body",
-                        "name": "nsRequest",
-                        "description": "nsRequest",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/NsRequest"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/NsResponse"
-                        }
-                    },
-                    "201": {
-                        "description": "Created"
-                    },
-                    "401": {
-                        "description": "Unauthorized"
-                    },
-                    "403": {
-                        "description": "Forbidden"
-                    },
-                    "404": {
-                        "description": "Not Found"
-                    }
-                }
-            }
-        },
-        "/mock/tpm/requests/{requestId}": {
-            "get": {
-                "tags": [
-                    "curator-mock"
-                ],
-                "summary": "getNsForTest",
-                "operationId": "getNsForTestUsingGET",
-                "produces": [
-                    "*/*"
-                ],
-                "parameters": [
-                    {
-                        "name": "requestId",
-                        "in": "path",
-                        "description": "requestId",
-                        "required": true,
-                        "type": "string"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/NsResponse"
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized"
-                    },
-                    "403": {
-                        "description": "Forbidden"
-                    },
-                    "404": {
-                        "description": "Not Found"
-                    }
-                }
-            }
-        },
-        "/mock/trr/test-plans": {
-            "get": {
-                "tags": [
-                    "test-plan-repository-mock"
-                ],
-                "summary": "listTestPlans",
                 "operationId": "listTestPlansUsingGET",
                 "produces": [
                     "*/*"
@@ -456,10 +454,10 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "array",
                             "items": {
                                 "type": "object"
-                            }
+                            },
+                            "type": "array"
                         }
                     },
                     "401": {
@@ -471,36 +469,36 @@
                     "404": {
                         "description": "Not Found"
                     }
-                }
-            },
-            "post": {
+                },
+                "summary": "listTestPlans",
                 "tags": [
                     "test-plan-repository-mock"
-                ],
-                "summary": "createTestPlan",
-                "operationId": "createTestPlanUsingPOST",
+                ]
+            },
+            "post": {
                 "consumes": [
                     "application/json"
                 ],
-                "produces": [
-                    "*/*"
-                ],
+                "operationId": "createTestPlanUsingPOST",
                 "parameters": [
                     {
+                        "description": "testPlan",
                         "in": "body",
                         "name": "testPlan",
-                        "description": "testPlan",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/TestPlanOld"
+                            "$ref": "#/definitions/TestPlan"
                         }
                     }
+                ],
+                "produces": [
+                    "*/*"
                 ],
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/TestPlanOld"
+                            "$ref": "#/definitions/TestPlan"
                         }
                     },
                     "201": {
@@ -515,45 +513,45 @@
                     "404": {
                         "description": "Not Found"
                     }
-                }
-            }
-        },
-        "/mock/trr/test-plans/{testPlanId}": {
-            "put": {
+                },
+                "summary": "createTestPlan",
                 "tags": [
                     "test-plan-repository-mock"
-                ],
-                "summary": "updatePlan",
-                "operationId": "updatePlanUsingPUT",
+                ]
+            }
+        },
+        "/mock/tpr/test-plans/{testPlanId}": {
+            "put": {
                 "consumes": [
                     "application/json"
                 ],
-                "produces": [
-                    "*/*"
-                ],
+                "operationId": "updatePlanUsingPUT",
                 "parameters": [
                     {
+                        "description": "testPlan",
                         "in": "body",
                         "name": "testPlan",
-                        "description": "testPlan",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/TestPlanOld"
+                            "$ref": "#/definitions/TestPlan"
                         }
                     },
                     {
-                        "name": "testPlanId",
-                        "in": "path",
                         "description": "testPlanId",
+                        "in": "path",
+                        "name": "testPlanId",
                         "required": true,
                         "type": "string"
                     }
                 ],
+                "produces": [
+                    "*/*"
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/TestPlanOld"
+                            "$ref": "#/definitions/TestPlan"
                         }
                     },
                     "201": {
@@ -568,175 +566,31 @@
                     "404": {
                         "description": "Not Found"
                     }
-                }
+                },
+                "summary": "updatePlan",
+                "tags": [
+                    "test-plan-repository-mock"
+                ]
             }
         }
     },
-    "definitions": {
-        "Login": {
-            "type": "object",
-            "properties": {
-                "password": {
-                    "type": "string"
-                },
-                "username": {
-                    "type": "string"
-                }
-            },
-            "title": "Login"
+    "swagger": "2.0",
+    "tags": [
+        {
+            "description": "Catalogue Mock",
+            "name": "catalogue-mock"
         },
-        "NetworkServiceInstance": {
-            "type": "object",
-            "properties": {
-                "instance_uuid": {
-                    "type": "string"
-                },
-                "name": {
-                    "type": "string"
-                },
-                "runtime": {
-                    "type": "object"
-                },
-                "service_uuid": {
-                    "type": "string"
-                },
-                "status": {
-                    "type": "string"
-                }
-            },
-            "title": "NetworkServiceInstance"
+        {
+            "description": "Curator Mock",
+            "name": "curator-mock"
         },
-        "NsRequest": {
-            "type": "object",
-            "properties": {
-                "egresses": {
-                    "type": "array",
-                    "items": {
-                        "type": "string"
-                    }
-                },
-                "ingresses": {
-                    "type": "array",
-                    "items": {
-                        "type": "string"
-                    }
-                },
-                "instance_uuid": {
-                    "type": "string"
-                },
-                "request_type": {
-                    "type": "string"
-                },
-                "service_uuid": {
-                    "type": "string"
-                }
-            },
-            "title": "NsRequest"
+        {
+            "description": "Session Mock",
+            "name": "session-mock"
         },
-        "NsResponse": {
-            "type": "object",
-            "properties": {
-                "id": {
-                    "type": "string"
-                },
-                "instance_uuid": {
-                    "type": "string"
-                },
-                "service_uuid": {
-                    "type": "string"
-                },
-                "status": {
-                    "type": "string"
-                }
-            },
-            "title": "NsResponse"
-        },
-        "Session": {
-            "type": "object",
-            "properties": {
-                "session_began_at": {
-                    "type": "string",
-                    "format": "date-time"
-                },
-                "token": {
-                    "$ref": "#/definitions/Token"
-                },
-                "username": {
-                    "type": "string"
-                }
-            },
-            "title": "Session"
-        },
-        "TestPlanOld": {
-            "type": "object",
-            "properties": {
-                "network_service_instances": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/NetworkServiceInstance"
-                    }
-                },
-                "package_id": {
-                    "type": "string"
-                },
-                "status": {
-                    "type": "string"
-                },
-                "test_suite_results": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/TestSuiteResult"
-                    }
-                },
-                "uuid": {
-                    "type": "string"
-                }
-            },
-            "title": "TestPlanOld"
-        },
-        "TestSuiteResult": {
-            "type": "object",
-            "required": [
-                "test_uuid"
-            ],
-            "properties": {
-                "instance_uuid": {
-                    "type": "string"
-                },
-                "package_id": {
-                    "type": "string"
-                },
-                "service_uuid": {
-                    "type": "string"
-                },
-                "status": {
-                    "type": "string"
-                },
-                "test_plan_id": {
-                    "type": "string"
-                },
-                "test_uuid": {
-                    "type": "string",
-                    "allowEmptyValue": false
-                },
-                "uuid": {
-                    "type": "string"
-                }
-            },
-            "title": "TestSuiteResult"
-        },
-        "Token": {
-            "type": "object",
-            "properties": {
-                "access_token": {
-                    "type": "string"
-                },
-                "expires_in": {
-                    "type": "integer",
-                    "format": "int32"
-                }
-            },
-            "title": "Token"
+        {
+            "description": "Test Plan Repository Mock",
+            "name": "test-plan-repository-mock"
         }
-    }
+    ]
 }

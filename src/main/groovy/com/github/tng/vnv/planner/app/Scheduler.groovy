@@ -32,23 +32,51 @@
  * partner consortium (www.5gtango.eu).
  */
 
-package com.github.tng.vnv.planner
+package com.github.tng.vnv.planner.app
 
+import com.github.tng.vnv.planner.Applicant
+import com.github.tng.vnv.planner.service.CatalogueService
 import com.github.tng.vnv.planner.service.TestPlanService
+import com.github.tng.vnv.planner.model.Package
 import com.github.tng.vnv.planner.model.TestPlan
+import com.github.tng.vnv.planner.queue.TestPlanProducer
 import groovy.util.logging.Log
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Component
+
+import java.util.concurrent.CompletableFuture
+
 
 @Log
 @Component
-class Applicant {
+class Scheduler extends Applicant {
+
+    @Autowired
+    TestPlanProducer testPlanProducer
 
     @Autowired
     TestPlanService testPlanService
 
-    def update(TestPlan testPlan) {
-        testPlanService.update(testPlan, testPlan.uuid)
-        //todo-gandreou: need to update the MQ, but how could the status reach this 'update' method?
+    @Autowired
+    CatalogueService catalogueService
+
+    @Async
+    CompletableFuture<Boolean> schedule(Package packageMetadata) {
+        def map = catalogueService.discoverAssociatedNssAndTests(packageMetadata)
+
+        Boolean out = (map == null) ? false : map.every {nsd,td ->
+//            schedule(testPlanService.createTestPlan(nsd: nsd, TestDescriptor: td) == true)
+        }
+        CompletableFuture.completedFuture(out)
+    }
+
+    def schedule(TestPlan testPlan) {
+        testPlanProducer.add(testPlan.uuid).to("TEST_PLAN_MESSAGE_QUEUE")
+        testPlanProducer.update(testPlan.uuid).to("TEST_SUITE_MESSAGE_QUEUE")
+    }
+
+    def schedule(List<TestPlan> testPlanList) {
+        testPlanList?.forEach({tp -> schedule(tp)})
     }
 }

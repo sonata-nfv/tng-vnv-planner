@@ -32,23 +32,40 @@
  * partner consortium (www.5gtango.eu).
  */
 
-package com.github.tng.vnv.planner
+package com.github.tng.vnv.planner.controller
 
-import com.github.tng.vnv.planner.service.TestPlanService
-import com.github.tng.vnv.planner.model.TestPlan
-import groovy.util.logging.Log
+
+import com.github.mrduguo.spring.test.AbstractSpec
+import com.github.tng.vnv.planner.restmock.CatalogueMock
+import com.github.tng.vnv.planner.restmock.CuratorMock
+import com.github.tng.vnv.planner.restmock.TestPlanRepositoryMock
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.stereotype.Component
+import spock.lang.Ignore
 
-@Log
-@Component
-class Applicant {
+class NetworkServiceControllerTest extends AbstractSpec {
+
+    final def NETWORK_SERVICE_ID = 'input0ns-f213-4fae-8d3f-04358e1e1445'
+
 
     @Autowired
-    TestPlanService testPlanService
+    CuratorMock curatorMock
 
-    def update(TestPlan testPlan) {
-        testPlanService.update(testPlan, testPlan.uuid)
-        //todo-gandreou: need to update the MQ, but how could the status reach this 'update' method?
+
+    @Autowired
+
+    CatalogueMock catalogueMock
+
+    @Autowired
+    TestPlanRepositoryMock testPlanRepositoryMock
+
+    void "retrieval of a single test suite's related tests should successfully all the tag related tests"() {
+        when:
+        List tss = getForEntity('/tng-vnv-planner/api/v1/test-plans/services/{serviceUuid}/tests', List, NETWORK_SERVICE_ID).body
+        then:
+
+        tss.size() == 4
+        cleanup:
+        curatorMock.reset()
+
     }
 }

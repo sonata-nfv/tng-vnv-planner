@@ -32,23 +32,34 @@
  * partner consortium (www.5gtango.eu).
  */
 
-package com.github.tng.vnv.planner
+package com.github.tng.vnv.planner.app
 
-import com.github.tng.vnv.planner.service.TestPlanService
+import com.github.tng.vnv.planner.Applicant
+import com.github.tng.vnv.planner.client.Curator
 import com.github.tng.vnv.planner.model.TestPlan
+import com.github.tng.vnv.planner.queue.TestPlanConsumer
 import groovy.util.logging.Log
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 
+
 @Log
 @Component
-class Applicant {
+class Provider extends Applicant {
 
     @Autowired
-    TestPlanService testPlanService
+    Curator curator
 
-    def update(TestPlan testPlan) {
-        testPlanService.update(testPlan, testPlan.uuid)
-        //todo-gandreou: need to update the MQ, but how could the status reach this 'update' method?
+    @Autowired
+    TestPlanConsumer testPlanConsumer
+
+    def delegate(TestPlan testPlan) {
+        def res = Curator.proceedWith(testPlan)
+        //if res is valid, set TestPlan status like "proceeded to curator"
+        update(TestPlan)
+        //todo-gandreou: remove from testPlan in testPlans queue or better update the testSuite (testPlans list) in testSuites queue
+
+        testPlanConsumer.remove(testPlan.uuid).from("TEST_PLAN_MESSAGE_QUEUE")
+        testPlanConsumer.update(testPlan.uuid).to("TEST_SUITE_MESSAGE_QUEUE")
     }
 }

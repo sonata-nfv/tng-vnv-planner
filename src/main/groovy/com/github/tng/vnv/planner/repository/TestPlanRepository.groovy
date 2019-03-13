@@ -32,37 +32,59 @@
  * partner consortium (www.5gtango.eu).
  */
 
-package com.github.tng.vnv.planner.client
+package com.github.tng.vnv.planner.repository
 
-import com.github.tng.vnv.planner.model.TestPlanRequest
-import com.github.tng.vnv.planner.model.TestPlanResponse
+
 import com.github.tng.vnv.planner.model.TestPlan
-import groovy.util.logging.Log
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.beans.factory.annotation.Value
-import org.springframework.stereotype.Component
+import org.springframework.http.HttpEntity
+import org.springframework.http.HttpHeaders
+import org.springframework.http.HttpMethod
+import org.springframework.http.MediaType
+import org.springframework.stereotype.Repository
 import org.springframework.web.client.RestTemplate
+import groovy.util.logging.Log
 
 import static com.github.tng.vnv.planner.utils.DebugHelper.callExternalEndpoint
 
-@Component
 @Log
-class Curator {
+@Repository
+class TestPlanRepository {
 
     @Autowired
     @Qualifier('restTemplateWithAuth')
     RestTemplate restTemplate
 
-    @Value('${app.curator.test.plan.curate.endpoint}')
-    def testPlanCurateEndpoint
+    @Autowired
+    @Qualifier('restTemplateWithAuth')
+    RestTemplate restTemplateWithAuth
 
-    def proceedWith(TestPlan testPlan) {
-        def createRequest = new TestPlanRequest(
-                serviceUuid: testPlan.networkServiceInstances.first().serviceUuid,
-                requestType: 'CREATE_SERVICE',
-        )
-        TestPlanResponse response = callExternalEndpoint(restTemplate.postForEntity(testPlanCurateEndpoint, createRequest, TestPlanResponse),'Curator.proceedWith(TestPlan)',testPlanCurateEndpoint).body
-        response
+    @Value('${app.tpr.test.plan.create.endpoint}')
+    def testPlanCreateEndpoint
+
+    @Value('${app.tpr.test.plan.update.endpoint}')
+    def testPlanUpdateEndpoint
+
+    @Value('${app.vnvgk.test.list.by.tag.endpoint}')
+    def testListByTagEndpoint
+
+    @Value('${app.gk.service.list.by.tag.endpoint}')
+    def serviceListByTagEndpoint
+
+    def create(def testPlan) {
+        def headers = new HttpHeaders()
+        headers.setContentType(MediaType.APPLICATION_JSON)
+        def entity = new HttpEntity<TestPlan>(testPlan ,headers)
+        callExternalEndpoint(restTemplate.postForEntity(testPlanCreateEndpoint,entity,TestPlan),'TestResultRepository.createTestPlan',testPlanCreateEndpoint).body
+    }
+
+    def update(def testPlan,String id) {
+        //CleanCode-gandreou: there is no reason to have "id" input param
+        def headers = new HttpHeaders()
+        headers.setContentType(MediaType.APPLICATION_JSON)
+        def entity = new HttpEntity<TestPlan>(testPlan ,headers)
+        callExternalEndpoint(restTemplate.exchange(testPlanUpdateEndpoint, HttpMethod.PUT, entity, TestPlan.class ,testPlan.uuid),'TestResultRepository.updatePlan',testPlanUpdateEndpoint).body
     }
 }

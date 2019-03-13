@@ -32,23 +32,35 @@
  * partner consortium (www.5gtango.eu).
  */
 
-package com.github.tng.vnv.planner
+package com.github.tng.vnv.planner.queue
 
-import com.github.tng.vnv.planner.service.TestPlanService
-import com.github.tng.vnv.planner.model.TestPlan
 import groovy.util.logging.Log
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
+
 
 @Log
 @Component
-class Applicant {
+class TestPlanProducer {
 
-    @Autowired
-    TestPlanService testPlanService
+    String id
+    String messageQueue
+    String action
 
-    def update(TestPlan testPlan) {
-        testPlanService.update(testPlan, testPlan.uuid)
-        //todo-gandreou: need to update the MQ, but how could the status reach this 'update' method?
+    def add(String uuid) {
+        action = 'ADD'
+        id = uuid
+        this
     }
+
+    def to(String mq) {
+        messageQueue = mq
+        //fixme-gandreou: clean up what (and how) will b kept from the MQ's and what not.
+        //case ADD
+        //todo-gandreou: return the result for the ADD of the item from the queue
+        //case REMOVE
+        //todo-gandreou: return the result for the REMOVE of the item from the queue
+        //case UPDATE
+        //todo-gandreou: return the result for the UPDATE of the item from the queue
+    }
+
 }

@@ -32,23 +32,46 @@
  * partner consortium (www.5gtango.eu).
  */
 
-package com.github.tng.vnv.planner
+package com.github.tng.vnv.planner.model
 
-import com.github.tng.vnv.planner.service.TestPlanService
-import com.github.tng.vnv.planner.model.TestPlan
-import groovy.util.logging.Log
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.stereotype.Component
+import com.fasterxml.jackson.annotation.JsonProperty
+import groovy.transform.EqualsAndHashCode
+import io.swagger.annotations.ApiModelProperty
 
-@Log
-@Component
-class Applicant {
+import javax.validation.constraints.NotNull
 
-    @Autowired
-    TestPlanService testPlanService
+@EqualsAndHashCode(includes = "uuid" )
+class Test {
 
-    def update(TestPlan testPlan) {
-        testPlanService.update(testPlan, testPlan.uuid)
-        //todo-gandreou: need to update the MQ, but how could the status reach this 'update' method?
+    @ApiModelProperty(required = true)
+    @NotNull
+    @JsonProperty("uuid")
+    String testUuid
+    String packageId
+    TestDescriptor testd
+
+
+}
+
+class TestDescriptor{
+    String uuid
+    String vendor
+    String name
+    String version
+    String description
+    String testType
+    List<TestTag> testExecution
+
+    @Override
+    public String toString() {
+        final StringBuffer sb = new StringBuffer("TestDescriptor{");
+        sb.append("testExecution=").append(testExecution);
+        sb.append('}');
+        return sb.toString();
     }
+}
+
+class TestTag{
+    String testTag
+    String tagId
 }

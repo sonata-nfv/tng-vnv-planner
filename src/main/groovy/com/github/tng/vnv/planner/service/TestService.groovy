@@ -32,58 +32,37 @@
  * partner consortium (www.5gtango.eu).
  */
 
-package com.github.tng.vnv.planner.controller
+package com.github.tng.vnv.planner.service
 
 import com.github.tng.vnv.planner.model.NetworkServiceDescriptor
+import com.github.tng.vnv.planner.model.Test
 import com.github.tng.vnv.planner.model.TestDescriptor
-import com.github.tng.vnv.planner.model.TestPlan
-import com.github.tng.vnv.planner.service.TestPlanService
-import io.swagger.annotations.ApiResponse
-import io.swagger.annotations.ApiResponses
+import com.github.tng.vnv.planner.repository.TestRepository
+import groovy.util.logging.Log
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.*
+import org.springframework.stereotype.Service
 
-import javax.validation.Valid
-
-@RestController
-@RequestMapping('/api/v1/test-plans')
-class TestPlanController {
+@Log
+@Service
+class TestService {
 
     @Autowired
-    TestPlanService testPlanService
+    TestRepository testRepository
 
-    @GetMapping('{uuid}')
-    ResponseEntity<List<TestPlan>> findOne(@PathVariable String uuid) {
-        testPlanService.findByUuid(uuid)
+    def findByService(String uuid) {
+        testRepository.findByUuid(uuid)
     }
 
-    @ApiResponses(value = [@ApiResponse(code = 400, message = 'Bad Request')])
-    @PostMapping('')
-    ResponseEntity<Void> save(@Valid @RequestBody List<TestPlan> body) {
-        testPlanService.save(body)
-        ResponseEntity.ok().build()
-    }
-
-    @PutMapping('{uuid}')
-    ResponseEntity<List<TestPlan>> update(@RequestBody List<TestPlan> request, @PathVariable String uuid) {
-        testPlanService.update(request)
-    }
-
-    @DeleteMapping('{uuid}')
-    ResponseEntity<Void> deleteById(@PathVariable String uuid) {
-        testPlanService.deleteByUuid(uuid)
-    }
-
-    @ApiResponses(value = [@ApiResponse(code = 400, message = 'Bad Request')])
-    @PostMapping('/services')
-    ResponseEntity<List<TestPlan>> createTestPlansByServiceDescriptor(@Valid @RequestBody NetworkServiceDescriptor body) {
-        testPlanService.findByService(body)
-    }
-
-    @ApiResponses(value = [@ApiResponse(code = 400, message = 'Bad Request')])
-    @PostMapping('/tests')
-    ResponseEntity<List<TestPlan>> createTestPlansByTestDescriptor(@Valid @RequestBody TestDescriptor body) {
-        testPlanService.findByTest(body)
+    def findByService(NetworkServiceDescriptor nsd) {
+        List<TestDescriptor> tdList = [] as ArrayList
+        nsd.testingTags?.each { tt ->
+            testRepository.findTssByTestTag(tt)?.each { t ->
+                if(t.testd.testExecution.any{ element ->
+                    element.testTag.contains(tt) && !tdList.contains(t.testd)
+                })
+                tdList << t.testd
+            }
+        }
+        tdList
     }
 }

@@ -32,23 +32,36 @@
  * partner consortium (www.5gtango.eu).
  */
 
-package com.github.tng.vnv.planner
+package com.github.tng.vnv.planner.model
 
-import com.github.tng.vnv.planner.service.TestPlanService
-import com.github.tng.vnv.planner.model.TestPlan
-import groovy.util.logging.Log
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.stereotype.Component
+import io.swagger.annotations.ApiModelProperty
 
-@Log
-@Component
-class Applicant {
+import javax.validation.constraints.NotNull
 
-    @Autowired
-    TestPlanService testPlanService
+class Package {
+    List<NetworkService> networkServices=[]
+    List<Test> tests=[]
 
-    def update(TestPlan testPlan) {
-        testPlanService.update(testPlan, testPlan.uuid)
-        //todo-gandreou: need to update the MQ, but how could the status reach this 'update' method?
-    }
+    String packageId
+    String uuid
+}
+
+class PackageCallback {
+
+    @ApiModelProperty(
+            value = 'Event Name',
+            allowEmptyValue = true,
+            example = 'UPDATED',
+            required = true
+    )
+    @NotNull
+    String eventName
+
+    @ApiModelProperty(required = true)
+    @NotNull
+    String packageId
+
+    String packageLocation
+
+
 }

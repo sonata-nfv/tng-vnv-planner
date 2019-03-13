@@ -32,23 +32,22 @@
  * partner consortium (www.5gtango.eu).
  */
 
-package com.github.tng.vnv.planner
+package com.github.tng.vnv.planner.service
 
-import com.github.tng.vnv.planner.service.TestPlanService
-import com.github.tng.vnv.planner.model.TestPlan
+
+import com.github.tng.vnv.planner.model.Package
 import groovy.util.logging.Log
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.stereotype.Component
+import org.springframework.stereotype.Service
 
 @Log
-@Component
-class Applicant {
+@Service
+class CatalogueService {
 
     @Autowired
-    TestPlanService testPlanService
+    CatalogueHelperService catalogueHelperService
 
-    def update(TestPlan testPlan) {
-        testPlanService.update(testPlan, testPlan.uuid)
-        //todo-gandreou: need to update the MQ, but how could the status reach this 'update' method?
+    def discoverAssociatedNssAndTests(Package packageMetadata) {
+        return catalogueHelperService.discoverAssociatedNssAndTests(packageMetadata)
     }
 }
