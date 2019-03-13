@@ -34,7 +34,7 @@
 
 package com.github.tng.vnv.planner.model
 
-import com.fasterxml.jackson.annotation.JsonProperty
+
 import groovy.transform.EqualsAndHashCode
 import io.swagger.annotations.ApiModelProperty
 
@@ -47,8 +47,8 @@ class TestPlan {
     String nsdUuid
     String tdUuid
     String index
-    NetworkServiceDescriptor networkServiceDescriptor
-    TestDescriptor testDescriptor
+    NetworkServiceDescriptor nsd
+    TestDescriptor testd
     String status
 
     @Override
@@ -59,11 +59,71 @@ class TestPlan {
         sb.append(", nsdUuid='").append(nsdUuid).append('\'');
         sb.append(", tdUuid='").append(tdUuid).append('\'');
         sb.append(", status='").append(status).append('\'');
-        sb.append(", \nnsd.name='").append(networkServiceDescriptor.name)
-                .append(", nsd.version='").append(networkServiceDescriptor.version).append('\'');
-        sb.append(", \ntd.name='").append(testDescriptor.name)
-                .append(", td.version='").append(testDescriptor.version).append('\'');
+        sb.append(", \nnsd.name='").append(nsd.name)
+                .append(", nsd.version='").append(nsd.version).append('\'');
+        sb.append(", \ntd.name='").append(testd.name)
+                .append(", td.version='").append(testd.version).append('\'');
         sb.append('}');
         return sb.toString();
     }
+}
+
+@EqualsAndHashCode
+class TestPlanRequest {
+    TestPlan testPlan
+    String requestType
+}
+
+@EqualsAndHashCode
+class TestPlanResponse {
+    String id
+    TestPlan testPlan
+    String status
+}
+
+class TestPlanCallback {
+
+    @ApiModelProperty(
+            value = 'Event Actor',
+            allowEmptyValue = false,
+            example = 'Curator, Executor',
+            required = true
+    )
+    @NotNull
+    String eventActor
+
+    @ApiModelProperty(
+            value = 'Test Plan Status',
+            allowEmptyValue = false,
+            example = 'PAUSED, CREATED, CRASHED, CANCELED, FINISHED, RESCHEDULED',
+            required = true
+    )
+    @NotNull
+    String testPlanStatus
+
+    @ApiModelProperty(required = true)
+    @NotNull
+    String testPlanUuid
+
+    @ApiModelProperty(
+            value = 'Test Plan Repository URI',
+            allowEmptyValue = false,
+            example = 'tng-cat, catalog, or xx.xx',
+            required = false
+    )
+    @NotNull
+    String testPlanRepository
+
+    @ApiModelProperty(required = true)
+    @NotNull
+    String testResultsUuid
+
+    @ApiModelProperty(
+            value = 'Test Results Repository URI',
+            allowEmptyValue = false,
+            example = 'tng-res, results, or xx.xx',
+            required = false
+    )
+    @NotNull
+    String testResultsRepository
 }

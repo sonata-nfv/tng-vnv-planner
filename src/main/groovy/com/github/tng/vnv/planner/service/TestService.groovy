@@ -32,23 +32,37 @@
  * partner consortium (www.5gtango.eu).
  */
 
-package com.github.tng.vnv.planner
+package com.github.tng.vnv.planner.service
 
-import com.github.tng.vnv.planner.service.TestPlanService
-import com.github.tng.vnv.planner.model.TestPlan
+import com.github.tng.vnv.planner.model.NetworkServiceDescriptor
+import com.github.tng.vnv.planner.model.Test
+import com.github.tng.vnv.planner.model.TestDescriptor
+import com.github.tng.vnv.planner.repository.TestRepository
 import groovy.util.logging.Log
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.stereotype.Component
+import org.springframework.stereotype.Service
 
 @Log
-@Component
-class Applicant {
+@Service
+class TestService {
 
     @Autowired
-    TestPlanService testPlanService
+    TestRepository testRepository
 
-    def update(TestPlan testPlan) {
-        testPlanService.update(testPlan, testPlan.uuid)
-        //todo-gandreou: need to update the MQ, but how could the status reach this 'update' method?
+    def findByService(String uuid) {
+        testRepository.findByUuid(uuid)
+    }
+
+    def findByService(NetworkServiceDescriptor nsd) {
+        List<TestDescriptor> tdList = [] as ArrayList
+        nsd.testingTags?.each { tt ->
+            testRepository.findTssByTestTag(tt)?.each { t ->
+                if(t.testd.testExecution.any{ element ->
+                    element.testTag.contains(tt) && !tdList.contains(t.testd)
+                })
+                tdList << t.testd
+            }
+        }
+        tdList
     }
 }

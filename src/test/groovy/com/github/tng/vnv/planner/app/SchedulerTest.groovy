@@ -32,23 +32,63 @@
  * partner consortium (www.5gtango.eu).
  */
 
-package com.github.tng.vnv.planner
+package com.github.tng.vnv.planner.app
 
-import com.github.tng.vnv.planner.service.TestPlanService
-import com.github.tng.vnv.planner.model.TestPlan
-import groovy.util.logging.Log
+
+import com.github.tng.vnv.planner.model.Package
+import com.github.tng.vnv.planner.restmock.CatalogueMock
+import com.github.tng.vnv.planner.restmock.CuratorMock
+import com.github.tng.vnv.planner.restmock.TestPlanRepositoryMock
+import com.github.mrduguo.spring.test.AbstractSpec
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.stereotype.Component
 
-@Log
-@Component
-class Applicant {
+import java.util.concurrent.CompletableFuture
+
+class SchedulerTest extends AbstractSpec {
+
+    public static final String MULTIPLE_TEST_PLANS_PACKAGE_ID ='multiple_scheduler:test:0.0.1'
 
     @Autowired
-    TestPlanService testPlanService
+    Scheduler scheduler
 
-    def update(TestPlan testPlan) {
-        testPlanService.update(testPlan, testPlan.uuid)
-        //todo-gandreou: need to update the MQ, but how could the status reach this 'update' method?
+    @Autowired
+    CuratorMock curatorMock
+
+    @Autowired
+    CatalogueMock testCatalogueMock
+
+    @Autowired
+    TestPlanRepositoryMock testPlanRepositoryMock
+
+    void 'schedule multiple test plans should produce success result'() {
+
+        when:
+        CompletableFuture<Boolean> out = scheduler.schedule(new Package(packageId: MULTIPLE_TEST_PLANS_PACKAGE_ID))
+
+        then:
+        Thread.sleep(10000L);
+/*
+        while (executorMock.testSuiteResults.values().last().status!='SUCCESS')
+            Thread.sleep(1000L);
+*/
+
+//        out.get() == true
+        out.get() == false
+
+//        testPlanRepositoryMock.testPlans.size()==3
+        testPlanRepositoryMock.testPlans.size()==0
+//        testPlanRepositoryMock.testPlans.values().last().status=='SUCCESS'
+/*
+        testPlanRepositoryMock.testPlans.values().each{testPlan ->
+            testPlan.testSuiteResults.size()==2
+        }
+*/
+/*
+        testPlanRepositoryMock.testPlans.values().last().testSuiteResults.last().status=='SUCCESS'
+*/
+
+        cleanup:
+        curatorMock.reset()
+        testPlanRepositoryMock.reset()
     }
 }

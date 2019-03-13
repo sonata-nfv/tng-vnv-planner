@@ -32,37 +32,50 @@
  * partner consortium (www.5gtango.eu).
  */
 
-package com.github.tng.vnv.planner.client
+package com.github.tng.vnv.planner.repository
 
-import com.github.tng.vnv.planner.model.TestPlanRequest
-import com.github.tng.vnv.planner.model.TestPlanResponse
-import com.github.tng.vnv.planner.model.TestPlan
+import com.github.tng.vnv.planner.utils.DebugHelper
+import com.github.tng.vnv.planner.model.NetworkService
+import com.github.tng.vnv.planner.model.NetworkServiceDescriptor
 import groovy.util.logging.Log
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.beans.factory.annotation.Value
-import org.springframework.stereotype.Component
+import org.springframework.stereotype.Repository
 import org.springframework.web.client.RestTemplate
 
 import static com.github.tng.vnv.planner.utils.DebugHelper.callExternalEndpoint
 
-@Component
 @Log
-class Curator {
+@Repository
+class NetworkServiceRepository {
 
     @Autowired
     @Qualifier('restTemplateWithAuth')
-    RestTemplate restTemplate
+    RestTemplate restTemplateWithAuth
 
-    @Value('${app.curator.test.plan.curate.endpoint}')
-    def testPlanCurateEndpoint
+    @Value('${app.gk.service.list.by.tag.endpoint}')
+    def serviceListByTagEndpoint
 
-    def proceedWith(TestPlan testPlan) {
-        def createRequest = new TestPlanRequest(
-                serviceUuid: testPlan.networkServiceInstances.first().serviceUuid,
-                requestType: 'CREATE_SERVICE',
-        )
-        TestPlanResponse response = callExternalEndpoint(restTemplate.postForEntity(testPlanCurateEndpoint, createRequest, TestPlanResponse),'Curator.proceedWith(TestPlan)',testPlanCurateEndpoint).body
-        response
+    @Value('${app.gk.service.metadata.endpoint}')
+    def serviceMetadataEndpoint
+
+
+    NetworkService findByUuid(String uuid) {
+        callExternalEndpoint(restTemplateWithAuth.getForEntity(serviceMetadataEndpoint,
+                NetworkService.class, uuid),'NetworkServiceRepository.findByUuid',
+                serviceMetadataEndpoint).body
+    }
+
+    String printAgnosticObjByUuid(String uuid) {
+        callExternalEndpoint(restTemplateWithAuth.getForEntity(serviceMetadataEndpoint, Object.class, uuid),
+                'TestCatalogue.loadPackageMetadata',serviceMetadataEndpoint).body.each {println it}
+    }
+
+    List<NetworkServiceDescriptor> findNssByTestTag(String tag) {
+		Map <String, Object> params = new HashMap <String, Object>()
+		params.put("testing_tag", tag)
+        DebugHelper.callExternalEndpoint(restTemplateWithAuth.getForEntity(serviceListByTagEndpoint, NetworkServiceDescriptor[], params),
+                'TestPlanRepositoryImpl.findNssByTestTag',serviceListByTagEndpoint).body
     }
 }

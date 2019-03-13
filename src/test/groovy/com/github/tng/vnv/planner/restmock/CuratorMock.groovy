@@ -35,41 +35,21 @@
 package com.github.tng.vnv.planner.restmock
 
 
-import com.github.tng.vnv.planner.model.NsRequest
-import com.github.tng.vnv.planner.model.NsResponse
+import com.github.tng.vnv.planner.model.TestPlan
 import org.springframework.web.bind.annotation.*
 
 @RestController
 class CuratorMock {
 
-    Map<String, NsResponse> networkServiceInstances = [:]
+    Map<String, TestPlan> requests = [:]
 
     void reset() {
-        networkServiceInstances.clear()
+        requests.clear()
     }
 
-    @PostMapping('/mock/tpm/requests')
-    NsResponse deployNsForTest(@RequestBody NsRequest nsRequest) {
-        def networkServiceInstance = new NsResponse(
-                instanceUuid: nsRequest.requestType == 'CREATE_SERVICE' ? UUID.randomUUID().toString() : nsRequest.instanceUuid,
-                serviceUuid: nsRequest.serviceUuid,
-                status: nsRequest.requestType == 'CREATE_SERVICE' ? 'CREATED' : 'TERMINATED',
-        )
-        networkServiceInstance.id=networkServiceInstance.instanceUuid
-        networkServiceInstances[networkServiceInstance.id] = networkServiceInstance
-        networkServiceInstance
+    @PostMapping('/mock/curator/curate-test-plan')
+    TestPlan curateTestPlan(@RequestBody TestPlan testPlan) {
+        requests << testPlan
+        testPlan
     }
-
-    @GetMapping('/mock/tpm/requests')
-    List<NsResponse> getDeployedNs() {
-        []
-    }
-
-    @GetMapping('/mock/tpm/requests/{requestId}')
-    NsResponse getNsForTest(@PathVariable('requestId') String requestId) {
-        def nsi=networkServiceInstances[requestId]
-        nsi.status = 'READY'
-        nsi
-    }
-
 }

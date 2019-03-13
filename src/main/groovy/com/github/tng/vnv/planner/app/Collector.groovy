@@ -1,3 +1,4 @@
+package com.github.tng.vnv.planner.app
 /*
  * Copyright (c) 2015 SONATA-NFV, 2017 5GTANGO [, ANY ADDITIONAL AFFILIATION]
  * ALL RIGHTS RESERVED.
@@ -32,23 +33,23 @@
  * partner consortium (www.5gtango.eu).
  */
 
-package com.github.tng.vnv.planner
-
+import com.github.tng.vnv.planner.Applicant
 import com.github.tng.vnv.planner.service.TestPlanService
 import com.github.tng.vnv.planner.model.TestPlan
 import groovy.util.logging.Log
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 
+
 @Log
 @Component
-class Applicant {
+class Collector extends Applicant {
 
     @Autowired
     TestPlanService testPlanService
 
+    @Override
     def update(TestPlan testPlan) {
-        testPlanService.update(testPlan, testPlan.uuid)
-        //todo-gandreou: need to update the MQ, but how could the status reach this 'update' method?
+        testPlanService.update(testPlan)
     }
 }

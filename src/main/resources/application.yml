@@ -67,24 +67,16 @@ app:
     host: tng-cat
     base.url: http://${app.cat.host}:4011/api/catalogues/v2
 
-  trr:
+  tpr:
     host: tng-rep
-    base.url: http://${app.trr.host}:4012/trr
-    test.plan.create.endpoint: ${app.trr.base.url}/test-plans
-    test.plan.update.endpoint: ${app.trr.base.url}/test-plans/{uuid}
-  tpm:
-    host: tng-vnv-tpm
-    base.url: ${app.gk.base.url}
-    ns.deploy.endpoint: ${app.tpm.base.url}/requests
-    ns.status.endpoint: ${app.tpm.base.url}/requests/{requestId}
-    ns.status.timeout.in.seconds: 600
-    ns.status.ping.in.seconds: 30
-    ns.get.endpoint: ${app.tpm.base.url}/requests/{instanceUuid}
-    ns.destroy.endpoint: ${app.tpm.base.url}/requests
-  tee:
-    host: tng-vnv-tee
-    base.url: http://${app.tee.host}:6200/tng-vnv-tee/api/v1
-    suite.execute.endpoint: ${app.tee.base.url}/test-suite-results
+    base.url: http://${app.tpr.host}:4012/tpr
+    test.plan.create.endpoint: ${app.tpr.base.url}/test-plans
+    test.plan.update.endpoint: ${app.tpr.base.url}/test-plans/{uuid}
+
+  curator:
+    host: tng-vnv-curator
+    base.url: http://${app.curator.host}:6200/api/v1
+    test.plan.curate.endpoint: ${app.curator.base.url}/curate-test-plan
 
   queue.capacity: 500
   pool:

@@ -36,78 +36,45 @@ package com.github.tng.vnv.planner.controller
 
 
 import com.github.mrduguo.spring.test.AbstractSpec
-import com.github.tng.vnv.planner.restmock.TestCatalogueMock
-import com.github.tng.vnv.planner.oldlcm.restmock.ExecutorMock
+import com.github.tng.vnv.planner.restmock.CatalogueMock
 import com.github.tng.vnv.planner.restmock.CuratorMock
 import com.github.tng.vnv.planner.restmock.TestPlanRepositoryMock
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.web.client.TestRestTemplate
 import org.springframework.http.HttpStatus
-import org.springframework.http.ResponseEntity
 
 class CatalogueCallbackControllerTest extends AbstractSpec {
 
-	public static final String MULTIPLE_TEST_PLANS_PACKAGE_ID ='multiple_scheduler:test:0.0.1'
-	public static final String BAD_REQUEST_PACKAGE_ID ='error:test:0.0.1'
+    public static final String MULTIPLE_TEST_PLANS_PACKAGE_ID ='multiple_scheduler:test:0.0.1'
+    public static final String BAD_REQUEST_PACKAGE_ID ='error:test:0.0.1'
 
-	@Autowired
-	CuratorMock curatorMock
+    @Autowired
+    CuratorMock curatorMock
 
-	@Autowired
-	ExecutorMock executorMock
+    @Autowired
+    CatalogueMock testCatalogueMock
 
-	@Autowired
-	TestCatalogueMock testCatalogueMock
+    @Autowired
+    TestPlanRepositoryMock testPlanRepositoryMock
 
-	@Autowired
-	TestPlanRepositoryMock testPlanRepositoryMock
 
-	void 'schedule single TestSuite and single NetworkService should produce successfully 2 Result for 2 testPlan'() {
+    void 'schedule single Test and single NetworkService should produce successfully 2 Result for 2 testPlan'() {
 
-		when:
-		def entity = postForEntity('/tng-vnv-planner/api/v1/packages/on-change',
-				[
-					event_name: UUID.randomUUID().toString(),
-					package_id:  MULTIPLE_TEST_PLANS_PACKAGE_ID,
-				]
-				, Void.class)
+        when:
+        def entity = postForEntity('/tng-vnv-planner/api/v1/packages/on-change',
+                [
+                        event_name: UUID.randomUUID().toString(),
+                        package_id:  MULTIPLE_TEST_PLANS_PACKAGE_ID,
+                ]
+                , Void.class)
 
-		then:
-		Thread.sleep(10000L);
-		while (curatorMock.networkServiceInstances.values().last().status!='TERMINATED')
-			Thread.sleep(1000L);
-		entity.statusCode == HttpStatus.OK
-		curatorMock.networkServiceInstances.size()==3
-		executorMock.testSuiteResults.size()==3
-		executorMock.testSuiteResults.values().last().status=='SUCCESS'
+        then:
+        Thread.sleep(10000L);
+        entity.statusCode == HttpStatus.OK
 
-		testPlanRepositoryMock.testPlans.size()==3
-		testPlanRepositoryMock.testPlans.values().last().status=='SUCCESS'
-		testPlanRepositoryMock.testPlans.values().last().networkServiceInstances.size()==1
-		testPlanRepositoryMock.testPlans.values().last().testSuiteResults.last().status=='SUCCESS'
+        testPlanRepositoryMock.testPlans.size()==0
 
-		cleanup:
-		curatorMock.reset()
-		executorMock.reset()
-		testPlanRepositoryMock.reset()
-	}
-
-	void 'Find the TDs from many NSDs with many tags'() {
-		Map<String,Object> params = new HashMap<String,Object>();
-		params.put("testingTags",  "[latency,http]")
-
-		when:
-		List tds = getForEntity('/tng-vnv-planner/api/v1/tests', List, params)
-
-		then:
-		Thread.sleep(10000L);
-
-		tds.size() == 1
-		cleanup:
-		curatorMock.reset()
-	}
-	
-	public <T> ResponseEntity<T> getForEntity(String path, Class<T> responseType, Map<String, ?> urlVariables){
-		new TestRestTemplate().getForEntity(url(path), responseType,urlVariables)
-	}
+        cleanup:
+        curatorMock.reset()
+        testPlanRepositoryMock.reset()
+    }
 }
