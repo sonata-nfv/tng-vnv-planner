@@ -39,6 +39,8 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
+import com.github.tng.vnv.planner.model.Test
+
 @RestController
 class CatalogueMock {
 
@@ -81,7 +83,7 @@ class CatalogueMock {
     }
 
     @GetMapping('/mock/gk/tests/descriptors')
-    def findTests(@RequestParam(value='test_tag',required=false) String tag) {
+    List<Test> findTests(@RequestParam(value='test_tag',required=false) String tag) {
 		if(!tag) {
 			return  DataMock.tests
 		}

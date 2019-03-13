@@ -86,19 +86,18 @@ class DataMock {
 		nss
 	}
 	
-	static List<Test> getTestByTag(String tag) {
-		def tss  = [] as List<Test>
-		getTests().each{
-			it.testd.test_execution.each { 
-				if (it.test_tag == tag ) {//&& it.nsd.testing_tags.contains(tag)
-					tss.add(it)
-				}
-			}
-			
+	static def getTestByTag(String tag) {
+		List<Test> tList = [] as ArrayList
+		getTests().each { t ->
+				println t.dump()
+				if(t.testd.testExecution.any{ element ->
+					element.testTag.contains(tag) && !tList.contains(t)
+				})
+				tList << t
 		}
 		println "***********************************"
-		println tss.size()
-		tss
+		println tList.size()
+		tList
 	}
 
 }
