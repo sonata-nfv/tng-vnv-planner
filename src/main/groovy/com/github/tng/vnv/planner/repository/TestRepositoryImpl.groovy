@@ -34,6 +34,7 @@
 
 package com.github.tng.vnv.planner.repository
 
+import com.github.tng.vnv.planner.model.Test
 import com.github.tng.vnv.planner.utils.DebugHelper
 import com.github.tng.vnv.planner.model.TestDescriptor
 import groovy.util.logging.Log
@@ -64,21 +65,22 @@ class TestRepositoryImpl implements TestRepository {
 
 
     @Override
-    TestDescriptor findByUuid(String uuid) {
-        callExternalEndpoint(restTemplateWithAuth.getForEntity(testMetadataEndpoint, TestDescriptor.class, uuid),
-                'TestCatalogue.findNssByTestTag','TestCatalogue.loadPackageMetadata',testMetadataEndpoint).body
+    Test findByUuid(String uuid) {
+        callExternalEndpoint(restTemplateWithAuth.getForEntity(testMetadataEndpoint, Test.class, uuid),
+                'TestRepository.findNssByTestTag','TestRepository.findByUuid',testMetadataEndpoint).body
 
     }
 
     String printAgnosticObjByUuid(String uuid) {
         callExternalEndpoint(
                 restTemplateWithAuth.getForEntity(testMetadataEndpoint, Object.class, uuid),
-                'TestCatalogue.loadPackageMetadata','TestCatalogue.loadPackageMetadata',
+                'TestRepository.loadPackageMetadata','TestCatalogue.loadPackageMetadata',
                 testMetadataEndpoint).body.each {println it}
     }
 
-    List<TestDescriptor> findTssByTestTag(String tag) {
-        DebugHelper.callExternalEndpoint(restTemplateWithAuth.getForEntity(testListByTagEndpoint, TestDescriptor[], tag),
-                'TestPlanRepositoryImpl.findTssByTestTag',testListByTagEndpoint).body
+    List<Test> findTssByTestTag(String tag) {
+        DebugHelper.callExternalEndpoint(restTemplateWithAuth.getForEntity(testListByTagEndpoint, Test[], tag),
+                'TestRepository.findTssByTestTag',testListByTagEndpoint).body
     }
+
 }

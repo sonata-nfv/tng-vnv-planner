@@ -39,6 +39,9 @@ import com.github.tng.vnv.planner.model.TestDescriptor
 
 interface NetworkServiceService {
 
+    def findByUuid(String uuid)
+
     def findByTest(TestDescriptor td)
+
 
 }

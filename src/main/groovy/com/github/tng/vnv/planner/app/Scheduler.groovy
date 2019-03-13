@@ -66,7 +66,7 @@ class Scheduler extends Applicant {
         def map = catalogueService.discoverAssociatedNssAndTests(packageMetadata)
 
         Boolean out = (map == null) ? false : map.every {nsd,td ->
-            schedule(testPlanService.createTestPlan(networkServiceDescriptor: nsd, TestDescriptor: td) == true)
+//            schedule(testPlanService.createTestPlan(networkServiceDescriptor: nsd, TestDescriptor: td) == true)
         }
         CompletableFuture.completedFuture(out)
     }

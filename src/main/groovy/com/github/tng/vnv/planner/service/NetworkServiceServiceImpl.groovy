@@ -48,6 +48,11 @@ class NetworkServiceServiceImpl implements NetworkServiceService {
     @Autowired
     NetworkServiceRepository networkServiceRepository
 
+    @Override
+    def findByUuid(String uuid) {
+        networkServiceRepository.findByUuid(uuid)
+    }
+
     def findByTest(TestDescriptor td) {
         List<NetworkServiceDescriptor> nsdList = [] as ArrayList
         td.testExecution?.each { tt ->

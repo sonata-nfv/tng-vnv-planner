@@ -36,7 +36,9 @@ package com.github.tng.vnv.planner.controller
 
 
 import com.github.mrduguo.spring.test.AbstractSpec
+import com.github.tng.vnv.planner.restmock.CatalogueMock
 import com.github.tng.vnv.planner.restmock.CuratorMock
+import com.github.tng.vnv.planner.restmock.TestPlanRepositoryMock
 import org.springframework.beans.factory.annotation.Autowired
 import spock.lang.Ignore
 
@@ -48,54 +50,20 @@ class NetworkServiceControllerTest extends AbstractSpec {
     @Autowired
     CuratorMock curatorMock
 
-/*
+
     @Autowired
-    TestCatalogueMock testCatalogueMock
+
+    CatalogueMock catalogueMock
 
     @Autowired
     TestPlanRepositoryMock testPlanRepositoryMock
-*/
 
-/*
-    @Ignore
-    void "schedule single NetworkService should produce successfully 1 Result for 1 testPlan"() {
-
+    void "retrieval of a single test suite's related tests should successfully all the tag related tests"() {
         when:
-        def entity = postForEntity('/tng-vnv-planner/api/v1/test-plans/services',
-                ["service_uuid": NETWORK_SERVICE_ID]
-                , Void.class)
-
-
-        then:
-        Thread.sleep(10000L);
-*/
-/*
-        while (executorMock.testSuiteResults.values().last().status!='SUCCESS')
-            Thread.sleep(1000L);
-*//*
-
-        curatorMock.networkServiceInstances.size()==1
-
-        testPlanRepositoryMock.testPlans.size()==1
-        testPlanRepositoryMock.testPlans.values().last().status=='SUCCESS'
-        testPlanRepositoryMock.testPlans.values().each{testPlan ->
-            testPlan.uuid.toInteger() != null
-        }
-
-        cleanup:
-        curatorMock.reset()
-        testPlanRepositoryMock.reset()
-    }
-*/
-
-    @Ignore
-    void "retrieval of a single t st suite's related tests should successfully all the tag related tests"() {
-        when:
-        List tss = getForEntity('/tng-vnv-planner/api/v1/services/{serviceUuid}/tests', List, NETWORK_SERVICE_ID).body
-        System.out.println("")
+        List tss = getForEntity('/tng-vnv-planner/api/v1/test-plans/services/{serviceUuid}/tests', List, NETWORK_SERVICE_ID).body
         then:
 
-        tss.size() == 1
+        tss.size() == 4
         cleanup:
         curatorMock.reset()
 

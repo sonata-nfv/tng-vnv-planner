@@ -63,7 +63,7 @@ class NetworkServiceRepositoryImpl implements NetworkServiceRepository {
 
     NetworkService findByUuid(String uuid) {
         callExternalEndpoint(restTemplateWithAuth.getForEntity(serviceMetadataEndpoint,
-                NetworkService.class, uuid),'TestCatalogue.loadPackageMetadata',
+                NetworkService.class, uuid),'NetworkServiceRepository.findByUuid',
                 serviceMetadataEndpoint).body
     }
 
@@ -72,8 +72,8 @@ class NetworkServiceRepositoryImpl implements NetworkServiceRepository {
                 'TestCatalogue.loadPackageMetadata',serviceMetadataEndpoint).body.each {println it}
     }
 
-    List<NetworkServiceDescriptor> findNssByTestTag(String tag) {
-        DebugHelper.callExternalEndpoint(restTemplateWithAuth.getForEntity(serviceListByTagEndpoint, NetworkServiceDescriptor[], tag),
+    List<NetworkService> findNssByTestTag(String tag) {
+        DebugHelper.callExternalEndpoint(restTemplateWithAuth.getForEntity(serviceListByTagEndpoint, NetworkService[], tag),
                 'TestPlanRepositoryImpl.findNssByTestTag',serviceListByTagEndpoint).body
     }
 }

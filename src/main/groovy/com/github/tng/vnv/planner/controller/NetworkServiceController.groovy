@@ -34,6 +34,8 @@
 
 package com.github.tng.vnv.planner.controller
 
+import com.github.tng.vnv.planner.model.NetworkService
+import com.github.tng.vnv.planner.service.NetworkServiceService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -49,8 +51,13 @@ class NetworkServiceController {
     @Autowired
     TestService testService
 
+    @Autowired
+    NetworkServiceService networkServiceService
+
     @GetMapping('/services/{serviceUuid}/tests')
     List<TestDescriptor> listTestsByService(@PathVariable('serviceUuid') String uuid) {
-        testService.findByService(uuid)
+        testService.findByService(
+                networkServiceService.findByUuid(uuid).nsd
+        )
     }
 }

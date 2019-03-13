@@ -34,6 +34,7 @@
 
 package com.github.tng.vnv.planner.service
 
+import com.github.tng.vnv.planner.model.NetworkService
 import com.github.tng.vnv.planner.repository.NetworkServiceRepository
 import com.github.tng.vnv.planner.repository.TestRepository
 import com.github.tng.vnv.planner.model.NetworkServiceDescriptor
@@ -77,6 +78,9 @@ class CatalogueHelperServiceImpl implements CatalogueHelperService {
     @Value('${app.gk.package.metadata.endpoint}')
     def packageMetadataEndpoint
 
+    @Value('${app.gk.package.list.endpoint}')
+    def packageListEndpoint
+
 
     @Override
     Map discoverAssociatedNssAndTests(PackageMetadata packageMetadata) {
@@ -108,9 +112,9 @@ class CatalogueHelperServiceImpl implements CatalogueHelperService {
         }
 
         //notes: loadByPackageId the nsAndTestsMapping with all the associated services according to the given tests
-        packageMetadata.testSuites?.each { ts -> ts.testd.testExecution?.each { tag ->
+        packageMetadata.tests?.each { ts -> ts.testd.testExecution?.each { tag ->
             if(!tag.testTag.isEmpty()) {
-                catalogueOld.findNssByTestTag(tag.testTag)?.each { ns ->
+                networkServiceRepository.findNssByTestTag(tag.testTag)?.each { ns ->
                     ts = addPackageIdToTestSuit(packageMetadata,ts)
                     if(!nsAndTestsMapping.containsKey(ns))
                         nsAndTestsMapping.put(ns, tss = [] << ts)
@@ -139,12 +143,12 @@ class CatalogueHelperServiceImpl implements CatalogueHelperService {
             if(s) metadata.networkServices << s
         }
 
-        packageMetadata.testSuites?.each { ts ->
+        packageMetadata.tests?.each { ts ->
             def t = testRepository.findByUuid(ts.testUuid)
-            if(t) metadata.testSuites << t
+            if(t) metadata.tests << t
         }
 
-        log.info("##vnvlog: \nnetworkServices: ${metadata.networkServices}, \ntestSuites: ${metadata.testSuites}")
+        log.info("##vnvlog: \nnetworkServices: ${metadata.networkServices}, \ntests: ${metadata.tests}")
         metadata
     }
 
@@ -156,14 +160,14 @@ class CatalogueHelperServiceImpl implements CatalogueHelperService {
         rawPackageMetadata?.pd?.package_content.each{resource ->
             switch (resource.get('content-type')) {
                 case 'application/vnd.5gtango.tstd':
-                    TestDescriptor ts = testRepository.findByUuid(resource.uuid)
+                    Test ts = testRepository.findByUuid(resource.uuid)
                     log.info("##vnvlog res: testSuite: $ts")
                     log.info("##vnvlog agnostic obj " + testRepository.printAgnosticObjByUuid(resource.uuid))
                     if(ts.testUuid)
-                        packageMetadata.testSuites << ts
+                        packageMetadata.tests << ts
                     break
                 case 'application/vnd.5gtango.nsd':
-                    NetworkServiceDescriptor ns =  networkServiceRepository.findByUuid(resource.uuid)
+                    NetworkService ns =  networkServiceRepository.findByUuid(resource.uuid)
                     log.info("##vnvlog Request: res: networkService: $ns")
                     log.info("##vnvlog agnostic obj: " + networkServiceRepository.printAgnosticObjByUuid(resource.uuid))
                     if(ns.networkServiceId)
@@ -176,7 +180,19 @@ class CatalogueHelperServiceImpl implements CatalogueHelperService {
 
     //todo: this is a workaround - to add the packageId to the Test - until the packageId be removed from the source
     def addPackageIdToTestSuit(PackageMetadata metadata, Test ts) {
-        ts.packageId = metadata.packageId?: catalogueOld.findPackageId(ts)
+        ts.packageId = metadata.packageId?: findPackageId(ts)
         ts
     }
+
+    //todo: this is a workaround solution to bypass the null packageId issue for test's
+    //todo-y2: remove the packageId from all the TestSuite,TestPlan,TestResult
+    def findPackageId(Test test){
+        callExternalEndpoint(restTemplateWithAuth.getForEntity(packageListEndpoint, Object[]),
+                'TestCatalogue.findPackageId', packageListEndpoint).body?.find { p ->
+            p.pd.package_content?.find { pc ->
+                pc.get('content-type') == "application/vnd.5gtango.tstd"
+            }?.get("uuid") == test.testUuid
+        }?.get("uuid")
+    }
+
 }

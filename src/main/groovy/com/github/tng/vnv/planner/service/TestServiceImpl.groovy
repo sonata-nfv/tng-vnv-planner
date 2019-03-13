@@ -35,6 +35,7 @@
 package com.github.tng.vnv.planner.service
 
 import com.github.tng.vnv.planner.model.NetworkServiceDescriptor
+import com.github.tng.vnv.planner.model.Test
 import com.github.tng.vnv.planner.model.TestDescriptor
 import com.github.tng.vnv.planner.repository.TestRepository
 import groovy.util.logging.Log
@@ -48,13 +49,21 @@ class TestServiceImpl implements TestService {
     @Autowired
     TestRepository testRepository
 
+    @Override
+    def findByService(String uuid) {
+        testRepository.findByUuid(uuid)
+    }
+
     def findByService(NetworkServiceDescriptor nsd) {
         List<TestDescriptor> tdList = [] as ArrayList
         nsd.testingTags?.each { tt ->
-            testRepository.findTssByTestTag(tt)?.each { td ->
-                tdList << td
+            testRepository.findTssByTestTag(tt)?.each { t ->
+                if(t.testd.testExecution.any{ element ->
+                    element.testTag.contains(tt) && !tdList.contains(t.testd)
+                })
+                tdList << t.testd
             }
         }
-        tps
+        tdList
     }
 }
