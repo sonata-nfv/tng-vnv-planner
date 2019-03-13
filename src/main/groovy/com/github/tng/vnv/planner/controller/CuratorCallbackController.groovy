@@ -53,12 +53,11 @@ import javax.validation.Valid
 @RequestMapping('/api/v1/test-plans')
 class CuratorCallbackController {
 
-    static final String TEST_PLAN_APPROVED_STATUS = 'PAUSED'
-    static final String TEST_PLAN_CREATED = 'CREATED'
-    static final String TEST_PLAN_CRASHED = 'CRASHED'
-    static final String TEST_PLAN_CANCELED = 'CANCELED'
-    static final String TEST_PLAN_FINISHED = 'FINISHED'
-    static final String TEST_PLAN_RESCHEDULED = 'RESCHEDULED'
+    static final String TEST_PLAN_STARTING = 'STARTING'
+    static final String TEST_PLAN_COMPLETED = 'COMPLETED'
+    static final String TEST_PLAN_CANCELLING = 'CANCELLING'
+    static final String TEST_PLAN_CANCELLED = 'CANCELLED'
+    static final String TEST_PLAN_ERROR = 'ERROR'
 
     @Autowired
     Collector collector
@@ -74,22 +73,19 @@ class CuratorCallbackController {
         switch (body.testPlanStatus) {
 
             //todo-gandreou: fix this part for every different schenario
-            case TEST_PLAN_PAUSED || TEST_PLAN_CREATED:
+            case TEST_PLAN_STARTING:
                 collector.update(body.testPlanUuid, body.testPlanStatus)
                 break
-            case TEST_PLAN_CREATED:
+            case TEST_PLAN_COMPLETED:
                 collector.update(body.testPlanUuid, body.testPlanStatus)
                 break
-            case TEST_PLAN_CRASHED:
+            case TEST_PLAN_CANCELLING:
                 collector.update(body.testPlanUuid, body.testPlanStatus)
                 break
-            case TEST_PLAN_CANCELED:
+            case TEST_PLAN_CANCELLED:
                 collector.update(body.testPlanUuid, body.testPlanStatus)
                 break
-            case TEST_PLAN_FINISHED:
-                collector.update(body.testPlanUuid, body.testPlanStatus)
-                break
-            case TEST_PLAN_POSTPONED:
+            case TEST_PLAN_ERROR:
                 collector.update(body.testPlanUuid, body.testPlanStatus)
                 break
             default:

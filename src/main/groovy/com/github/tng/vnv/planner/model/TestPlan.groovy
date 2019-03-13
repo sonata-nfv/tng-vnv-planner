@@ -49,7 +49,6 @@ class TestPlan {
     String index
     NetworkServiceDescriptor nsd
     TestDescriptor testd
-    String status
 
     @Override
     public String toString() {
@@ -70,8 +69,10 @@ class TestPlan {
 
 @EqualsAndHashCode
 class TestPlanRequest {
-    TestPlan testPlan
-    String requestType
+    NetworkServiceDescriptor nsd
+    TestDescriptor testd
+    Boolean lastTest
+    List<TestPlanCallback> testPlanCallbacks
 }
 
 @EqualsAndHashCode
@@ -93,13 +94,22 @@ class TestPlanCallback {
     String eventActor
 
     @ApiModelProperty(
-            value = 'Test Plan Status',
+            value = 'Callback URL',
             allowEmptyValue = false,
-            example = 'PAUSED, CREATED, CRASHED, CANCELED, FINISHED, RESCHEDULED',
+            example = '/on-change',
             required = true
     )
     @NotNull
-    String testPlanStatus
+    String url
+
+    @ApiModelProperty(
+            value = 'Test Plan Status',
+            allowEmptyValue = false,
+            example = 'STARTING, COMPLETED, CANCELLING, CANCELLED, ERROR',
+            required = true
+    )
+    @NotNull
+    String status
 
     @ApiModelProperty(required = true)
     @NotNull
