@@ -44,6 +44,7 @@ import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Repository
 import org.springframework.web.client.RestTemplate
+import org.springframework.web.util.UriComponentsBuilder
 
 import static com.github.tng.vnv.planner.helper.DebugHelper.callExternalEndpoint
 
@@ -80,9 +81,10 @@ class TestRepositoryImpl implements TestRepository {
     }
 
     List<TestDescriptor> findTssByTestTag(String tag) {
-		Map <String, Object> params = new HashMap <String, Object>()
-		params.put("testing_tag", tag)
-        DebugHelper.callExternalEndpoint(restTemplateWithAuth.getForEntity(testListByTagEndpoint, TestDescriptor[], params),
+		UriComponentsBuilder builder = UriComponentsBuilder
+		.fromUriString(testListByTagEndpoint)
+		.queryParam("testing_tag", tag)
+		DebugHelper.callExternalEndpoint(restTemplateWithAuth.getForObject(builder.toUriString(), TestDescriptor[]),
                 'TestPlanRepositoryImpl.findTssByTestTag',testListByTagEndpoint).body
     }
 
