@@ -32,23 +32,36 @@
  * partner consortium (www.5gtango.eu).
  */
 
-package com.github.tng.vnv.planner.service
+package com.github.tng.vnv.planner.model
+
+import io.swagger.annotations.ApiModelProperty
+
+import javax.validation.constraints.NotNull
+
+class Package {
+    List<NetworkService> networkServices=[]
+    List<Test> tests=[]
+
+    String packageId
+    String uuid
+}
+
+class PackageCallback {
+
+    @ApiModelProperty(
+            value = 'Event Name',
+            allowEmptyValue = true,
+            example = 'UPDATED',
+            required = true
+    )
+    @NotNull
+    String eventName
+
+    @ApiModelProperty(required = true)
+    @NotNull
+    String packageId
+
+    String packageLocation
 
 
-import com.github.tng.vnv.planner.model.PackageMetadata
-import groovy.util.logging.Log
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.stereotype.Service
-
-@Log
-@Service("CatalogueService")
-class CatalogueServiceImpl implements CatalogueService {
-
-    @Autowired
-    CatalogueHelperService catalogueHelperService
-
-    @Override
-    def discoverAssociatedNssAndTests(PackageMetadata packageMetadata) {
-        return catalogueHelperService.discoverAssociatedNssAndTests(packageMetadata)
-    }
 }

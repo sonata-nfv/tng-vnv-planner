@@ -34,12 +34,52 @@
 
 package com.github.tng.vnv.planner.repository
 
-interface TestRepository {
+import com.github.tng.vnv.planner.model.Test
+import com.github.tng.vnv.planner.utils.DebugHelper
+import com.github.tng.vnv.planner.model.TestDescriptor
+import groovy.util.logging.Log
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Qualifier
+import org.springframework.beans.factory.annotation.Value
+import org.springframework.stereotype.Repository
+import org.springframework.web.client.RestTemplate
 
-    def findByUuid(String uuid)
+import static com.github.tng.vnv.planner.utils.DebugHelper.callExternalEndpoint
 
-    def printAgnosticObjByUuid(String uuid)
+@Log
+@Repository
+class TestRepository {
 
-    def findTssByTestTag(String tag)
+    @Autowired
+    @Qualifier('restTemplateWithAuth')
+    RestTemplate restTemplateWithAuth
+
+    @Value('${app.vnvgk.test.metadata.endpoint}')
+    def testMetadataEndpoint
+
+    @Value('${app.vnvgk.test.list.by.tag.endpoint}')
+    def testListByTagEndpoint
+
+    @Value('${app.gk.service.metadata.endpoint}')
+    def serviceMetadataEndpoint
+
+
+    Test findByUuid(String uuid) {
+        callExternalEndpoint(restTemplateWithAuth.getForEntity(testMetadataEndpoint, Test.class, uuid),
+                'TestRepository.findNssByTestTag','TestRepository.findByUuid',testMetadataEndpoint).body
+
+    }
+
+    String printAgnosticObjByUuid(String uuid) {
+        callExternalEndpoint(
+                restTemplateWithAuth.getForEntity(testMetadataEndpoint, Object.class, uuid),
+                'TestRepository.loadPackageMetadata','TestCatalogue.loadPackageMetadata',
+                testMetadataEndpoint).body.each {println it}
+    }
+
+    List<Test> findTssByTestTag(String tag) {
+        DebugHelper.callExternalEndpoint(restTemplateWithAuth.getForEntity(testListByTagEndpoint, Test[], tag),
+                'TestRepository.findTssByTestTag',testListByTagEndpoint).body
+    }
 
 }

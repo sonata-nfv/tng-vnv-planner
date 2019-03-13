@@ -35,7 +35,7 @@
 package com.github.tng.vnv.planner.controller
 
 import com.github.tng.vnv.planner.model.PackageCallback
-import com.github.tng.vnv.planner.model.PackageMetadata
+import com.github.tng.vnv.planner.model.Package
 import com.github.tng.vnv.planner.app.Scheduler
 import groovy.util.logging.Log
 import io.swagger.annotations.ApiResponse
@@ -74,7 +74,7 @@ class CatalogueCallbackController {
             case PACKAGE_CREATED:
                 break
             default:
-               scheduler.schedule(new PackageMetadata(packageId: body.packageId))
+               scheduler.schedule(new Package(packageId: body.packageId))
         }
         ResponseEntity.ok().build()
     }

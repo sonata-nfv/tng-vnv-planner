@@ -34,17 +34,68 @@
 
 package com.github.tng.vnv.planner.service
 
+import com.github.tng.vnv.planner.repository.TestPlanRepository
 import com.github.tng.vnv.planner.model.NetworkServiceDescriptor
 import com.github.tng.vnv.planner.model.TestDescriptor
 import com.github.tng.vnv.planner.model.TestPlan
+import com.github.tng.vnv.planner.repository.NetworkServiceRepository
+import com.github.tng.vnv.planner.repository.TestRepository
+import groovy.util.logging.Log
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.stereotype.Service
 
-interface TestPlanService {
+@Log
+@Service
+class TestPlanService {
 
-    def findByService(NetworkServiceDescriptor nsd)
+    @Autowired
+    TestRepository testRepository
 
-    def findByTest(TestDescriptor td)
+    @Autowired
+    TestPlanRepository testPlanRepository
 
-    def update(TestPlan tp, String id)
+    @Autowired
+    NetworkServiceRepository networkServiceRepository
 
-    TestPlan createTestPlan(NetworkServiceDescriptor nsd, TestDescriptor td)
+    def findByService(NetworkServiceDescriptor nsd) {
+        List<TestPlan> tps = [] as ArrayList
+        nsd.testingTags?.each { tt ->
+            testRepository.findTssByTestTag(tt)?.each { td ->
+                tps << new TestPlan(nsd:nsd, testd:td)
+            }
+        }
+        tps
+    }
+
+    def findByTest(TestDescriptor td) {
+        List<TestPlan> tps = [] as ArrayList
+        td.testExecution?.each { tt ->
+            networkServiceRepository.findNssByTestTag(tt)?.each { nsd ->
+                tps <<  new TestPlan(nsd:nsd, testd:td)
+            }
+        }
+        tps
+    }
+
+    def update(TestPlan tp, String id) {
+        return testPlanRepository.update(tp,id)
+    }
+
+    TestPlan createTestPlan(NetworkServiceDescriptor nsd, TestDescriptor td) {
+        def testPlanUuid = UUID.randomUUID().toString()
+        def testPlan = new TestPlan(
+                uuid: testPlanUuid,
+                packageId: testSuites.first().packageId,
+
+                nsdUuid: nsd.uuid,
+                tdUuid: td.uuid,
+                index: 0,
+                NetworkServiceDescriptor: nsd,
+                TestDescriptor: td,
+                status: 'CREATED',
+        )
+        TestPlan tpo = testPlanRepository.create(testPlan)
+        tpo
+    }
+
 }

@@ -34,7 +34,57 @@
 
 package com.github.tng.vnv.planner.repository
 
-interface TestPlanRepository {
-    def create(def testPlan)
-    def update(def testPlan, String id)
+
+import com.github.tng.vnv.planner.model.TestPlan
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Qualifier
+import org.springframework.beans.factory.annotation.Value
+import org.springframework.http.HttpEntity
+import org.springframework.http.HttpHeaders
+import org.springframework.http.HttpMethod
+import org.springframework.http.MediaType
+import org.springframework.stereotype.Repository
+import org.springframework.web.client.RestTemplate
+import groovy.util.logging.Log
+
+import static com.github.tng.vnv.planner.utils.DebugHelper.callExternalEndpoint
+
+@Log
+@Repository
+class TestPlanRepository {
+
+    @Autowired
+    @Qualifier('restTemplateWithAuth')
+    RestTemplate restTemplate
+
+    @Autowired
+    @Qualifier('restTemplateWithAuth')
+    RestTemplate restTemplateWithAuth
+
+    @Value('${app.tpr.test.plan.create.endpoint}')
+    def testPlanCreateEndpoint
+
+    @Value('${app.tpr.test.plan.update.endpoint}')
+    def testPlanUpdateEndpoint
+
+    @Value('${app.vnvgk.test.list.by.tag.endpoint}')
+    def testListByTagEndpoint
+
+    @Value('${app.gk.service.list.by.tag.endpoint}')
+    def serviceListByTagEndpoint
+
+    def create(def testPlan) {
+        def headers = new HttpHeaders()
+        headers.setContentType(MediaType.APPLICATION_JSON)
+        def entity = new HttpEntity<TestPlan>(testPlan ,headers)
+        callExternalEndpoint(restTemplate.postForEntity(testPlanCreateEndpoint,entity,TestPlan),'TestResultRepository.createTestPlan',testPlanCreateEndpoint).body
+    }
+
+    def update(def testPlan,String id) {
+        //CleanCode-gandreou: there is no reason to have "id" input param
+        def headers = new HttpHeaders()
+        headers.setContentType(MediaType.APPLICATION_JSON)
+        def entity = new HttpEntity<TestPlan>(testPlan ,headers)
+        callExternalEndpoint(restTemplate.exchange(testPlanUpdateEndpoint, HttpMethod.PUT, entity, TestPlan.class ,testPlan.uuid),'TestResultRepository.updatePlan',testPlanUpdateEndpoint).body
+    }
 }

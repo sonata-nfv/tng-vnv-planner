@@ -34,14 +34,31 @@
 
 package com.github.tng.vnv.planner.service
 
-
+import com.github.tng.vnv.planner.model.NetworkServiceDescriptor
 import com.github.tng.vnv.planner.model.TestDescriptor
+import com.github.tng.vnv.planner.repository.NetworkServiceRepository
+import groovy.util.logging.Log
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.stereotype.Service
 
-interface NetworkServiceService {
+@Log
+@Service
+class NetworkServiceService {
 
-    def findByUuid(String uuid)
+    @Autowired
+    NetworkServiceRepository networkServiceRepository
 
-    def findByTest(TestDescriptor td)
+    def findByUuid(String uuid) {
+        networkServiceRepository.findByUuid(uuid)
+    }
 
-
+    def findByTest(TestDescriptor td) {
+        List<NetworkServiceDescriptor> nsdList = [] as ArrayList
+        td.testExecution?.each { tt ->
+            networkServiceRepository.findNssByTestTag(tt)?.each { nsd ->
+                nsdList <<  nsd
+            }
+        }
+        nsdList
+    }
 }

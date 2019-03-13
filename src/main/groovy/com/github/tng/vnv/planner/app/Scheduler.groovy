@@ -37,7 +37,7 @@ package com.github.tng.vnv.planner.app
 import com.github.tng.vnv.planner.Applicant
 import com.github.tng.vnv.planner.service.CatalogueService
 import com.github.tng.vnv.planner.service.TestPlanService
-import com.github.tng.vnv.planner.model.PackageMetadata
+import com.github.tng.vnv.planner.model.Package
 import com.github.tng.vnv.planner.model.TestPlan
 import com.github.tng.vnv.planner.queue.TestPlanProducer
 import groovy.util.logging.Log
@@ -62,11 +62,11 @@ class Scheduler extends Applicant {
     CatalogueService catalogueService
 
     @Async
-    CompletableFuture<Boolean> schedule(PackageMetadata packageMetadata) {
+    CompletableFuture<Boolean> schedule(Package packageMetadata) {
         def map = catalogueService.discoverAssociatedNssAndTests(packageMetadata)
 
         Boolean out = (map == null) ? false : map.every {nsd,td ->
-//            schedule(testPlanService.createTestPlan(networkServiceDescriptor: nsd, TestDescriptor: td) == true)
+//            schedule(testPlanService.createTestPlan(nsd: nsd, TestDescriptor: td) == true)
         }
         CompletableFuture.completedFuture(out)
     }

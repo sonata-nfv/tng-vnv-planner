@@ -35,13 +35,12 @@
 package com.github.tng.vnv.planner.app
 
 
-import com.github.tng.vnv.planner.model.PackageMetadata
+import com.github.tng.vnv.planner.model.Package
 import com.github.tng.vnv.planner.restmock.CatalogueMock
 import com.github.tng.vnv.planner.restmock.CuratorMock
 import com.github.tng.vnv.planner.restmock.TestPlanRepositoryMock
 import com.github.mrduguo.spring.test.AbstractSpec
 import org.springframework.beans.factory.annotation.Autowired
-import spock.lang.Ignore
 
 import java.util.concurrent.CompletableFuture
 
@@ -64,7 +63,7 @@ class SchedulerTest extends AbstractSpec {
     void 'schedule multiple test plans should produce success result'() {
 
         when:
-        CompletableFuture<Boolean> out = scheduler.schedule(new PackageMetadata(packageId: MULTIPLE_TEST_PLANS_PACKAGE_ID))
+        CompletableFuture<Boolean> out = scheduler.schedule(new Package(packageId: MULTIPLE_TEST_PLANS_PACKAGE_ID))
 
         then:
         Thread.sleep(10000L);

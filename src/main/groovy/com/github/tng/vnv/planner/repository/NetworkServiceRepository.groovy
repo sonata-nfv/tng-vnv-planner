@@ -34,12 +34,46 @@
 
 package com.github.tng.vnv.planner.repository
 
-interface NetworkServiceRepository {
+import com.github.tng.vnv.planner.utils.DebugHelper
+import com.github.tng.vnv.planner.model.NetworkService
+import com.github.tng.vnv.planner.model.NetworkServiceDescriptor
+import groovy.util.logging.Log
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Qualifier
+import org.springframework.beans.factory.annotation.Value
+import org.springframework.stereotype.Repository
+import org.springframework.web.client.RestTemplate
 
-    def findByUuid(String uuid)
+import static com.github.tng.vnv.planner.utils.DebugHelper.callExternalEndpoint
 
-    def printAgnosticObjByUuid(String uuid)
+@Log
+@Repository
+class NetworkServiceRepository {
 
-    def findNssByTestTag(String tag)
+    @Autowired
+    @Qualifier('restTemplateWithAuth')
+    RestTemplate restTemplateWithAuth
 
+    @Value('${app.gk.service.list.by.tag.endpoint}')
+    def serviceListByTagEndpoint
+
+    @Value('${app.gk.service.metadata.endpoint}')
+    def serviceMetadataEndpoint
+
+
+    NetworkService findByUuid(String uuid) {
+        callExternalEndpoint(restTemplateWithAuth.getForEntity(serviceMetadataEndpoint,
+                NetworkService.class, uuid),'NetworkServiceRepository.findByUuid',
+                serviceMetadataEndpoint).body
+    }
+
+    String printAgnosticObjByUuid(String uuid) {
+        callExternalEndpoint(restTemplateWithAuth.getForEntity(serviceMetadataEndpoint, Object.class, uuid),
+                'TestCatalogue.loadPackageMetadata',serviceMetadataEndpoint).body.each {println it}
+    }
+
+    List<NetworkService> findNssByTestTag(String tag) {
+        DebugHelper.callExternalEndpoint(restTemplateWithAuth.getForEntity(serviceListByTagEndpoint, NetworkService[], tag),
+                'TestPlanRepository.findNssByTestTag',serviceListByTagEndpoint).body
+    }
 }
