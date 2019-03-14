@@ -34,12 +34,14 @@
 
 package com.github.tng.vnv.planner.service
 
+import com.github.tng.vnv.planner.model.NetworkService
 import com.github.tng.vnv.planner.model.NetworkServiceDescriptor
 import com.github.tng.vnv.planner.model.TestDescriptor
 import com.github.tng.vnv.planner.repository.NetworkServiceRepository
 import groovy.util.logging.Log
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+import org.springframework.web.util.UriComponentsBuilder
 
 @Log
 @Service
@@ -61,4 +63,7 @@ class NetworkServiceService {
         }
         nsdList
     }
+	def findNssByTestTag(String tag) {
+		networkServiceRepository.findNssByTestTag(tag)
+	}
 }
