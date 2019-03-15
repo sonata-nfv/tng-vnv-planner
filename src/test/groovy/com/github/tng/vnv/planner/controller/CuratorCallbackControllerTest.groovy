@@ -69,7 +69,6 @@ class CuratorCallbackControllerTest extends AbstractSpec {
                 , Void.class)
 
         then:
-        Thread.sleep(10000L);
         entity.statusCode == HttpStatus.OK
 
         testPlanRepositoryMock.testPlans.size()==1
@@ -96,7 +95,6 @@ class CuratorCallbackControllerTest extends AbstractSpec {
                 , Void.class)
 
         then:
-        Thread.sleep(10000L);
         entity.statusCode == HttpStatus.OK
 
         testPlanRepositoryMock.testPlans.size()==2
