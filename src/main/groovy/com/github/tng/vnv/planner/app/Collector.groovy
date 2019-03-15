@@ -35,6 +35,7 @@ package com.github.tng.vnv.planner.app
 
 import com.github.tng.vnv.planner.Applicant
 import com.github.tng.vnv.planner.model.TEST_PLAN_STATUS
+import com.github.tng.vnv.planner.model.TestPlanCallback
 import com.github.tng.vnv.planner.service.TestPlanService
 import com.github.tng.vnv.planner.model.TestPlan
 import groovy.util.logging.Log
@@ -54,28 +55,7 @@ class Collector extends Applicant {
         testPlanService.update(testPlan)
     }
 
-    TestPlanService collect(TestPlan testPlan) {
-        switch (testPlan.status) {
-
-        //todo-gandreou: fix this part for every different scenario
-            case TEST_PLAN_STATUS.STARTING:
-                update(testPlan)
-                break
-            case TEST_PLAN_STATUS.COMPLETED:
-                update(testPlan)
-                break
-            case TEST_PLAN_STATUS.CANCELLING:
-                update(testPlan)
-                break
-            case TEST_PLAN_STATUS.CANCELLED:
-                update(testPlan)
-                break
-            case TEST_PLAN_STATUS.ERROR:
-                update(testPlan)
-                break
-            default:
-                update(testPlan)
-        }
-
+    void accept(TestPlan testPlan) {
+        update(testPlan)
     }
 }

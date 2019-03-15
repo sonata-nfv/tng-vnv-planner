@@ -35,7 +35,7 @@
 package com.github.tng.vnv.planner.controller
 
 import com.github.tng.vnv.planner.app.Collector
-import com.github.tng.vnv.planner.model.TEST_PLAN_STATUS
+import com.github.tng.vnv.planner.model.TestPlan
 import com.github.tng.vnv.planner.model.TestPlanCallback
 import groovy.util.logging.Log
 import io.swagger.annotations.ApiResponse
@@ -62,10 +62,10 @@ class CuratorCallbackController {
             @ApiResponse(code = 404, message = 'Could not find package with that package_id'),
     ])
     @PostMapping('/on-change/completed')
-    ResponseEntity<Void> onChangeCompleted(@Valid @RequestBody TestPlanCallback body) {
+    ResponseEntity<Void> onChangeCompleted(@Valid @RequestBody TestPlanCallback callback) {
         //todo-Y2:this endpoint is an on-change callback and is specific to the asynchronous nature of the unpackaging
         log.info("##vnvlog Executor.executeTests request. ")
-        collector.collect(body)
+        collector.accept(new TestPlan(uuid: callback.testPlanUuid, status: callback.status))
 
         ResponseEntity.ok().build()
     }
@@ -75,10 +75,10 @@ class CuratorCallbackController {
             @ApiResponse(code = 404, message = 'Could not find package with that package_id'),
     ])
     @PostMapping('/on-change/')
-    ResponseEntity<Void> onChange(@Valid @RequestBody TestPlanCallback body) {
+    ResponseEntity<Void> onChange(@Valid @RequestBody TestPlanCallback callback) {
         //todo-Y2:this endpoint is an on-change callback and is specific to the asynchronous nature of the unpackaging
         log.info("##vnvlog Executor.executeTests request. ")
-        collector.collect(body)
+        collector.accept(new TestPlan(uuid: callback.testPlanUuid, status: callback.status))
 
         ResponseEntity.ok().build()
     }
