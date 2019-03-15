@@ -33,9 +33,15 @@
 server:
   port: 6100
   contextPath: /tng-vnv-planner
-spring.jackson.property-naming-strategy: SNAKE_CASE
+spring:
+  jackson.property-naming-strategy: SNAKE_CASE
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
 api:
-  name: 5GTANGO VnV Planner
+  name: tng-vnv-planner
   description: An H2020 5GTANGO project
   version: 0.0.1
   host: tng-vnv-planner:6100
@@ -76,6 +82,12 @@ app:
     host: tng-vnv-curator
     base.url: http://${app.curator.host}:6200/api/v1
     test.plan.curate.endpoint: ${app.curator.base.url}/curate-test-plan
+
+  rabbitmq:
+    host: localhost
+    base.url: http://${app.rabbitmq.host}
+    test.plan.queue: ${api.name}-test-plans
+
 
   queue.capacity: 500
   pool:

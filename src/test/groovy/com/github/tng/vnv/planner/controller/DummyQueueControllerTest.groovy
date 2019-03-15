@@ -32,11 +32,36 @@
  * partner consortium (www.5gtango.eu).
  */
 
-dependencies {
-    compile 'com.github.mrduguo.spring:spring-app:0.3.0-180320-171212-882f865-8'
-    compile "org.springframework.boot:spring-boot-starter-amqp:$libSpringBootVersion"
-    compile "org.codehaus.groovy:groovy-all:$libGroovyVersion"
+package com.github.tng.vnv.planner.controller
 
-    testCompile 'com.github.mrduguo.spring:spring-test:0.3.0-180320-161244-f62665d-6'
-    testCompile "org.springframework.boot:spring-boot-starter-aop:$libSpringBootVersion"
+import com.github.mrduguo.spring.test.AbstractSpec
+import com.github.tng.vnv.planner.restmock.CatalogueMock
+import com.github.tng.vnv.planner.restmock.CuratorMock
+import com.github.tng.vnv.planner.restmock.TestPlanRepositoryMock
+import org.springframework.beans.factory.annotation.Autowired
+
+class DummyQueueControllerTest extends AbstractSpec {
+
+    final def NETWORK_SERVICE_ID = 'input0ns-f213-4fae-8d3f-04358e1e1445'
+
+
+    @Autowired
+    CuratorMock curatorMock
+
+    @Autowired
+    CatalogueMock catalogueMock
+
+    @Autowired
+    TestPlanRepositoryMock testPlanRepositoryMock
+
+    void "call retrieval of a single test suite's related tests should successfully all the tag related tests"() {
+        when:
+        String tss = getForEntity('/tng-vnv-planner/api/v1/test-plans/queue/{action}', String, "true").body
+        then:
+
+        tss.toString() == "OK"
+        cleanup:
+        curatorMock.reset()
+
+    }
 }

@@ -35,14 +35,24 @@
 package com.github.tng.vnv.planner.queue
 
 import groovy.util.logging.Log
+import org.springframework.amqp.core.Message
+import org.springframework.amqp.core.Queue
+import org.springframework.amqp.rabbit.core.RabbitTemplate
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 
 
 @Log
 @Component
 class TestPlanConsumer {
+
+    @Autowired
+    private RabbitTemplate template;
+
+    @Autowired
+    private Queue testPlansQueue;
+
     String id
-    String messageQueue
     String action
 
     def add(String uuid) {
@@ -64,7 +74,6 @@ class TestPlanConsumer {
     }
 
     def to(String mq) {
-        messageQueue = mq
         //case ADD
         //todo-gandreou: return the result for the ADD of the item from the queue
         //case REMOVE
@@ -73,7 +82,29 @@ class TestPlanConsumer {
         //todo-gandreou: return the result for the UPDATE of the item from the queue
     }
 
-    def from(String mq) {
-        from(mq)
+    def fromTestPlansQueue() {
+
+        //cleancode-gandreou: bypass-all-of-these: I will send a message to 'Hello' queue
+        receive()
+
+    }
+
+    void receive() {
+
+        log.info("##Consumer:testPlansQueue: ${testPlansQueue.name} [before]")
+
+//        Message message = this.template.receive()
+        Message message = this.template.receive("tng-vnv-planner-test-plans")
+//        Message message = this.template.receive(testPlansQueue.getName())
+/*
+        def receivedMassage = new String(message, "UTF-8")
+        if (!receivedMassage.isEmpty()) {
+            log.info("##Consumer:receives message: " + receivedMassage)
+        } else
+            log.info("##Consumer:didn't receive message!!!!")
+*/
+
+        log.info("##Consumer:testPlansQueue: ${testPlansQueue.name} [after]")
+
     }
 }

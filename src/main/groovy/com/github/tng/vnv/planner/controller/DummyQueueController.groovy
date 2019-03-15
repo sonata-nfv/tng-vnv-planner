@@ -32,42 +32,51 @@
  * partner consortium (www.5gtango.eu).
  */
 
-package com.github.tng.vnv.planner.queue
+package com.github.tng.vnv.planner.controller
 
+
+import com.github.tng.vnv.planner.model.TestDescriptor
+import com.github.tng.vnv.planner.queue.TestPlanConsumer
+import com.github.tng.vnv.planner.queue.TestPlanProducer
+import com.github.tng.vnv.planner.service.NetworkServiceService
+import com.github.tng.vnv.planner.service.TestService
 import groovy.util.logging.Log
-import org.springframework.amqp.rabbit.core.RabbitTemplate
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.stereotype.Component
-import org.springframework.amqp.core.Queue
+import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RestController
+
+import java.sql.Timestamp
 
 @Log
-@Component
-class TestPlanProducer {
+@RestController
+@RequestMapping('/api/v1/test-plans')
+class DummyQueueController {
 
     @Autowired
-    private RabbitTemplate template;
+    TestPlanProducer testPlanProducer
 
     @Autowired
-    private Queue testPlansQueue;
+    TestPlanConsumer testPlanConsumer
 
-    String id
-    String action
+    @GetMapping('/queue/{action}')
+    ResponseEntity<Void> testQueue(@PathVariable('action') String action) {
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
 
-    def add(String uuid) {
-        action = 'ADD'
-        id = uuid
-        this
-    }
+        log.info("##DummyQueueController: Access to /api/v1/test-plans/queue/{action} endpoint  with the received action: $action")
+        def o
+        if('add'.contains(action)) {
+            o = testPlanProducer.send(timestamp.toString())
+            log.info("##DummyQueueController: call testPlanProducer to add a timestamp message: $timestamp")
 
-    def toTestPlansQueue() {
-        send("#~#: Queue: ${testPlansQueue.name}: testPlanId:"+id)
-    }
+        }
+        else {
+            o = testPlanConsumer.receive()
+            log.info("##DummyQueueController: call testPlanConsumer to receive a message")
+        }
 
-    def send(String message) {
-        log.info("##Producer:testPlansQueue: " + testPlansQueue.getName())
-        log.info("##Producer:convertAndSend message: $message [before]")
-        this.template.convertAndSend(testPlansQueue.getName(), message)
-        log.info("##Producer:convertAndSend message: $message [after]")
-
+        ResponseEntity.ok().build()
     }
 }
