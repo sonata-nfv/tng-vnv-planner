@@ -141,20 +141,13 @@
                 "test_results_uuid": {
                     "allowEmptyValue": false,
                     "type": "string"
-                },
-                "url": {
-                    "allowEmptyValue": false,
-                    "description": "Callback URL",
-                    "example": "/test-plans/on-change",
-                    "type": "string"
                 }
             },
             "required": [
                 "event_actor",
                 "status",
                 "test_plan_uuid",
-                "test_results_uuid",
-                "url"
+                "test_results_uuid"
             ],
             "title": "TestPlanCallback",
             "type": "object"
@@ -287,9 +280,9 @@
                 "operationId": "onChangeUsingPOST_1",
                 "parameters": [
                     {
-                        "description": "body",
+                        "description": "callback",
                         "in": "body",
-                        "name": "body",
+                        "name": "callback",
                         "required": true,
                         "schema": {
                             "$ref": "#/definitions/TestPlanCallback"
@@ -333,9 +326,9 @@
                 "operationId": "onChangeCompletedUsingPOST",
                 "parameters": [
                     {
-                        "description": "body",
+                        "description": "callback",
                         "in": "body",
-                        "name": "body",
+                        "name": "callback",
                         "required": true,
                         "schema": {
                             "$ref": "#/definitions/TestPlanCallback"

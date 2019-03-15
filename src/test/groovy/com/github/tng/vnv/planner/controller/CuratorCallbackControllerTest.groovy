@@ -72,7 +72,8 @@ class CuratorCallbackControllerTest extends AbstractSpec {
         Thread.sleep(10000L);
         entity.statusCode == HttpStatus.OK
 
-        testPlanRepositoryMock.testPlans.size()==0
+        testPlanRepositoryMock.testPlans.size()==1
+        testPlanRepositoryMock.testPlans.values().last().status=='COMPLETED'
 
         cleanup:
         testPlanRepositoryMock.reset()
@@ -99,6 +100,7 @@ class CuratorCallbackControllerTest extends AbstractSpec {
         entity.statusCode == HttpStatus.OK
 
         testPlanRepositoryMock.testPlans.size()==2
+        testPlanRepositoryMock.testPlans.values().last().status=='CANCELLING'
 
         cleanup:
         testPlanRepositoryMock.reset()
