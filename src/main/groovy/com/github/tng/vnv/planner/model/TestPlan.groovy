@@ -47,22 +47,22 @@ class TestPlan {
     String nsdUuid
     String tdUuid
     String index
+    String status
     NetworkServiceDescriptor nsd
     TestDescriptor testd
-    String status
+
 
     @Override
     public String toString() {
-        final StringBuffer sb = new StringBuffer("\n - TestPlan{ \n");
+        final StringBuffer sb = new StringBuffer("TestPlan{");
         sb.append("uuid='").append(uuid).append('\'');
-        sb.append(", index='").append(index).append('\'');
+        sb.append(", packageId='").append(packageId).append('\'');
         sb.append(", nsdUuid='").append(nsdUuid).append('\'');
         sb.append(", tdUuid='").append(tdUuid).append('\'');
+        sb.append(", index='").append(index).append('\'');
         sb.append(", status='").append(status).append('\'');
-        sb.append(", \nnsd.name='").append(nsd.name)
-                .append(", nsd.version='").append(nsd.version).append('\'');
-        sb.append(", \ntd.name='").append(testd.name)
-                .append(", td.version='").append(testd.version).append('\'');
+        sb.append(", nsd.name=").append(nsd.name);
+        sb.append(", testd.name=").append(testd.name);
         sb.append('}');
         return sb.toString();
     }
@@ -70,8 +70,13 @@ class TestPlan {
 
 @EqualsAndHashCode
 class TestPlanRequest {
-    TestPlan testPlan
-    String requestType
+    NetworkServiceDescriptor nsd
+    TestDescriptor testd
+    Boolean lastTest = false
+    List<TestPlanCallback> testPlanCallbacks = [
+            new TestPlanCallback(eventActor: 'Curator', url: '/test-plans/on-change/completed', status:TEST_PLAN_STATUS.COMPLETED),
+            new TestPlanCallback(eventActor: 'Curator', url: '/test-plans/on-change'),
+    ]
 }
 
 @EqualsAndHashCode
@@ -95,11 +100,11 @@ class TestPlanCallback {
     @ApiModelProperty(
             value = 'Test Plan Status',
             allowEmptyValue = false,
-            example = 'PAUSED, CREATED, CRASHED, CANCELED, FINISHED, RESCHEDULED',
+            example = 'STARTING, COMPLETED, CANCELLING, CANCELLED, ERROR',
             required = true
     )
     @NotNull
-    String testPlanStatus
+    String status
 
     @ApiModelProperty(required = true)
     @NotNull
@@ -126,4 +131,9 @@ class TestPlanCallback {
     )
     @NotNull
     String testResultsRepository
+}
+
+
+enum TEST_PLAN_STATUS{
+    STARTING('STARTING'), COMPLETED('COMPLETED'), CANCELLING('CANCELLING'), CANCELLED('CANCELLED'), ERROR('ERROR')
 }

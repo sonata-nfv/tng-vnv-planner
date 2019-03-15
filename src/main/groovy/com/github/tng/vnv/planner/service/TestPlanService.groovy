@@ -77,8 +77,8 @@ class TestPlanService {
         tps
     }
 
-    def update(TestPlan tp, String id) {
-        return testPlanRepository.update(tp,id)
+    def update(TestPlan tp) {
+        return testPlanRepository.update(tp)
     }
 
     TestPlan createTestPlan(NetworkServiceDescriptor nsd, TestDescriptor td) {
