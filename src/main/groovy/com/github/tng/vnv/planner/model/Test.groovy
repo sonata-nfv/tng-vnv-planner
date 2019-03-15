@@ -60,11 +60,13 @@ class TestDescriptor{
     String version
     String description
     String testType
+    boolean confirmRequired
     List<TestTag> testExecution
 
     @Override
     public String toString() {
         final StringBuffer sb = new StringBuffer("TestDescriptor{");
+        sb.append("confirmRequired=").append(confirmRequired);
         sb.append("testExecution=").append(testExecution);
         sb.append('}');
         return sb.toString();

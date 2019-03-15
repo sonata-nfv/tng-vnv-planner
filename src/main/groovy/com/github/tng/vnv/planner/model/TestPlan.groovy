@@ -47,9 +47,9 @@ class TestPlan {
     String nsdUuid
     String tdUuid
     String index
+    String status
     NetworkServiceDescriptor nsd
     TestDescriptor testd
-    String status
 
     @Override
     public String toString() {
@@ -70,8 +70,13 @@ class TestPlan {
 
 @EqualsAndHashCode
 class TestPlanRequest {
-    TestPlan testPlan
-    String requestType
+    NetworkServiceDescriptor nsd
+    TestDescriptor testd
+    Boolean lastTest = false
+    List<TestPlanCallback> testPlanCallbacks = [
+            new TestPlanCallback(eventActor: 'Curator', url: '/test-plans/on-change/completed', status:TEST_PLAN_STATUS.COMPLETED),
+            new TestPlanCallback(eventActor: 'Curator', url: '/test-plans/on-change'),
+    ]
 }
 
 @EqualsAndHashCode
@@ -93,13 +98,22 @@ class TestPlanCallback {
     String eventActor
 
     @ApiModelProperty(
-            value = 'Test Plan Status',
+            value = 'Callback URL',
             allowEmptyValue = false,
-            example = 'PAUSED, CREATED, CRASHED, CANCELED, FINISHED, RESCHEDULED',
+            example = '/test-plans/on-change',
             required = true
     )
     @NotNull
-    String testPlanStatus
+    String url
+
+    @ApiModelProperty(
+            value = 'Test Plan Status',
+            allowEmptyValue = false,
+            example = 'STARTING, COMPLETED, CANCELLING, CANCELLED, ERROR',
+            required = true
+    )
+    @NotNull
+    String status
 
     @ApiModelProperty(required = true)
     @NotNull
@@ -126,4 +140,15 @@ class TestPlanCallback {
     )
     @NotNull
     String testResultsRepository
+}
+
+
+enum TEST_PLAN_STATUS{
+    SCHEDULING('SCHEDULING'),
+    SCHEDULED('SCHEDULED'),
+    STARTING('STARTING'),
+    COMPLETED('COMPLETED'),
+    CANCELLING('CANCELLING'),
+    CANCELLED('CANCELLED'),
+    ERROR('ERROR')
 }

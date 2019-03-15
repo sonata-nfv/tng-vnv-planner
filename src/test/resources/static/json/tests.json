@@ -12,6 +12,7 @@
       "author": "Felipe Vicens, ATOS",
       "description": "\"Test descriptor for http benchmarking\"\n",
       "test_type": "bash",
+      "validate": "true",
       "test_configuration_parameters": [
         {
           "parameter_name": "config_file",
@@ -86,6 +87,7 @@
         }
       ],
       "test_type": "bash",
+      "validate": "true",
       "vendor": "eu.5gtango.atos.simple-test-descriptor",
       "version": "0.3"
     },
@@ -133,6 +135,7 @@
         }
       ],
       "test_type": "bash",
+      "validate": "true",
       "vendor": "eu.5gtango.atos.simple-test-descriptor",
       "version": "0.2"
     },
@@ -180,6 +183,7 @@
         }
       ],
       "test_type": "bash",
+      "validate": "false",
       "vendor": "eu.5gtango.atos.simple-test-descriptor",
       "version": "0.1"
     },
@@ -225,6 +229,7 @@
         }
       ],
       "test_type": "bash",
+      "validate": "1",
       "vendor": "eu.5gtango.atos",
       "version": "0.1"
     },
