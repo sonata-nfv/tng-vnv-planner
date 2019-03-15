@@ -80,8 +80,7 @@ class TestPlanRepository {
         callExternalEndpoint(restTemplate.postForEntity(testPlanCreateEndpoint,entity,TestPlan),'TestResultRepository.createTestPlan',testPlanCreateEndpoint).body
     }
 
-    def update(def testPlan,String id) {
-        //CleanCode-gandreou: there is no reason to have "id" input param
+    def update(def testPlan) {
         def headers = new HttpHeaders()
         headers.setContentType(MediaType.APPLICATION_JSON)
         def entity = new HttpEntity<TestPlan>(testPlan ,headers)
