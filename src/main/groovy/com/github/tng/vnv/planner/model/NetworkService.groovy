@@ -37,13 +37,10 @@ package com.github.tng.vnv.planner.model
 import com.fasterxml.jackson.annotation.JsonProperty
 import groovy.transform.EqualsAndHashCode
 
-@EqualsAndHashCode(includes = "networkServiceId")
+@EqualsAndHashCode(includes = "uuid")
 class NetworkService {
 
-//    @ApiModelProperty(required = true)
-//    @NotNull
-    @JsonProperty("uuid")
-    String networkServiceId
+    String uuid
 
     NetworkServiceDescriptor nsd
 
@@ -53,7 +50,7 @@ class NetworkService {
     @Override
     public String toString() {
         final StringBuffer sb = new StringBuffer("NetworkService{");
-        sb.append("uuid='").append(networkServiceId).append('\'');
+        sb.append("uuid='").append(uuid).append('\'');
         sb.append(", nsd=").append(nsd);
         sb.append(", status='").append(status).append('\'');
         sb.append('}');
@@ -61,13 +58,12 @@ class NetworkService {
     }
 }
 
-class NetworkServiceDescriptor {
+class NetworkServiceDescriptor implements Serializable {
     String uuid
     String name
     String vendor
     String version
     List<String> testingTags;
-
 
     @Override
     public String toString() {

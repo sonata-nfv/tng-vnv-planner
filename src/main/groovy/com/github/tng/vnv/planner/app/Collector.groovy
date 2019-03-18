@@ -33,11 +33,8 @@ package com.github.tng.vnv.planner.app
  * partner consortium (www.5gtango.eu).
  */
 
-import com.github.tng.vnv.planner.Applicant
-import com.github.tng.vnv.planner.model.TEST_PLAN_STATUS
-import com.github.tng.vnv.planner.model.TestPlanCallback
-import com.github.tng.vnv.planner.service.TestPlanService
 import com.github.tng.vnv.planner.model.TestPlan
+import com.github.tng.vnv.planner.service.TestPlanService
 import groovy.util.logging.Log
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
@@ -45,17 +42,16 @@ import org.springframework.stereotype.Component
 
 @Log
 @Component
-class Collector extends Applicant {
+class Collector {
+
+    @Autowired
+    Provider provider
 
     @Autowired
     TestPlanService testPlanService
 
-    @Override
-    def update(TestPlan testPlan) {
-        testPlanService.update(testPlan)
-    }
-
     void accept(TestPlan testPlan) {
-        update(testPlan)
+        testPlanService.update(testPlan)
+        provider.delegateNextTestPlan()
     }
 }

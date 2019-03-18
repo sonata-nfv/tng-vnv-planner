@@ -36,10 +36,8 @@ package com.github.tng.vnv.planner.controller
 
 
 import com.github.mrduguo.spring.test.AbstractSpec
-import com.github.tng.vnv.planner.app.Collector
-import com.github.tng.vnv.planner.model.TEST_PLAN_STATUS
 import com.github.tng.vnv.planner.model.TestPlan
-import com.github.tng.vnv.planner.restmock.CatalogueMock
+import com.github.tng.vnv.planner.queue.TestPlanProducer
 import com.github.tng.vnv.planner.restmock.CuratorMock
 import com.github.tng.vnv.planner.restmock.TestPlanRepositoryMock
 import org.springframework.beans.factory.annotation.Autowired
@@ -52,10 +50,19 @@ class CuratorCallbackControllerTest extends AbstractSpec {
     public static final String TEST_PLAN_UUID = '109873678'
 
     @Autowired
+    TestPlanProducer testPlanProducer
+
+    @Autowired
+    CuratorMock curatorMock
+
+    @Autowired
     TestPlanRepositoryMock testPlanRepositoryMock
 
-    void 'curator returns back call as completed should change the testPlan status to be completed'() {
+    void 'curator returns back call as COMPLETED should get a new testPlan with status STARTING to curate'() {
 
+        setup:
+        testPlanProducer.send(
+                new TestPlan(uuid: UUID.randomUUID().toString(), status: 'dummyTestPlan') )
         when:
         def entity = postForEntity('/tng-vnv-planner/api/v1/test-plans/on-change/completed',
                 [
@@ -71,19 +78,20 @@ class CuratorCallbackControllerTest extends AbstractSpec {
         then:
         entity.statusCode == HttpStatus.OK
 
-        testPlanRepositoryMock.testPlans.size()==1
-        testPlanRepositoryMock.testPlans.values().last().status=='COMPLETED'
+        testPlanRepositoryMock.testPlans.values()[0].status=='COMPLETED'
+        testPlanRepositoryMock.testPlans.values().last().status=='STARTING'
 
         cleanup:
         testPlanRepositoryMock.reset()
     }
 
-    void 'curator returns back call as not completed should change the testPlan status to be updated accordingly'() {
+    void 'curator returns back call as not completed should get a new testPlan with status STARTING to curate'() {
 
+        setup:
+        testPlanProducer.send(
+                new TestPlan(uuid: UUID.randomUUID().toString(), status: 'dummyTestPlan') )
         when:
-
-        testPlanRepositoryMock.createTestPlan(new TestPlan())
-        def entity = postForEntity('/tng-vnv-planner/api/v1/test-plans/on-change/completed',
+        def entity = postForEntity('/tng-vnv-planner/api/v1/test-plans/on-change/',
                 [
                         event_actor: 'tng-vnv-curator',
                         status:'CANCELLING',
@@ -97,8 +105,8 @@ class CuratorCallbackControllerTest extends AbstractSpec {
         then:
         entity.statusCode == HttpStatus.OK
 
-        testPlanRepositoryMock.testPlans.size()==2
-        testPlanRepositoryMock.testPlans.values().last().status=='CANCELLING'
+        testPlanRepositoryMock.testPlans.values()[0].status=='CANCELLING'
+        testPlanRepositoryMock.testPlans.values().last().status=='STARTING'
 
         cleanup:
         testPlanRepositoryMock.reset()

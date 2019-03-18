@@ -34,12 +34,11 @@
 
 package com.github.tng.vnv.planner.controller
 
-
+import com.github.tng.vnv.planner.model.NetworkServiceDescriptor
 import com.github.tng.vnv.planner.model.TestDescriptor
+import com.github.tng.vnv.planner.model.TestPlan
 import com.github.tng.vnv.planner.queue.TestPlanConsumer
 import com.github.tng.vnv.planner.queue.TestPlanProducer
-import com.github.tng.vnv.planner.service.NetworkServiceService
-import com.github.tng.vnv.planner.service.TestService
 import groovy.util.logging.Log
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
@@ -62,21 +61,25 @@ class DummyQueueController {
     TestPlanConsumer testPlanConsumer
 
     @GetMapping('/queue/{action}')
-    ResponseEntity<Void> testQueue(@PathVariable('action') String action) {
+    ResponseEntity<String> testQueue(@PathVariable('action') String action) {
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
 
         log.info("##DummyQueueController: Access to /api/v1/test-plans/queue/{action} endpoint  with the received action: $action")
-        def o
-        if('add'.contains(action)) {
-            o = testPlanProducer.send(timestamp.toString())
-            log.info("##DummyQueueController: call testPlanProducer to add a timestamp message: $timestamp")
+        if('send'.contains(action)) {
+//            testPlanProducer.send(timestamp.toString()).toTestPlansQueue()
+            def testPlan = new TestPlan()
+            testPlan.uuid = UUID.randomUUID().toString()
+            testPlan.status = 'dummyTestPlan'
+            testPlan.nsd = new NetworkServiceDescriptor()
+            testPlan.testd = new TestDescriptor()
+            testPlanProducer.send(testPlan)
+            log.info("##DummyQueueController: call testPlanProducer to send the message: ${testPlan.toString()}")
 
         }
         else {
-            o = testPlanConsumer.receive()
-            log.info("##DummyQueueController: call testPlanConsumer to receive a message")
+            testPlanConsumer.getTestPlan()
+            log.info("##DummyQueueController: call testPlanConsumer to get a message")
         }
-
-        ResponseEntity.ok().build()
+        ResponseEntity.ok().body("Your timestamp is " + timestamp)
     }
 }

@@ -34,23 +34,22 @@
 
 package com.github.tng.vnv.planner.model
 
-
+import com.fasterxml.jackson.annotation.JsonProperty
 import groovy.transform.EqualsAndHashCode
 import io.swagger.annotations.ApiModelProperty
 
 import javax.validation.constraints.NotNull
 
 @EqualsAndHashCode
-class TestPlan {
+class TestPlan implements Serializable {
     String uuid
     String packageId
     String nsdUuid
     String tdUuid
-    String index
+    int index
     String status
     NetworkServiceDescriptor nsd
     TestDescriptor testd
-
 
     @Override
     public String toString() {
@@ -61,8 +60,8 @@ class TestPlan {
         sb.append(", tdUuid='").append(tdUuid).append('\'');
         sb.append(", index='").append(index).append('\'');
         sb.append(", status='").append(status).append('\'');
-        sb.append(", nsd.name=").append(nsd.name);
-        sb.append(", testd.name=").append(testd.name);
+        sb.append(", nsd=").append(nsd);
+        sb.append(", testd=").append(testd);
         sb.append('}');
         return sb.toString();
     }
@@ -74,7 +73,7 @@ class TestPlanRequest {
     TestDescriptor testd
     Boolean lastTest = false
     List<TestPlanCallback> testPlanCallbacks = [
-            new TestPlanCallback(eventActor: 'Curator', url: '/test-plans/on-change/completed', status:TEST_PLAN_STATUS.COMPLETED),
+            new TestPlanCallback(eventActor: 'Curator', url: '/test-plans/on-change/completed', status:'COMPLETED'),
             new TestPlanCallback(eventActor: 'Curator', url: '/test-plans/on-change'),
     ]
 }
@@ -96,6 +95,13 @@ class TestPlanCallback {
     )
     @NotNull
     String eventActor
+
+    @ApiModelProperty(
+            value = 'Callback URL',
+            allowEmptyValue = false,
+            example = '/test-plans/on-change'
+    )
+    String url
 
     @ApiModelProperty(
             value = 'Test Plan Status',
@@ -134,6 +140,16 @@ class TestPlanCallback {
 }
 
 
-enum TEST_PLAN_STATUS{
-    STARTING('STARTING'), COMPLETED('COMPLETED'), CANCELLING('CANCELLING'), CANCELLED('CANCELLED'), ERROR('ERROR')
+class TEST_PLAN_STATUS {
+    static def CREATED = 'CREATED'
+    static def REJECTED = 'REJECTED'
+    static def CONFIRMED = 'CONFIRMED'
+    static def SCHEDULED = 'SCHEDULED'
+    static def UPDATED = 'UPDATED'
+    static def STARTING = 'STARTING'
+    static def COMPLETED = 'COMPLETED'
+    static def CANCELLING = 'CANCELLING'
+    def CANCELLED = 'CANCELLED'
+    def ERROR = 'ERROR'
+
 }

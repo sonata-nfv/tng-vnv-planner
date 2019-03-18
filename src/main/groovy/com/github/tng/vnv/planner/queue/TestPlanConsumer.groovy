@@ -34,15 +34,20 @@
 
 package com.github.tng.vnv.planner.queue
 
+import com.github.tng.vnv.planner.model.TestPlan
 import groovy.util.logging.Log
+import groovy.util.logging.Slf4j
 import org.springframework.amqp.core.Message
 import org.springframework.amqp.core.Queue
 import org.springframework.amqp.rabbit.core.RabbitTemplate
+import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 
+import javax.annotation.PostConstruct
 
-@Log
+
+@Slf4j
 @Component
 class TestPlanConsumer {
 
@@ -50,61 +55,21 @@ class TestPlanConsumer {
     private RabbitTemplate template;
 
     @Autowired
+    private Jackson2JsonMessageConverter messageConverter
+
+    @Autowired
     private Queue testPlansQueue;
 
-    String id
-    String action
+    TestPlan message
 
-    def add(String uuid) {
-        action = 'ADD'
-        id = uuid
-        this
-    }
-    def remove(String uuid) {
-        action = 'REMOVE'
-        id = uuid
-        this
+    @PostConstruct
+    void init(){
+        template.setMessageConverter(messageConverter)
     }
 
-
-    def update(String uuid) {
-        action = 'UPDATE'
-        id = uuid
-        this
-    }
-
-    def to(String mq) {
-        //case ADD
-        //todo-gandreou: return the result for the ADD of the item from the queue
-        //case REMOVE
-        //todo-gandreou: return the result for the REMOVE of the item from the queue
-        //case UPDATE
-        //todo-gandreou: return the result for the UPDATE of the item from the queue
-    }
-
-    def fromTestPlansQueue() {
-
-        //cleancode-gandreou: bypass-all-of-these: I will send a message to 'Hello' queue
-        receive()
-
-    }
-
-    void receive() {
-
-        log.info("##Consumer:testPlansQueue: ${testPlansQueue.name} [before]")
-
-//        Message message = this.template.receive()
-        Message message = this.template.receive("tng-vnv-planner-test-plans")
-//        Message message = this.template.receive(testPlansQueue.getName())
-/*
-        def receivedMassage = new String(message, "UTF-8")
-        if (!receivedMassage.isEmpty()) {
-            log.info("##Consumer:receives message: " + receivedMassage)
-        } else
-            log.info("##Consumer:didn't receive message!!!!")
-*/
-
-        log.info("##Consumer:testPlansQueue: ${testPlansQueue.name} [after]")
-
+    def getTestPlan() {
+        message = this.template.receiveAndConvert(testPlansQueue.name)
+        log.info("##Consumer:testPlansQueue: Received message as generic: {}", message);
+        message
     }
 }

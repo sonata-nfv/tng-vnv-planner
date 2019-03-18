@@ -34,6 +34,7 @@
 
 package com.github.tng.vnv.planner.service
 
+import com.github.tng.vnv.planner.model.TEST_PLAN_STATUS
 import com.github.tng.vnv.planner.repository.TestPlanRepository
 import com.github.tng.vnv.planner.model.NetworkServiceDescriptor
 import com.github.tng.vnv.planner.model.TestDescriptor
@@ -61,7 +62,7 @@ class TestPlanService {
         List<TestPlan> tps = [] as ArrayList
         nsd.testingTags?.each { tt ->
             testRepository.findTssByTestTag(tt)?.each { td ->
-                tps << new TestPlan(nsd:nsd, testd:td)
+                tps << new TestPlan(uuid: UUID.randomUUID().toString(), nsd:nsd, testd:td)
             }
         }
         tps
@@ -71,31 +72,31 @@ class TestPlanService {
         List<TestPlan> tps = [] as ArrayList
         td.testExecution?.each { tt ->
             networkServiceRepository.findNssByTestTag(tt)?.each { nsd ->
-                tps <<  new TestPlan(nsd:nsd, testd:td)
+                tps <<  new TestPlan(uuid: UUID.randomUUID().toString(), nsd:nsd, testd:td)
             }
         }
         tps
     }
 
-    def update(TestPlan tp) {
-        return testPlanRepository.update(tp)
+    def update(TestPlan testPlan) {
+        testPlanRepository.update(testPlan)
     }
 
-    TestPlan createTestPlan(NetworkServiceDescriptor nsd, TestDescriptor td) {
-        def testPlanUuid = UUID.randomUUID().toString()
-        def testPlan = new TestPlan(
-                uuid: testPlanUuid,
-                packageId: testSuites.first().packageId,
-
-                nsdUuid: nsd.uuid,
-                tdUuid: td.uuid,
-                index: 0,
-                NetworkServiceDescriptor: nsd,
-                TestDescriptor: td,
-                status: 'CREATED',
-        )
-        TestPlan tpo = testPlanRepository.create(testPlan)
-        tpo
+    def update(TestPlan testPlan, String status) {
+        testPlan.status = status
+        testPlanRepository.update(testPlan)
     }
+
+    TestPlan create(TestPlan testPlan) {
+        testPlan.uuid = UUID.randomUUID().toString()
+        testPlanRepository.create(testPlan)
+    }
+
+    def load(TestPlan testPlan) {
+        testPlanRepository.update(testPlan)
+        TestPlan newTestPlan = new TestPlan(nsd:testPlan.nsd, testd:  testPlan.testd, status: testPlan.status)
+        create(newTestPlan)
+    }
+
 
 }

@@ -53,7 +53,7 @@ class Test {
 
 }
 
-class TestDescriptor{
+class TestDescriptor implements Serializable {
     String uuid
     String vendor
     String name
@@ -71,7 +71,7 @@ class TestDescriptor{
     }
 }
 
-class TestTag{
+class TestTag implements Serializable {
     String testTag
     String tagId
 }

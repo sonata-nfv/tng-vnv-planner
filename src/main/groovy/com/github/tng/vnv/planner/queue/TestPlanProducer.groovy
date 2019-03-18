@@ -34,11 +34,15 @@
 
 package com.github.tng.vnv.planner.queue
 
+import com.github.tng.vnv.planner.model.TestPlan
 import groovy.util.logging.Log
 import org.springframework.amqp.rabbit.core.RabbitTemplate
+import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 import org.springframework.amqp.core.Queue
+
+import javax.annotation.PostConstruct
 
 @Log
 @Component
@@ -48,26 +52,18 @@ class TestPlanProducer {
     private RabbitTemplate template;
 
     @Autowired
+    private Jackson2JsonMessageConverter messageConverter
+
+    @Autowired
     private Queue testPlansQueue;
 
-    String id
-    String action
-
-    def add(String uuid) {
-        action = 'ADD'
-        id = uuid
-        this
+    @PostConstruct
+    void init(){
+        template.setMessageConverter(messageConverter)
     }
 
-    def toTestPlansQueue() {
-        send("#~#: Queue: ${testPlansQueue.name}: testPlanId:"+id)
-    }
-
-    def send(String message) {
-        log.info("##Producer:testPlansQueue: " + testPlansQueue.getName())
-        log.info("##Producer:convertAndSend message: $message [before]")
+    void send(TestPlan message) {
+        log.info("#~#: Queue: ${testPlansQueue.name}: message: $message")
         this.template.convertAndSend(testPlansQueue.getName(), message)
-        log.info("##Producer:convertAndSend message: $message [after]")
-
     }
 }

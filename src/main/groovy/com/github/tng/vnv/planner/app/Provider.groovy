@@ -34,18 +34,19 @@
 
 package com.github.tng.vnv.planner.app
 
-import com.github.tng.vnv.planner.Applicant
 import com.github.tng.vnv.planner.client.Curator
+import com.github.tng.vnv.planner.model.TEST_PLAN_STATUS
 import com.github.tng.vnv.planner.model.TestPlan
+import com.github.tng.vnv.planner.model.TestPlanResponse
 import com.github.tng.vnv.planner.queue.TestPlanConsumer
+import com.github.tng.vnv.planner.service.TestPlanService
 import groovy.util.logging.Log
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 
-
 @Log
 @Component
-class Provider extends Applicant {
+class Provider {
 
     @Autowired
     Curator curator
@@ -53,13 +54,38 @@ class Provider extends Applicant {
     @Autowired
     TestPlanConsumer testPlanConsumer
 
-    def delegate(TestPlan testPlan) {
-        def res = Curator.proceedWith(testPlan)
-        //if res is valid, set TestPlan status like "proceeded to curator"
-        update(TestPlan)
-        //todo-gandreou: remove from testPlan in testPlans queue or better update the testSuite (testPlans list) in testSuites queue
+    @Autowired
+    Scheduler scheduler
 
-        testPlanConsumer.remove(testPlan.uuid).from("TEST_PLAN_MESSAGE_QUEUE")
-        testPlanConsumer.update(testPlan.uuid).to("TEST_SUITE_MESSAGE_QUEUE")
+    @Autowired
+    TestPlanService testPlanService
+
+    def delegateNextTestPlan() {
+        //fixme-gandreou: a) check the condition that the queue is empty of messages...
+        //fixme-gandreou: b) or the messages are already cancelled&updated through another client call.
+
+        TestPlan testPlan = testPlanConsumer.getTestPlan()
+
+        TestPlanResponse testPlanResponse = curator.proceedWith(testPlan)
+
+        if('202'.contains(testPlanResponse.status)){
+            //fixme-gandreou: if res is valid, set TestPlan status like "proceeded to curator"
+            // The Provider gets the message from the Queue, but without ack yet
+            // The message acknowledgement could be used, to let the broker completely remove the message from a queue. This will happens
+            // when it receives a notification for that message (or group of messages).
+            testPlanResponse.testPlan.status = TEST_PLAN_STATUS.STARTING
+            testPlanService.update(testPlanResponse.testPlan)
+            // If curator is not responding as it should the message returns as a new plan in RabbitMQ
+            // and then, send the ack back to the Broker.
+        } else {
+            // if Curator won't reply with HTTP Status Code 202 (The request has been accepted for processing)
+            // it will response with a log, but the message will stay in the list
+
+            log.info("Curator response wasn't 202. The current TestPlan has been rescheduled")
+            testPlan.status = TEST_PLAN_STATUS.REJECTED
+            scheduler.update(testPlan)
+        }
+
     }
+
 }

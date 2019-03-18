@@ -34,7 +34,7 @@
 
 package com.github.tng.vnv.planner.app
 
-import com.github.tng.vnv.planner.Applicant
+
 import com.github.tng.vnv.planner.service.CatalogueService
 import com.github.tng.vnv.planner.service.TestPlanService
 import com.github.tng.vnv.planner.model.Package
@@ -50,7 +50,7 @@ import java.util.concurrent.CompletableFuture
 
 @Log
 @Component
-class Scheduler extends Applicant {
+class Scheduler {
 
     @Autowired
     TestPlanProducer testPlanProducer
@@ -65,18 +65,46 @@ class Scheduler extends Applicant {
     CompletableFuture<Boolean> schedule(Package packageMetadata) {
         def map = catalogueService.discoverAssociatedNssAndTests(packageMetadata)
 
-        Boolean out = (map == null) ? false : map.every {nsd,td ->
-//            schedule(testPlanService.createTestPlan(nsd: nsd, TestDescriptor: td) == true)
+/*
+        List<TestPlan> testPlanList = []
+        map?.every {ns,t ->
+            TestPlan testPlan = new TestPlan(nsd: ns.nsd, testd: t.testd, status: TEST_PLAN_STATUS.CREATED)
+            testPlan = testPlanService.create(testPlan)
+            schedule(testPlan)
+            testPlan.status=TEST_PLAN_STATUS.SCHEDULED
+            testPlan = testPlanService.update(testPlan)
+            testPlanList << testPlan
         }
+
+        def notConfirmedTestIndex = testPlanList?.findIndexOf {t ->
+            t.testd.status == 'confirm_required' && t.status != TEST_PLAN_STATUS.CONFIRMED}
+*/
+
+        //fixme-allemaso: this method 'schedule' should return a list [int:notConfirmedTestIndex,list:testPlanList]
+        Boolean out = false
+
         CompletableFuture.completedFuture(out)
     }
 
+    def update(TestPlan testPlan) {
+        testPlanService.load(testPlan)
+        schedule(testPlan)
+    }
+
     def schedule(TestPlan testPlan) {
-        testPlanProducer.add(testPlan.uuid).to("TEST_PLAN_MESSAGE_QUEUE")
-        testPlanProducer.update(testPlan.uuid).to("TEST_SUITE_MESSAGE_QUEUE")
+        testPlanProducer.send(testPlan)
+        testPlanService.create(testPlan)
+    }
+
+    def update(List<TestPlan> testPlanList) {
+        testPlanList
+                ?.toSorted{t1,t2 -> t1.index < t2.index}
+                ?.forEach({tp -> update(tp)})
     }
 
     def schedule(List<TestPlan> testPlanList) {
-        testPlanList?.forEach({tp -> schedule(tp)})
+        testPlanList
+                ?.toSorted{t1,t2 -> t1.index < t2.index}
+                ?.forEach({tp -> schedule(tp)})
     }
 }

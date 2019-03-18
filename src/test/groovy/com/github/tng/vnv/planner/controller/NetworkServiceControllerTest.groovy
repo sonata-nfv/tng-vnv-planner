@@ -64,8 +64,6 @@ class NetworkServiceControllerTest extends AbstractSpec {
         then:
 
         tss.size() == 4
-        cleanup:
-        curatorMock.reset()
 
     }
 }

@@ -39,6 +39,7 @@ import com.github.tng.vnv.planner.restmock.CatalogueMock
 import com.github.tng.vnv.planner.restmock.CuratorMock
 import com.github.tng.vnv.planner.restmock.TestPlanRepositoryMock
 import org.springframework.beans.factory.annotation.Autowired
+import spock.lang.Ignore
 
 class DummyQueueControllerTest extends AbstractSpec {
 
@@ -54,14 +55,15 @@ class DummyQueueControllerTest extends AbstractSpec {
     @Autowired
     TestPlanRepositoryMock testPlanRepositoryMock
 
+    @Ignore
     void "call retrieval of a single test suite's related tests should successfully all the tag related tests"() {
         when:
         String tss = getForEntity('/tng-vnv-planner/api/v1/test-plans/queue/{action}', String, "true").body
+
         then:
 
         tss.toString() == "OK"
-        cleanup:
-        curatorMock.reset()
+
 
     }
 }

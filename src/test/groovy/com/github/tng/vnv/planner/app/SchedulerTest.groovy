@@ -72,23 +72,13 @@ class SchedulerTest extends AbstractSpec {
             Thread.sleep(1000L);
 */
 
+        //fixme-gandreou: this should be true
 //        out.get() == true
         out.get() == false
 
-//        testPlanRepositoryMock.testPlans.size()==3
         testPlanRepositoryMock.testPlans.size()==0
-//        testPlanRepositoryMock.testPlans.values().last().status=='SUCCESS'
-/*
-        testPlanRepositoryMock.testPlans.values().each{testPlan ->
-            testPlan.testSuiteResults.size()==2
-        }
-*/
-/*
-        testPlanRepositoryMock.testPlans.values().last().testSuiteResults.last().status=='SUCCESS'
-*/
 
         cleanup:
-        curatorMock.reset()
         testPlanRepositoryMock.reset()
     }
 }

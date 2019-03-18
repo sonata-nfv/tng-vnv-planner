@@ -135,7 +135,7 @@ class CatalogueHelperService {
         Package metadata = new Package();
 
         packageMetadata.networkServices?.each { ns ->
-            def s = networkServiceRepository.findByUuid(ns.networkServiceId)
+            def s = networkServiceRepository.findByUuid(ns.uuid)
             if(s) metadata.networkServices << s
         }
 
@@ -166,7 +166,7 @@ class CatalogueHelperService {
                     NetworkService ns =  networkServiceRepository.findByUuid(resource.uuid)
                     log.info("##vnvlog Request: res: networkService: $ns")
                     log.info("##vnvlog agnostic obj: " + networkServiceRepository.printAgnosticObjByUuid(resource.uuid))
-                    if(ns.networkServiceId)
+                    if(ns.uuid)
                         packageMetadata.networkServices << ns
                     break
             }
@@ -174,7 +174,7 @@ class CatalogueHelperService {
         packageMetadata
     }
 
-    //todo: this is a workaround - to add the packageId to the Test - until the packageId be removed from the source
+    //todo: this is a workaround - to send the packageId to the Test - until the packageId be removed from the source
     def addPackageIdToTestSuit(Package metadata, Test ts) {
         ts.packageId = metadata.packageId?: findPackageId(ts)
         ts
