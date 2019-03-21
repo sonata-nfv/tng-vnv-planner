@@ -57,6 +57,7 @@ class TestService {
         List<TestDescriptor> tdList = [] as ArrayList
         nsd.testingTags?.each { tt ->
             testRepository.findTssByTestTag(tt)?.each { t ->
+				println t.dump()
                 if(t.testd.testExecution.any{ element ->
                     element.testTag.contains(tt) && !tdList.contains(t.testd)
                 })

@@ -34,10 +34,6 @@
 
 package com.github.tng.vnv.planner.restmock
 
-import com.fasterxml.jackson.core.type.TypeReference
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.github.tng.vnv.planner.model.Test
-
 import groovy.json.JsonSlurper
 import org.springframework.util.ResourceUtils
 
@@ -71,9 +67,22 @@ class DataMock {
         File file = ResourceUtils.getFile(resourceLocation)
         (file.exists()) ? new JsonSlurper().parseText(file.text) :  null
     }
-	
+
+	static def getServiceByTag(String tag) {
+		def nss  = [] as Set
+		getServices().each{
+			println it.nsd.testing_tags
+			if (it.nsd.testing_tags!=null ) {//&& it.nsd.testing_tags.contains(tag)
+				nss.add(it)
+			}
+		}
+		println "***********************************"
+		println nss.size()
+		nss
+	}
+
 	static def getTestByTag(String tag) {
-		List<Test> tList = [] as ArrayList
+		List tList = [] as ArrayList
 		getTests().each { t ->
 				if(t.testd.test_execution.any{ element ->
 					element.test_tag==tag && !tList.contains(t)
