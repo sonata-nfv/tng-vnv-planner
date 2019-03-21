@@ -67,9 +67,6 @@
                     },
                     "type": "array"
                 },
-                "test_type": {
-                    "type": "string"
-                },
                 "uuid": {
                     "type": "string"
                 },
@@ -202,9 +199,6 @@
         },
         "TestTag": {
             "properties": {
-                "tag_id": {
-                    "type": "string"
-                },
                 "test_tag": {
                     "type": "string"
                 }
@@ -380,14 +374,14 @@
                 ]
             }
         },
-        "/mock/gk/services/{networkServiceId}": {
+        "/mock/gk/services/{uuid}": {
             "get": {
                 "operationId": "findServiceUsingGET",
                 "parameters": [
                     {
-                        "description": "networkServiceId",
+                        "description": "uuid",
                         "in": "path",
-                        "name": "networkServiceId",
+                        "name": "uuid",
                         "required": true,
                         "type": "string"
                     }
@@ -493,14 +487,14 @@
                 ]
             }
         },
-        "/mock/gk/tests/descriptors/{testUuid}": {
+        "/mock/gk/tests/descriptors/{uuid}": {
             "get": {
                 "operationId": "findTestUsingGET",
                 "parameters": [
                     {
-                        "description": "testUuid",
+                        "description": "uuid",
                         "in": "path",
-                        "name": "testUuid",
+                        "name": "uuid",
                         "required": true,
                         "type": "string"
                     }

@@ -50,21 +50,6 @@ class TestPlan implements Serializable {
     String status
     NetworkServiceDescriptor nsd
     TestDescriptor testd
-
-    @Override
-    public String toString() {
-        final StringBuffer sb = new StringBuffer("TestPlan{");
-        sb.append("uuid='").append(uuid).append('\'');
-        sb.append(", packageId='").append(packageId).append('\'');
-        sb.append(", nsdUuid='").append(nsdUuid).append('\'');
-        sb.append(", tdUuid='").append(tdUuid).append('\'');
-        sb.append(", index='").append(index).append('\'');
-        sb.append(", status='").append(status).append('\'');
-        sb.append(", nsd=").append(nsd);
-        sb.append(", testd=").append(testd);
-        sb.append('}');
-        return sb.toString();
-    }
 }
 
 @EqualsAndHashCode
@@ -149,7 +134,7 @@ class TEST_PLAN_STATUS {
     static def STARTING = 'STARTING'
     static def COMPLETED = 'COMPLETED'
     static def CANCELLING = 'CANCELLING'
-    def CANCELLED = 'CANCELLED'
-    def ERROR = 'ERROR'
+    static def CANCELLED = 'CANCELLED'
+    static def ERROR = 'ERROR'
 
 }

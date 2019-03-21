@@ -60,14 +60,14 @@ app:
     service.list.endpoint: ${app.gk.base.url}/services
     service.list.by.tag.endpoint: ${app.gk.base.url}/services
     package.list.endpoint: ${app.gk.base.url}/packages
-    service.metadata.endpoint: ${app.gk.base.url}/services/{networkServiceId}
+    service.metadata.endpoint: ${app.gk.base.url}/services/{uuid}
     package.metadata.endpoint: ${app.gk.base.url}/packages/{packageId}
   vnvgk:
     host: tng-api-gtw
     base.url: http://${app.vnvgk.host}:5000/api/v3
     test.list.endpoint: ${app.vnvgk.base.url}/tests/descriptors
     test.list.by.tag.endpoint: ${app.vnvgk.base.url}/tests/descriptors
-    test.metadata.endpoint: ${app.vnvgk.base.url}/tests/descriptors/{testUuid}
+    test.metadata.endpoint: ${app.vnvgk.base.url}/tests/descriptors/{uuid}
   cat:
     host: tng-cat
     base.url: http://${app.cat.host}:4011/api/catalogues/v2

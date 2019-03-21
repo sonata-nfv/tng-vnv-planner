@@ -36,42 +36,20 @@ package com.github.tng.vnv.planner.model
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import groovy.transform.EqualsAndHashCode
+import groovy.transform.ToString
 
-@EqualsAndHashCode(includes = "uuid")
+@EqualsAndHashCode
 class NetworkService {
-
     String uuid
-
-    NetworkServiceDescriptor nsd
-
     String status
-
-
-    @Override
-    public String toString() {
-        final StringBuffer sb = new StringBuffer("NetworkService{");
-        sb.append("uuid='").append(uuid).append('\'');
-        sb.append(", nsd=").append(nsd);
-        sb.append(", status='").append(status).append('\'');
-        sb.append('}');
-        return sb.toString();
-    }
+    NetworkServiceDescriptor nsd
 }
 
+@ToString(excludes = ['name','vendor'])
 class NetworkServiceDescriptor implements Serializable {
     String uuid
     String name
     String vendor
     String version
     List<String> testingTags;
-
-    @Override
-    public String toString() {
-        final StringBuffer sb = new StringBuffer("nsd{");
-        sb.append("name=").append(name);
-        sb.append("testingTags=").append(testingTags);
-        sb.append("testingTags=").append(testingTags);
-        sb.append('}');
-        return sb.toString();
-    }
 }

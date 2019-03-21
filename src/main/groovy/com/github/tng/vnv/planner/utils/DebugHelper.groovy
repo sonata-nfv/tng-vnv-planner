@@ -23,7 +23,7 @@ class DebugHelper {
         map?.each { ns1, tss1 -> stringBuffer.append(
                 "\n nsId: ${ns1.uuid}, testingTags: ${ns1.nsd.testingTags} \n\t - ts's(#${tss1.size()})" );
             tss1.each { t1 ->
-                stringBuffer.append(" \n\t\ttsId: ${t1.testUuid}, testTag's: ( ")
+                stringBuffer.append(" \n\t\ttsId: ${t1.uuid}, testTag's: ( ")
                 t1.testd.testExecution.each{ stringBuffer.append('\'' + it.testTag+'\' ')}
                 stringBuffer.append(')')
 

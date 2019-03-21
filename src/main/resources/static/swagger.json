@@ -62,9 +62,6 @@
                     },
                     "type": "array"
                 },
-                "test_type": {
-                    "type": "string"
-                },
                 "uuid": {
                     "type": "string"
                 },
@@ -161,9 +158,6 @@
         },
         "TestTag": {
             "properties": {
-                "tag_id": {
-                    "type": "string"
-                },
                 "test_tag": {
                     "type": "string"
                 }

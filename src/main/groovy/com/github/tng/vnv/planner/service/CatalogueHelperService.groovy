@@ -140,7 +140,7 @@ class CatalogueHelperService {
         }
 
         packageMetadata.tests?.each { ts ->
-            def t = testRepository.findByUuid(ts.testUuid)
+            def t = testRepository.findByUuid(ts.uuid)
             if(t) metadata.tests << t
         }
 
@@ -159,7 +159,7 @@ class CatalogueHelperService {
                     Test ts = testRepository.findByUuid(resource.uuid)
                     log.info("##vnvlog res: testSuite: $ts")
                     log.info("##vnvlog agnostic obj " + testRepository.printAgnosticObjByUuid(resource.uuid))
-                    if(ts.testUuid)
+                    if(ts.uuid)
                         packageMetadata.tests << ts
                     break
                 case 'application/vnd.5gtango.nsd':
@@ -187,7 +187,7 @@ class CatalogueHelperService {
                 'TestCatalogue.findPackageId', packageListEndpoint).body?.find { p ->
             p.pd.package_content?.find { pc ->
                 pc.get('content-type') == "application/vnd.5gtango.tstd"
-            }?.get("uuid") == test.testUuid
+            }?.get("uuid") == test.uuid
         }?.get("uuid")
     }
 
