@@ -33,6 +33,6 @@
 
 FROM openjdk:11-jdk-slim
 
-#ENTRYPOINT ["java", "-jar", "-Xmx1024m", "-Xms256m", "-Dtng-vnv-planner", "-Djava.security.egd=file:/dev/./urandom", "/app.jar"]
+ENTRYPOINT ["java", "-jar", "-Xmx1024m", "-Xms256m", "-Dtng-vnv-planner", "-Djava.security.egd=file:/dev/./urandom", "/app.jar"]
 EXPOSE 6100
 ADD /libs/${name}-${version}.jar /app.jar
