@@ -74,7 +74,7 @@ class CatalogueMock {
 
     @GetMapping('/mock/gk/services')
     def findServices() {
-        DataMock.services
+		return  DataMock.services
     }
 
     @GetMapping('/mock/gk/services/{networkServiceId:.+}')
@@ -94,5 +94,6 @@ class CatalogueMock {
     def findTest(@PathVariable('testUuid') String testUuid) {
         DataMock.getTest(testUuid)
     }
+	
 }
 

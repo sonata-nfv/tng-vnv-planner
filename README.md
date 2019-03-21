@@ -36,7 +36,7 @@ For advanced build arguments, please checkout the [gradle-buildscript](https://g
 ## Run the docker image
 
 ```bash
-docker pull registry.sonata-nfv.eu:5000/tng-vnv-planner
+./gradlew
 docker run -d --name tng-vnv-planner -p 6100:6100 registry.sonata-nfv.eu:5000/tng-vnv-planner
 ```
 
