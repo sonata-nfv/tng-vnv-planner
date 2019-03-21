@@ -53,6 +53,25 @@
             "title": "Session",
             "type": "object"
         },
+        "Test": {
+            "properties": {
+                "package_id": {
+                    "type": "string"
+                },
+                "testd": {
+                    "$ref": "#/definitions/TestDescriptor"
+                },
+                "uuid": {
+                    "allowEmptyValue": false,
+                    "type": "string"
+                }
+            },
+            "required": [
+                "uuid"
+            ],
+            "title": "Test",
+            "type": "object"
+        },
         "TestDescriptor": {
             "properties": {
                 "description": {
@@ -461,6 +480,15 @@
         "/mock/gk/tests/descriptors": {
             "get": {
                 "operationId": "findTestsUsingGET",
+                "parameters": [
+                    {
+                        "description": "test_tag",
+                        "in": "query",
+                        "name": "test_tag",
+                        "required": false,
+                        "type": "string"
+                    }
+                ],
                 "produces": [
                     "*/*"
                 ],
@@ -468,7 +496,10 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "object"
+                            "items": {
+                                "$ref": "#/definitions/Test"
+                            },
+                            "type": "array"
                         }
                     },
                     "401": {
