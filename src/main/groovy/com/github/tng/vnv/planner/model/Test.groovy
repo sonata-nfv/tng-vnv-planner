@@ -43,7 +43,6 @@ import javax.validation.constraints.NotNull
 
 @EqualsAndHashCode
 class Test {
-
     @ApiModelProperty(required = true)
     @NotNull
     String uuid
@@ -53,7 +52,6 @@ class Test {
 
 @ToString(excludes = ['name','vendor','description'])
 class TestDescriptor implements Serializable {
-
     String uuid
     String vendor
     String name
@@ -62,6 +60,6 @@ class TestDescriptor implements Serializable {
     List<TestTag> testExecution
 }
 
-class TestTag implements Serializable {
+class TestTag{
     String testTag
 }
