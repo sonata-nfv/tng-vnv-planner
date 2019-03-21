@@ -34,20 +34,22 @@
 
 package com.github.tng.vnv.planner.controller
 
-import com.github.tng.vnv.planner.model.PackageCallback
-import com.github.tng.vnv.planner.model.Package
-import com.github.tng.vnv.planner.app.Scheduler
-import groovy.util.logging.Log
-import io.swagger.annotations.ApiResponse
-import io.swagger.annotations.ApiResponses
+import javax.validation.Valid
+
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
-
-import javax.validation.Valid
+import com.github.tng.vnv.planner.app.Scheduler
+import com.github.tng.vnv.planner.model.Package
+import com.github.tng.vnv.planner.model.PackageCallback
+import com.github.tng.vnv.planner.repository.NetworkServiceRepository
+import com.github.tng.vnv.planner.repository.TestRepository
+import groovy.util.logging.Log
+import io.swagger.annotations.ApiResponse
+import io.swagger.annotations.ApiResponses
 
 @Log
 @RestController
@@ -59,6 +61,13 @@ class CatalogueCallbackController {
 
     @Autowired
     Scheduler scheduler
+	
+	@Autowired
+	TestRepository testRepository
+	
+	@Autowired
+	NetworkServiceRepository nsRepository
+
 
     @ApiResponses(value = [
             @ApiResponse(code = 400, message = 'Bad Request'),
