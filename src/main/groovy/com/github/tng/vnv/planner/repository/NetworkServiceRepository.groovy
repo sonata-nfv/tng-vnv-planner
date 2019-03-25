@@ -68,18 +68,12 @@ class NetworkServiceRepository {
                 serviceMetadataEndpoint).body
     }
 
-    String printAgnosticObjByUuid(String uuid) {
-        callExternalEndpoint(restTemplateWithAuth.getForEntity(serviceMetadataEndpoint, Object.class, uuid),
-                'TestCatalogue.loadPackageMetadata',serviceMetadataEndpoint).body.each {println it}
-    }
-	
-	List<Object> findNssByTestTag(String tag) {
+	List<NetworkService> findNssByTestTag(String tag) {
 		UriComponentsBuilder builder = UriComponentsBuilder
 		.fromUriString(serviceListByTagEndpoint)
 		.queryParam("testing_tag", tag);
 		println "*****************  "+builder.toUriString()+" ****************************"
-		DebugHelper.callExternalEndpoint(restTemplateWithAuth.getForEntity(builder.toUriString(),  Object[].class),
+		DebugHelper.callExternalEndpoint(restTemplateWithAuth.getForEntity(builder.toUriString(),  NetworkService[]),
 				'NetworkServiceRepository.findNssByTestTag',serviceListByTagEndpoint).body
 	}
-	
 }

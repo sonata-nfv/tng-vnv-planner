@@ -1,4 +1,3 @@
-package com.github.tng.vnv.planner.app
 /*
  * Copyright (c) 2015 SONATA-NFV, 2017 5GTANGO [, ANY ADDITIONAL AFFILIATION]
  * ALL RIGHTS RESERVED.
@@ -33,25 +32,28 @@ package com.github.tng.vnv.planner.app
  * partner consortium (www.5gtango.eu).
  */
 
-import com.github.tng.vnv.planner.model.TestPlan
-import com.github.tng.vnv.planner.service.TestPlanService
+package com.github.tng.vnv.planner.service
+
+import com.github.tng.vnv.planner.model.TestSuite
+import com.github.tng.vnv.planner.repository.TestSuiteRepository
+
+
+//import com.github.tng.vnv.planner.repository.TestSuiteJpaRepository
 import groovy.util.logging.Log
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.stereotype.Component
-
+import org.springframework.stereotype.Service
 
 @Log
-@Component
-class Collector {
+@Service
+class TestSuiteService {
 
     @Autowired
-    Provider provider
+    TestSuiteRepository testSuiteRepository
 
-    @Autowired
-    TestPlanService testPlanService
-
-    void accept(TestPlan testPlan) {
-        testPlanService.update(testPlan)
-        provider.delegateNextTestPlan()
+    TestSuite getOne(Long id){
+        testSuiteRepository.getOne(id)
+    }
+    TestSuite save(TestSuite testSuite){
+        testSuiteRepository.save(testSuite)
     }
 }

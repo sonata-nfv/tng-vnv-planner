@@ -32,38 +32,38 @@
  * partner consortium (www.5gtango.eu).
  */
 
-package com.github.tng.vnv.planner.queue
+package com.github.tng.vnv.planner.utils
 
-import com.github.tng.vnv.planner.model.TestPlan
-import groovy.util.logging.Log
-import org.springframework.amqp.rabbit.core.RabbitTemplate
-import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter
+
+import com.github.tng.vnv.planner.model.Session
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Qualifier
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
-import org.springframework.amqp.core.Queue
+import org.springframework.web.client.RestTemplate
 
-import javax.annotation.PostConstruct
-
-@Log
 @Component
-class TestPlanProducer {
+class UserSessionManager {
 
     @Autowired
-    private RabbitTemplate template;
+    @Qualifier('restTemplateWithoutAuth')
+    RestTemplate restTemplate
 
-    @Autowired
-    private Jackson2JsonMessageConverter messageConverter
+    @Value('${app.gk.session.endpoint}')
+    def sessionEndpoint
 
-    @Autowired
-    private Queue testPlansQueue;
+    @Value('${app.gk.session.username}')
+    def username
 
-    @PostConstruct
-    void init(){
-        template.setMessageConverter(messageConverter)
-    }
+    @Value('${app.gk.session.password}')
+    def password
 
-    void send(TestPlan message) {
-        log.info("#~#: Queue: ${testPlansQueue.name}: message: $message")
-        this.template.convertAndSend(testPlansQueue.getName(), message)
+    Session session
+
+    synchronized String retrieveValidBearerToken() {
+        if (session == null || session.invalid()) {
+            session = restTemplate.postForEntity(sessionEndpoint, [username: username, password: password], Session.class).body
+        }
+        session.token.access_token
     }
 }

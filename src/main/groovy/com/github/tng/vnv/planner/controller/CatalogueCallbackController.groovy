@@ -42,7 +42,7 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
-import com.github.tng.vnv.planner.app.Scheduler
+import com.github.tng.vnv.planner.ScheduleManager
 import com.github.tng.vnv.planner.model.Package
 import com.github.tng.vnv.planner.model.PackageCallback
 import com.github.tng.vnv.planner.repository.NetworkServiceRepository
@@ -60,7 +60,7 @@ class CatalogueCallbackController {
     static final String PACKAGE_CREATED = 'CREATED'
 
     @Autowired
-    Scheduler scheduler
+    ScheduleManager scheduler
 	
 	@Autowired
 	TestRepository testRepository
@@ -83,7 +83,7 @@ class CatalogueCallbackController {
             case PACKAGE_CREATED:
                 break
             default:
-               scheduler.schedule(new Package(packageId: body.packageId))
+               scheduler.create(new Package(packageId: body.packageId))
         }
         ResponseEntity.ok().build()
     }

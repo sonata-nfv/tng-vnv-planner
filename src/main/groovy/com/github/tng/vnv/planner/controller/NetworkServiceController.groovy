@@ -55,9 +55,9 @@ class NetworkServiceController {
     NetworkServiceService networkServiceService
 	
     @GetMapping('/services/{serviceUuid}/tests')
-    List<TestDescriptor> listTestsByService(@PathVariable('serviceUuid') String uuid) {
+    Set<TestDescriptor> listTestsByService(@PathVariable('serviceUuid') String uuid) {
         testService.findByService(
-                networkServiceService.findByUuid(uuid).nsd
+                networkServiceService.findByUuid(uuid)
         )
     }
 	

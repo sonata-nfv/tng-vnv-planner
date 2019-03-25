@@ -37,8 +37,9 @@ package com.github.tng.vnv.planner.controller
 import com.github.tng.vnv.planner.model.NetworkServiceDescriptor
 import com.github.tng.vnv.planner.model.TestDescriptor
 import com.github.tng.vnv.planner.model.TestPlan
-import com.github.tng.vnv.planner.queue.TestPlanConsumer
-import com.github.tng.vnv.planner.queue.TestPlanProducer
+import com.github.tng.vnv.planner.model.TestSuite
+import com.github.tng.vnv.planner.service.TestPlanService
+import com.github.tng.vnv.planner.service.TestSuiteService
 import groovy.util.logging.Log
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
@@ -55,10 +56,9 @@ import java.sql.Timestamp
 class DummyQueueController {
 
     @Autowired
-    TestPlanProducer testPlanProducer
-
+    TestPlanService testPlanService
     @Autowired
-    TestPlanConsumer testPlanConsumer
+    TestSuiteService testSuiteService
 
     @GetMapping('/queue/{action}')
     ResponseEntity<String> testQueue(@PathVariable('action') String action) {
@@ -66,19 +66,31 @@ class DummyQueueController {
 
         log.info("##DummyQueueController: Access to /api/v1/test-plans/queue/{action} endpoint  with the received action: $action")
         if('send'.contains(action)) {
-//            testPlanProducer.send(timestamp.toString()).toTestPlansQueue()
-            def testPlan = new TestPlan()
-            testPlan.uuid = UUID.randomUUID().toString()
-            testPlan.status = 'dummyTestPlan'
-            testPlan.nsd = new NetworkServiceDescriptor()
-            testPlan.testd = new TestDescriptor()
-            testPlanProducer.send(testPlan)
-            log.info("##DummyQueueController: call testPlanProducer to send the message: ${testPlan.toString()}")
 
+
+            List testPlanList = [
+                    new TestPlan(status: 'dummyTestPlan0'),
+                    new TestPlan(status: 'dummyTestPlan1'),
+                    new TestPlan(status: 'dummyTestPlan2'),
+                    new TestPlan(status: 'dummyTestPlan3'),
+            ]
+
+            TestSuite testSuite = new TestSuite()
+            testSuite = testSuiteService.save(testSuite)
+            testPlanList?.forEach{tp -> tp.testSuite = testSuite}
+            testPlanList?.forEach{tp -> testSuite.testPlans.add(tp)}
+            testPlanList?.forEach{tp -> testPlanService.save(tp)}
+
+            log.info("##DummyQueueController: call testPlanService to send messages")
+
+            def  testSuite2 = testSuiteService.getOne(1L)
+            def  testPlan3 = testPlanService.getLast()
+            log.info("##DummyQueueController: call testPlanService to get a message")
         }
         else {
-            testPlanConsumer.getTestPlan()
-            log.info("##DummyQueueController: call testPlanConsumer to get a message")
+            def testPlanX = testPlanService.getLast()
+            List testPlans = testPlanService.findAll()
+            log.info("##DummyQueueController: call testPlanService to get a message")
         }
         ResponseEntity.ok().body("Your timestamp is " + timestamp)
     }

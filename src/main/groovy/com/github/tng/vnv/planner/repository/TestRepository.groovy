@@ -67,15 +67,8 @@ class TestRepository {
 
     Test findByUuid(String uuid) {
         callExternalEndpoint(restTemplateWithAuth.getForEntity(testMetadataEndpoint, Test.class, uuid),
-                'TestRepository.findNssByTestTag','TestRepository.findByUuid',testMetadataEndpoint).body
+                'TestRepository.findByUuid',testMetadataEndpoint).body
 
-    }
-
-    String printAgnosticObjByUuid(String uuid) {
-        callExternalEndpoint(
-                restTemplateWithAuth.getForEntity(testMetadataEndpoint, Object.class, uuid),
-                'TestRepository.loadPackageMetadata','TestCatalogue.loadPackageMetadata',
-                testMetadataEndpoint).body.each {println it}
     }
 
     List<Test> findTssByTestTag(String tag) {
@@ -83,7 +76,7 @@ class TestRepository {
 		.fromUriString(testListByTagEndpoint)
 		.queryParam("test_tag", tag)
 		println builder.toUriString()
-        DebugHelper.callExternalEndpoint(restTemplateWithAuth.getForEntity(builder.toUriString(), Test[]),
+        callExternalEndpoint(restTemplateWithAuth.getForEntity(builder.toUriString(), Test[]),
                 'TestRepository.findTssByTestTag',testListByTagEndpoint).body
     }
 

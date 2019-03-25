@@ -32,53 +32,13 @@
  * partner consortium (www.5gtango.eu).
  */
 
-package com.github.tng.vnv.planner.app
+package com.github.tng.vnv.planner.repository
 
+import com.github.tng.vnv.planner.model.TestSuite
+import org.springframework.data.jpa.repository.JpaRepository
+import org.springframework.stereotype.Repository
 
-import com.github.tng.vnv.planner.model.Package
-import com.github.tng.vnv.planner.restmock.CatalogueMock
-import com.github.tng.vnv.planner.restmock.CuratorMock
-import com.github.tng.vnv.planner.restmock.TestPlanRepositoryMock
-import com.github.mrduguo.spring.test.AbstractSpec
-import org.springframework.beans.factory.annotation.Autowired
+@Repository
+interface TestSuiteRepository extends JpaRepository<TestSuite, Long> {
 
-import java.util.concurrent.CompletableFuture
-
-class SchedulerTest extends AbstractSpec {
-
-    public static final String MULTIPLE_TEST_PLANS_PACKAGE_ID ='multiple_scheduler:test:0.0.1'
-
-    @Autowired
-    Scheduler scheduler
-
-    @Autowired
-    CuratorMock curatorMock
-
-    @Autowired
-    CatalogueMock testCatalogueMock
-
-    @Autowired
-    TestPlanRepositoryMock testPlanRepositoryMock
-
-    void 'schedule multiple test plans should produce success result'() {
-
-        when:
-        CompletableFuture<Boolean> out = scheduler.schedule(new Package(packageId: MULTIPLE_TEST_PLANS_PACKAGE_ID))
-
-        then:
-        Thread.sleep(10000L);
-/*
-        while (executorMock.testSuiteResults.values().last().status!='SUCCESS')
-            Thread.sleep(1000L);
-*/
-
-        //fixme-gandreou: this should be true
-//        out.get() == true
-        out.get() == false
-
-        testPlanRepositoryMock.testPlans.size()==0
-
-        cleanup:
-        testPlanRepositoryMock.reset()
-    }
 }

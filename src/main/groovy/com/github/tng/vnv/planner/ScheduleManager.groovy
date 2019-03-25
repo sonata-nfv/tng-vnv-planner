@@ -32,47 +32,47 @@
  * partner consortium (www.5gtango.eu).
  */
 
-package com.github.tng.vnv.planner.app
+package com.github.tng.vnv.planner
 
-
-import com.github.tng.vnv.planner.service.CatalogueService
+import com.github.tng.vnv.planner.model.TestSuite
 import com.github.tng.vnv.planner.service.TestPlanService
 import com.github.tng.vnv.planner.model.Package
 import com.github.tng.vnv.planner.model.TestPlan
-import com.github.tng.vnv.planner.queue.TestPlanProducer
+import com.github.tng.vnv.planner.service.TestSuiteService
 import groovy.util.logging.Log
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Component
 
 import java.util.concurrent.CompletableFuture
 
+import static com.github.tng.vnv.planner.utils.TEST_PLAN_STATUS.SCHEDULED
+import static com.github.tng.vnv.planner.utils.TEST_PLAN_STATUS.UPDATED
+
 
 @Log
 @Component
-class Scheduler {
-
-    @Autowired
-    TestPlanProducer testPlanProducer
+class ScheduleManager {
 
     @Autowired
     TestPlanService testPlanService
 
     @Autowired
-    CatalogueService catalogueService
+    TestSuiteService testSuiteService
 
-    @Async
-    CompletableFuture<Boolean> schedule(Package packageMetadata) {
-        def map = catalogueService.discoverAssociatedNssAndTests(packageMetadata)
+//    @Async
+//    CompletableFuture<Boolean> create(Package packageMetadata) {
+      Boolean create(Package packageMetadata) {
+          Set testPlans = testPlanService.createByPackage(packageMetadata)
+          def testPlans1 = testPlans
 
 /*
         List<TestPlan> testPlanList = []
         map?.every {ns,t ->
             TestPlan testPlan = new TestPlan(nsd: ns.nsd, testd: t.testd, status: TEST_PLAN_STATUS.CREATED)
             testPlan = testPlanService.create(testPlan)
-            schedule(testPlan)
+            create(testPlan)
             testPlan.status=TEST_PLAN_STATUS.SCHEDULED
-            testPlan = testPlanService.update(testPlan)
+            testPlan = testPlanService.updateRest(testPlan)
             testPlanList << testPlan
         }
 
@@ -80,31 +80,30 @@ class Scheduler {
             t.testd.status == 'confirm_required' && t.status != TEST_PLAN_STATUS.CONFIRMED}
 */
 
-        //fixme-allemaso: this method 'schedule' should return a list [int:notConfirmedTestIndex,list:testPlanList]
+        //fixme-allemaso: this method 'create' should return a list [int:notConfirmedTestIndex,list:testPlanList]
         Boolean out = false
 
-        CompletableFuture.completedFuture(out)
+//        CompletableFuture.completedFuture(out)
+          out
+    }
+
+    def create(TestSuite ts) {
+        List<TestPlan> testPlanList = ts.testPlans
+        TestSuite testSuite = testSuiteService.save(new TestSuite())
+        testPlanList?.forEach({tp ->
+            tp.testSuite = testSuite
+            tp.status = SCHEDULED
+            testPlanService.save(tp)})
+        testSuite.testPlans = ts.testPlans
+        testSuite
     }
 
     def update(TestPlan testPlan) {
-        testPlanService.load(testPlan)
-        schedule(testPlan)
-    }
-
-    def schedule(TestPlan testPlan) {
-        testPlanProducer.send(testPlan)
-        testPlanService.create(testPlan)
-    }
-
-    def update(List<TestPlan> testPlanList) {
-        testPlanList
-                ?.toSorted{t1,t2 -> t1.index < t2.index}
-                ?.forEach({tp -> update(tp)})
-    }
-
-    def schedule(List<TestPlan> testPlanList) {
-        testPlanList
-                ?.toSorted{t1,t2 -> t1.index < t2.index}
-                ?.forEach({tp -> schedule(tp)})
+        TestPlan testPlanOld = testPlanService.testPlanRepository.find { it.uuid == testPlan.uuid}
+        testPlanOld.status = UPDATED
+        testPlanService.testPlanRepository.save(testPlanOld)
+        testPlan.id = null
+        testPlan.status = SCHEDULED
+        testPlanService.save(testPlan)
     }
 }

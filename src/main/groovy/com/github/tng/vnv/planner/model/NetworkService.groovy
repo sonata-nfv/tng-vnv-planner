@@ -37,11 +37,17 @@ package com.github.tng.vnv.planner.model
 import com.fasterxml.jackson.annotation.JsonProperty
 import groovy.transform.EqualsAndHashCode
 import groovy.transform.ToString
+import io.swagger.annotations.ApiModelProperty
+
+import javax.validation.constraints.NotNull
 
 @EqualsAndHashCode
 class NetworkService {
+    @ApiModelProperty(required = true)
+    @NotNull
     String uuid
     String status
+    String packageId
     NetworkServiceDescriptor nsd
 }
 
