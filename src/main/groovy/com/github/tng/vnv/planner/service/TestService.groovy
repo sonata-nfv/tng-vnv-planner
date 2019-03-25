@@ -34,9 +34,8 @@
 
 package com.github.tng.vnv.planner.service
 
-import com.github.tng.vnv.planner.model.NetworkServiceDescriptor
+import com.github.tng.vnv.planner.model.NetworkService
 import com.github.tng.vnv.planner.model.Test
-import com.github.tng.vnv.planner.model.TestDescriptor
 import com.github.tng.vnv.planner.repository.TestRepository
 import groovy.util.logging.Log
 import org.springframework.beans.factory.annotation.Autowired
@@ -49,21 +48,20 @@ class TestService {
     @Autowired
     TestRepository testRepository
 
-    TestDescriptor findByUuid(String uuid) {
-        testRepository.findByUuid(uuid).testd
+    Test findByUuid(String uuid) {
+        testRepository.findByUuid(uuid)
     }
 
-    Set<TestDescriptor> findByService(NetworkServiceDescriptor nsd) {
-        def tds = [] as HashSet<TestDescriptor>
-        nsd.testingTags?.each { tt ->
-            testRepository.findTssByTestTag(tt)?.each { t ->
-				println t.dump()
-                if(t.testd.testExecution.any{ element ->
-                    element.testTag.contains(tt) && !tds.contains(t.testd)
-                })
-                tds << t.testd
+    Set<Test> findByService(NetworkService service) {
+        def ts = [] as HashSet<Test>
+        service.nsd.testingTags?.each { tt ->
+            testRepository.findTssByTestTag(tt)?.each { test ->
+				println test.dump()
+                if(test.testd.testExecution.any{ element -> element.testTag.contains(tt) }){
+                    ts.add(test)
+                }
             }
         }
-        tds
+        ts
     }
 }

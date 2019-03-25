@@ -53,7 +53,6 @@ import javax.validation.constraints.NotNull
 
 @Entity
 @Table(name="Test_Plan")
-@EqualsAndHashCode
 class TestPlan implements Serializable {
     @Id
     @GeneratedValue
@@ -66,14 +65,20 @@ class TestPlan implements Serializable {
 
     String uuid
     String packageId
-    String nsdUuid
-    String tdUuid
     int index
     String status
     NetworkServiceDescriptor nsd
     TestDescriptor testd
-}
 
+    boolean equals(o) {
+        if ((o.uuid).contains(uuid)) return true
+        return false
+    }
+
+    int hashCode() {
+        return uuid.hashCode()
+    }
+}
 
 @EqualsAndHashCode
 class TestPlanRequest {

@@ -36,6 +36,7 @@ package com.github.tng.vnv.planner.service
 
 import com.github.tng.vnv.planner.model.NetworkService
 import com.github.tng.vnv.planner.model.NetworkServiceDescriptor
+import com.github.tng.vnv.planner.model.Test
 import com.github.tng.vnv.planner.model.TestDescriptor
 import com.github.tng.vnv.planner.repository.NetworkServiceRepository
 import groovy.util.logging.Log
@@ -49,17 +50,17 @@ class NetworkServiceService {
     @Autowired
     NetworkServiceRepository networkServiceRepository
 
-    NetworkServiceDescriptor findByUuid(String uuid) {
-        networkServiceRepository.findByUuid(uuid).nsd
+    NetworkService findByUuid(String uuid) {
+        networkServiceRepository.findByUuid(uuid)
     }
 
-    Set<NetworkServiceDescriptor> findByTest(TestDescriptor td) {
-        def nsds = [] as HashSet<NetworkServiceDescriptor>
-        td.testExecution?.each { tt ->
+    Set<NetworkService> findByTest(Test test) {
+        def nss = [] as HashSet<NetworkService>
+        test.testd.testExecution?.each { tt ->
             networkServiceRepository.findNssByTestTag(tt.testTag)?.each { service ->
-                nsds <<  service.nsd
+                nss.add(service)
             }
         }
-        nsds
+        nss
     }
 }

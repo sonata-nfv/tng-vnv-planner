@@ -64,33 +64,35 @@ class TestPlanService {
     @Autowired
     CatalogueService catalogueService
 
-    Set<TestPlan> createByService(NetworkServiceDescriptor nsd) {
+    Set<TestPlan> createByService(NetworkService service) {
         def testPlans = [] as HashSet
-        nsd = networkServiceService.findByUuid(nsd.uuid)
-        testService.findByService(nsd)?.each { td ->
-                testPlans << new TestPlan(uuid: UUID.randomUUID().toString(), nsd:nsd, testd:td)
+        service = networkServiceService.findByUuid(service.uuid)
+        testService.findByService(service)?.each { test ->
+            if(service.uuid != null && test.uuid!=null)
+                testPlans.add(new TestPlan(uuid: service.uuid+test.uuid, nsd:service.nsd, testd:test.testd))
         }
         testPlans
     }
 
-    Set<TestPlan> createByTest(TestDescriptor testd) {
+    Set<TestPlan> createByTest(Test test) {
         def testPlans = [] as HashSet
-        testd = testService.findByUuid(testd.uuid)
-        networkServiceService.findByTest(testd)?.each { nsd ->
-            testPlans <<  new TestPlan(uuid: UUID.randomUUID().toString(), nsd:nsd, testd:testd)
+        test = testService.findByUuid(test.uuid)
+        networkServiceService.findByTest(test)?.each { service ->
+            if(service.uuid != null && test.uuid!=null)
+                testPlans.add(new TestPlan(uuid: service.uuid+test.uuid, nsd:service.nsd, testd:test.testd))
         }
         testPlans
     }
 
     Set<TestPlan> createByServices(Set<NetworkService> nss) {
         def testPlans = [] as HashSet
-        nss?.each { it -> testPlans.addAll(createByService(it.nsd)) }
+        nss?.each { it -> testPlans.addAll(createByService(it)) }
         testPlans
     }
 
     Set<TestPlan> createByTests(Set<Test> ts) {
         def testPlans = [] as HashSet<TestPlan>
-        ts?.each { it -> testPlans.addAll(createByTest(it.testd)) }
+        ts?.each { it -> testPlans.addAll(createByTest(it)) }
         testPlans
     }
 
