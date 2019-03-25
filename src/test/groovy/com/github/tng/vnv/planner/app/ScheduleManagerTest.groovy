@@ -34,7 +34,7 @@
 
 package com.github.tng.vnv.planner.app
 
-
+import com.github.tng.vnv.planner.ScheduleManager
 import com.github.tng.vnv.planner.model.Package
 import com.github.tng.vnv.planner.restmock.CatalogueMock
 import com.github.tng.vnv.planner.restmock.CuratorMock
@@ -44,12 +44,12 @@ import org.springframework.beans.factory.annotation.Autowired
 
 import java.util.concurrent.CompletableFuture
 
-class SchedulerTest extends AbstractSpec {
+class ScheduleManagerTest extends AbstractSpec {
 
     public static final String MULTIPLE_TEST_PLANS_PACKAGE_ID ='multiple_scheduler:test:0.0.1'
 
     @Autowired
-    Scheduler scheduler
+    ScheduleManager scheduler
 
     @Autowired
     CuratorMock curatorMock
@@ -63,7 +63,8 @@ class SchedulerTest extends AbstractSpec {
     void 'schedule multiple test plans should produce success result'() {
 
         when:
-        CompletableFuture<Boolean> out = scheduler.schedule(new Package(packageId: MULTIPLE_TEST_PLANS_PACKAGE_ID))
+//        CompletableFuture<Boolean> out = scheduler.create(new Package(packageId: MULTIPLE_TEST_PLANS_PACKAGE_ID))
+        Boolean out = scheduler.create(new Package(packageId: MULTIPLE_TEST_PLANS_PACKAGE_ID))
 
         then:
         Thread.sleep(10000L);
@@ -72,23 +73,13 @@ class SchedulerTest extends AbstractSpec {
             Thread.sleep(1000L);
 */
 
+        //fixme-gandreou: this should be true
 //        out.get() == true
-        out.get() == false
+        out == Boolean.FALSE
 
-//        testPlanRepositoryMock.testPlans.size()==3
         testPlanRepositoryMock.testPlans.size()==0
-//        testPlanRepositoryMock.testPlans.values().last().status=='SUCCESS'
-/*
-        testPlanRepositoryMock.testPlans.values().each{testPlan ->
-            testPlan.testSuiteResults.size()==2
-        }
-*/
-/*
-        testPlanRepositoryMock.testPlans.values().last().testSuiteResults.last().status=='SUCCESS'
-*/
 
         cleanup:
-        curatorMock.reset()
         testPlanRepositoryMock.reset()
     }
 }

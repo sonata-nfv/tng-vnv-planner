@@ -73,7 +73,6 @@ class CatalogueCallbackControllerTest extends AbstractSpec {
         testPlanRepositoryMock.testPlans.size()==0
 
         cleanup:
-        curatorMock.reset()
         testPlanRepositoryMock.reset()
     }
 }

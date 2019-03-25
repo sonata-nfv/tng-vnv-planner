@@ -34,50 +34,28 @@
 
 package com.github.tng.vnv.planner.model
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonProperty
 import groovy.transform.EqualsAndHashCode
+import groovy.transform.ToString
+import io.swagger.annotations.ApiModelProperty
 
-@EqualsAndHashCode(includes = "networkServiceId")
-@JsonIgnoreProperties(ignoreUnknown = true)
+import javax.validation.constraints.NotNull
+
+@EqualsAndHashCode
 class NetworkService {
-
-//    @ApiModelProperty(required = true)
-//    @NotNull
-    @JsonProperty("uuid")
-    String networkServiceId
-
-    NetworkServiceDescriptor nsd
-
+    @ApiModelProperty(required = true)
+    @NotNull
+    String uuid
     String status
-
-
-    @Override
-    public String toString() {
-        final StringBuffer sb = new StringBuffer("NetworkService{");
-        sb.append("uuid='").append(networkServiceId).append('\'');
-        sb.append(", nsd=").append(nsd);
-        sb.append(", status='").append(status).append('\'');
-        sb.append('}');
-        return sb.toString();
-    }
+    String packageId
+    NetworkServiceDescriptor nsd
 }
-@JsonIgnoreProperties(ignoreUnknown = true)
-class NetworkServiceDescriptor {
+
+@ToString(excludes = ['name','vendor'])
+class NetworkServiceDescriptor implements Serializable {
     String uuid
     String name
     String vendor
     String version
     List<String> testingTags;
-
-
-    @Override
-    public String toString() {
-        final StringBuffer sb = new StringBuffer("nsd{");
-        sb.append("name=").append(name);
-        sb.append("testingTags=").append(testingTags);
-        sb.append("testingTags=").append(testingTags);
-        sb.append('}');
-        return sb.toString();
-    }
 }

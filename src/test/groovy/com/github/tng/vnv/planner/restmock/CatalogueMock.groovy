@@ -77,9 +77,9 @@ class CatalogueMock {
 		return  DataMock.services
     }
 
-    @GetMapping('/mock/gk/services/{networkServiceId:.+}')
-    def findService(@PathVariable('networkServiceId') String networkServiceId) {
-        DataMock.getService(networkServiceId)
+    @GetMapping('/mock/gk/services/{uuid:.+}')
+    def findService(@PathVariable('uuid') String uuid) {
+        DataMock.getService(uuid)
     }
 
     @GetMapping('/mock/gk/tests/descriptors')
@@ -90,9 +90,9 @@ class CatalogueMock {
 		DataMock.getTestByTag(tag)
     }
 
-    @GetMapping('/mock/gk/tests/descriptors/{testUuid:.+}')
-    def findTest(@PathVariable('testUuid') String testUuid) {
-        DataMock.getTest(testUuid)
+    @GetMapping('/mock/gk/tests/descriptors/{uuid:.+}')
+    def findTest(@PathVariable('uuid') String uuid) {
+        DataMock.getTest(uuid)
     }
 	
 }

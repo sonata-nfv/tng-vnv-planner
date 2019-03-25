@@ -57,12 +57,9 @@ class Curator {
     @Value('${app.curator.test.plan.curate.endpoint}')
     def testPlanCurateEndpoint
 
-    def proceedWith(TestPlan testPlan) {
-        def createRequest = new TestPlanRequest(
-                serviceUuid: testPlan.networkServiceInstances.first().serviceUuid,
-                requestType: 'CREATE_SERVICE',
-        )
-        TestPlanResponse response = callExternalEndpoint(restTemplate.postForEntity(testPlanCurateEndpoint, createRequest, TestPlanResponse),'Curator.proceedWith(TestPlan)',testPlanCurateEndpoint).body
-        response
+    TestPlanResponse proceedWith(TestPlan testPlan) {
+        def createRequest = new TestPlanRequest(nsd: testPlan.nsd, testd: testPlan.testd, lastTest: false)
+        callExternalEndpoint(restTemplate.postForEntity(testPlanCurateEndpoint, createRequest, TestPlanResponse),
+                'Curator.proceedWith(TestPlan)',testPlanCurateEndpoint).body
     }
 }

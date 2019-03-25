@@ -32,38 +32,58 @@
  * partner consortium (www.5gtango.eu).
  */
 
-package com.github.tng.vnv.planner.client
+package com.github.tng.vnv.planner.repository
 
 
-import com.github.tng.vnv.planner.model.Session
+import com.github.tng.vnv.planner.model.TestPlan
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.beans.factory.annotation.Value
-import org.springframework.stereotype.Component
+import org.springframework.http.HttpEntity
+import org.springframework.http.HttpHeaders
+import org.springframework.http.HttpMethod
+import org.springframework.http.MediaType
+import org.springframework.stereotype.Repository
 import org.springframework.web.client.RestTemplate
+import groovy.util.logging.Log
 
-@Component
-class UserSessionManager {
+import static com.github.tng.vnv.planner.utils.DebugHelper.callExternalEndpoint
+
+@Log
+@Repository
+class TestPlanRestRepository {
 
     @Autowired
-    @Qualifier('restTemplateWithoutAuth')
+    @Qualifier('restTemplateWithAuth')
     RestTemplate restTemplate
 
-    @Value('${app.gk.session.endpoint}')
-    def sessionEndpoint
+    @Autowired
+    @Qualifier('restTemplateWithAuth')
+    RestTemplate restTemplateWithAuth
 
-    @Value('${app.gk.session.username}')
-    def username
+    @Value('${app.tpr.test.plan.create.endpoint}')
+    def testPlanCreateEndpoint
 
-    @Value('${app.gk.session.password}')
-    def password
+    @Value('${app.tpr.test.plan.update.endpoint}')
+    def testPlanUpdateEndpoint
 
-    Session session
+    @Value('${app.vnvgk.test.list.by.tag.endpoint}')
+    def testListByTagEndpoint
 
-    synchronized String retrieveValidBearerToken() {
-        if (session == null || session.invalid()) {
-            session = restTemplate.postForEntity(sessionEndpoint, [username: username, password: password], Session.class).body
-        }
-        session.token.access_token
+    @Value('${app.gk.service.list.by.tag.endpoint}')
+    def serviceListByTagEndpoint
+
+    TestPlan create(def testPlan) {
+        def headers = new HttpHeaders()
+        headers.setContentType(MediaType.APPLICATION_JSON)
+        def entity = new HttpEntity<TestPlan>(testPlan ,headers)
+        callExternalEndpoint(restTemplate.postForEntity(testPlanCreateEndpoint,entity,TestPlan),'TestResultRepository.createTestPlan',testPlanCreateEndpoint).body
+    }
+
+    TestPlan update(def testPlan) {
+        def headers = new HttpHeaders()
+        headers.setContentType(MediaType.APPLICATION_JSON)
+        def entity = new HttpEntity<TestPlan>(testPlan ,headers)
+        callExternalEndpoint(restTemplate.exchange(testPlanUpdateEndpoint, HttpMethod.PUT, entity, TestPlan.class ,testPlan.uuid),'TestResultRepository.updatePlan',testPlanUpdateEndpoint).body
     }
 }

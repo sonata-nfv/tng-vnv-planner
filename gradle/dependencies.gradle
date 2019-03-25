@@ -35,6 +35,8 @@
 dependencies {
     compile 'com.github.mrduguo.spring:spring-app:0.3.0-180320-171212-882f865-8'
     compile "org.codehaus.groovy:groovy-all:$libGroovyVersion"
+    compile("org.springframework.boot:spring-boot-starter-data-jpa")
+    compile("com.h2database:h2")
 
     testCompile 'com.github.mrduguo.spring:spring-test:0.3.0-180320-161244-f62665d-6'
     testCompile "org.springframework.boot:spring-boot-starter-aop:$libSpringBootVersion"

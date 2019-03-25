@@ -32,48 +32,38 @@
  * partner consortium (www.5gtango.eu).
  */
 
-package com.github.tng.vnv.planner.queue
+package com.github.tng.vnv.planner.controller
 
-import groovy.util.logging.Log
-import org.springframework.stereotype.Component
+import com.github.mrduguo.spring.test.AbstractSpec
+import com.github.tng.vnv.planner.restmock.CatalogueMock
+import com.github.tng.vnv.planner.restmock.CuratorMock
+import com.github.tng.vnv.planner.restmock.TestPlanRepositoryMock
+import org.springframework.beans.factory.annotation.Autowired
+import spock.lang.Ignore
 
+class DummyQueueControllerTest extends AbstractSpec {
 
-@Log
-@Component
-class TestPlanConsumer {
-    String id
-    String messageQueue
-    String action
-
-    def add(String uuid) {
-        action = 'ADD'
-        id = uuid
-        this
-    }
-    def remove(String uuid) {
-        action = 'REMOVE'
-        id = uuid
-        this
-    }
+    final def NETWORK_SERVICE_ID = 'input0ns-f213-4fae-8d3f-04358e1e1445'
 
 
-    def update(String uuid) {
-        action = 'UPDATE'
-        id = uuid
-        this
-    }
+    @Autowired
+    CuratorMock curatorMock
 
-    def to(String mq) {
-        messageQueue = mq
-        //case ADD
-        //todo-gandreou: return the result for the ADD of the item from the queue
-        //case REMOVE
-        //todo-gandreou: return the result for the REMOVE of the item from the queue
-        //case UPDATE
-        //todo-gandreou: return the result for the UPDATE of the item from the queue
-    }
+    @Autowired
+    CatalogueMock catalogueMock
 
-    def from(String mq) {
-        from(mq)
+    @Autowired
+    TestPlanRepositoryMock testPlanRepositoryMock
+
+    @Ignore
+    void "call retrieval of a single test suite's related tests should successfully all the tag related tests"() {
+        when:
+        String tss = getForEntity('/tng-vnv-planner/api/v1/test-plans/queue/{action}', String, "true").body
+
+        then:
+
+        tss.toString() == "OK"
+
+
     }
 }

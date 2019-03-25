@@ -34,39 +34,46 @@
 
 package com.github.tng.vnv.planner.model
 
-
+import com.fasterxml.jackson.annotation.JsonIgnore
 import groovy.transform.EqualsAndHashCode
 import io.swagger.annotations.ApiModelProperty
+import org.hibernate.annotations.Fetch
+import org.hibernate.annotations.FetchMode
 
+import javax.persistence.CascadeType
+import javax.persistence.Entity
+import javax.persistence.FetchType
+import javax.persistence.GeneratedValue
+import javax.persistence.Id
+import javax.persistence.JoinColumn
+import javax.persistence.ManyToOne
+import javax.persistence.OneToMany
+import javax.persistence.Table
 import javax.validation.constraints.NotNull
 
+@Entity
+@Table(name="Test_Plan")
 @EqualsAndHashCode
-class TestPlan {
+class TestPlan implements Serializable {
+    @Id
+    @GeneratedValue
+    Long id
+
+    @JsonIgnore
+    @ManyToOne
+    @JoinColumn(name = "testSuiteId", referencedColumnName = "id", nullable = false)
+    TestSuite testSuite
+
     String uuid
     String packageId
     String nsdUuid
     String tdUuid
-    String index
+    int index
     String status
     NetworkServiceDescriptor nsd
     TestDescriptor testd
-
-
-    @Override
-    public String toString() {
-        final StringBuffer sb = new StringBuffer("TestPlan{");
-        sb.append("uuid='").append(uuid).append('\'');
-        sb.append(", packageId='").append(packageId).append('\'');
-        sb.append(", nsdUuid='").append(nsdUuid).append('\'');
-        sb.append(", tdUuid='").append(tdUuid).append('\'');
-        sb.append(", index='").append(index).append('\'');
-        sb.append(", status='").append(status).append('\'');
-        sb.append(", nsd.name=").append(nsd.name);
-        sb.append(", testd.name=").append(testd.name);
-        sb.append('}');
-        return sb.toString();
-    }
 }
+
 
 @EqualsAndHashCode
 class TestPlanRequest {
@@ -74,7 +81,7 @@ class TestPlanRequest {
     TestDescriptor testd
     Boolean lastTest = false
     List<TestPlanCallback> testPlanCallbacks = [
-            new TestPlanCallback(eventActor: 'Curator', url: '/test-plans/on-change/completed', status:TEST_PLAN_STATUS.COMPLETED),
+            new TestPlanCallback(eventActor: 'Curator', url: '/test-plans/on-change/completed', status:'COMPLETED'),
             new TestPlanCallback(eventActor: 'Curator', url: '/test-plans/on-change'),
     ]
 }
@@ -92,17 +99,21 @@ class TestPlanCallback {
             value = 'Event Actor',
             allowEmptyValue = false,
             example = 'Curator, Executor',
-            required = true
-    )
+            required = true)
     @NotNull
     String eventActor
+
+    @ApiModelProperty(
+            value = 'Callback URL',
+            allowEmptyValue = false,
+            example = '/test-plans/on-change')
+    String url
 
     @ApiModelProperty(
             value = 'Test Plan Status',
             allowEmptyValue = false,
             example = 'STARTING, COMPLETED, CANCELLING, CANCELLED, ERROR',
-            required = true
-    )
+            required = true)
     @NotNull
     String status
 
@@ -114,8 +125,7 @@ class TestPlanCallback {
             value = 'Test Plan Repository URI',
             allowEmptyValue = false,
             example = 'tng-cat, catalog, or xx.xx',
-            required = false
-    )
+            required = false)
     @NotNull
     String testPlanRepository
 
@@ -127,13 +137,8 @@ class TestPlanCallback {
             value = 'Test Results Repository URI',
             allowEmptyValue = false,
             example = 'tng-res, results, or xx.xx',
-            required = false
-    )
+            required = false)
     @NotNull
     String testResultsRepository
 }
 
-
-enum TEST_PLAN_STATUS{
-    STARTING('STARTING'), COMPLETED('COMPLETED'), CANCELLING('CANCELLING'), CANCELLED('CANCELLED'), ERROR('ERROR')
-}

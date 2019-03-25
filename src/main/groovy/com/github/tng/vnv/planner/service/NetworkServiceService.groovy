@@ -41,7 +41,6 @@ import com.github.tng.vnv.planner.repository.NetworkServiceRepository
 import groovy.util.logging.Log
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
-import org.springframework.web.util.UriComponentsBuilder
 
 @Log
 @Service
@@ -50,20 +49,17 @@ class NetworkServiceService {
     @Autowired
     NetworkServiceRepository networkServiceRepository
 
-    def findByUuid(String uuid) {
-        networkServiceRepository.findByUuid(uuid)
+    NetworkServiceDescriptor findByUuid(String uuid) {
+        networkServiceRepository.findByUuid(uuid).nsd
     }
 
-    def findByTest(TestDescriptor td) {
-        List<NetworkServiceDescriptor> nsdList = [] as ArrayList
+    Set<NetworkServiceDescriptor> findByTest(TestDescriptor td) {
+        def nsds = [] as HashSet<NetworkServiceDescriptor>
         td.testExecution?.each { tt ->
-            networkServiceRepository.findNssByTestTag(tt)?.each { nsd ->
-                nsdList <<  nsd
+            networkServiceRepository.findNssByTestTag(tt.testTag)?.each { service ->
+                nsds <<  service.nsd
             }
         }
-        nsdList
+        nsds
     }
-	def findNssByTestTag(String tag) {
-		networkServiceRepository.findNssByTestTag(tag)
-	}
 }

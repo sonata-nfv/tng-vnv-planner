@@ -34,68 +34,105 @@
 
 package com.github.tng.vnv.planner.service
 
-import com.github.tng.vnv.planner.repository.TestPlanRepository
-import com.github.tng.vnv.planner.model.NetworkServiceDescriptor
+import com.github.tng.vnv.planner.model.NetworkService
+import com.github.tng.vnv.planner.model.Package
+import com.github.tng.vnv.planner.model.Test
 import com.github.tng.vnv.planner.model.TestDescriptor
+import com.github.tng.vnv.planner.repository.TestPlanRepository
+import com.github.tng.vnv.planner.repository.TestPlanRestRepository
+import com.github.tng.vnv.planner.model.NetworkServiceDescriptor
 import com.github.tng.vnv.planner.model.TestPlan
-import com.github.tng.vnv.planner.repository.NetworkServiceRepository
-import com.github.tng.vnv.planner.repository.TestRepository
 import groovy.util.logging.Log
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+
+import static com.github.tng.vnv.planner.utils.TEST_PLAN_STATUS.DELETED
 
 @Log
 @Service
 class TestPlanService {
 
     @Autowired
-    TestRepository testRepository
-
-    @Autowired
     TestPlanRepository testPlanRepository
+    @Autowired
+    TestPlanRestRepository testPlanRestRepository
 
     @Autowired
-    NetworkServiceRepository networkServiceRepository
+    TestService testService
+    @Autowired
+    NetworkServiceService networkServiceService
+    @Autowired
+    CatalogueService catalogueService
 
-    def findByService(NetworkServiceDescriptor nsd) {
-        List<TestPlan> tps = [] as ArrayList
-        nsd.testingTags?.each { tt ->
-            testRepository.findTssByTestTag(tt)?.each { td ->
-                tps << new TestPlan(nsd:nsd, testd:td)
-            }
+    Set<TestPlan> createByService(NetworkServiceDescriptor nsd) {
+        def testPlans = [] as HashSet
+        nsd = networkServiceService.findByUuid(nsd.uuid)
+        testService.findByService(nsd)?.each { td ->
+                testPlans << new TestPlan(uuid: UUID.randomUUID().toString(), nsd:nsd, testd:td)
         }
-        tps
+        testPlans
     }
 
-    def findByTest(TestDescriptor td) {
-        List<TestPlan> tps = [] as ArrayList
-        td.testExecution?.each { tt ->
-            networkServiceRepository.findNssByTestTag(tt)?.each { nsd ->
-                tps <<  new TestPlan(nsd:nsd, testd:td)
-            }
+    Set<TestPlan> createByTest(TestDescriptor testd) {
+        def testPlans = [] as HashSet
+        testd = testService.findByUuid(testd.uuid)
+        networkServiceService.findByTest(testd)?.each { nsd ->
+            testPlans <<  new TestPlan(uuid: UUID.randomUUID().toString(), nsd:nsd, testd:testd)
         }
-        tps
+        testPlans
     }
 
-    def update(TestPlan tp) {
-        return testPlanRepository.update(tp)
+    Set<TestPlan> createByServices(Set<NetworkService> nss) {
+        def testPlans = [] as HashSet
+        nss?.each { it -> testPlans.addAll(createByService(it.nsd)) }
+        testPlans
     }
 
-    TestPlan createTestPlan(NetworkServiceDescriptor nsd, TestDescriptor td) {
-        def testPlanUuid = UUID.randomUUID().toString()
-        def testPlan = new TestPlan(
-                uuid: testPlanUuid,
-                packageId: testSuites.first().packageId,
-
-                nsdUuid: nsd.uuid,
-                tdUuid: td.uuid,
-                index: 0,
-                NetworkServiceDescriptor: nsd,
-                TestDescriptor: td,
-                status: 'CREATED',
-        )
-        TestPlan tpo = testPlanRepository.create(testPlan)
-        tpo
+    Set<TestPlan> createByTests(Set<Test> ts) {
+        def testPlans = [] as HashSet<TestPlan>
+        ts?.each { it -> testPlans.addAll(createByTest(it.testd)) }
+        testPlans
     }
 
+    Set<TestPlan> createByServicesAndByTests(Set nss, Set ts) {
+        def testPlans = [] as HashSet<TestPlan>
+        testPlans.addAll(createByServices(nss))
+        testPlans.addAll(createByTests(ts))
+        testPlans
+    }
+
+    Set<TestPlan> createByPackage(Package pack){
+        catalogueService.createByPackage(pack)
+    }
+
+    TestPlan getLast(){
+        testPlanRepository.getOne(testPlanRepository.count())
+    }
+
+    TestPlan save(TestPlan testPlan){
+        testPlan.uuid = testPlan.uuid?:UUID.randomUUID().toString()
+        testPlanRepository.save(testPlan)
+        testPlanRestRepository.create(testPlan)
+    }
+
+    TestPlan update(String uuid, String status) {
+        TestPlan testPlan = testPlanRepository.find {it.uuid == uuid}
+        testPlan.status = status
+        testPlanRepository.save(testPlan)
+        testPlanRestRepository.update(testPlan)
+        testPlan
+    }
+
+    void delete(String uuid) {
+        update(uuid, DELETED)
+    }
+
+    TestPlan getNextScheduled() {
+//        testPlanRepository.find {it.status == SCHEDULED}
+        //Todo-allemaos: extract the first correct item which status is SCHEDULED
+        getLast()
+
+    }
 }
+
+

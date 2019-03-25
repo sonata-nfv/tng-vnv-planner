@@ -32,34 +32,13 @@
  * partner consortium (www.5gtango.eu).
  */
 
-package com.github.tng.vnv.planner.app
+package com.github.tng.vnv.planner.repository
 
-import com.github.tng.vnv.planner.Applicant
-import com.github.tng.vnv.planner.client.Curator
-import com.github.tng.vnv.planner.model.TestPlan
-import com.github.tng.vnv.planner.queue.TestPlanConsumer
-import groovy.util.logging.Log
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.stereotype.Component
+import com.github.tng.vnv.planner.model.TestSuite
+import org.springframework.data.jpa.repository.JpaRepository
+import org.springframework.stereotype.Repository
 
+@Repository
+interface TestSuiteRepository extends JpaRepository<TestSuite, Long> {
 
-@Log
-@Component
-class Provider extends Applicant {
-
-    @Autowired
-    Curator curator
-
-    @Autowired
-    TestPlanConsumer testPlanConsumer
-
-    def delegate(TestPlan testPlan) {
-        def res = Curator.proceedWith(testPlan)
-        //if res is valid, set TestPlan status like "proceeded to curator"
-        update(TestPlan)
-        //todo-gandreou: remove from testPlan in testPlans queue or better update the testSuite (testPlans list) in testSuites queue
-
-        testPlanConsumer.remove(testPlan.uuid).from("TEST_PLAN_MESSAGE_QUEUE")
-        testPlanConsumer.update(testPlan.uuid).to("TEST_SUITE_MESSAGE_QUEUE")
-    }
 }

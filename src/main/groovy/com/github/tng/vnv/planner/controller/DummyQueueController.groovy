@@ -34,58 +34,64 @@
 
 package com.github.tng.vnv.planner.controller
 
-import com.github.tng.vnv.planner.ScheduleManager
 import com.github.tng.vnv.planner.model.NetworkServiceDescriptor
 import com.github.tng.vnv.planner.model.TestDescriptor
 import com.github.tng.vnv.planner.model.TestPlan
 import com.github.tng.vnv.planner.model.TestSuite
 import com.github.tng.vnv.planner.service.TestPlanService
-import io.swagger.annotations.ApiResponse
-import io.swagger.annotations.ApiResponses
+import com.github.tng.vnv.planner.service.TestSuiteService
+import groovy.util.logging.Log
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.web.bind.annotation.*
+import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RestController
 
-import javax.validation.Valid
+import java.sql.Timestamp
 
+@Log
 @RestController
 @RequestMapping('/api/v1/test-plans')
-class TestPlanController {
+class DummyQueueController {
 
-    @Autowired
-    ScheduleManager scheduler
     @Autowired
     TestPlanService testPlanService
+    @Autowired
+    TestSuiteService testSuiteService
 
-    @ApiResponses(value = [@ApiResponse(code = 400, message = 'Bad Request')])
-    @PostMapping('')
-    @ResponseBody
-    TestSuite save(@Valid @RequestBody TestSuite testSuite) {
-        scheduler.create(testSuite)
-    }
+    @GetMapping('/queue/{action}')
+    ResponseEntity<String> testQueue(@PathVariable('action') String action) {
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
 
-    @PutMapping('{uuid}')
-    @ResponseBody
-    TestPlan updateTestPlan(@RequestBody TestPlan testPlan, @PathVariable String uuid) {
-        scheduler.update(testPlan)
-    }
+        log.info("##DummyQueueController: Access to /api/v1/test-plans/queue/{action} endpoint  with the received action: $action")
+        if('send'.contains(action)) {
 
-    @DeleteMapping('{uuid}')
-    @ResponseBody
-    void deleteTestPlan(@PathVariable String uuid) {
-        testPlanService.delete(uuid)
-    }
 
-    @ApiResponses(value = [@ApiResponse(code = 400, message = 'Bad Request')])
-    @PostMapping('/services')
-    @ResponseBody
-    List<TestPlan> createTestPlansByServiceDescriptor(@Valid @RequestBody NetworkServiceDescriptor body) {
-        testPlanService.createByService(body)
-    }
+            List testPlanList = [
+                    new TestPlan(status: 'dummyTestPlan0'),
+                    new TestPlan(status: 'dummyTestPlan1'),
+                    new TestPlan(status: 'dummyTestPlan2'),
+                    new TestPlan(status: 'dummyTestPlan3'),
+            ]
 
-    @ApiResponses(value = [@ApiResponse(code = 400, message = 'Bad Request')])
-    @PostMapping('/tests')
-    @ResponseBody
-    List<TestPlan> createTestPlansByTestDescriptor(@Valid @RequestBody TestDescriptor body) {
-        testPlanService.createByTest(body)
+            TestSuite testSuite = new TestSuite()
+            testSuite = testSuiteService.save(testSuite)
+            testPlanList?.forEach{tp -> tp.testSuite = testSuite}
+            testPlanList?.forEach{tp -> testSuite.testPlans.add(tp)}
+            testPlanList?.forEach{tp -> testPlanService.save(tp)}
+
+            log.info("##DummyQueueController: call testPlanService to send messages")
+
+            def  testSuite2 = testSuiteService.getOne(1L)
+            def  testPlan3 = testPlanService.getLast()
+            log.info("##DummyQueueController: call testPlanService to get a message")
+        }
+        else {
+            def testPlanX = testPlanService.getLast()
+            List testPlans = testPlanService.findAll()
+            log.info("##DummyQueueController: call testPlanService to get a message")
+        }
+        ResponseEntity.ok().body("Your timestamp is " + timestamp)
     }
 }

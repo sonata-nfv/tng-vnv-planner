@@ -36,42 +36,30 @@ package com.github.tng.vnv.planner.model
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import groovy.transform.EqualsAndHashCode
+import groovy.transform.ToString
 import io.swagger.annotations.ApiModelProperty
 
 import javax.validation.constraints.NotNull
 
-@EqualsAndHashCode(includes = "testUuid" )
+@EqualsAndHashCode
 class Test {
-
     @ApiModelProperty(required = true)
     @NotNull
-    @JsonProperty("uuid")
-    String testUuid
+    String uuid
     String packageId
     TestDescriptor testd
-
-
 }
 
-class TestDescriptor{
+@ToString(excludes = ['name','vendor','description'])
+class TestDescriptor implements Serializable {
     String uuid
     String vendor
     String name
     String version
     String description
-    String testType
     List<TestTag> testExecution
-
-    @Override
-    public String toString() {
-        final StringBuffer sb = new StringBuffer("TestDescriptor{");
-        sb.append("testExecution=").append(testExecution);
-        sb.append('}');
-        return sb.toString();
-    }
 }
 
 class TestTag{
     String testTag
-    String tagId
 }

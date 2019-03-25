@@ -47,7 +47,6 @@ import spock.lang.Ignore
 class NetworkServiceControllerTest extends AbstractSpec {
 
     final def NETWORK_SERVICE_ID = 'input0ns-f213-4fae-8d3f-04358e1e1445'
-	final def TAGS = '[latency,http]'
 
 
     @Autowired
@@ -67,8 +66,6 @@ class NetworkServiceControllerTest extends AbstractSpec {
         then:
 
         tss.size() == 4
-        cleanup:
-        curatorMock.reset()
 
     }
 	

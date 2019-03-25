@@ -39,8 +39,8 @@ import io.swagger.annotations.ApiModelProperty
 import javax.validation.constraints.NotNull
 
 class Package {
-    List<NetworkService> networkServices=[]
-    List<Test> tests=[]
+    def networkServices= [] as HashSet<NetworkService>
+    def tests=[] as HashSet<Test>
 
     String packageId
     String uuid

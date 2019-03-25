@@ -34,9 +34,9 @@
 
 package com.github.tng.vnv.planner.controller
 
-import com.github.tng.vnv.planner.app.Collector
-import com.github.tng.vnv.planner.model.TestPlan
+
 import com.github.tng.vnv.planner.model.TestPlanCallback
+import com.github.tng.vnv.planner.service.TestPlanService
 import groovy.util.logging.Log
 import io.swagger.annotations.ApiResponse
 import io.swagger.annotations.ApiResponses
@@ -45,6 +45,7 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.ResponseBody
 import org.springframework.web.bind.annotation.RestController
 
 import javax.validation.Valid
@@ -55,19 +56,16 @@ import javax.validation.Valid
 class CuratorCallbackController {
 
     @Autowired
-    Collector collector
+    TestPlanService testPlanService
 
     @ApiResponses(value = [
             @ApiResponse(code = 400, message = 'Bad Request'),
             @ApiResponse(code = 404, message = 'Could not find package with that package_id'),
     ])
     @PostMapping('/on-change/completed')
-    ResponseEntity<Void> onChangeCompleted(@Valid @RequestBody TestPlanCallback callback) {
-        //todo-Y2:this endpoint is an on-change callback and is specific to the asynchronous nature of the unpackaging
-        log.info("##vnvlog Executor.executeTests request. ")
-        collector.accept(new TestPlan(uuid: callback.testPlanUuid, status: callback.status))
-
-        ResponseEntity.ok().build()
+    @ResponseBody
+    void onChangeCompleted(@Valid @RequestBody TestPlanCallback callback) {
+        testPlanService.update(callback.testPlanUuid, callback.status)
     }
 
     @ApiResponses(value = [
@@ -75,12 +73,8 @@ class CuratorCallbackController {
             @ApiResponse(code = 404, message = 'Could not find package with that package_id'),
     ])
     @PostMapping('/on-change/')
-    ResponseEntity<Void> onChange(@Valid @RequestBody TestPlanCallback callback) {
-        //todo-Y2:this endpoint is an on-change callback and is specific to the asynchronous nature of the unpackaging
-        log.info("##vnvlog Executor.executeTests request. ")
-        collector.accept(new TestPlan(uuid: callback.testPlanUuid, status: callback.status))
-
-        ResponseEntity.ok().build()
+    void onChange(@Valid @RequestBody TestPlanCallback callback) {
+        testPlanService.update(callback.testPlanUuid, callback.status)
     }
 }
 

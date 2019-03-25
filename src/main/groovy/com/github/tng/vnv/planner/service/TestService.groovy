@@ -49,21 +49,21 @@ class TestService {
     @Autowired
     TestRepository testRepository
 
-    def findByService(String uuid) {
-        testRepository.findByUuid(uuid)
+    TestDescriptor findByUuid(String uuid) {
+        testRepository.findByUuid(uuid).testd
     }
 
-    def findByService(NetworkServiceDescriptor nsd) {
-        List<TestDescriptor> tdList = [] as ArrayList
+    Set<TestDescriptor> findByService(NetworkServiceDescriptor nsd) {
+        def tds = [] as HashSet<TestDescriptor>
         nsd.testingTags?.each { tt ->
             testRepository.findTssByTestTag(tt)?.each { t ->
 				println t.dump()
                 if(t.testd.testExecution.any{ element ->
-                    element.testTag.contains(tt) && !tdList.contains(t.testd)
+                    element.testTag.contains(tt) && !tds.contains(t.testd)
                 })
-                tdList << t.testd
+                tds << t.testd
             }
         }
-        tdList
+        tds
     }
 }
