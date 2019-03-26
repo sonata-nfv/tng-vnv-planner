@@ -89,13 +89,13 @@ class TestPlanService {
     }
 
     Set<TestPlan> createByTests(Set<Test> ts) {
-        def testPlans = [] as HashSet<TestPlan>
+        def testPlans = [] as HashSet
         ts?.each { it -> testPlans.addAll(createByTest(it.testd)) }
         testPlans
     }
 
     Set<TestPlan> createByServicesAndByTests(Set nss, Set ts) {
-        def testPlans = [] as HashSet<TestPlan>
+        def testPlans = [] as HashSet
         testPlans.addAll(createByServices(nss))
         testPlans.addAll(createByTests(ts))
         testPlans
