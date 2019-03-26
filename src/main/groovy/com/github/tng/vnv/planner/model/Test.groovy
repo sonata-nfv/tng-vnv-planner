@@ -41,13 +41,24 @@ import io.swagger.annotations.ApiModelProperty
 
 import javax.validation.constraints.NotNull
 
-@EqualsAndHashCode
 class Test {
     @ApiModelProperty(required = true)
     @NotNull
     String uuid
     String packageId
     TestDescriptor testd
+
+    boolean equals(o) {
+        if (this.is(o)) return true
+        if (getClass() != o.class) return false
+        Test test = (Test) o
+        if (uuid != test.uuid) return false
+        return true
+    }
+
+    int hashCode() {
+        return uuid.hashCode()
+    }
 }
 
 @ToString(excludes = ['name','vendor','description'])
