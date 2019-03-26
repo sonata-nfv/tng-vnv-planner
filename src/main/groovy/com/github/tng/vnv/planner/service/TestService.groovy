@@ -54,7 +54,7 @@ class TestService {
     }
 
     Set<TestDescriptor> findByService(NetworkServiceDescriptor nsd) {
-        def tds = [] as HashSet<TestDescriptor>
+        def tds = [] as HashSet
         nsd.testingTags?.each { tt ->
             testRepository.findTssByTestTag(tt)?.each { t ->
 				println t.dump()
