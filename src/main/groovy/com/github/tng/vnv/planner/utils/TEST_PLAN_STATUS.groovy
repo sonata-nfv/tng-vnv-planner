@@ -7,6 +7,7 @@ class TEST_PLAN_STATUS {
     static def REJECTED = 'REJECTED'
     static def DELETED = 'DELETED'
     static def CONFIRMED = 'CONFIRMED'
+    static def NOT_CONFIRMED = 'NOT_CONFIRMED'
     static def SCHEDULED = 'SCHEDULED'
     static def STARTING = 'STARTING'
     static def COMPLETED = 'COMPLETED'

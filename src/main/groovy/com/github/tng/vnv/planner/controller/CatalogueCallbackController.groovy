@@ -34,6 +34,9 @@
 
 package com.github.tng.vnv.planner.controller
 
+import com.github.tng.vnv.planner.model.TestSuite
+import org.springframework.web.bind.annotation.ResponseBody
+
 import javax.validation.Valid
 
 import org.springframework.beans.factory.annotation.Autowired
@@ -74,18 +77,19 @@ class CatalogueCallbackController {
             @ApiResponse(code = 404, message = 'Could not find package with that package_id'),
     ])
     @PostMapping('/on-change')
-    ResponseEntity<Void> onChange(@Valid @RequestBody PackageCallback body) {
-        //todo-Y2:this endpoint is an on-change callback and is specific to the asynchronous nature of the unpackaging
+    @ResponseBody
+    TestSuite onChange(@Valid @RequestBody PackageCallback body) {
         log.info("##vnvlog Executor.executeTests request. ")
+        TestSuite testSuite = new TestSuite();
         switch (body.eventName) {
             case PACKAGE_DELETED:
                 break
             case PACKAGE_CREATED:
                 break
             default:
-               scheduler.create(new Package(packageId: body.packageId))
+               testSuite = scheduler.create(new Package(packageId: body.packageId))
         }
-        ResponseEntity.ok().build()
+        testSuite
     }
 
 }
