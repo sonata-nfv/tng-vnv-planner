@@ -68,6 +68,7 @@ class TestDescriptor implements Serializable {
     String name
     String version
     String description
+    String confirm_required
     List<TestTag> testExecution
 }
 

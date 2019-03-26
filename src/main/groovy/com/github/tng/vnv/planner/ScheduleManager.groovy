@@ -39,15 +39,12 @@ import com.github.tng.vnv.planner.service.TestPlanService
 import com.github.tng.vnv.planner.model.Package
 import com.github.tng.vnv.planner.model.TestPlan
 import com.github.tng.vnv.planner.service.TestSuiteService
+import com.github.tng.vnv.planner.utils.TEST_PLAN_STATUS
 import groovy.util.logging.Log
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 
 import java.util.concurrent.CompletableFuture
-
-import static com.github.tng.vnv.planner.utils.TEST_PLAN_STATUS.SCHEDULED
-import static com.github.tng.vnv.planner.utils.TEST_PLAN_STATUS.UPDATED
-
 
 @Log
 @Component
@@ -61,49 +58,39 @@ class ScheduleManager {
 
 //    @Async
 //    CompletableFuture<Boolean> create(Package packageMetadata) {
-      Boolean create(Package packageMetadata) {
-          Set testPlans = testPlanService.createByPackage(packageMetadata)
-          def testPlans1 = testPlans
+    TestSuite create(Package packageMetadata) {
+        Set testPlans = testPlanService.createByPackage(packageMetadata)
 
-/*
-        List<TestPlan> testPlanList = []
-        map?.every {ns,t ->
-            TestPlan testPlan = new TestPlan(nsd: ns.nsd, testd: t.testd, status: TEST_PLAN_STATUS.CREATED)
-            testPlan = testPlanService.create(testPlan)
-            create(testPlan)
-            testPlan.status=TEST_PLAN_STATUS.SCHEDULED
-            testPlan = testPlanService.updateRest(testPlan)
-            testPlanList << testPlan
-        }
+        TestSuite testSuite = new TestSuite(testPlans: testPlans)
+        testSuite = create(testSuite)
 
-        def notConfirmedTestIndex = testPlanList?.findIndexOf {t ->
-            t.testd.status == 'confirm_required' && t.status != TEST_PLAN_STATUS.CONFIRMED}
-*/
-
-        //fixme-allemaso: this method 'create' should return a list [int:notConfirmedTestIndex,list:testPlanList]
-        Boolean out = false
-
+        //fixme-allemaso: fix the not_Confirmed testPlans of the test descriptors with t.testd.status == 'confirm_required' by returning testPlan.status as TEST_PLAN_STATUS.NOT_CONFIRMED
+//        Boolean out = false
 //        CompletableFuture.completedFuture(out)
-          out
+        testSuite
     }
 
     def create(TestSuite ts) {
         List<TestPlan> testPlanList = ts.testPlans
         TestSuite testSuite = testSuiteService.save(new TestSuite())
-        testPlanList?.forEach({tp ->
+        testPlanList?.forEach({ tp ->
             tp.testSuite = testSuite
-            tp.status = SCHEDULED
-            testPlanService.save(tp)})
+            if (tp.testd.confirm_required != null && 'true'.contains(tp.testd.confirm_required) && tp.status != TEST_PLAN_STATUS.CONFIRMED)
+                tp.status = TEST_PLAN_STATUS.NOT_CONFIRMED
+            else
+                tp.status = TEST_PLAN_STATUS.SCHEDULED
+            testPlanService.save(tp)
+        })
         testSuite.testPlans = ts.testPlans
         testSuite
     }
 
     def update(TestPlan testPlan) {
         TestPlan testPlanOld = testPlanService.testPlanRepository.find { it.uuid == testPlan.uuid}
-        testPlanOld.status = UPDATED
+        testPlanOld.status = TEST_PLAN_STATUS.UPDATED
         testPlanService.testPlanRepository.save(testPlanOld)
         testPlan.id = null
-        testPlan.status = SCHEDULED
+        testPlan.status = TEST_PLAN_STATUS.SCHEDULED
         testPlanService.save(testPlan)
     }
 }
