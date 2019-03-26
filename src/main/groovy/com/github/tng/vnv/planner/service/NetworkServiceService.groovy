@@ -35,9 +35,7 @@
 package com.github.tng.vnv.planner.service
 
 import com.github.tng.vnv.planner.model.NetworkService
-import com.github.tng.vnv.planner.model.NetworkServiceDescriptor
 import com.github.tng.vnv.planner.model.Test
-import com.github.tng.vnv.planner.model.TestDescriptor
 import com.github.tng.vnv.planner.repository.NetworkServiceRepository
 import groovy.util.logging.Log
 import org.springframework.beans.factory.annotation.Autowired
