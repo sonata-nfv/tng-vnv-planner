@@ -7,9 +7,9 @@ create table test_plan (
     index integer not null,
     test_suite_id bigint not null,
     nsd_uuid varchar(255),
-    nsd binary(255),
+    nsd BLOB,
     td_uuid varchar(255),
-    testd binary(255),
+    testd BLOB,
     package_id varchar(255),
     status varchar(255),
     primary key (id)

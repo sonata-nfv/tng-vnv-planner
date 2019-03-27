@@ -56,7 +56,7 @@ class CatalogueCallbackControllerTest extends AbstractSpec {
     TestPlanRepositoryMock testPlanRepositoryMock
 
 
-    void 'schedule single Test and single NetworkService should produce successfully 2 Result for 2 testPlan'() {
+    void 'schedule single Test and single NetworkService should produce successfully 10 testPlans'() {
 
         when:
         def entity = postForEntity('/tng-vnv-planner/api/v1/packages/on-change',
@@ -67,10 +67,9 @@ class CatalogueCallbackControllerTest extends AbstractSpec {
                 , Void.class)
 
         then:
-        Thread.sleep(10000L);
         entity.statusCode == HttpStatus.OK
 
-        testPlanRepositoryMock.testPlans.size()==0
+        testPlanRepositoryMock.testPlans.size()==10
 
         cleanup:
         testPlanRepositoryMock.reset()

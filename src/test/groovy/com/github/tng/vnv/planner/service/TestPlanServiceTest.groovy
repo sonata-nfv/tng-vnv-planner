@@ -11,47 +11,12 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager
 import org.springframework.http.HttpStatus
 import spock.lang.Ignore
 
-//@DataJpaTest
 class TestPlanServiceTest extends AbstractSpec {
-/*
-    @Autowired
-    private TestEntityManager entityManager;
-*/
-
-    @Autowired
-    TestPlanService testPlanService
-
-    @Autowired
-    TestSuiteService testSuiteService
 
     @Autowired
     TestPlanRepositoryMock testPlanRepositoryMock
 
-    @Ignore
-    void 'schedule single Test and single NetworkService should produce successfully 2 Result for 2 testPlan'() {
-
-        when:
-        List testPlanList = [
-                new TestPlan(status: 'dummyTestPlan0'),
-                new TestPlan(status: 'dummyTestPlan1'),
-                new TestPlan(status: 'dummyTestPlan2'),
-                new TestPlan(status: 'dummyTestPlan3'),
-        ]
-
-        TestSuite testSuite = new TestSuite()
-        testSuite = testSuiteService.save(testSuite)
-        testPlanList?.forEach{tp -> tp.testSuite = testSuite}
-        testPlanList?.forEach{tp -> testSuite.testPlans.add(tp)}
-        testPlanList?.forEach{tp -> testPlanService.save(tp)}
-
-        then:
-        TestSuite  testSuite2 = testSuiteService.getOne(1L).testPlans?.size() == 4
-        testPlanService.getLast().testSuite.uuid == testSuite2.uuid
-
-        testPlanService.findAll().size() == 4
-    }
-
-    void 'request for 2 test plans should store in the db and consiquently schedule 2 test plans hopefully'(){
+    void 'request for 2 test plans should store in the db and consequently schedule 2 test plans hopefully'(){
 
         when:
         def entity = postForEntity('/tng-vnv-planner/api/v1/test-plans',
@@ -99,7 +64,7 @@ class TestPlanServiceTest extends AbstractSpec {
         Thread.sleep(10000L);
         entity.statusCode == HttpStatus.OK
 
-        testPlanRepositoryMock.testPlans.size()==0
+        testPlanRepositoryMock.testPlans.size()==2
 
         cleanup:
         testPlanRepositoryMock.reset()

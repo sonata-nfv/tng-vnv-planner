@@ -78,7 +78,7 @@ class ScheduleManagerTest extends AbstractSpec {
 //        out.get() == true
         testSuite.testPlans.size() == 10
 
-        testPlanRepositoryMock.testPlans.size()==0
+        testPlanRepositoryMock.testPlans.size()==10
 
         cleanup:
         testPlanRepositoryMock.reset()

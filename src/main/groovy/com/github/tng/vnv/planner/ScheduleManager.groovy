@@ -42,6 +42,7 @@ import com.github.tng.vnv.planner.service.TestSuiteService
 import com.github.tng.vnv.planner.utils.TEST_PLAN_STATUS
 import groovy.util.logging.Log
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Component
 
 import java.util.concurrent.CompletableFuture
@@ -56,36 +57,32 @@ class ScheduleManager {
     @Autowired
     TestSuiteService testSuiteService
 
-//    @Async
-//    CompletableFuture<Boolean> create(Package packageMetadata) {
     TestSuite create(Package packageMetadata) {
-        Set testPlans = testPlanService.createByPackage(packageMetadata)
 
-        TestSuite testSuite = new TestSuite(testPlans: testPlans)
+        TestSuite testSuite = new TestSuite(testPlans: new ArrayList<>(
+                testPlanService.createByPackage(packageMetadata)))
         testSuite = create(testSuite)
 
         //fixme-allemaso: fix the not_Confirmed testPlans of the test descriptors with t.testd.status == 'confirm_required' by returning testPlan.status as TEST_PLAN_STATUS.NOT_CONFIRMED
-//        Boolean out = false
-//        CompletableFuture.completedFuture(out)
+
         testSuite
     }
 
-    def create(TestSuite ts) {
-        List<TestPlan> testPlanList = ts.testPlans
+    TestSuite create(TestSuite ts) {
         TestSuite testSuite = testSuiteService.save(new TestSuite())
-        testPlanList?.forEach({ tp ->
+        ts.testPlans?.forEach({ tp ->
             tp.testSuite = testSuite
-            if (tp.testd.confirm_required != null && 'true'.contains(tp.testd.confirm_required) && tp.status != TEST_PLAN_STATUS.CONFIRMED)
+            if (tp.testd != null && tp.testd.confirm_required != null && 'true'.contains(tp.testd.confirm_required) && tp.status != TEST_PLAN_STATUS.CONFIRMED)
                 tp.status = TEST_PLAN_STATUS.NOT_CONFIRMED
             else
                 tp.status = TEST_PLAN_STATUS.SCHEDULED
             testPlanService.save(tp)
         })
-        testSuite.testPlans = ts.testPlans
+        testSuite.testPlans.addAll(ts.testPlans)
         testSuite
     }
 
-    def update(TestPlan testPlan) {
+    TestSuite update(TestPlan testPlan) {
         TestPlan testPlanOld = testPlanService.testPlanRepository.find { it.uuid == testPlan.uuid}
         testPlanOld.status = TEST_PLAN_STATUS.UPDATED
         testPlanService.testPlanRepository.save(testPlanOld)

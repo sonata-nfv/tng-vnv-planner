@@ -72,6 +72,6 @@ class TestDescriptor implements Serializable {
     List<TestTag> testExecution
 }
 
-class TestTag{
+class TestTag implements Serializable {
     String testTag
 }
