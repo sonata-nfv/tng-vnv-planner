@@ -35,11 +35,6 @@ server:
   contextPath: /tng-vnv-planner
 spring:
   jackson.property-naming-strategy: SNAKE_CASE
-  rabbitmq:
-#    host: localhost
-#    port: 5672
-#    username: guest
-#    password: guest
 api:
   name: tng-vnv-planner
   description: An H2020 5GTANGO project
@@ -90,16 +85,33 @@ app:
       max: 20
 
 
-# Enabling H2 Console
-spring.h2.console.enabled: true
+# ===============================
+# = DATA SOURCE
+# ===============================
 
-# create n drop tables, loads import.sql
+## ===============================
+## = Postgresql
+## ===============================
+## Set here configurations for the database connection
+#spring.datasource.url: jdbc:postgresql://localhost:5432/springbootdb
+#spring.datasource.username: postgres
+#spring.datasource.password: postgres@123
+## Keep the connection alive if idle for a long time (needed in production)
+#spring.datasource.testWhileIdle: true
+#spring.datasource.validationQuery: SELECT 1
+#
+## ===============================
+## = JPA / HIBERNATE
+## ===============================
+## Show or not log for each sql query
+#spring.jpa.show-sql: true
+## Hibernate ddl auto (create, create-drop, update): with "create-drop" the database
+## schema will be automatically created afresh for every start of application
 #spring.jpa.hibernate.ddl-auto: create-drop
-spring.jpa.hibernate.ddl-auto: create
-#Turn Statistics on
-spring.jpa.properties.hibernate.generate_statistics: true
-logging.level.org.hibernate.stat: debug
-# Show all queries
-spring.jpa.show-sql: true
-spring.jpa.properties.hibernate.format_sql: true
-logging.level.org.hibernate.type: trace
+#
+## Naming strategy
+#spring.jpa.hibernate.naming.implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyHbmImpl
+#spring.jpa.hibernate.naming.physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
+#
+## Allows Hibernate to generate SQL optimized for a particular DBMS
+#spring.jpa.properties.hibernate.dialect: org.hibernate.dialect.PostgreSQLDialect

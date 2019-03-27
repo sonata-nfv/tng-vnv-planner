@@ -31,8 +31,7 @@
 ## partner consortium (www.5gtango.eu).
 # encoding: utf-8
 
-FROM openjdk:11-jdk-slim
-
-ENTRYPOINT ["java", "-jar", "-Xmx1024m", "-Xms256m", "-Dtng-vnv-planner", "-Djava.security.egd=file:/dev/./urandom", "/app.jar"]
+FROM openjdk:8-jdk-alpine
+ENTRYPOINT ["java", "-jar", "/app.jar"]
 EXPOSE 6100
 ADD /libs/${name}-${version}.jar /app.jar
