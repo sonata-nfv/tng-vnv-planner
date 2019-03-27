@@ -1,0 +1,26 @@
+${Ansi.RED}
+${Ansi.RED}
+${Ansi.RED} 555555555555555555         GGGGGGGGGGGGGTTTTTTTTTTTTTTTTTTTTTTT
+${Ansi.RED} 5::::::::::::::::5      GGG::::::::::::GT:::::::::::::::::::::T
+${Ansi.RED} 5::::::::::::::::5    GG:::::::::::::::GT:::::::::::::::::::::T
+${Ansi.RED} 5:::::555555555555   G:::::GGGGGGGG::::GT:::::TT:::::::TT:::::T
+${Ansi.RED} 5:::::5             G:::::G       GGGGGGTTTTTT  T:::::T  TTTTTT  aaaaaaaaaaaaa   nnnn  nnnnnnnn       ggggggggg   ggggg   ooooooooooo
+${Ansi.RED} 5:::::5            G:::::G                      T:::::T          a::::::::::::a  n:::nn::::::::nn    g:::::::::ggg::::g oo:::::::::::oo
+${Ansi.RED} 5:::::5555555555   G:::::G                      T:::::T          aaaaaaaaa:::::a n::::::::::::::nn  g:::::::::::::::::go:::::::::::::::o
+${Ansi.RED} 5:::::::::::::::5  G:::::G    GGGGGGGGGG        T:::::T                   a::::a nn:::::::::::::::ng::::::ggggg::::::ggo:::::ooooo:::::o
+${Ansi.RED} 555555555555:::::5 G:::::G    G::::::::G        T:::::T            aaaaaaa:::::a   n:::::nnnn:::::ng:::::g     g:::::g o::::o     o::::o
+${Ansi.RED}             5:::::5G:::::G    GGGGG::::G        T:::::T          aa::::::::::::a   n::::n    n::::ng:::::g     g:::::g o::::o     o::::o
+${Ansi.RED}             5:::::5G:::::G        G::::G        T:::::T         a::::aaaa::::::a   n::::n    n::::ng:::::g     g:::::g o::::o     o::::o
+${Ansi.RED} 5555555     5:::::5 G:::::G       G::::G        T:::::T        a::::a    a:::::a   n::::n    n::::ng::::::g    g:::::g o::::o     o::::o
+${Ansi.RED} 5::::::55555::::::5  G:::::GGGGGGGG::::G      TT:::::::TT      a::::a    a:::::a   n::::n    n::::ng:::::::ggggg:::::g o:::::ooooo:::::o
+${Ansi.RED}  55:::::::::::::55    GG:::::::::::::::G      T:::::::::T      a:::::aaaa::::::a   n::::n    n::::n g::::::::::::::::g o:::::::::::::::o
+${Ansi.RED}    55:::::::::55        GGG::::::GGG:::G      T:::::::::T       a::::::::::aa:::a  n::::n    n::::n  gg::::::::::::::g  oo:::::::::::oo
+${Ansi.RED}      555555555             GGGGGG   GGGG      TTTTTTTTTTT        aaaaaaaaaa  aaaa  nnnnnn    nnnnnn    gggggggg::::::g    ooooooooooo
+${Ansi.RED}                                                                                                                g:::::g
+${Ansi.RED}                                                                                                    gggggg      g:::::g
+${Ansi.RED}                                                                                                    g:::::gg   gg:::::g
+${Ansi.RED}                                                                                                     g::::::ggg:::::::g
+${Ansi.RED}                                                                                                      gg:::::::::::::g
+${Ansi.RED}                                                                                                        ggg::::::ggg
+${Ansi.RED}                                                                                                           gggggg
+${Ansi.RED}
