@@ -41,7 +41,6 @@ import io.swagger.annotations.ApiModelProperty
 
 import javax.validation.constraints.NotNull
 
-@EqualsAndHashCode
 class NetworkService {
     @ApiModelProperty(required = true)
     @NotNull
@@ -49,6 +48,18 @@ class NetworkService {
     String status
     String packageId
     NetworkServiceDescriptor nsd
+
+    boolean equals(o) {
+        if (this.is(o)) return true
+        if (getClass() != o.class) return false
+        NetworkService that = (NetworkService) o
+        if (uuid != that.uuid) return false
+        return true
+    }
+
+    int hashCode() {
+        return uuid.hashCode()
+    }
 }
 
 @ToString(excludes = ['name','vendor'])

@@ -13,7 +13,7 @@ import javax.persistence.Table
 
 @Entity
 @Table(name="Test_Suite")
-class TestSuite {
+class TestSuite implements Serializable {
     @Id
     @GeneratedValue
     Long id

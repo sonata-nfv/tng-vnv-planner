@@ -36,6 +36,7 @@ package com.github.tng.vnv.planner.app
 
 import com.github.tng.vnv.planner.ScheduleManager
 import com.github.tng.vnv.planner.model.Package
+import com.github.tng.vnv.planner.model.TestSuite
 import com.github.tng.vnv.planner.restmock.CatalogueMock
 import com.github.tng.vnv.planner.restmock.CuratorMock
 import com.github.tng.vnv.planner.restmock.TestPlanRepositoryMock
@@ -64,7 +65,7 @@ class ScheduleManagerTest extends AbstractSpec {
 
         when:
 //        CompletableFuture<Boolean> out = scheduler.create(new Package(packageId: MULTIPLE_TEST_PLANS_PACKAGE_ID))
-        Boolean out = scheduler.create(new Package(packageId: MULTIPLE_TEST_PLANS_PACKAGE_ID))
+        TestSuite testSuite = scheduler.create(new Package(packageId: MULTIPLE_TEST_PLANS_PACKAGE_ID))
 
         then:
         Thread.sleep(10000L);
@@ -75,9 +76,9 @@ class ScheduleManagerTest extends AbstractSpec {
 
         //fixme-gandreou: this should be true
 //        out.get() == true
-        out == Boolean.FALSE
+        testSuite.testPlans.size() == 10
 
-        testPlanRepositoryMock.testPlans.size()==0
+        testPlanRepositoryMock.testPlans.size()==10
 
         cleanup:
         testPlanRepositoryMock.reset()

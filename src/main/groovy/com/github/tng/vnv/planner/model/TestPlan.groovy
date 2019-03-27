@@ -41,11 +41,13 @@ import org.hibernate.annotations.Fetch
 import org.hibernate.annotations.FetchMode
 
 import javax.persistence.CascadeType
+import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.FetchType
 import javax.persistence.GeneratedValue
 import javax.persistence.Id
 import javax.persistence.JoinColumn
+import javax.persistence.Lob
 import javax.persistence.ManyToOne
 import javax.persistence.OneToMany
 import javax.persistence.Table
@@ -53,7 +55,6 @@ import javax.validation.constraints.NotNull
 
 @Entity
 @Table(name="Test_Plan")
-@EqualsAndHashCode
 class TestPlan implements Serializable {
     @Id
     @GeneratedValue
@@ -66,14 +67,24 @@ class TestPlan implements Serializable {
 
     String uuid
     String packageId
-    String nsdUuid
-    String tdUuid
     int index
     String status
+    @Lob
+    @Column(name = "nsd", columnDefinition="BLOB")
     NetworkServiceDescriptor nsd
+    @Lob
+    @Column(name = "testd", columnDefinition="BLOB")
     TestDescriptor testd
-}
 
+    boolean equals(o) {
+        if ((o.uuid).contains(uuid)) return true
+        return false
+    }
+
+    int hashCode() {
+        return uuid.hashCode()
+    }
+}
 
 @EqualsAndHashCode
 class TestPlanRequest {
