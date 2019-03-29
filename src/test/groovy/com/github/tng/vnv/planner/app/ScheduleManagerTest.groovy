@@ -64,21 +64,12 @@ class ScheduleManagerTest extends AbstractSpec {
     void 'schedule multiple test plans should produce success result'() {
 
         when:
-//        CompletableFuture<Boolean> out = scheduler.create(new Package(packageId: MULTIPLE_TEST_PLANS_PACKAGE_ID))
         TestSuite testSuite = scheduler.create(new Package(packageId: MULTIPLE_TEST_PLANS_PACKAGE_ID))
 
         then:
-        Thread.sleep(10000L);
-/*
-        while (executorMock.testSuiteResults.values().last().status!='SUCCESS')
-            Thread.sleep(1000L);
-*/
+        testSuite.testPlans.size() == 6
 
-        //fixme-gandreou: this should be true
-//        out.get() == true
-        testSuite.testPlans.size() == 10
-
-        testPlanRepositoryMock.testPlans.size()==10
+        testPlanRepositoryMock.testPlans.size()==6
 
         cleanup:
         testPlanRepositoryMock.reset()

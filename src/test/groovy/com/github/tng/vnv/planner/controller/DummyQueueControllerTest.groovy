@@ -56,7 +56,7 @@ class DummyQueueControllerTest extends AbstractSpec {
     TestPlanRepositoryMock testPlanRepositoryMock
 
     @Ignore
-    void "call retrieval of a single test suite's related tests should successfully all the tag related tests"() {
+    void "dummy tests"() {
         when:
         String tss = getForEntity('/tng-vnv-planner/api/v1/test-plans/queue/{action}', String, "true").body
 

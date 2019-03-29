@@ -13,10 +13,41 @@
             "title": "Login",
             "type": "object"
         },
+        "NetworkService": {
+            "properties": {
+                "descriptor": {
+                    "$ref": "#/definitions/NetworkServiceDescriptor"
+                },
+                "nsd": {
+                    "type": "object"
+                },
+                "package_id": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "uuid": {
+                    "allowEmptyValue": false,
+                    "type": "string"
+                }
+            },
+            "required": [
+                "uuid"
+            ],
+            "title": "NetworkService",
+            "type": "object"
+        },
         "NetworkServiceDescriptor": {
             "properties": {
                 "name": {
                     "type": "string"
+                },
+                "service_platforms": {
+                    "items": {
+                        "type": "string"
+                    },
+                    "type": "array"
                 },
                 "testing_tags": {
                     "items": {
@@ -55,11 +86,14 @@
         },
         "Test": {
             "properties": {
+                "descriptor": {
+                    "$ref": "#/definitions/TestDescriptor"
+                },
                 "package_id": {
                     "type": "string"
                 },
                 "testd": {
-                    "$ref": "#/definitions/TestDescriptor"
+                    "type": "object"
                 },
                 "uuid": {
                     "allowEmptyValue": false,
@@ -83,9 +117,15 @@
                 "name": {
                     "type": "string"
                 },
-                "test_execution": {
+                "service_platforms": {
                     "items": {
-                        "$ref": "#/definitions/TestTag"
+                        "type": "string"
+                    },
+                    "type": "array"
+                },
+                "test_tags": {
+                    "items": {
+                        "type": "string"
                     },
                     "type": "array"
                 },
@@ -113,7 +153,10 @@
                     "type": "integer"
                 },
                 "nsd": {
-                    "$ref": "#/definitions/NetworkServiceDescriptor"
+                    "additionalProperties": {
+                        "type": "object"
+                    },
+                    "type": "object"
                 },
                 "package_id": {
                     "type": "string"
@@ -122,7 +165,10 @@
                     "type": "string"
                 },
                 "testd": {
-                    "$ref": "#/definitions/TestDescriptor"
+                    "additionalProperties": {
+                        "type": "object"
+                    },
+                    "type": "object"
                 },
                 "uuid": {
                     "type": "string"
@@ -187,7 +233,7 @@
                     "type": "boolean"
                 },
                 "nsd": {
-                    "$ref": "#/definitions/NetworkServiceDescriptor"
+                    "type": "object"
                 },
                 "test_plan_callbacks": {
                     "items": {
@@ -196,7 +242,7 @@
                     "type": "array"
                 },
                 "testd": {
-                    "$ref": "#/definitions/TestDescriptor"
+                    "type": "object"
                 }
             },
             "title": "TestPlanRequest",
@@ -215,15 +261,6 @@
                 }
             },
             "title": "TestPlanResponse",
-            "type": "object"
-        },
-        "TestTag": {
-            "properties": {
-                "test_tag": {
-                    "type": "string"
-                }
-            },
-            "title": "TestTag",
             "type": "object"
         },
         "Token": {
@@ -368,6 +405,15 @@
         "/mock/gk/services": {
             "get": {
                 "operationId": "findServicesUsingGET",
+                "parameters": [
+                    {
+                        "description": "testing_tag",
+                        "in": "query",
+                        "name": "testing_tag",
+                        "required": false,
+                        "type": "string"
+                    }
+                ],
                 "produces": [
                     "*/*"
                 ],
@@ -375,7 +421,10 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "object"
+                            "items": {
+                                "$ref": "#/definitions/NetworkService"
+                            },
+                            "type": "array"
                         }
                     },
                     "401": {

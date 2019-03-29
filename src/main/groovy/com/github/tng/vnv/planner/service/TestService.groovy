@@ -54,10 +54,10 @@ class TestService {
 
     Set<Test> findByService(NetworkService service) {
         def ts = [] as HashSet<Test>
-        service.nsd.testingTags?.each { tt ->
+        service.descriptor.testingTags?.each { tt ->
             testRepository.findTssByTestTag(tt)?.each { test ->
 				println test.dump()
-                if(test.testd.testExecution.any{ element -> element.testTag.contains(tt) }){
+                if(test.descriptor?.testTags.any{ it -> it.contains(tt) }){
                     ts.add(test)
                 }
             }
