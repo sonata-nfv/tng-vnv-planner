@@ -71,10 +71,10 @@ class TestPlan implements Serializable {
     String status
     @Lob
     @Column(name = "nsd", columnDefinition="BLOB")
-    NetworkServiceDescriptor nsd
+    MyLinkedHashMap nsd
     @Lob
     @Column(name = "testd", columnDefinition="BLOB")
-    TestDescriptor testd
+    MyLinkedHashMap testd
 
     boolean equals(o) {
         if ((o.uuid).contains(uuid)) return true
@@ -86,10 +86,14 @@ class TestPlan implements Serializable {
     }
 }
 
+class MyLinkedHashMap extends LinkedHashMap implements Serializable {
+
+}
+
 @EqualsAndHashCode
 class TestPlanRequest {
-    NetworkServiceDescriptor nsd
-    TestDescriptor testd
+    def nsd
+    def testd
     Boolean lastTest = false
     List<TestPlanCallback> testPlanCallbacks = [
             new TestPlanCallback(eventActor: 'Curator', url: '/test-plans/on-change/completed', status:'COMPLETED'),

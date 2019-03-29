@@ -6,6 +6,12 @@
                 "name": {
                     "type": "string"
                 },
+                "service_platforms": {
+                    "items": {
+                        "type": "string"
+                    },
+                    "type": "array"
+                },
                 "testing_tags": {
                     "items": {
                         "type": "string"
@@ -59,9 +65,15 @@
                 "name": {
                     "type": "string"
                 },
-                "test_execution": {
+                "service_platforms": {
                     "items": {
-                        "$ref": "#/definitions/TestTag"
+                        "type": "string"
+                    },
+                    "type": "array"
+                },
+                "test_tags": {
+                    "items": {
+                        "type": "string"
                     },
                     "type": "array"
                 },
@@ -89,7 +101,10 @@
                     "type": "integer"
                 },
                 "nsd": {
-                    "$ref": "#/definitions/NetworkServiceDescriptor"
+                    "additionalProperties": {
+                        "type": "object"
+                    },
+                    "type": "object"
                 },
                 "package_id": {
                     "type": "string"
@@ -98,7 +113,10 @@
                     "type": "string"
                 },
                 "testd": {
-                    "$ref": "#/definitions/TestDescriptor"
+                    "additionalProperties": {
+                        "type": "object"
+                    },
+                    "type": "object"
                 },
                 "uuid": {
                     "type": "string"
@@ -174,15 +192,6 @@
                 }
             },
             "title": "TestSuite",
-            "type": "object"
-        },
-        "TestTag": {
-            "properties": {
-                "test_tag": {
-                    "type": "string"
-                }
-            },
-            "title": "TestTag",
             "type": "object"
         }
     },

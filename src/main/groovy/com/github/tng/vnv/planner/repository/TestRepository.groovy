@@ -68,6 +68,7 @@ class TestRepository {
     Test findByUuid(String uuid) {
         callExternalEndpoint(restTemplateWithAuth.getForEntity(testMetadataEndpoint, Test.class, uuid),
                 'TestRepository.findByUuid',testMetadataEndpoint).body
+                .reload()
 
     }
 
@@ -78,6 +79,7 @@ class TestRepository {
 		println builder.toUriString()
         callExternalEndpoint(restTemplateWithAuth.getForEntity(builder.toUriString(), Test[]),
                 'TestRepository.findTssByTestTag',testListByTagEndpoint).body
+                .collect { it.reload() }
     }
 
 }

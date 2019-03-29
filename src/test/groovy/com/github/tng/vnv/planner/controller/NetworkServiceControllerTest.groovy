@@ -46,7 +46,7 @@ import spock.lang.Ignore
 
 class NetworkServiceControllerTest extends AbstractSpec {
 
-    final def NETWORK_SERVICE_ID = 'input0ns-f213-4fae-8d3f-04358e1e1445'
+    final def NETWORK_SERVICE_ID = 'input0ns-f213-4fae-8d3f-04358e1e1451'
 
 
     @Autowired

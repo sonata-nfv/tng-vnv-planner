@@ -34,10 +34,7 @@ class TestPlanServiceTest extends AbstractSpec {
                                             testd:
                                                     [
                                                             uuid: 'aa5c779a-8cc7-47a9-9112-d2ff348898b4',
-                                                            testExecution:
-                                                                    [
-                                                                            test_tag:'http-advanced',
-                                                                    ],
+                                                            test_tags: ['http-advanced'],
                                                     ],
                                     ],
                                     [
@@ -50,10 +47,7 @@ class TestPlanServiceTest extends AbstractSpec {
                                             testd:
                                                     [
                                                             uuid: 'fe7ec2a8-644f-4788-9aa7-bc2ff059819e',
-                                                            testExecution:
-                                                                    [
-                                                                            test_tag:'latency',
-                                                                    ],
+                                                            test_tags: ['latency'],
                                                     ],
                                     ],
                             ],

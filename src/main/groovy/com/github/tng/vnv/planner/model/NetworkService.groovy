@@ -47,7 +47,14 @@ class NetworkService {
     String uuid
     String status
     String packageId
-    NetworkServiceDescriptor nsd
+    def nsd
+    NetworkServiceDescriptor descriptor
+
+    NetworkService reload() {
+        descriptor = new NetworkServiceDescriptor()
+        descriptor.load(this)
+        this
+    }
 
     boolean equals(o) {
         if (this.is(o)) return true
@@ -68,5 +75,15 @@ class NetworkServiceDescriptor implements Serializable {
     String name
     String vendor
     String version
-    List<String> testingTags;
+    List<String> testingTags
+    List<String> servicePlatforms
+
+    void load(NetworkService service){
+        uuid = service.nsd.uuid
+        name = service.nsd.name
+        vendor = service.nsd.vendor
+        testingTags = service.nsd.testing_tags
+        servicePlatforms = service.nsd.service_platforms
+
+    }
 }

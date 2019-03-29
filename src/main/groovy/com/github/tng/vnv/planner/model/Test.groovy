@@ -46,7 +46,14 @@ class Test {
     @NotNull
     String uuid
     String packageId
-    TestDescriptor testd
+    def testd
+    TestDescriptor descriptor
+
+    Test reload() {
+        descriptor = new TestDescriptor()
+        descriptor.load(this)
+        this
+    }
 
     boolean equals(o) {
         if (this.is(o)) return true
@@ -68,10 +75,18 @@ class TestDescriptor implements Serializable {
     String name
     String version
     String description
-    String confirm_required
-    List<TestTag> testExecution
-}
+    String confirmRequired
+    List<String> testTags;
+    List<String> servicePlatforms
 
-class TestTag implements Serializable {
-    String testTag
+    void load(Test test){
+        uuid = test.testd.uuid
+        vendor = test.testd.vendor
+        name = test.testd.name
+        version = test.testd.version
+        description = test.testd.description
+        confirmRequired = test.testd.confirm_required
+        testTags = test.testd.test_tags
+        servicePlatforms = test.testd.service_platforms
+    }
 }
