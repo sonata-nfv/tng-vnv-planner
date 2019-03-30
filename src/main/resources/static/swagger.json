@@ -627,23 +627,16 @@
                 "consumes": [
                     "application/json"
                 ],
-                "operationId": "updateTestPlanUsingPUT",
+                "operationId": "updateUsingPUT",
                 "parameters": [
                     {
-                        "description": "testPlan",
+                        "description": "testSuite",
                         "in": "body",
-                        "name": "testPlan",
+                        "name": "testSuite",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/TestPlan"
+                            "$ref": "#/definitions/TestSuite"
                         }
-                    },
-                    {
-                        "description": "uuid",
-                        "in": "path",
-                        "name": "uuid",
-                        "required": true,
-                        "type": "string"
                     }
                 ],
                 "produces": [
@@ -653,11 +646,14 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/TestPlan"
+                            "$ref": "#/definitions/TestSuite"
                         }
                     },
                     "201": {
                         "description": "Created"
+                    },
+                    "400": {
+                        "description": "Bad Request"
                     },
                     "401": {
                         "description": "Unauthorized"
@@ -669,7 +665,7 @@
                         "description": "Not Found"
                     }
                 },
-                "summary": "updateTestPlan",
+                "summary": "update",
                 "tags": [
                     "test-plan-controller"
                 ]

@@ -47,9 +47,11 @@ import com.github.tng.vnv.planner.service.TestSuiteService
 import com.github.tng.vnv.planner.utils.TEST_PLAN_STATUS
 import groovy.util.logging.Log
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Component
 
+import java.security.AllPermission
 import java.util.concurrent.CompletableFuture
 
 @Log
@@ -68,6 +70,11 @@ class ScheduleManager {
     @Autowired
     TestSuiteService testSuiteService
 
+    @Value('${app.NOT_AVAILABLE_DATA}')
+    String not_available_data
+    @Value('${app.NOT_MATCHING_TEST_TAGS}')
+    String not_matching_test_tags
+
     TestSuite create(Package packageMetadata) {
 
         TestSuite testSuite = new TestSuite(testPlans: new ArrayList<>(
@@ -82,38 +89,61 @@ class ScheduleManager {
     TestSuite create(TestSuite ts) {
         def testPlans = [] as HashSet
         TestSuite testSuite = testSuiteService.save(new TestSuite())
-        ts.testPlans?.each { tp ->
-            if ((tp.serviceUuid != null || tp.nsd != null) && (tp.testUuid != null || tp.testd != null)) {
-                def service = (tp.serviceUuid != null)? networkServiceService.findByUuid(tp.serviceUuid).reload():
-                        new NetworkService(uuid: tp.nsd.uuid?:UUID.randomUUID().toString()+'DIY', nsd: tp.nsd).reload()
-                def test = (tp.testUuid != null)? testService.findByUuid(tp.testUuid).reload():
-                        new Test(uuid: tp.testd.uuid?:UUID.randomUUID().toString()+'DIY', testd: tp.testd).reload()
-                if(!( service.descriptor.tagMatchedWith(test.descriptor) ))
-                     testPlans.add(new TestPlan(status: TEST_PLAN_STATUS.REJECTED, description: tp.description+' [not matching test tags]'))
-                else
-                    testPlans.add(new TestPlan(uuid: service.uuid?:tp.nsd.uuid + test.uuid?:tp.testd.uuid,
-                            nsd: service.nsd, testd: test.testd, index: tp.index, description: tp.description))
-
-            }
+        ts.testPlans?.toSorted().each { tp ->
+            tp = create(tp, testSuite)
+            if(tp != null)
+                testPlans.add(tp)
         }
-        ts.testPlans?.toSorted().forEach({ tp ->
-            tp.testSuite = testSuite
-            if (tp.testd?.confirm_required != null && 'true'.contains(tp.testd.confirm_required) && tp.status != TEST_PLAN_STATUS.CONFIRMED)
-                tp.status = TEST_PLAN_STATUS.NOT_CONFIRMED
-            else
-                tp.status = TEST_PLAN_STATUS.SCHEDULED
-            testPlanService.save(tp)
-        })
-        testSuite.testPlans.addAll(ts.testPlans)
+        testSuite.testPlans = new ArrayList<>(testPlans)
         testSuite
     }
 
-    TestSuite update(TestPlan testPlan) {
-        TestPlan testPlanOld = testPlanService.testPlanRepository.find { it.uuid == testPlan.uuid}
-        testPlanOld.status = TEST_PLAN_STATUS.UPDATED
-        testPlanService.testPlanRepository.save(testPlanOld)
-        testPlan.id = null
-        testPlan.status = TEST_PLAN_STATUS.SCHEDULED
-        testPlanService.save(testPlan)
+    TestSuite update(TestSuite ts) {
+        def testPlans = [] as HashSet
+        TestSuite testSuite = testSuiteService.save(new TestSuite())
+        ts.testPlans?.toSorted().forEach({ tp ->
+            update(tp, testSuite)
+            testPlans.add(tp)
+        })
+        testSuite.testPlans = new ArrayList<>(testPlans)
+        testSuite
+    }
+
+
+    TestPlan create(TestPlan tp, TestSuite ts) {
+        tp.testSuite = ts
+        if (!((tp.serviceUuid != null || tp.nsd != null) && (tp.testUuid != null || tp.testd != null))){
+            tp.status = TEST_PLAN_STATUS.REJECTED
+            tp.description = tp.description +' [$not_available_data]'
+        } else {
+            def service = (tp.serviceUuid != null) ? networkServiceService.findByUuid(tp.serviceUuid).reload() :
+                    new NetworkService(uuid: tp.nsd.uuid ?: UUID.randomUUID().toString() + 'DIY', nsd: tp.nsd).reload()
+            tp.nsd = service.nsd
+            def test = (tp.testUuid != null) ? testService.findByUuid(tp.testUuid).reload() :
+                    new Test(uuid: tp.testd.uuid ?: UUID.randomUUID().toString() + 'DIY', testd: tp.testd).reload()
+            tp.testd = test.testd
+            tp.uuid = service.uuid ?:tp.nsd.uuid + test.uuid?:tp.testd.uuid
+            if (!(service.descriptor.tagMatchedWith(test.descriptor))) {
+                tp.status = TEST_PLAN_STATUS.REJECTED
+                tp.description = tp.description + ' [$not_matching_test_tags]'
+            }
+            if (tp.testd?.confirm_required != null && 'true'.contains(tp.testd.confirm_required) && tp.status != TEST_PLAN_STATUS.CONFIRMED)
+                tp.status = TEST_PLAN_STATUS.NOT_CONFIRMED
+            else {
+                tp.status = TEST_PLAN_STATUS.SCHEDULED
+                testPlanService.save(tp)
+            }
+        }
+        tp
+    }
+
+    TestPlan update(TestPlan tp, TestSuite ts) {
+        TestPlan tpOld = testPlanService.testPlanRepository.find { it.uuid == tp.uuid}
+        tpOld.status = TEST_PLAN_STATUS.UPDATED
+        testPlanService.testPlanRepository.save(tpOld)
+        tp.id = null
+        tp.testSuite = ts
+        tp.status = TEST_PLAN_STATUS.SCHEDULED
+        testPlanService.save(tp)
     }
 }
