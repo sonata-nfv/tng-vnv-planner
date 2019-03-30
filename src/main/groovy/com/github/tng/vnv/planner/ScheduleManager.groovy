@@ -114,25 +114,31 @@ class ScheduleManager {
         tp.testSuite = ts
         if (!((tp.serviceUuid != null || tp.nsd != null) && (tp.testUuid != null || tp.testd != null))){
             tp.status = TEST_PLAN_STATUS.REJECTED
-            tp.description = tp.description +' [$not_available_data]'
+            tp.description = tp.description+" $not_available_data"
         } else {
-            def service = (tp.serviceUuid != null) ? networkServiceService.findByUuid(tp.serviceUuid).reload() :
-                    new NetworkService(uuid: tp.nsd.uuid ?: UUID.randomUUID().toString() + 'DIY', nsd: tp.nsd).reload()
-            tp.nsd = service.nsd
-            def test = (tp.testUuid != null) ? testService.findByUuid(tp.testUuid).reload() :
-                    new Test(uuid: tp.testd.uuid ?: UUID.randomUUID().toString() + 'DIY', testd: tp.testd).reload()
-            tp.testd = test.testd
-            tp.uuid = service.uuid ?:tp.nsd.uuid + test.uuid?:tp.testd.uuid
-            if (!(service.descriptor.tagMatchedWith(test.descriptor))) {
+            def service = (tp.serviceUuid != null) ?
+                    networkServiceService.findByUuid(tp.serviceUuid)?.reload() :
+                    new NetworkService(uuid: tp.nsd?.uuid?: UUID.randomUUID().toString() + 'DIY', nsd: tp.nsd)?.reload()
+            def test = (tp.testUuid != null) ? testService.findByUuid(tp.testUuid)?.reload() :
+                    new Test(uuid: tp.testd?.uuid ?: UUID.randomUUID().toString() + 'DIY', testd: tp.testd)?.reload()
+            if(service == null || test == null){
                 tp.status = TEST_PLAN_STATUS.REJECTED
-                tp.description = tp.description + ' [$not_matching_test_tags]'
-            }
-            if (tp.testd?.confirm_required != null && tp.testd?.confirm_required == '1'
-                    && (tp.testd?.confirmed == null || tp.testd?.confirmed != '1'))
-                tp.status = TEST_PLAN_STATUS.NOT_CONFIRMED
-            else {
-                tp.status = TEST_PLAN_STATUS.SCHEDULED
-                testPlanService.save(tp)
+                tp.description = tp.description +" $not_available_data"
+            } else {
+                tp.nsd = service.nsd
+                tp.testd = test.testd
+                tp.uuid = service.uuid?:tp.nsd?.uuid?:UUID.randomUUID().toString() + test.uuid?:tp.testd?.uuid?:UUID.randomUUID().toString()
+                if (!(service.descriptor.tagMatchedWith(test.descriptor))) {
+                    tp.status = TEST_PLAN_STATUS.REJECTED
+                    tp.description = tp.description +" $not_matching_test_tags"
+                }
+                if (tp.testd?.confirm_required != null && tp.testd?.confirm_required == '1'
+                        && (tp.testd?.confirmed == null || tp.testd?.confirmed != '1'))
+                    tp.status = TEST_PLAN_STATUS.NOT_CONFIRMED
+                else {
+                    tp.status = TEST_PLAN_STATUS.SCHEDULED
+                    testPlanService.save(tp)
+                }
             }
         }
         tp

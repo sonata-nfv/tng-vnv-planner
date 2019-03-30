@@ -66,7 +66,7 @@ class TestPlanService {
 
     Set<TestPlan> createByService(NetworkService service) {
         def testPlans = [] as HashSet
-        service = networkServiceService.findByUuid(service.uuid).reload()
+        service = networkServiceService.findByUuid(service.uuid)?.reload()
         testService.findByService(service)?.each { test ->
             if(service.uuid != null && test.uuid!=null)
                 testPlans.add(new TestPlan(uuid: service.uuid+test.uuid, nsd:service.nsd, testd:test.testd))
