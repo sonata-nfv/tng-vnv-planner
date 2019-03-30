@@ -127,7 +127,8 @@ class ScheduleManager {
                 tp.status = TEST_PLAN_STATUS.REJECTED
                 tp.description = tp.description + ' [$not_matching_test_tags]'
             }
-            if (tp.testd?.confirm_required != null && 'true'.contains(tp.testd.confirm_required) && tp.status != TEST_PLAN_STATUS.CONFIRMED)
+            if (tp.testd?.confirm_required != null && tp.testd?.confirm_required == '1'
+                    && (tp.testd?.confirmed == null || tp.testd?.confirmed != '1'))
                 tp.status = TEST_PLAN_STATUS.NOT_CONFIRMED
             else {
                 tp.status = TEST_PLAN_STATUS.SCHEDULED
