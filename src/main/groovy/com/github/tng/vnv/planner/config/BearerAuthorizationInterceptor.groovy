@@ -35,7 +35,7 @@
 package com.github.tng.vnv.planner.config
 
 
-import com.github.tng.vnv.planner.client.UserSessionManager
+import com.github.tng.vnv.planner.utils.UserSessionManager
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpRequest
 import org.springframework.http.client.ClientHttpRequestExecution

@@ -36,42 +36,83 @@ package com.github.tng.vnv.planner.controller
 
 
 import com.github.mrduguo.spring.test.AbstractSpec
-import com.github.tng.vnv.planner.restmock.CatalogueMock
+import com.github.tng.vnv.planner.model.TestPlan
 import com.github.tng.vnv.planner.restmock.CuratorMock
 import com.github.tng.vnv.planner.restmock.TestPlanRepositoryMock
+import com.github.tng.vnv.planner.service.TestPlanService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
+import spock.lang.Ignore
 
-class CatalogueCallbackControllerTest extends AbstractSpec {
+class CuratorCallbackControllerTest extends AbstractSpec {
 
     public static final String MULTIPLE_TEST_PLANS_PACKAGE_ID ='multiple_scheduler:test:0.0.1'
+    public static final String TEST_RESULT_UUID = UUID.randomUUID().toString()
+    public static final String TEST_PLAN_UUID = '109873678'
+
+    @Autowired
+    TestPlanService testPlanService
 
     @Autowired
     CuratorMock curatorMock
 
     @Autowired
-    CatalogueMock testCatalogueMock
-
-    @Autowired
     TestPlanRepositoryMock testPlanRepositoryMock
 
+    @Ignore
+    void 'curator returns back call as COMPLETED should get a new testPlan with status STARTING to curate'() {
 
-    void 'schedule single Test and single NetworkService should produce successfully 6 testPlans'() {
-
+        setup:
+        testPlanService.send(
+                new TestPlan(uuid: UUID.randomUUID().toString(), status: 'dummyTestPlan') )
         when:
-        def entity = postForEntity('/tng-vnv-planner/api/v1/packages/on-change',
+        def entity = postForEntity('/tng-vnv-planner/api/v1/test-plans/on-change/completed',
                 [
-                        event_name: UUID.randomUUID().toString(),
-                        package_id:  MULTIPLE_TEST_PLANS_PACKAGE_ID,
+                        event_actor: 'tng-vnv-curator',
+                        status: 'COMPLETED',
+                        test_plan_uuid: TEST_PLAN_UUID,
+                        test_results_uuid: TEST_RESULT_UUID,
+                        test_plan_repository: 'tng-rep',
+                        test_results_repository: 'tng-res',
                 ]
                 , Void.class)
 
         then:
         entity.statusCode == HttpStatus.OK
 
-        testPlanRepositoryMock.testPlans.size()==6
+        testPlanRepositoryMock.testPlans.values()[0].status=='COMPLETED'
+        testPlanRepositoryMock.testPlans.values().last().status=='STARTING'
 
         cleanup:
         testPlanRepositoryMock.reset()
     }
+
+    @Ignore
+    void 'curator returns back call as not completed should get a new testPlan with status STARTING to curate'() {
+
+        setup:
+        testPlanService.send(
+                new TestPlan(uuid: UUID.randomUUID().toString(), status: 'dummyTestPlan') )
+        when:
+        def entity = postForEntity('/tng-vnv-planner/api/v1/test-plans/on-change/',
+                [
+                        event_actor: 'tng-vnv-curator',
+                        status:'CANCELLING',
+                        test_plan_uuid:TEST_PLAN_UUID,
+                        test_results_uuid:TEST_RESULT_UUID,
+                        test_plan_repository:'tng-rep',
+                        test_results_repository:'tng-res',
+                ]
+                , Void.class)
+
+        then:
+        entity.statusCode == HttpStatus.OK
+
+        testPlanRepositoryMock.testPlans.values()[0].status=='CANCELLING'
+        testPlanRepositoryMock.testPlans.values().last().status=='STARTING'
+
+        cleanup:
+        testPlanRepositoryMock.reset()
+    }
+
 }

@@ -34,8 +34,9 @@
 
 package com.github.tng.vnv.planner.controller
 
-import com.github.tng.vnv.planner.app.Collector
+
 import com.github.tng.vnv.planner.model.TestPlanCallback
+import com.github.tng.vnv.planner.service.TestPlanService
 import groovy.util.logging.Log
 import io.swagger.annotations.ApiResponse
 import io.swagger.annotations.ApiResponses
@@ -44,6 +45,7 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.ResponseBody
 import org.springframework.web.bind.annotation.RestController
 
 import javax.validation.Valid
@@ -53,48 +55,27 @@ import javax.validation.Valid
 @RequestMapping('/api/v1/test-plans')
 class CuratorCallbackController {
 
-    static final String TEST_PLAN_APPROVED_STATUS = 'PAUSED'
-    static final String TEST_PLAN_CREATED = 'CREATED'
-    static final String TEST_PLAN_CRASHED = 'CRASHED'
-    static final String TEST_PLAN_CANCELED = 'CANCELED'
-    static final String TEST_PLAN_FINISHED = 'FINISHED'
-    static final String TEST_PLAN_RESCHEDULED = 'RESCHEDULED'
-
     @Autowired
-    Collector collector
+    TestPlanService testPlanService
 
     @ApiResponses(value = [
             @ApiResponse(code = 400, message = 'Bad Request'),
             @ApiResponse(code = 404, message = 'Could not find package with that package_id'),
     ])
-    @PostMapping('/on-change')
-    ResponseEntity<Void> onChange(@Valid @RequestBody TestPlanCallback body) {
-        //todo-Y2:this endpoint is an on-change callback and is specific to the asynchronous nature of the unpackaging
-        log.info("##vnvlog Executor.executeTests request. ")
-        switch (body.testPlanStatus) {
+    @PostMapping('/on-change/completed')
+    @ResponseBody
+    void onChangeCompleted(@Valid @RequestBody TestPlanCallback callback) {
+        testPlanService.update(callback.testPlanUuid, callback.status)
+    }
 
-            //todo-gandreou: fix this part for every different schenario
-            case TEST_PLAN_PAUSED || TEST_PLAN_CREATED:
-                collector.update(body.testPlanUuid, body.testPlanStatus)
-                break
-            case TEST_PLAN_CREATED:
-                collector.update(body.testPlanUuid, body.testPlanStatus)
-                break
-            case TEST_PLAN_CRASHED:
-                collector.update(body.testPlanUuid, body.testPlanStatus)
-                break
-            case TEST_PLAN_CANCELED:
-                collector.update(body.testPlanUuid, body.testPlanStatus)
-                break
-            case TEST_PLAN_FINISHED:
-                collector.update(body.testPlanUuid, body.testPlanStatus)
-                break
-            case TEST_PLAN_POSTPONED:
-                collector.update(body.testPlanUuid, body.testPlanStatus)
-                break
-            default:
-                collector.update(body.testPlanUuid, body.testPlanStatus)
-        }
-        ResponseEntity.ok().build()
+    @ApiResponses(value = [
+            @ApiResponse(code = 400, message = 'Bad Request'),
+            @ApiResponse(code = 404, message = 'Could not find package with that package_id'),
+    ])
+    @PostMapping('/on-change/')
+    void onChange(@Valid @RequestBody TestPlanCallback callback) {
+        testPlanService.update(callback.testPlanUuid, callback.status)
     }
 }
+
+

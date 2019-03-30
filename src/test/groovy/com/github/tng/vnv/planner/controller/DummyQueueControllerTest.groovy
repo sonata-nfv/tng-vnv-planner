@@ -32,51 +32,38 @@
  * partner consortium (www.5gtango.eu).
  */
 
-package com.github.tng.vnv.planner.app
+package com.github.tng.vnv.planner.controller
 
-import com.github.tng.vnv.planner.Applicant
-import com.github.tng.vnv.planner.service.CatalogueService
-import com.github.tng.vnv.planner.service.TestPlanService
-import com.github.tng.vnv.planner.model.Package
-import com.github.tng.vnv.planner.model.TestPlan
-import com.github.tng.vnv.planner.queue.TestPlanProducer
-import groovy.util.logging.Log
+import com.github.mrduguo.spring.test.AbstractSpec
+import com.github.tng.vnv.planner.restmock.CatalogueMock
+import com.github.tng.vnv.planner.restmock.CuratorMock
+import com.github.tng.vnv.planner.restmock.TestPlanRepositoryMock
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.scheduling.annotation.Async
-import org.springframework.stereotype.Component
+import spock.lang.Ignore
 
-import java.util.concurrent.CompletableFuture
+class DummyQueueControllerTest extends AbstractSpec {
 
+    final def NETWORK_SERVICE_ID = 'input0ns-f213-4fae-8d3f-04358e1e1445'
 
-@Log
-@Component
-class Scheduler extends Applicant {
 
     @Autowired
-    TestPlanProducer testPlanProducer
+    CuratorMock curatorMock
 
     @Autowired
-    TestPlanService testPlanService
+    CatalogueMock catalogueMock
 
     @Autowired
-    CatalogueService catalogueService
+    TestPlanRepositoryMock testPlanRepositoryMock
 
-    @Async
-    CompletableFuture<Boolean> schedule(Package packageMetadata) {
-        def map = catalogueService.discoverAssociatedNssAndTests(packageMetadata)
+    @Ignore
+    void "dummy tests"() {
+        when:
+        String tss = getForEntity('/tng-vnv-planner/api/v1/test-plans/queue/{action}', String, "true").body
 
-        Boolean out = (map == null) ? false : map.every {nsd,td ->
-//            schedule(testPlanService.createTestPlan(nsd: nsd, TestDescriptor: td) == true)
-        }
-        CompletableFuture.completedFuture(out)
-    }
+        then:
 
-    def schedule(TestPlan testPlan) {
-        testPlanProducer.add(testPlan.uuid).to("TEST_PLAN_MESSAGE_QUEUE")
-        testPlanProducer.update(testPlan.uuid).to("TEST_SUITE_MESSAGE_QUEUE")
-    }
+        tss.toString() == "OK"
 
-    def schedule(List<TestPlan> testPlanList) {
-        testPlanList?.forEach({tp -> schedule(tp)})
+
     }
 }

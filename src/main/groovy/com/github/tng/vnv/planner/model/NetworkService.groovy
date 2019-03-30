@@ -36,46 +36,56 @@ package com.github.tng.vnv.planner.model
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import groovy.transform.EqualsAndHashCode
+import groovy.transform.ToString
+import io.swagger.annotations.ApiModelProperty
 
-@EqualsAndHashCode(includes = "networkServiceId")
+import javax.validation.constraints.NotNull
+
 class NetworkService {
-
-//    @ApiModelProperty(required = true)
-//    @NotNull
-    @JsonProperty("uuid")
-    String networkServiceId
-
-    NetworkServiceDescriptor nsd
-
+    @ApiModelProperty(required = true)
+    @NotNull
+    String uuid
     String status
+    String packageId
+    def nsd
+    NetworkServiceDescriptor descriptor
 
+    NetworkService reload() {
+        descriptor = new NetworkServiceDescriptor()
+        descriptor.load(this)
+        this
+    }
 
-    @Override
-    public String toString() {
-        final StringBuffer sb = new StringBuffer("NetworkService{");
-        sb.append("uuid='").append(networkServiceId).append('\'');
-        sb.append(", nsd=").append(nsd);
-        sb.append(", status='").append(status).append('\'');
-        sb.append('}');
-        return sb.toString();
+    boolean equals(o) {
+        if (this.is(o)) return true
+        if (getClass() != o.class) return false
+        NetworkService that = (NetworkService) o
+        if (uuid != that.uuid) return false
+        return true
+    }
+
+    int hashCode() {
+        return uuid.hashCode()
     }
 }
 
-class NetworkServiceDescriptor {
+@ToString(excludes = ['name','vendor'])
+class NetworkServiceDescriptor implements Serializable {
     String uuid
     String name
     String vendor
     String version
-    List<String> testingTags;
+    List<String> testingTags
+    List<String> servicePlatforms
 
-
-    @Override
-    public String toString() {
-        final StringBuffer sb = new StringBuffer("nsd{");
-        sb.append("name=").append(name);
-        sb.append("testingTags=").append(testingTags);
-        sb.append("testingTags=").append(testingTags);
-        sb.append('}');
-        return sb.toString();
+    void load(NetworkService service){
+        uuid = service.nsd.uuid
+        name = service.nsd.name
+        vendor = service.nsd.vendor
+        testingTags = service.nsd.testing_tags
+        servicePlatforms = service.nsd.service_platforms
+    }
+    boolean tagMatchedWith(TestDescriptor testDescriptor) {
+        (testDescriptor == null)?false:this?.testingTags?.flatten().any { st -> testDescriptor?.testTags?.flatten().any{ tt -> tt == st}}
     }
 }

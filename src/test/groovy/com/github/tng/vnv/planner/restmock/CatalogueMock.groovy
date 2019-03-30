@@ -34,15 +34,19 @@
 
 package com.github.tng.vnv.planner.restmock
 
+import com.github.tng.vnv.planner.model.NetworkService
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
+
+import com.github.tng.vnv.planner.model.Test
 
 @RestController
 class CatalogueMock {
 
-    private static String TEST_UUID='input0ts-75f5-4ca1-90c8-12ec80a79821'
-    private static String SERVICE_UUID='input0ns-f213-4fae-8d3f-04358e1e1445'
+    private static String TEST_UUID='input0ts-75f5-4ca1-90c8-12ec80a79836' //test_tags: latency (#4), http (#4)
+    private static String SERVICE_UUID='input0ns-f213-4fae-8d3f-04358e1e1451' //test_tags: latency (#3), aux_test
     private static String MULTIPLE_TEST_PLANS_PACKAGE_ID ='multiple_scheduler:test:0.0.1'
 
     @GetMapping('/mock/gk/packages')
@@ -70,23 +74,30 @@ class CatalogueMock {
     }
 
     @GetMapping('/mock/gk/services')
-    def findServices() {
-        DataMock.services
+    List<NetworkService> findServices(@RequestParam(value='testing_tag',required=false) String tag) {
+        if(!tag) {
+            return DataMock.services
+        }
+        DataMock.getServiceByTag(tag)
     }
 
-    @GetMapping('/mock/gk/services/{networkServiceId:.+}')
-    def findService(@PathVariable('networkServiceId') String networkServiceId) {
-        DataMock.getService(networkServiceId)
+    @GetMapping('/mock/gk/services/{uuid:.+}')
+    def findService(@PathVariable('uuid') String uuid) {
+        DataMock.getService(uuid)
     }
 
     @GetMapping('/mock/gk/tests/descriptors')
-    def findTests() {
-        DataMock.tests
+    List<Test> findTests(@RequestParam(value='test_tag',required=false) String tag) {
+		if(!tag) {
+			return  DataMock.tests
+		}
+		DataMock.getTestByTag(tag)
     }
 
-    @GetMapping('/mock/gk/tests/descriptors/{testUuid:.+}')
-    def findTest(@PathVariable('testUuid') String testUuid) {
-        DataMock.getTest(testUuid)
+    @GetMapping('/mock/gk/tests/descriptors/{uuid:.+}')
+    def findTest(@PathVariable('uuid') String uuid) {
+        DataMock.getTest(uuid)
     }
+	
 }
 

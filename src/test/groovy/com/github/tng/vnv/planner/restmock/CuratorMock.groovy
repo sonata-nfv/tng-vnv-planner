@@ -36,20 +36,17 @@ package com.github.tng.vnv.planner.restmock
 
 
 import com.github.tng.vnv.planner.model.TestPlan
+import com.github.tng.vnv.planner.model.TestPlanRequest
+import com.github.tng.vnv.planner.model.TestPlanResponse
 import org.springframework.web.bind.annotation.*
 
 @RestController
 class CuratorMock {
 
-    Map<String, TestPlan> requests = [:]
-
-    void reset() {
-        requests.clear()
-    }
-
     @PostMapping('/mock/curator/curate-test-plan')
-    TestPlan curateTestPlan(@RequestBody TestPlan testPlan) {
-        requests << testPlan
-        testPlan
+    TestPlanResponse curateTestPlan(@RequestBody TestPlanRequest testPlanRequest) {
+        new TestPlanResponse(id: UUID.randomUUID().toString(), status: '202',
+                testPlan: new TestPlan(uuid:UUID.randomUUID().toString(), status: 'STARTING',
+                        nsd:testPlanRequest.nsd,testd:testPlanRequest.testd))
     }
 }

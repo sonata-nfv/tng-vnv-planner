@@ -43,6 +43,7 @@ import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Repository
 import org.springframework.web.client.RestTemplate
+import org.springframework.web.util.UriComponentsBuilder
 
 import static com.github.tng.vnv.planner.utils.DebugHelper.callExternalEndpoint
 
@@ -66,20 +67,19 @@ class TestRepository {
 
     Test findByUuid(String uuid) {
         callExternalEndpoint(restTemplateWithAuth.getForEntity(testMetadataEndpoint, Test.class, uuid),
-                'TestRepository.findNssByTestTag','TestRepository.findByUuid',testMetadataEndpoint).body
+                'TestRepository.findByUuid',testMetadataEndpoint).body
+                .reload()
 
-    }
-
-    String printAgnosticObjByUuid(String uuid) {
-        callExternalEndpoint(
-                restTemplateWithAuth.getForEntity(testMetadataEndpoint, Object.class, uuid),
-                'TestRepository.loadPackageMetadata','TestCatalogue.loadPackageMetadata',
-                testMetadataEndpoint).body.each {println it}
     }
 
     List<Test> findTssByTestTag(String tag) {
-        DebugHelper.callExternalEndpoint(restTemplateWithAuth.getForEntity(testListByTagEndpoint, Test[], tag),
+		UriComponentsBuilder builder = UriComponentsBuilder
+		.fromUriString(testListByTagEndpoint)
+		.queryParam("test_tag", tag)
+		println builder.toUriString()
+        callExternalEndpoint(restTemplateWithAuth.getForEntity(builder.toUriString(), Test[]),
                 'TestRepository.findTssByTestTag',testListByTagEndpoint).body
+                .collect { it.reload() }
     }
 
 }

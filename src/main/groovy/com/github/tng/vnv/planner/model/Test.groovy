@@ -36,44 +36,56 @@ package com.github.tng.vnv.planner.model
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import groovy.transform.EqualsAndHashCode
+import groovy.transform.ToString
 import io.swagger.annotations.ApiModelProperty
 
 import javax.validation.constraints.NotNull
 
-@EqualsAndHashCode(includes = "uuid" )
 class Test {
-
     @ApiModelProperty(required = true)
-    @NotNull
-    @JsonProperty("uuid")
-    String testUuid
+    String uuid
     String packageId
-    TestDescriptor testd
+    def testd
+    TestDescriptor descriptor
 
+    Test reload() {
+        descriptor = new TestDescriptor()
+        descriptor.load(this)
+        this
+    }
 
+    boolean equals(o) {
+        if (this.is(o)) return true
+        if (getClass() != o.class) return false
+        Test test = (Test) o
+        if (uuid != test.uuid) return false
+        return true
+    }
+
+    int hashCode() {
+        return uuid.hashCode()
+    }
 }
 
-class TestDescriptor{
+@ToString(excludes = ['name','vendor','description'])
+class TestDescriptor implements Serializable {
     String uuid
     String vendor
     String name
     String version
     String description
-    String testType
-    boolean confirmRequired
-    List<TestTag> testExecution
+    String confirmRequired
+    List<String> testTags;
+    List<String> servicePlatforms
 
-    @Override
-    public String toString() {
-        final StringBuffer sb = new StringBuffer("TestDescriptor{");
-        sb.append("confirmRequired=").append(confirmRequired);
-        sb.append("testExecution=").append(testExecution);
-        sb.append('}');
-        return sb.toString();
+    void load(Test test){
+        uuid = test.testd.uuid
+        vendor = test.testd.vendor
+        name = test.testd.name
+        version = test.testd.version
+        description = test.testd.description
+        confirmRequired = test.testd.confirm_required
+        testTags = test.testd.test_tags
+        servicePlatforms = test.testd.service_platforms
     }
-}
-
-class TestTag{
-    String testTag
-    String tagId
 }

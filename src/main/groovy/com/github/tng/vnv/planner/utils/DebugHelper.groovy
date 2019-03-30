@@ -12,25 +12,6 @@ class DebugHelper {
             log.severe("##vnvlog-v.2:$methodName $message: $endpoint, status: ${responseEntity.statusCode}")
             return null
         }
-
         responseEntity
     }
-
-    static String nsAndTestsMappingToString(Map map){
-        def stringBuffer = new StringBuffer("\n ---- \n")
-        stringBuffer.append("##vnvlog-v.2: testPlans:\n\n")
-        stringBuffer.append(" ns's(#${map?.keySet()?.size()})");
-        map?.each { ns1, tss1 -> stringBuffer.append(
-                "\n nsId: ${ns1.networkServiceId}, testingTags: ${ns1.nsd.testingTags} \n\t - ts's(#${tss1.size()})" );
-            tss1.each { t1 ->
-                stringBuffer.append(" \n\t\ttsId: ${t1.testUuid}, testTag's: ( ")
-                t1.testd.testExecution.each{ stringBuffer.append('\'' + it.testTag+'\' ')}
-                stringBuffer.append(')')
-
-            }
-        }
-        stringBuffer.append("\n ")
-        stringBuffer.toString()
-    }
-
 }

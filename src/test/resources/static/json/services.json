@@ -55,9 +55,8 @@
     "status": "active",
     "updated_at": "2018-08-07T16:09:34.935+00:00",
     "username": null,
-    "uuid": "input0ns-f213-4fae-8d3f-04358e1e1445"
+    "uuid": "input0ns-f213-4fae-8d3f-04358e1e1451"
   },
-
   {
     "created_at": "2018-08-07T16:09:34.935+00:00",
     "md5": "f2e43735d408fb64e2ba2e56471ba1a8",
@@ -114,7 +113,7 @@
     "status": "active",
     "updated_at": "2018-08-07T16:09:34.935+00:00",
     "username": null,
-    "uuid": "4763bde6-f213-4fae-8d3f-04358e1e1445"
+    "uuid": "4763bde6-f213-4fae-8d3f-04358e1e1489"
   },
   {
     "created_at": "2018-08-07T16:08:28.588+00:00",
@@ -172,7 +171,7 @@
     "status": "active",
     "updated_at": "2018-08-07T16:08:28.588+00:00",
     "username": null,
-    "uuid": "a0c112ac-8c06-49e0-a34b-16693a50e72a"
+    "uuid": "a0c112ac-8c06-49e0-a34b-16693a50e147"
   },
   {
     "created_at": "2018-08-07T14:46:50.564+00:00",
@@ -425,5 +424,80 @@
     "updated_at": "2018-09-12T09:09:16.319+00:00",
     "username": null,
     "uuid": "d07742ed-9429-4a07-b7af-d0b24a6d5c4c"
+  },
+  {
+    "created_at": "2018-09-12T09:09:16.319+00:00",
+    "md5": "32ec0bb9c155816e99438e1209baeb81",
+    "nsd": {
+      "descriptor_schema": "https://raw.githubusercontent.com/sonata-nfv/tng-schema/master/service-descriptor/nsd-schema.yml",
+      "vendor": "eu.sonata-nfv",
+      "name": "mediapilot-service",
+      "version": "0.2",
+      "author": "Ignacio Dominguez @: atos",
+      "description": "This NS provides the video streaming service for the immersive media pilot.",
+      "network_functions": [
+        {
+          "vnf_id": "vnf-ma",
+          "vnf_vendor": "eu.5gtango",
+          "vnf_name": "ma-vnfd-k8s",
+          "vnf_version": "0.2"
+        },
+        {
+          "vnf_id": "vnf-mse",
+          "vnf_vendor": "eu.5gtango",
+          "vnf_name": "mse-vnfd-k8s",
+          "vnf_version": "0.2"
+        },
+        {
+          "vnf_id": "vnf-cms",
+          "vnf_vendor": "eu.5gtango",
+          "vnf_name": "cms-vnfd-k8s",
+          "vnf_version": "0.1"
+        }
+      ],
+      "connection_points": [
+        {
+          "id": "nscpexternal",
+          "interface": "ipv4",
+          "type": "external"
+        }
+      ],
+      "testing_tags": [
+        "rtmp-media-service"
+      ],
+      "virtual_links": [
+        {
+          "id": "vlexternal",
+          "connectivity_type": "E-LAN",
+          "connection_points_reference": [
+            "vnf-ma:rtmp",
+            "vnf-mse:hls",
+            "vnf-cms:api",
+            "nscpexternal"
+          ]
+        },
+        {
+          "id": "cms-aggregator",
+          "connectivity_type": "E-Line",
+          "connection_points_reference": [
+            "vnf-cms:api",
+            "vnf-ma:api"
+          ]
+        },
+        {
+          "id": "aggregator-mse",
+          "connectivity_type": "E-Line",
+          "connection_points_reference": [
+            "vnf-ma:rtmp",
+            "vnf-mse:rtmp"
+          ]
+        }
+      ]
+    },
+    "signature": null,
+    "status": "active",
+    "updated_at": "2019-03-28T09:09:16.319+00:00",
+    "username": null,
+    "uuid": "immedia0-9429-4a07-b7af-dd429d6d04o3"
   }
 ]

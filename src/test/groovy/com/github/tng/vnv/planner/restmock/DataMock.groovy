@@ -34,6 +34,7 @@
 
 package com.github.tng.vnv.planner.restmock
 
+import com.github.tng.vnv.planner.model.NetworkService
 import groovy.json.JsonSlurper
 import org.springframework.util.ResourceUtils
 
@@ -67,4 +68,13 @@ class DataMock {
         File file = ResourceUtils.getFile(resourceLocation)
         (file.exists()) ? new JsonSlurper().parseText(file.text) :  null
     }
+
+	static def getServiceByTag(String tag) {
+        getServices().findAll { it -> it.nsd.testing_tags?.contains(tag)}
+	}
+
+	static def getTestByTag(String tag) {
+        getTests().findAll {it -> it.testd.test_tags?.contains(tag)}
+	}
+
 }

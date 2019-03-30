@@ -34,20 +34,25 @@
 
 package com.github.tng.vnv.planner.controller
 
-import com.github.tng.vnv.planner.model.PackageCallback
-import com.github.tng.vnv.planner.model.Package
-import com.github.tng.vnv.planner.app.Scheduler
-import groovy.util.logging.Log
-import io.swagger.annotations.ApiResponse
-import io.swagger.annotations.ApiResponses
+import com.github.tng.vnv.planner.model.TestSuite
+import org.springframework.web.bind.annotation.ResponseBody
+
+import javax.validation.Valid
+
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
-
-import javax.validation.Valid
+import com.github.tng.vnv.planner.ScheduleManager
+import com.github.tng.vnv.planner.model.Package
+import com.github.tng.vnv.planner.model.PackageCallback
+import com.github.tng.vnv.planner.repository.NetworkServiceRepository
+import com.github.tng.vnv.planner.repository.TestRepository
+import groovy.util.logging.Log
+import io.swagger.annotations.ApiResponse
+import io.swagger.annotations.ApiResponses
 
 @Log
 @RestController
@@ -58,25 +63,33 @@ class CatalogueCallbackController {
     static final String PACKAGE_CREATED = 'CREATED'
 
     @Autowired
-    Scheduler scheduler
+    ScheduleManager scheduler
+	
+	@Autowired
+	TestRepository testRepository
+	
+	@Autowired
+	NetworkServiceRepository nsRepository
+
 
     @ApiResponses(value = [
             @ApiResponse(code = 400, message = 'Bad Request'),
             @ApiResponse(code = 404, message = 'Could not find package with that package_id'),
     ])
     @PostMapping('/on-change')
-    ResponseEntity<Void> onChange(@Valid @RequestBody PackageCallback body) {
-        //todo-Y2:this endpoint is an on-change callback and is specific to the asynchronous nature of the unpackaging
+    @ResponseBody
+    TestSuite onChange(@Valid @RequestBody PackageCallback body) {
         log.info("##vnvlog Executor.executeTests request. ")
+        TestSuite testSuite = new TestSuite();
         switch (body.eventName) {
             case PACKAGE_DELETED:
                 break
             case PACKAGE_CREATED:
                 break
             default:
-               scheduler.schedule(new Package(packageId: body.packageId))
+               testSuite = scheduler.create(new Package(packageId: body.packageId))
         }
-        ResponseEntity.ok().build()
+        testSuite
     }
 
 }

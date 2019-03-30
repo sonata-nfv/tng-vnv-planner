@@ -43,6 +43,7 @@ import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Repository
 import org.springframework.web.client.RestTemplate
+import org.springframework.web.util.UriComponentsBuilder
 
 import static com.github.tng.vnv.planner.utils.DebugHelper.callExternalEndpoint
 
@@ -65,15 +66,16 @@ class NetworkServiceRepository {
         callExternalEndpoint(restTemplateWithAuth.getForEntity(serviceMetadataEndpoint,
                 NetworkService.class, uuid),'NetworkServiceRepository.findByUuid',
                 serviceMetadataEndpoint).body
+                .reload()
     }
 
-    String printAgnosticObjByUuid(String uuid) {
-        callExternalEndpoint(restTemplateWithAuth.getForEntity(serviceMetadataEndpoint, Object.class, uuid),
-                'TestCatalogue.loadPackageMetadata',serviceMetadataEndpoint).body.each {println it}
-    }
-
-    List<NetworkService> findNssByTestTag(String tag) {
-        DebugHelper.callExternalEndpoint(restTemplateWithAuth.getForEntity(serviceListByTagEndpoint, NetworkService[], tag),
-                'TestPlanRepository.findNssByTestTag',serviceListByTagEndpoint).body
-    }
+	List<NetworkService> findNssByTestTag(String tag) {
+		UriComponentsBuilder builder = UriComponentsBuilder
+		.fromUriString(serviceListByTagEndpoint)
+		.queryParam("testing_tag", tag);
+		println "*****************  "+builder.toUriString()+" ****************************"
+		DebugHelper.callExternalEndpoint(restTemplateWithAuth.getForEntity(builder.toUriString(),  NetworkService[]),
+				'NetworkServiceRepository.findNssByTestTag',serviceListByTagEndpoint).body
+                .collect { it.reload() }
+	}
 }

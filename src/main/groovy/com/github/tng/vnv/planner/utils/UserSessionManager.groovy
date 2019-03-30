@@ -32,34 +32,38 @@
  * partner consortium (www.5gtango.eu).
  */
 
-package com.github.tng.vnv.planner.app
+package com.github.tng.vnv.planner.utils
 
-import com.github.tng.vnv.planner.Applicant
-import com.github.tng.vnv.planner.client.Curator
-import com.github.tng.vnv.planner.model.TestPlan
-import com.github.tng.vnv.planner.queue.TestPlanConsumer
-import groovy.util.logging.Log
+
+import com.github.tng.vnv.planner.model.Session
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Qualifier
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
+import org.springframework.web.client.RestTemplate
 
-
-@Log
 @Component
-class Provider extends Applicant {
+class UserSessionManager {
 
     @Autowired
-    Curator curator
+    @Qualifier('restTemplateWithoutAuth')
+    RestTemplate restTemplate
 
-    @Autowired
-    TestPlanConsumer testPlanConsumer
+    @Value('${app.gk.session.endpoint}')
+    def sessionEndpoint
 
-    def delegate(TestPlan testPlan) {
-        def res = Curator.proceedWith(testPlan)
-        //if res is valid, set TestPlan status like "proceeded to curator"
-        update(TestPlan)
-        //todo-gandreou: remove from testPlan in testPlans queue or better update the testSuite (testPlans list) in testSuites queue
+    @Value('${app.gk.session.username}')
+    def username
 
-        testPlanConsumer.remove(testPlan.uuid).from("TEST_PLAN_MESSAGE_QUEUE")
-        testPlanConsumer.update(testPlan.uuid).to("TEST_SUITE_MESSAGE_QUEUE")
+    @Value('${app.gk.session.password}')
+    def password
+
+    Session session
+
+    synchronized String retrieveValidBearerToken() {
+        if (session == null || session.invalid()) {
+            session = restTemplate.postForEntity(sessionEndpoint, [username: username, password: password], Session.class).body
+        }
+        session.token.access_token
     }
 }

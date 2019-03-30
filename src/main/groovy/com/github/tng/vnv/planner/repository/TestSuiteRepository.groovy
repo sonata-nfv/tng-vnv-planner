@@ -32,48 +32,13 @@
  * partner consortium (www.5gtango.eu).
  */
 
-package com.github.tng.vnv.planner.queue
+package com.github.tng.vnv.planner.repository
 
-import groovy.util.logging.Log
-import org.springframework.stereotype.Component
+import com.github.tng.vnv.planner.model.TestSuite
+import org.springframework.data.jpa.repository.JpaRepository
+import org.springframework.stereotype.Repository
 
+@Repository
+interface TestSuiteRepository extends JpaRepository<TestSuite, Long> {
 
-@Log
-@Component
-class TestPlanConsumer {
-    String id
-    String messageQueue
-    String action
-
-    def add(String uuid) {
-        action = 'ADD'
-        id = uuid
-        this
-    }
-    def remove(String uuid) {
-        action = 'REMOVE'
-        id = uuid
-        this
-    }
-
-
-    def update(String uuid) {
-        action = 'UPDATE'
-        id = uuid
-        this
-    }
-
-    def to(String mq) {
-        messageQueue = mq
-        //case ADD
-        //todo-gandreou: return the result for the ADD of the item from the queue
-        //case REMOVE
-        //todo-gandreou: return the result for the REMOVE of the item from the queue
-        //case UPDATE
-        //todo-gandreou: return the result for the UPDATE of the item from the queue
-    }
-
-    def from(String mq) {
-        from(mq)
-    }
 }

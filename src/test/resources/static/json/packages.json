@@ -51,7 +51,7 @@
           },
           "source": "Definitions/Definitions/test-descriptor.yml",
           "tags": [],
-          "uuid": "input0ts-75f5-4ca1-90c8-12ec80a79821"
+          "uuid": "input0ts-75f5-4ca1-90c8-12ec80a79836"
         }
       ],
       "package_file_name": "eu.5gtango.ports-test.0.1.tgo",
@@ -159,7 +159,7 @@
           "tags": [
             "eu.5gtango"
           ],
-          "uuid": "402d0a3f-09eb-4979-86f5-9c1aeabfa0e4"
+          "uuid": "input0ns-f213-4fae-8d3f-04358e1e1445"
         },
         {
           "algorithm": "SHA-256",

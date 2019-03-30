@@ -34,47 +34,67 @@
 
 package com.github.tng.vnv.planner.model
 
-
+import com.fasterxml.jackson.annotation.JsonIgnore
 import groovy.transform.EqualsAndHashCode
+import groovy.transform.Sortable
 import io.swagger.annotations.ApiModelProperty
 
+import javax.persistence.Column
+import javax.persistence.Entity
+import javax.persistence.GeneratedValue
+import javax.persistence.Id
+import javax.persistence.JoinColumn
+import javax.persistence.Lob
+import javax.persistence.ManyToOne
+import javax.persistence.Table
 import javax.validation.constraints.NotNull
 
-@EqualsAndHashCode
-class TestPlan {
+@Entity
+@Table(name="Test_Plan")
+@Sortable(includes = ['index'])
+class TestPlan implements Serializable {
+    @Id
+    @GeneratedValue
+    Long id
+
+    @JsonIgnore
+    @ManyToOne
+    @JoinColumn(name = "testSuiteId", referencedColumnName = "id", nullable = false)
+    TestSuite testSuite
+
     String uuid
     String packageId
-    String nsdUuid
-    String tdUuid
-    String index
+    String serviceUuid
+    String testUuid
+    int index
     String status
-    NetworkServiceDescriptor nsd
-    TestDescriptor testd
+    String description
+    @Lob
+    @Column(name = "nsd", columnDefinition="BLOB")
+    BlobOfLinkedHashMap nsd
+    @Lob
+    @Column(name = "testd", columnDefinition="BLOB")
+    BlobOfLinkedHashMap testd
 
-    @Override
-    public String toString() {
-        final StringBuffer sb = new StringBuffer("\n - TestPlan{ \n");
-        sb.append("uuid='").append(uuid).append('\'');
-        sb.append(", index='").append(index).append('\'');
-        sb.append(", nsdUuid='").append(nsdUuid).append('\'');
-        sb.append(", tdUuid='").append(tdUuid).append('\'');
-        sb.append(", status='").append(status).append('\'');
-        sb.append(", \nnsd.name='").append(nsd.name)
-                .append(", nsd.version='").append(nsd.version).append('\'');
-        sb.append(", \ntd.name='").append(testd.name)
-                .append(", td.version='").append(testd.version).append('\'');
-        sb.append('}');
-        return sb.toString();
+    boolean equals(o) {
+        if ((o.uuid).contains(uuid)) return true
+        return false
+    }
+
+    int hashCode() {
+        return uuid.hashCode()
     }
 }
 
+class BlobOfLinkedHashMap extends LinkedHashMap implements Serializable {}
+
 @EqualsAndHashCode
 class TestPlanRequest {
-    NetworkServiceDescriptor nsd
-    TestDescriptor testd
+    def nsd
+    def testd
     Boolean lastTest = false
     List<TestPlanCallback> testPlanCallbacks = [
-            new TestPlanCallback(eventActor: 'Curator', url: '/test-plans/on-change/completed', status:TEST_PLAN_STATUS.COMPLETED),
+            new TestPlanCallback(eventActor: 'Curator', url: '/test-plans/on-change/completed', status:'COMPLETED'),
             new TestPlanCallback(eventActor: 'Curator', url: '/test-plans/on-change'),
     ]
 }
@@ -92,26 +112,21 @@ class TestPlanCallback {
             value = 'Event Actor',
             allowEmptyValue = false,
             example = 'Curator, Executor',
-            required = true
-    )
+            required = true)
     @NotNull
     String eventActor
 
     @ApiModelProperty(
             value = 'Callback URL',
             allowEmptyValue = false,
-            example = '/test-plans/on-change',
-            required = true
-    )
-    @NotNull
+            example = '/test-plans/on-change')
     String url
 
     @ApiModelProperty(
             value = 'Test Plan Status',
             allowEmptyValue = false,
             example = 'STARTING, COMPLETED, CANCELLING, CANCELLED, ERROR',
-            required = true
-    )
+            required = true)
     @NotNull
     String status
 
@@ -123,8 +138,7 @@ class TestPlanCallback {
             value = 'Test Plan Repository URI',
             allowEmptyValue = false,
             example = 'tng-cat, catalog, or xx.xx',
-            required = false
-    )
+            required = false)
     @NotNull
     String testPlanRepository
 
@@ -136,19 +150,7 @@ class TestPlanCallback {
             value = 'Test Results Repository URI',
             allowEmptyValue = false,
             example = 'tng-res, results, or xx.xx',
-            required = false
-    )
+            required = false)
     @NotNull
     String testResultsRepository
-}
-
-
-enum TEST_PLAN_STATUS{
-    SCHEDULING('SCHEDULING'),
-    SCHEDULED('SCHEDULED'),
-    STARTING('STARTING'),
-    COMPLETED('COMPLETED'),
-    CANCELLING('CANCELLING'),
-    CANCELLED('CANCELLED'),
-    ERROR('ERROR')
 }

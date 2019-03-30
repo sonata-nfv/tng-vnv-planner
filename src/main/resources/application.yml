@@ -33,9 +33,10 @@
 server:
   port: 6100
   contextPath: /tng-vnv-planner
-spring.jackson.property-naming-strategy: SNAKE_CASE
+spring:
+  jackson.property-naming-strategy: SNAKE_CASE
 api:
-  name: 5GTANGO VnV Planner
+  name: tng-vnv-planner
   description: An H2020 5GTANGO project
   version: 0.0.1
   host: tng-vnv-planner:6100
@@ -54,14 +55,14 @@ app:
     service.list.endpoint: ${app.gk.base.url}/services
     service.list.by.tag.endpoint: ${app.gk.base.url}/services
     package.list.endpoint: ${app.gk.base.url}/packages
-    service.metadata.endpoint: ${app.gk.base.url}/services/{networkServiceId}
+    service.metadata.endpoint: ${app.gk.base.url}/services/{uuid}
     package.metadata.endpoint: ${app.gk.base.url}/packages/{packageId}
   vnvgk:
     host: tng-api-gtw
     base.url: http://${app.vnvgk.host}:5000/api/v3
     test.list.endpoint: ${app.vnvgk.base.url}/tests/descriptors
     test.list.by.tag.endpoint: ${app.vnvgk.base.url}/tests/descriptors
-    test.metadata.endpoint: ${app.vnvgk.base.url}/tests/descriptors/{testUuid}
+    test.metadata.endpoint: ${app.vnvgk.base.url}/tests/descriptors/{uuid}
   cat:
     host: tng-cat
     base.url: http://${app.cat.host}:4011/api/catalogues/v2
@@ -82,3 +83,38 @@ app:
     size:
       core: 10
       max: 20
+
+# STATIC MESSAGES:
+  NOT_MATCHING_TEST_TAGS: '[NOT MATCHING TEST TAGS]'
+  NOT_AVAILABLE_DATA: '[NOT AVAILABLE DATA]'
+
+# ===============================
+# = DATA SOURCE
+# ===============================
+
+## ===============================
+## = Postgresql
+## ===============================
+## Set here configurations for the database connection
+#spring.datasource.url: jdbc:postgresql://localhost:5432/springbootdb
+#spring.datasource.username: postgres
+#spring.datasource.password: postgres@123
+## Keep the connection alive if idle for a long time (needed in production)
+#spring.datasource.testWhileIdle: true
+#spring.datasource.validationQuery: SELECT 1
+#
+## ===============================
+## = JPA / HIBERNATE
+## ===============================
+## Show or not log for each sql query
+#spring.jpa.show-sql: true
+## Hibernate ddl auto (create, create-drop, update): with "create-drop" the database
+## schema will be automatically created afresh for every start of application
+#spring.jpa.hibernate.ddl-auto: create-drop
+#
+## Naming strategy
+#spring.jpa.hibernate.naming.implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyHbmImpl
+#spring.jpa.hibernate.naming.physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
+#
+## Allows Hibernate to generate SQL optimized for a particular DBMS
+#spring.jpa.properties.hibernate.dialect: org.hibernate.dialect.PostgreSQLDialect

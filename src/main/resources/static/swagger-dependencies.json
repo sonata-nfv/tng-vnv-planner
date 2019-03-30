@@ -13,10 +13,41 @@
             "title": "Login",
             "type": "object"
         },
+        "NetworkService": {
+            "properties": {
+                "descriptor": {
+                    "$ref": "#/definitions/NetworkServiceDescriptor"
+                },
+                "nsd": {
+                    "type": "object"
+                },
+                "package_id": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "uuid": {
+                    "allowEmptyValue": false,
+                    "type": "string"
+                }
+            },
+            "required": [
+                "uuid"
+            ],
+            "title": "NetworkService",
+            "type": "object"
+        },
         "NetworkServiceDescriptor": {
             "properties": {
                 "name": {
                     "type": "string"
+                },
+                "service_platforms": {
+                    "items": {
+                        "type": "string"
+                    },
+                    "type": "array"
                 },
                 "testing_tags": {
                     "items": {
@@ -53,22 +84,50 @@
             "title": "Session",
             "type": "object"
         },
+        "Test": {
+            "properties": {
+                "descriptor": {
+                    "$ref": "#/definitions/TestDescriptor"
+                },
+                "package_id": {
+                    "type": "string"
+                },
+                "testd": {
+                    "type": "object"
+                },
+                "uuid": {
+                    "allowEmptyValue": false,
+                    "type": "string"
+                }
+            },
+            "required": [
+                "uuid"
+            ],
+            "title": "Test",
+            "type": "object"
+        },
         "TestDescriptor": {
             "properties": {
+                "confirm_required": {
+                    "type": "string"
+                },
                 "description": {
                     "type": "string"
                 },
                 "name": {
                     "type": "string"
                 },
-                "test_execution": {
+                "service_platforms": {
                     "items": {
-                        "$ref": "#/definitions/TestTag"
+                        "type": "string"
                     },
                     "type": "array"
                 },
-                "test_type": {
-                    "type": "string"
+                "test_tags": {
+                    "items": {
+                        "type": "string"
+                    },
+                    "type": "array"
                 },
                 "uuid": {
                     "type": "string"
@@ -85,26 +144,40 @@
         },
         "TestPlan": {
             "properties": {
-                "index": {
+                "description": {
                     "type": "string"
+                },
+                "id": {
+                    "format": "int64",
+                    "type": "integer"
+                },
+                "index": {
+                    "format": "int32",
+                    "type": "integer"
                 },
                 "nsd": {
-                    "$ref": "#/definitions/NetworkServiceDescriptor"
-                },
-                "nsd_uuid": {
-                    "type": "string"
+                    "additionalProperties": {
+                        "type": "object"
+                    },
+                    "type": "object"
                 },
                 "package_id": {
+                    "type": "string"
+                },
+                "service_uuid": {
                     "type": "string"
                 },
                 "status": {
                     "type": "string"
                 },
-                "td_uuid": {
+                "test_uuid": {
                     "type": "string"
                 },
                 "testd": {
-                    "$ref": "#/definitions/TestDescriptor"
+                    "additionalProperties": {
+                        "type": "object"
+                    },
+                    "type": "object"
                 },
                 "uuid": {
                     "type": "string"
@@ -113,16 +186,90 @@
             "title": "TestPlan",
             "type": "object"
         },
-        "TestTag": {
+        "TestPlanCallback": {
             "properties": {
-                "tag_id": {
+                "event_actor": {
+                    "allowEmptyValue": false,
+                    "description": "Event Actor",
+                    "example": "Curator, Executor",
                     "type": "string"
                 },
-                "test_tag": {
+                "status": {
+                    "allowEmptyValue": false,
+                    "description": "Test Plan Status",
+                    "example": "STARTING, COMPLETED, CANCELLING, CANCELLED, ERROR",
+                    "type": "string"
+                },
+                "test_plan_repository": {
+                    "allowEmptyValue": false,
+                    "description": "Test Plan Repository URI",
+                    "example": "tng-cat, catalog, or xx.xx",
+                    "type": "string"
+                },
+                "test_plan_uuid": {
+                    "allowEmptyValue": false,
+                    "type": "string"
+                },
+                "test_results_repository": {
+                    "allowEmptyValue": false,
+                    "description": "Test Results Repository URI",
+                    "example": "tng-res, results, or xx.xx",
+                    "type": "string"
+                },
+                "test_results_uuid": {
+                    "allowEmptyValue": false,
+                    "type": "string"
+                },
+                "url": {
+                    "allowEmptyValue": false,
+                    "description": "Callback URL",
+                    "example": "/test-plans/on-change",
                     "type": "string"
                 }
             },
-            "title": "TestTag",
+            "required": [
+                "event_actor",
+                "status",
+                "test_plan_uuid",
+                "test_results_uuid"
+            ],
+            "title": "TestPlanCallback",
+            "type": "object"
+        },
+        "TestPlanRequest": {
+            "properties": {
+                "last_test": {
+                    "type": "boolean"
+                },
+                "nsd": {
+                    "type": "object"
+                },
+                "test_plan_callbacks": {
+                    "items": {
+                        "$ref": "#/definitions/TestPlanCallback"
+                    },
+                    "type": "array"
+                },
+                "testd": {
+                    "type": "object"
+                }
+            },
+            "title": "TestPlanRequest",
+            "type": "object"
+        },
+        "TestPlanResponse": {
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "test_plan": {
+                    "$ref": "#/definitions/TestPlan"
+                }
+            },
+            "title": "TestPlanResponse",
             "type": "object"
         },
         "Token": {
@@ -147,7 +294,7 @@
             "url": "https://github.com/sonata-nfv/tng-vnv-planner/blob/master/LICENSE"
         },
         "termsOfService": "https://5gtango.eu/",
-        "title": "5GTANGO VnV Planner Dependencies' API",
+        "title": "tng-vnv-planner Dependencies' API",
         "version": "0.0.1"
     },
     "paths": {
@@ -159,12 +306,12 @@
                 "operationId": "curateTestPlanUsingPOST",
                 "parameters": [
                     {
-                        "description": "testPlan",
+                        "description": "testPlanRequest",
                         "in": "body",
-                        "name": "testPlan",
+                        "name": "testPlanRequest",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/TestPlan"
+                            "$ref": "#/definitions/TestPlanRequest"
                         }
                     }
                 ],
@@ -175,7 +322,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/TestPlan"
+                            "$ref": "#/definitions/TestPlanResponse"
                         }
                     },
                     "201": {
@@ -267,6 +414,15 @@
         "/mock/gk/services": {
             "get": {
                 "operationId": "findServicesUsingGET",
+                "parameters": [
+                    {
+                        "description": "testing_tag",
+                        "in": "query",
+                        "name": "testing_tag",
+                        "required": false,
+                        "type": "string"
+                    }
+                ],
                 "produces": [
                     "*/*"
                 ],
@@ -274,7 +430,10 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "object"
+                            "items": {
+                                "$ref": "#/definitions/NetworkService"
+                            },
+                            "type": "array"
                         }
                     },
                     "401": {
@@ -293,14 +452,14 @@
                 ]
             }
         },
-        "/mock/gk/services/{networkServiceId}": {
+        "/mock/gk/services/{uuid}": {
             "get": {
                 "operationId": "findServiceUsingGET",
                 "parameters": [
                     {
-                        "description": "networkServiceId",
+                        "description": "uuid",
                         "in": "path",
-                        "name": "networkServiceId",
+                        "name": "uuid",
                         "required": true,
                         "type": "string"
                     }
@@ -380,6 +539,15 @@
         "/mock/gk/tests/descriptors": {
             "get": {
                 "operationId": "findTestsUsingGET",
+                "parameters": [
+                    {
+                        "description": "test_tag",
+                        "in": "query",
+                        "name": "test_tag",
+                        "required": false,
+                        "type": "string"
+                    }
+                ],
                 "produces": [
                     "*/*"
                 ],
@@ -387,7 +555,10 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "object"
+                            "items": {
+                                "$ref": "#/definitions/Test"
+                            },
+                            "type": "array"
                         }
                     },
                     "401": {
@@ -406,14 +577,14 @@
                 ]
             }
         },
-        "/mock/gk/tests/descriptors/{testUuid}": {
+        "/mock/gk/tests/descriptors/{uuid}": {
             "get": {
                 "operationId": "findTestUsingGET",
                 "parameters": [
                     {
-                        "description": "testUuid",
+                        "description": "uuid",
                         "in": "path",
-                        "name": "testUuid",
+                        "name": "uuid",
                         "required": true,
                         "type": "string"
                     }

@@ -32,35 +32,28 @@
  * partner consortium (www.5gtango.eu).
  */
 
-package com.github.tng.vnv.planner.queue
+package com.github.tng.vnv.planner.service
 
+import com.github.tng.vnv.planner.model.TestSuite
+import com.github.tng.vnv.planner.repository.TestSuiteRepository
+
+
+//import com.github.tng.vnv.planner.repository.TestSuiteJpaRepository
 import groovy.util.logging.Log
-import org.springframework.stereotype.Component
-
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.stereotype.Service
 
 @Log
-@Component
-class TestPlanProducer {
+@Service
+class TestSuiteService {
 
-    String id
-    String messageQueue
-    String action
+    @Autowired
+    TestSuiteRepository testSuiteRepository
 
-    def add(String uuid) {
-        action = 'ADD'
-        id = uuid
-        this
+    TestSuite getOne(Long id){
+        testSuiteRepository.getOne(id)
     }
-
-    def to(String mq) {
-        messageQueue = mq
-        //fixme-gandreou: clean up what (and how) will b kept from the MQ's and what not.
-        //case ADD
-        //todo-gandreou: return the result for the ADD of the item from the queue
-        //case REMOVE
-        //todo-gandreou: return the result for the REMOVE of the item from the queue
-        //case UPDATE
-        //todo-gandreou: return the result for the UPDATE of the item from the queue
+    TestSuite save(TestSuite testSuite){
+        testSuiteRepository.save(testSuite)
     }
-
 }
