@@ -36,25 +36,22 @@ package com.github.tng.vnv.planner.model
 
 import com.fasterxml.jackson.annotation.JsonIgnore
 import groovy.transform.EqualsAndHashCode
+import groovy.transform.Sortable
 import io.swagger.annotations.ApiModelProperty
-import org.hibernate.annotations.Fetch
-import org.hibernate.annotations.FetchMode
 
-import javax.persistence.CascadeType
 import javax.persistence.Column
 import javax.persistence.Entity
-import javax.persistence.FetchType
 import javax.persistence.GeneratedValue
 import javax.persistence.Id
 import javax.persistence.JoinColumn
 import javax.persistence.Lob
 import javax.persistence.ManyToOne
-import javax.persistence.OneToMany
 import javax.persistence.Table
 import javax.validation.constraints.NotNull
 
 @Entity
 @Table(name="Test_Plan")
+@Sortable(includes = ['index'])
 class TestPlan implements Serializable {
     @Id
     @GeneratedValue
@@ -67,14 +64,17 @@ class TestPlan implements Serializable {
 
     String uuid
     String packageId
+    String serviceUuid
+    String testUuid
     int index
     String status
+    String description
     @Lob
     @Column(name = "nsd", columnDefinition="BLOB")
-    MyLinkedHashMap nsd
+    BlobOfLinkedHashMap nsd
     @Lob
     @Column(name = "testd", columnDefinition="BLOB")
-    MyLinkedHashMap testd
+    BlobOfLinkedHashMap testd
 
     boolean equals(o) {
         if ((o.uuid).contains(uuid)) return true
@@ -86,9 +86,7 @@ class TestPlan implements Serializable {
     }
 }
 
-class MyLinkedHashMap extends LinkedHashMap implements Serializable {
-
-}
+class BlobOfLinkedHashMap extends LinkedHashMap implements Serializable {}
 
 @EqualsAndHashCode
 class TestPlanRequest {

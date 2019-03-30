@@ -92,6 +92,9 @@
         },
         "TestPlan": {
             "properties": {
+                "description": {
+                    "type": "string"
+                },
                 "id": {
                     "format": "int64",
                     "type": "integer"
@@ -109,7 +112,13 @@
                 "package_id": {
                     "type": "string"
                 },
+                "service_uuid": {
+                    "type": "string"
+                },
                 "status": {
+                    "type": "string"
+                },
+                "test_uuid": {
                     "type": "string"
                 },
                 "testd": {

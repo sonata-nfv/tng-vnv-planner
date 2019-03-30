@@ -43,7 +43,6 @@ import javax.validation.constraints.NotNull
 
 class Test {
     @ApiModelProperty(required = true)
-    @NotNull
     String uuid
     String packageId
     def testd
