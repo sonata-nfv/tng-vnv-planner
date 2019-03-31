@@ -49,6 +49,21 @@ class Package {
 class PackageCallback {
 
     @ApiModelProperty(
+            value = 'The reference id of the uploaded package that will generate test plans as pair of network services and tests',
+            allowEmptyValue = false,
+            required = true
+    )
+    @NotNull
+    String packageId
+
+    @ApiModelProperty(
+                value = 'Additional validation step before every test plan progresses towards execution',
+            allowEmptyValue = true,
+            example = 'true'
+    )
+    boolean confirmRequired
+
+    @ApiModelProperty(
             value = 'Event Name',
             allowEmptyValue = true,
             example = 'UPDATED',
@@ -56,10 +71,6 @@ class PackageCallback {
     )
     @NotNull
     String eventName
-
-    @ApiModelProperty(required = true)
-    @NotNull
-    String packageId
 
     String packageLocation
 

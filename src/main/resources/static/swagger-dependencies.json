@@ -144,6 +144,9 @@
         },
         "TestPlan": {
             "properties": {
+                "description": {
+                    "type": "string"
+                },
                 "id": {
                     "format": "int64",
                     "type": "integer"
@@ -153,21 +156,21 @@
                     "type": "integer"
                 },
                 "nsd": {
-                    "additionalProperties": {
-                        "type": "object"
-                    },
                     "type": "object"
                 },
                 "package_id": {
                     "type": "string"
                 },
+                "service_uuid": {
+                    "type": "string"
+                },
                 "status": {
                     "type": "string"
                 },
+                "test_uuid": {
+                    "type": "string"
+                },
                 "testd": {
-                    "additionalProperties": {
-                        "type": "object"
-                    },
                     "type": "object"
                 },
                 "uuid": {

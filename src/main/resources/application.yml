@@ -84,6 +84,9 @@ app:
       core: 10
       max: 20
 
+# STATIC MESSAGES:
+  NOT_MATCHING_TEST_TAGS: '[NOT MATCHING TEST TAGS]'
+  NOT_AVAILABLE_DATA: '[NOT AVAILABLE DATA]'
 
 # ===============================
 # = DATA SOURCE

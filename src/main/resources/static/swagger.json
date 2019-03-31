@@ -33,6 +33,12 @@
         },
         "PackageCallback": {
             "properties": {
+                "confirm_required": {
+                    "allowEmptyValue": true,
+                    "description": "Additional validation step before every test plan progresses towards execution",
+                    "example": true,
+                    "type": "boolean"
+                },
                 "event_name": {
                     "allowEmptyValue": true,
                     "description": "Event Name",
@@ -41,6 +47,7 @@
                 },
                 "package_id": {
                     "allowEmptyValue": false,
+                    "description": "The reference id of the uploaded package that will generate test plans as pair of network services and tests",
                     "type": "string"
                 },
                 "package_location": {
@@ -92,6 +99,9 @@
         },
         "TestPlan": {
             "properties": {
+                "description": {
+                    "type": "string"
+                },
                 "id": {
                     "format": "int64",
                     "type": "integer"
@@ -101,21 +111,21 @@
                     "type": "integer"
                 },
                 "nsd": {
-                    "additionalProperties": {
-                        "type": "object"
-                    },
                     "type": "object"
                 },
                 "package_id": {
                     "type": "string"
                 },
+                "service_uuid": {
+                    "type": "string"
+                },
                 "status": {
                     "type": "string"
                 },
+                "test_uuid": {
+                    "type": "string"
+                },
                 "testd": {
-                    "additionalProperties": {
-                        "type": "object"
-                    },
                     "type": "object"
                 },
                 "uuid": {
@@ -618,23 +628,16 @@
                 "consumes": [
                     "application/json"
                 ],
-                "operationId": "updateTestPlanUsingPUT",
+                "operationId": "updateUsingPUT",
                 "parameters": [
                     {
-                        "description": "testPlan",
+                        "description": "testSuite",
                         "in": "body",
-                        "name": "testPlan",
+                        "name": "testSuite",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/TestPlan"
+                            "$ref": "#/definitions/TestSuite"
                         }
-                    },
-                    {
-                        "description": "uuid",
-                        "in": "path",
-                        "name": "uuid",
-                        "required": true,
-                        "type": "string"
                     }
                 ],
                 "produces": [
@@ -644,11 +647,14 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/TestPlan"
+                            "$ref": "#/definitions/TestSuite"
                         }
                     },
                     "201": {
                         "description": "Created"
+                    },
+                    "400": {
+                        "description": "Bad Request"
                     },
                     "401": {
                         "description": "Unauthorized"
@@ -660,7 +666,7 @@
                         "description": "Not Found"
                     }
                 },
-                "summary": "updateTestPlan",
+                "summary": "update",
                 "tags": [
                     "test-plan-controller"
                 ]

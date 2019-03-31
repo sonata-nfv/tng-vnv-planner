@@ -63,10 +63,11 @@ class TestPlanController {
         scheduler.create(testSuite)
     }
 
+    @ApiResponses(value = [@ApiResponse(code = 400, message = 'Bad Request')])
     @PutMapping('{uuid}')
     @ResponseBody
-    TestPlan updateTestPlan(@RequestBody TestPlan testPlan, @PathVariable String uuid) {
-        scheduler.update(testPlan)
+    TestSuite update(@Valid @RequestBody TestSuite testSuite) {
+        scheduler.update(testSuite)
     }
 
     @DeleteMapping('{uuid}')

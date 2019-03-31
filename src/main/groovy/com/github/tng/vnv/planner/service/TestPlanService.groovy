@@ -66,7 +66,7 @@ class TestPlanService {
 
     Set<TestPlan> createByService(NetworkService service) {
         def testPlans = [] as HashSet
-        service = networkServiceService.findByUuid(service.uuid).reload()
+        service = networkServiceService.findByUuid(service.uuid)?.reload()
         testService.findByService(service)?.each { test ->
             if(service.uuid != null && test.uuid!=null)
                 testPlans.add(new TestPlan(uuid: service.uuid+test.uuid, nsd:service.nsd, testd:test.testd))
@@ -113,7 +113,7 @@ class TestPlanService {
 
     TestPlan save(TestPlan testPlan){
         testPlan.uuid = testPlan.uuid?:UUID.randomUUID().toString()
-        testPlanRepository.save(testPlan)
+        testPlanRepository.save(testPlan.blob())
         testPlanRestRepository.create(testPlan)
     }
 
