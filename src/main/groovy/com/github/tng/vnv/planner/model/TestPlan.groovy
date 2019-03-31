@@ -35,6 +35,7 @@
 package com.github.tng.vnv.planner.model
 
 import com.fasterxml.jackson.annotation.JsonIgnore
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import groovy.transform.EqualsAndHashCode
 import groovy.transform.Sortable
 import io.swagger.annotations.ApiModelProperty
@@ -47,6 +48,7 @@ import javax.persistence.JoinColumn
 import javax.persistence.Lob
 import javax.persistence.ManyToOne
 import javax.persistence.Table
+import javax.persistence.Transient
 import javax.validation.constraints.NotNull
 
 @Entity
@@ -69,12 +71,32 @@ class TestPlan implements Serializable {
     int index
     String status
     String description
+    @Transient
+    def nsd
+    @Transient
+    def testd
+
+    @JsonIgnore
     @Lob
     @Column(name = "nsd", columnDefinition="BLOB")
-    BlobOfLinkedHashMap nsd
+    BlobOfLinkedHashMap nsdBlob
+
+    @JsonIgnore
     @Lob
     @Column(name = "testd", columnDefinition="BLOB")
-    BlobOfLinkedHashMap testd
+    BlobOfLinkedHashMap testdBlob
+
+
+    TestPlan blob(){
+            nsdBlob = nsd
+            testdBlob = testd
+        this
+    }
+    TestPlan unBlob(){
+            nsd = nsdBlob
+            testd = testdBlob
+        this
+    }
 
     boolean equals(o) {
         if ((o.uuid).contains(uuid)) return true

@@ -113,7 +113,7 @@ class TestPlanService {
 
     TestPlan save(TestPlan testPlan){
         testPlan.uuid = testPlan.uuid?:UUID.randomUUID().toString()
-        testPlanRepository.save(testPlan)
+        testPlanRepository.save(testPlan.blob())
         testPlanRestRepository.create(testPlan)
     }
 

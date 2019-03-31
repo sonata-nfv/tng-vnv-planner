@@ -10,7 +10,7 @@
       "name": "http-benchmark-test",
       "version": "0.3",
       "author": "Felipe Vicens, ATOS",
-      "description": "\"Test descriptor for http benchmarking\"\n",
+      "description": "Test descriptor for http benchmarking",
       "test_type": "bash",
       "validate": "true",
       "test_configuration_parameters": [
@@ -39,7 +39,6 @@
     },
     "updated_at": "2018-08-07T15:19:57.887+00:00",
     "updated_at": "2018-08-07T15:19:57.887+00:00",
-    "username": null,
     "uuid": "input0ts-75f5-4ca1-90c8-12ec80a79836"
   },
   {
@@ -49,7 +48,7 @@
     "status": "active",
     "testd": {
       "author": "Felipe Vicens, ATOS",
-      "description": "\"Test descriptor for http benchmarking\"\n",
+      "description": "Test descriptor for http benchmarking",
       "descriptor_schema": "https://raw.githubusercontent.com/sonata-nfv/tng-schema/master/test-descriptor/testdescriptor-schema.yml",
       "name": "http-benchmark-test",
       "test_category": [
@@ -81,7 +80,7 @@
       "version": "0.3"
     },
     "updated_at": "2018-08-07T15:19:57.887+00:00",
-    "username": null,
+    "username": "paco",
     "uuid": "9bbbd636-75f5-4ca1-90c8-12ec80a79875"
   },
   {
@@ -91,7 +90,7 @@
     "status": "active",
     "testd": {
       "author": "Felipe Vicens, ATOS",
-      "description": "\"Test descriptor for http benchmarking\"\n",
+      "description": "Test descriptor for http benchmarking",
       "descriptor_schema": "https://raw.githubusercontent.com/sonata-nfv/tng-schema/master/test-descriptor/testdescriptor-schema.yml",
       "name": "http-benchmark-test",
       "test_category": [
@@ -123,7 +122,6 @@
       "version": "0.2"
     },
     "updated_at": "2018-08-07T15:13:26.118+00:00",
-    "username": null,
     "uuid": "ccbf8bad-2534-4308-b47c-4034133b3116"
   },
   {
@@ -133,7 +131,7 @@
     "status": "active",
     "testd": {
       "author": "Felipe Vicens, ATOS",
-      "description": "\"Test descriptor for http benchmarking\"\n",
+      "description": "Test descriptor for http benchmarking",
       "descriptor_schema": "https://raw.githubusercontent.com/sonata-nfv/tng-schema/master/test-descriptor/testdescriptor-schema.yml",
       "name": "http-benchmark-test",
       "test_category": [
@@ -165,7 +163,6 @@
       "version": "0.1"
     },
     "updated_at": "2018-08-05T10:00:17.184+00:00",
-    "username": null,
     "uuid": "fe7ec2a8-644f-4788-9aa7-bc2ff0598157"
   },
   {
@@ -177,7 +174,7 @@
     "status": "active",
     "testd": {
       "author": "Felipe Vicens, ATOS",
-      "description": "\"Test descriptor for http benchmarking advanced proxy\"\n",
+      "description": "Test descriptor for http benchmarking advanced proxy",
       "descriptor_schema": "https://raw.githubusercontent.com/sonata-nfv/tng-schema/master/test-descriptor/testdescriptor-schema.yml",
       "name": "test-http-benchmark-advanced-proxy",
       "test_category": [
@@ -208,7 +205,6 @@
       "version": "0.1"
     },
     "updated_at": "2018-09-11T07:23:04.942+00:00",
-    "username": null,
     "uuid": "b68dbe19-5c02-4865-8c4b-5e43ada1b67d"
   },
   {
@@ -220,7 +216,7 @@
     "status": "active",
     "testd": {
       "author": "Felipe Vicens, ATOS",
-      "description": "\"Test descriptor for http benchmarking advanced proxy\"\n",
+      "description": "Test descriptor for http benchmarking advanced proxy",
       "descriptor_schema": "https://raw.githubusercontent.com/sonata-nfv/tng-schema/master/test-descriptor/testdescriptor-schema.yml",
       "name": "test-http-benchmark-advanced-proxy",
       "test_category": [
@@ -252,7 +248,6 @@
       "version": "0.2"
     },
     "updated_at": "2018-09-11T07:23:04.942+00:00",
-    "username": null,
     "uuid": "b68dbe19-5c02-4865-8c4b-5e43ada1b67c"
   },
   {
@@ -264,7 +259,7 @@
     "status": "confirmed",
     "testd": {
       "author": "Felipe Vicens, ATOS",
-      "description": "\"Test descriptor for http benchmarking advanced proxy\"\n",
+      "description": "Test descriptor for http benchmarking advanced proxy",
       "descriptor_schema": "https://raw.githubusercontent.com/sonata-nfv/tng-schema/master/test-descriptor/testdescriptor-schema.yml",
       "name": "test-http-benchmark-advanced-proxy",
       "test_category": [
@@ -297,7 +292,6 @@
       "version": "0.2"
     },
     "updated_at": "2018-09-11T07:23:04.942+00:00",
-    "username": null,
     "uuid": "b68dbe19-5c02-4865-8c4b-5e43ada1b67b"
   },
   {
@@ -309,7 +303,7 @@
     "status": "active",
     "testd": {
       "author": "Felipe Vicens, ATOS",
-      "description": "\"Test descriptor for http benchmarking advanced\"\n",
+      "description": "Test descriptor for http benchmarking advanced",
       "descriptor_schema": "https://raw.githubusercontent.com/sonata-nfv/tng-schema/master/test-descriptor/testdescriptor-schema.yml",
       "name": "test-http-benchmark-advanced",
       "test_category": [
@@ -598,7 +592,6 @@
     },
 
     "updated_at": "2019-03-28T09:51:37.810+00:00",
-    "username": null,
     "uuid": "immedia0-8cc7-47a9-9112-6wff9e88wu2k"
   }
 ]

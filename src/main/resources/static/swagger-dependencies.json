@@ -156,9 +156,6 @@
                     "type": "integer"
                 },
                 "nsd": {
-                    "additionalProperties": {
-                        "type": "object"
-                    },
                     "type": "object"
                 },
                 "package_id": {
@@ -174,9 +171,6 @@
                     "type": "string"
                 },
                 "testd": {
-                    "additionalProperties": {
-                        "type": "object"
-                    },
                     "type": "object"
                 },
                 "uuid": {

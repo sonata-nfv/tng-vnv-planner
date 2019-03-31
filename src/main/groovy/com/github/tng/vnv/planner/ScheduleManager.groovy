@@ -116,11 +116,12 @@ class ScheduleManager {
             tp.status = TEST_PLAN_STATUS.REJECTED
             tp.description = tp.description+" $not_available_data"
         } else {
-            def service = (tp.serviceUuid != null) ?
-                    networkServiceService.findByUuid(tp.serviceUuid)?.reload() :
-                    new NetworkService(uuid: tp.nsd?.uuid?: UUID.randomUUID().toString() + 'DIY', nsd: tp.nsd)?.reload()
-            def test = (tp.testUuid != null) ? testService.findByUuid(tp.testUuid)?.reload() :
-                    new Test(uuid: tp.testd?.uuid ?: UUID.randomUUID().toString() + 'DIY', testd: tp.testd)?.reload()
+            def service = (tp.serviceUuid != null) ? networkServiceService.findByUuid(tp.serviceUuid) :
+                    new NetworkService(uuid: tp.nsd?.uuid?: UUID.randomUUID().toString() + 'DIY', nsd: tp.nsd)
+            service?.reload()
+            def test = (tp.testUuid != null) ? testService.findByUuid(tp.testUuid) :
+                    new Test(uuid: tp.testd?.uuid ?: UUID.randomUUID().toString() + 'DIY', testd: tp.testd)
+            test?.reload()
             if(service == null || test == null){
                 tp.status = TEST_PLAN_STATUS.REJECTED
                 tp.description = tp.description +" $not_available_data"

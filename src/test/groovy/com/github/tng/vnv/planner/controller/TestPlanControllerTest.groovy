@@ -128,6 +128,35 @@ class TestPlanControllerTest extends AbstractSpec {
 
     }
 
+    void "schedule request with validation required for one test plan should successfully schedule no test plans"() {
+
+
+        when:
+        def entity = postForEntity('/tng-vnv-planner/api/v1/test-plans',
+                [
+                        'test_plans':
+                                [
+                                        [
+                                                "service_uuid": DIY_DESCRIPTOR_TEST_PLAN_SERVICE_UUID,
+                                                "test_uuid": DIY_DESCRIPTOR_TEST_PLAN_VALIDATION_REQUIRED_TEST_UUID,
+                                                'description': 'dummyTestPlan1-validation_required',
+                                                'index': '1',
+                                        ],
+                                ]
+                ]
+                , Void.class)
+
+        then:
+        entity.statusCode == HttpStatus.OK
+        testPlanRepositoryMock.testPlans.size() == 0
+
+        cleanup:
+        testPlanRepositoryMock.reset()
+
+    }
+
+
+
     void "update request of a test plan list should successfully update all test plans"() {
 
 
