@@ -32,38 +32,41 @@
  * partner consortium (www.5gtango.eu).
  */
 
-package com.github.tng.vnv.planner.controller
+package com.github.tng.vnv.planner
 
-import com.github.mrduguo.spring.test.AbstractSpec
+
+import com.github.tng.vnv.planner.model.Package
+import com.github.tng.vnv.planner.model.TestSuite
 import com.github.tng.vnv.planner.restmock.CatalogueMock
-import com.github.tng.vnv.planner.restmock.CuratorMock
 import com.github.tng.vnv.planner.restmock.TestPlanRepositoryMock
+import com.github.tng.vnv.planner.config.TestRestSpec
+import com.github.tng.vnv.planner.service.TestPlanService
 import org.springframework.beans.factory.annotation.Autowired
-import spock.lang.Ignore
 
-class DummyQueueControllerTest extends AbstractSpec {
+class ScheduleManagerTest extends TestRestSpec {
 
-    final def NETWORK_SERVICE_ID = 'input0ns-f213-4fae-8d3f-04358e1e1445'
-
+    public static final String MULTIPLE_TEST_PLANS_PACKAGE_ID ='multiple_scheduler:test:0.0.1'
 
     @Autowired
-    CuratorMock curatorMock
+    ScheduleManager scheduler
 
     @Autowired
-    CatalogueMock catalogueMock
+    CatalogueMock testCatalogueMock
 
     @Autowired
     TestPlanRepositoryMock testPlanRepositoryMock
 
-    @Ignore
-    void "dummy tests"() {
+    @Autowired
+    TestPlanService testPlanService
+
+    void 'schedule multiple test plans should produce success result'() {
+
+        setup:
+        cleanTestPlansRepo()
         when:
-        String tss = getForEntity('/tng-vnv-planner/api/v1/test-plans/queue/{action}', String, "true").body
-
+        TestSuite testSuite = scheduler.create(new Package(packageId: MULTIPLE_TEST_PLANS_PACKAGE_ID))
         then:
-
-        tss.toString() == "OK"
-
-
+        testSuite.testPlans.size() == 6
+        testPlanRepositoryMock.testPlans.size()==6
     }
 }

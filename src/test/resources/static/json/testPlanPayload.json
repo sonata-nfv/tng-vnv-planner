@@ -2,7 +2,7 @@
   "id": 0,
   "test_plans": [
     {
-      "description": "confirm required but not confirmed",
+      "description": "Test Plan Description: confirm required but not confirmed",
       "id": 0,
       "index": 1,
       "nsd": {
@@ -24,7 +24,7 @@
       }
     },
     {
-      "description": "confirm required and confirmed",
+      "description": "Test Plan Description: Confirm required and confirmed",
       "id": 0,
       "index": 1,
       "nsd": {
@@ -47,6 +47,7 @@
       }
     },
     {
+      "description": "Test Plan Description: Adhoc TD,NSD request for testing",
       "id": 1,
       "index": 2,
       "nsd": {

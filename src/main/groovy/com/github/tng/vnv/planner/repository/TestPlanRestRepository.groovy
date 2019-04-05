@@ -84,6 +84,6 @@ class TestPlanRestRepository {
         def headers = new HttpHeaders()
         headers.setContentType(MediaType.APPLICATION_JSON)
         def entity = new HttpEntity<TestPlan>(testPlan ,headers)
-        callExternalEndpoint(restTemplate.exchange(testPlanUpdateEndpoint, HttpMethod.PUT, entity, TestPlan.class ,testPlan.uuid),'TestResultRepository.updatePlan',testPlanUpdateEndpoint).body
+        callExternalEndpoint(restTemplate.exchange(testPlanUpdateEndpoint, HttpMethod.PUT, entity, TestPlan.class ,testPlan.id),'TestResultRepository.updatePlan',testPlanUpdateEndpoint).body
     }
 }

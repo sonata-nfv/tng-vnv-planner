@@ -38,15 +38,28 @@ package com.github.tng.vnv.planner.restmock
 import com.github.tng.vnv.planner.model.TestPlan
 import com.github.tng.vnv.planner.model.TestPlanRequest
 import com.github.tng.vnv.planner.model.TestPlanResponse
+import com.github.tng.vnv.planner.utils.TEST_PLAN_STATUS
+import groovy.util.logging.Log
+import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
+@Log
 @RestController
 class CuratorMock {
 
-    @PostMapping('/mock/curator/curate-test-plan')
-    TestPlanResponse curateTestPlan(@RequestBody TestPlanRequest testPlanRequest) {
-        new TestPlanResponse(id: UUID.randomUUID().toString(), status: '202',
-                testPlan: new TestPlan(uuid:UUID.randomUUID().toString(), status: 'STARTING',
-                        nsd:testPlanRequest.nsd,testd:testPlanRequest.testd))
+    def active = false
+    def testPlanResponseUuid
+    @PostMapping('/mock/curator/test-preparations')
+    ResponseEntity<TestPlanResponse> curateTestPlan(@RequestBody TestPlanRequest testPlanRequest) {
+                TestPlanResponse tpr = new TestPlanResponse(uuid: testPlanResponseUuid, status:
+                        (active)? TEST_PLAN_STATUS.STARTING:TEST_PLAN_STATUS.REJECTED)
+        ResponseEntity.status(HttpStatus.OK).body(tpr)
+    }
+
+    @DeleteMapping('/mock/curator/test-preparations/{testPlanUuid}')
+    ResponseEntity<Void> deleteTestPlan(@PathVariable('testPlanUuid') String uuid) {
+        log.info("The testPlan with uuid: \"$uuid\" has been cancelled")
+        ResponseEntity.status(HttpStatus.OK).build()
     }
 }

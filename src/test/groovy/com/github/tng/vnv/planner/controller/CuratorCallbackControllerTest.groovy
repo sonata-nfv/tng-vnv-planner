@@ -35,84 +35,82 @@
 package com.github.tng.vnv.planner.controller
 
 
-import com.github.mrduguo.spring.test.AbstractSpec
+import com.github.tng.vnv.planner.config.TestRestSpec
 import com.github.tng.vnv.planner.model.TestPlan
-import com.github.tng.vnv.planner.restmock.CuratorMock
+import com.github.tng.vnv.planner.model.TestSuite
 import com.github.tng.vnv.planner.restmock.TestPlanRepositoryMock
 import com.github.tng.vnv.planner.service.TestPlanService
+import com.github.tng.vnv.planner.service.TestSuiteService
+import com.github.tng.vnv.planner.utils.TEST_PLAN_STATUS
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
-import spock.lang.Ignore
 
-class CuratorCallbackControllerTest extends AbstractSpec {
+class CuratorCallbackControllerTest extends TestRestSpec {
 
-    public static final String MULTIPLE_TEST_PLANS_PACKAGE_ID ='multiple_scheduler:test:0.0.1'
     public static final String TEST_RESULT_UUID = UUID.randomUUID().toString()
     public static final String TEST_PLAN_UUID = '109873678'
 
     @Autowired
     TestPlanService testPlanService
-
     @Autowired
-    CuratorMock curatorMock
+    TestSuiteService testSuiteService
 
     @Autowired
     TestPlanRepositoryMock testPlanRepositoryMock
 
-    @Ignore
-    void 'curator returns back call as COMPLETED should get a new testPlan with status STARTING to curate'() {
+    void 'curator returns back call as COMPLETED should store the testPlan with status respectively'() {
 
         setup:
-        testPlanService.send(
-                new TestPlan(uuid: UUID.randomUUID().toString(), status: 'dummyTestPlan') )
+        cleanTestPlansRepo()
+        cleanTestPlanDB()
         when:
+        createDummyTestPlan()
+        def status = TEST_PLAN_STATUS.COMPLETED
         def entity = postForEntity('/tng-vnv-planner/api/v1/test-plans/on-change/completed',
                 [
                         event_actor: 'tng-vnv-curator',
-                        status: 'COMPLETED',
+                        status: status,
                         test_plan_uuid: TEST_PLAN_UUID,
                         test_results_uuid: TEST_RESULT_UUID,
                         test_plan_repository: 'tng-rep',
                         test_results_repository: 'tng-res',
                 ]
                 , Void.class)
-
         then:
         entity.statusCode == HttpStatus.OK
-
-        testPlanRepositoryMock.testPlans.values()[0].status=='COMPLETED'
-        testPlanRepositoryMock.testPlans.values().last().status=='STARTING'
-
-        cleanup:
-        testPlanRepositoryMock.reset()
+        testPlanRepositoryMock.testPlans.values().last().status==status
+        testPlanService.testPlanRepository.findLastByUuid(TEST_PLAN_UUID).status==status
     }
 
-    @Ignore
-    void 'curator returns back call as not completed should get a new testPlan with status STARTING to curate'() {
-
+    void 'curator returns back call as NOT COMPLETED should store the testPlan with status respectively'() {
         setup:
-        testPlanService.send(
-                new TestPlan(uuid: UUID.randomUUID().toString(), status: 'dummyTestPlan') )
+        cleanTestPlansRepo()
+        cleanTestPlanDB()
         when:
+        createDummyTestPlan()
+        def status = TEST_PLAN_STATUS.CANCELLING
         def entity = postForEntity('/tng-vnv-planner/api/v1/test-plans/on-change/',
                 [
                         event_actor: 'tng-vnv-curator',
-                        status:'CANCELLING',
+                        status:status,
                         test_plan_uuid:TEST_PLAN_UUID,
                         test_results_uuid:TEST_RESULT_UUID,
                         test_plan_repository:'tng-rep',
                         test_results_repository:'tng-res',
                 ]
                 , Void.class)
-
         then:
         entity.statusCode == HttpStatus.OK
-
-        testPlanRepositoryMock.testPlans.values()[0].status=='CANCELLING'
-        testPlanRepositoryMock.testPlans.values().last().status=='STARTING'
-
-        cleanup:
-        testPlanRepositoryMock.reset()
+        testPlanRepositoryMock.testPlans.values().last().status==status
+        testPlanService.testPlanRepository.findLastByUuid(TEST_PLAN_UUID).status==status
     }
 
+    void createDummyTestPlan(){
+        def testPlan = new TestPlan(uuid: TEST_PLAN_UUID, status: 'dummyTestPlan')
+        def testSuite = new TestSuite()
+        testSuite = testSuiteService.save(testSuite)
+        testPlan.testSuite = testSuite
+        testSuite.testPlans.add(testPlan)
+        testPlanService.save(testPlan)
+    }
 }

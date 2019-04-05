@@ -35,39 +35,27 @@
 package com.github.tng.vnv.planner.controller
 
 
-import com.github.mrduguo.spring.test.AbstractSpec
+import com.github.tng.vnv.planner.config.TestRestSpec
 import com.github.tng.vnv.planner.restmock.CatalogueMock
-import com.github.tng.vnv.planner.restmock.CuratorMock
 import com.github.tng.vnv.planner.restmock.TestPlanRepositoryMock
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.web.bind.annotation.GetMapping
 
-import spock.lang.Ignore
-
-class NetworkServiceControllerTest extends AbstractSpec {
+class NetworkServiceControllerTest extends TestRestSpec {
 
     final def NETWORK_SERVICE_ID = 'input0ns-f213-4fae-8d3f-04358e1e1451'
 
-
     @Autowired
-    CuratorMock curatorMock
-
-
-    @Autowired
-
     CatalogueMock catalogueMock
 
     @Autowired
     TestPlanRepositoryMock testPlanRepositoryMock
 
     void "retrieval of a single test suite's related tests should successfully all the tag related tests"() {
+        setup:
+        cleanTestPlansRepo()
         when:
         List tss = getForEntity('/tng-vnv-planner/api/v1/test-plans/services/{serviceUuid}/tests', List, NETWORK_SERVICE_ID).body
         then:
-
         tss.size() == 4
-
     }
-	
-
 }

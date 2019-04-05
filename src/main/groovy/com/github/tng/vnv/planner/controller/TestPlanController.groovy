@@ -35,6 +35,7 @@
 package com.github.tng.vnv.planner.controller
 
 import com.github.tng.vnv.planner.ScheduleManager
+import com.github.tng.vnv.planner.WorkflowManager
 import com.github.tng.vnv.planner.model.NetworkServiceDescriptor
 import com.github.tng.vnv.planner.model.TestDescriptor
 import com.github.tng.vnv.planner.model.TestPlan
@@ -53,6 +54,8 @@ class TestPlanController {
 
     @Autowired
     ScheduleManager scheduler
+    @Autowired
+    WorkflowManager manager
     @Autowired
     TestPlanService testPlanService
 
@@ -73,7 +76,7 @@ class TestPlanController {
     @DeleteMapping('{uuid}')
     @ResponseBody
     void deleteTestPlan(@PathVariable String uuid) {
-        testPlanService.delete(uuid)
+        manager.deleteTestPlan(uuid)
     }
 
     @ApiResponses(value = [@ApiResponse(code = 400, message = 'Bad Request')])

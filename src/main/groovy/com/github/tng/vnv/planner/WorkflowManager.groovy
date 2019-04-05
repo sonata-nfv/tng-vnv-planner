@@ -44,12 +44,6 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Component
 
-import static com.github.tng.vnv.planner.utils.TEST_PLAN_STATUS.CANCELLED
-import static com.github.tng.vnv.planner.utils.TEST_PLAN_STATUS.COMPLETED
-import static com.github.tng.vnv.planner.utils.TEST_PLAN_STATUS.DELETED
-import static com.github.tng.vnv.planner.utils.TEST_PLAN_STATUS.REJECTED
-import static com.github.tng.vnv.planner.utils.TEST_PLAN_STATUS.ERROR
-
 @Log
 @Component
 class WorkflowManager {
@@ -62,31 +56,30 @@ class WorkflowManager {
 
     TestPlan pendingTestPlan
 
-//    @Scheduled(fixedRate = 5000L)
-    def sendNext() {
-        if(pendingTestPlan == null) {
-            pendingTestPlan = testPlanService.getNextScheduled()
-            if(pendingTestPlan != null) {
-                TestPlanResponse testPlanResponse = curator.proceedWith(pendingTestPlan)
-                switch (testPlanResponse.status){
-                    case '202':
-                        pendingTestPlan = ([COMPLETED || CANCELLED || REJECTED || DELETED || ERROR]
-                                .contains(testPlanResponse.testPlan.status)) ?
-                                null : testPlanService.update(testPlanResponse.testPlan.uuid,
-                                testPlanResponse.testPlan.status)
-                        break
-                    case '500':
-                        pendingTestPlan = testPlanService.update(testPlanResponse.testPlan.uuid,
-                                TEST_PLAN_STATUS.PENDING)
+    @Scheduled(fixedRate = 5000L , initialDelay = 1000L)
+    void searchForScheduledPlan() {
+        pendingTestPlan = testPlanService.findPendingTestPlan()
+        if (pendingTestPlan == null) {
+            TestPlan nextTestPlan = testPlanService.findNextScheduledTestPlan()
+            if (nextTestPlan != null) {
+                log.info("No Pending plan. Available scheduled Plan Descr: [\"" + nextTestPlan.description + "\"]")
+                TestPlanResponse testPlanResponse = curator.proceedWith(nextTestPlan)
+                switch (testPlanResponse.status) {
+                    case TEST_PLAN_STATUS.STARTING:
+                        pendingTestPlan = nextTestPlan
+                        testPlanService.update(pendingTestPlan, TEST_PLAN_STATUS.PENDING)
                         break
                     default:
-                        pendingTestPlan = testPlanService.update(testPlanResponse.testPlan.uuid,
-                                TEST_PLAN_STATUS.PENDING)
+                        log.info("Get response: ${testPlanResponse.status} for plan description: \"${nextTestPlan.description}\"")
                         break
                 }
+
             }
         }
-        pendingTestPlan
     }
 
+    void deleteTestPlan(String uuid){
+        curator.deleteTestPlan(uuid)
+        testPlanService.delete(uuid)
+    }
 }
