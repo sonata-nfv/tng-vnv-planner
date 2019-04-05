@@ -54,7 +54,7 @@ class WorkFlowManagerTest extends TestRestSpec {
         curatorMock.testPlanResponseUuid = TEST_PLAN_UUID_2
         scheduleTestPlan(TEST_PLAN_UUID_2, TEST_PLAN_STATUS.SCHEDULED, 'Single scheduled testPlan')
         then:
-        Thread.sleep(1500L);
+        Thread.sleep(2500L);
         testPlanService.testPlanRepository.findAll().find { it.uuid == TEST_PLAN_UUID_2}.status ==TEST_PLAN_STATUS.PENDING
     }
 
@@ -79,7 +79,7 @@ class WorkFlowManagerTest extends TestRestSpec {
                 ]
                 , Void.class)
         then:
-        Thread.sleep(15000L);
+        Thread.sleep(25000L);
         entity.statusCode == HttpStatus.OK
         testPlanService.testPlanRepository.findLastByUuid(TEST_PLAN_UUID_3).status == TEST_PLAN_STATUS.COMPLETED
         cleanup:
