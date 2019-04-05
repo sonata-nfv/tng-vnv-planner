@@ -55,8 +55,7 @@ class WorkFlowManagerTest extends TestRestSpec {
         scheduleTestPlan(TEST_PLAN_UUID_2, TEST_PLAN_STATUS.SCHEDULED, 'Single scheduled testPlan')
         then:
         Thread.sleep(1500L);
-        testPlanService.testPlanRepository.findAll().last().uuid==TEST_PLAN_UUID_2
-        testPlanService.testPlanRepository.findAll().last().status==TEST_PLAN_STATUS.PENDING
+        testPlanService.testPlanRepository.findAll().find { it.uuid == TEST_PLAN_UUID_2}.status ==TEST_PLAN_STATUS.PENDING
     }
 
     void 'checks the test plans and successfully passes a test plan to Curator should the oldest SCHEDULED test plan become initially PENDING and finally COMPLETED'() {
