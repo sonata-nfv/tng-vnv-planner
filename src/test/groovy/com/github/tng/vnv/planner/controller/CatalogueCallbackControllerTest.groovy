@@ -35,19 +35,16 @@
 package com.github.tng.vnv.planner.controller
 
 
-import com.github.mrduguo.spring.test.AbstractSpec
+import com.github.tng.vnv.planner.config.TestRestSpec
 import com.github.tng.vnv.planner.restmock.CatalogueMock
-import com.github.tng.vnv.planner.restmock.CuratorMock
 import com.github.tng.vnv.planner.restmock.TestPlanRepositoryMock
+import com.github.tng.vnv.planner.service.TestPlanService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 
-class CatalogueCallbackControllerTest extends AbstractSpec {
+class CatalogueCallbackControllerTest extends TestRestSpec {
 
     public static final String MULTIPLE_TEST_PLANS_PACKAGE_ID ='multiple_scheduler:test:0.0.1'
-
-    @Autowired
-    CuratorMock curatorMock
 
     @Autowired
     CatalogueMock testCatalogueMock
@@ -55,23 +52,26 @@ class CatalogueCallbackControllerTest extends AbstractSpec {
     @Autowired
     TestPlanRepositoryMock testPlanRepositoryMock
 
+    @Autowired
+    TestPlanService testPlanService
+
 
     void 'schedule single Test and single NetworkService should produce successfully 6 testPlans'() {
 
+        setup:
+        cleanTestPlansRepo()
+        cleanTestPlanDB()
         when:
+        testPlanRepositoryMock.testPlans = [:]
         def entity = postForEntity('/tng-vnv-planner/api/v1/packages/on-change',
                 [
                         event_name: UUID.randomUUID().toString(),
                         package_id:  MULTIPLE_TEST_PLANS_PACKAGE_ID,
                 ]
                 , Void.class)
-
         then:
         entity.statusCode == HttpStatus.OK
-
         testPlanRepositoryMock.testPlans.size()==6
 
-        cleanup:
-        testPlanRepositoryMock.reset()
     }
 }

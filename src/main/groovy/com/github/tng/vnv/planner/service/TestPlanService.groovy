@@ -42,6 +42,7 @@ import com.github.tng.vnv.planner.repository.TestPlanRepository
 import com.github.tng.vnv.planner.repository.TestPlanRestRepository
 import com.github.tng.vnv.planner.model.NetworkServiceDescriptor
 import com.github.tng.vnv.planner.model.TestPlan
+import com.github.tng.vnv.planner.utils.TEST_PLAN_STATUS
 import groovy.util.logging.Log
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
@@ -69,7 +70,7 @@ class TestPlanService {
         service = networkServiceService.findByUuid(service.uuid)?.reload()
         testService.findByService(service)?.each { test ->
             if(service.uuid != null && test.uuid!=null)
-                testPlans.add(new TestPlan(uuid: service.uuid+test.uuid, nsd:service.nsd, testd:test.testd))
+                testPlans.add(new TestPlan(uuid: service.uuid+test.uuid, nsd:service.nsd, testd:test.testd, status: TEST_PLAN_STATUS.CREATED))
         }
         testPlans
     }
@@ -79,7 +80,7 @@ class TestPlanService {
         test = testService.findByUuid(test.uuid)
         networkServiceService.findByTest(test)?.each { service ->
             if(service.uuid != null && test.uuid!=null)
-                testPlans.add(new TestPlan(uuid: service.uuid+test.uuid, nsd:service.nsd, testd:test.testd))
+                testPlans.add(new TestPlan(uuid: service.uuid+test.uuid, nsd:service.nsd, testd:test.testd, status: TEST_PLAN_STATUS.CREATED))
         }
         testPlans
     }
@@ -117,8 +118,16 @@ class TestPlanService {
         testPlanRestRepository.create(testPlan)
     }
 
+    TestPlan update(TestPlan testPlan, String status) {
+        testPlan = testPlanRepository.findById(testPlan.id)
+        testPlan.status = status
+        testPlanRepository.save(testPlan)
+        testPlanRestRepository.update(testPlan)
+        testPlan
+    }
+
     TestPlan update(String uuid, String status) {
-        TestPlan testPlan = testPlanRepository.find {it.uuid == uuid}
+        TestPlan testPlan = testPlanRepository.findLastByUuid(uuid)
         testPlan.status = status
         testPlanRepository.save(testPlan)
         testPlanRestRepository.update(testPlan)
@@ -126,14 +135,14 @@ class TestPlanService {
     }
 
     void delete(String uuid) {
-        update(uuid, DELETED)
+        update(uuid, TEST_PLAN_STATUS.CANCELLING)
     }
 
-    TestPlan getNextScheduled() {
-//        testPlanRepository.find {it.status == SCHEDULED}
-        //Todo-allemaos: extract the first correct item which status is SCHEDULED
-        getLast()
-
+    TestPlan findNextScheduledTestPlan() {
+        testPlanRepository.findFirstByStatus(TEST_PLAN_STATUS.SCHEDULED)
+    }
+    TestPlan findPendingTestPlan() {
+        testPlanRepository.findFirstByStatus(TEST_PLAN_STATUS.PENDING)
     }
 }
 

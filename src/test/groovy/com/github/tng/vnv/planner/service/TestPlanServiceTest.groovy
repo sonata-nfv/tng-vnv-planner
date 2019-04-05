@@ -1,23 +1,21 @@
 package com.github.tng.vnv.planner.service
 
-import com.github.mrduguo.spring.test.AbstractSpec
-import com.github.tng.vnv.planner.model.TestPlan
-import com.github.tng.vnv.planner.model.TestSuite
+import com.github.tng.vnv.planner.config.TestRestSpec
 import com.github.tng.vnv.planner.restmock.TestPlanRepositoryMock
-import com.github.tng.vnv.planner.service.TestPlanService
+import com.github.tng.vnv.planner.utils.TEST_PLAN_STATUS
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
-import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager
 import org.springframework.http.HttpStatus
-import spock.lang.Ignore
 
-class TestPlanServiceTest extends AbstractSpec {
+class TestPlanServiceTest extends TestRestSpec {
 
     @Autowired
     TestPlanRepositoryMock testPlanRepositoryMock
 
     void 'request for 2 test plans should store in the db and consequently schedule 2 test plans hopefully'(){
 
+        setup:
+        cleanTestPlansRepo()
+        cleanTestPlanDB()
         when:
         def entity = postForEntity('/tng-vnv-planner/api/v1/test-plans',
                 [
@@ -57,12 +55,7 @@ class TestPlanServiceTest extends AbstractSpec {
         then:
         Thread.sleep(10000L);
         entity.statusCode == HttpStatus.OK
-
-        testPlanRepositoryMock.testPlans.size()==2
-
-        cleanup:
-        testPlanRepositoryMock.reset()
-
+        testPlanService.testPlanRepository.findAll().findAll {[TEST_PLAN_STATUS.SCHEDULED, TEST_PLAN_STATUS.PENDING].contains(it.status)}.size()==2
     }
 
 }

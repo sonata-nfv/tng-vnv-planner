@@ -41,6 +41,10 @@ import groovy.util.logging.Log
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.http.HttpEntity
+import org.springframework.http.HttpHeaders
+import org.springframework.http.HttpMethod
+import org.springframework.http.MediaType
 import org.springframework.stereotype.Component
 import org.springframework.web.client.RestTemplate
 
@@ -56,10 +60,24 @@ class Curator {
 
     @Value('${app.curator.test.plan.curate.endpoint}')
     def testPlanCurateEndpoint
+    @Value('${app.curator.cancel.test.plan.curate.endpoint}')
+    def cancelTestPlanCurateEndpoint
+
 
     TestPlanResponse proceedWith(TestPlan testPlan) {
         def createRequest = new TestPlanRequest(nsd: testPlan.nsd, testd: testPlan.testd, lastTest: false)
         callExternalEndpoint(restTemplate.postForEntity(testPlanCurateEndpoint, createRequest, TestPlanResponse),
                 'Curator.proceedWith(TestPlan)',testPlanCurateEndpoint).body
+    }
+    void deleteTestPlan(uuid) {
+        callExternalEndpoint(restTemplate.delete(cancelTestPlanCurateEndpoint, uuid),
+                'Curator.deleteTestPlan(TestPlan)',cancelTestPlanCurateEndpoint)
+    }
+
+    TestPlan update(def testPlan) {
+        def headers = new HttpHeaders()
+        headers.setContentType(MediaType.APPLICATION_JSON)
+        def entity = new HttpEntity<TestPlan>(testPlan ,headers)
+        callExternalEndpoint(restTemplate.exchange(testPlanUpdateEndpoint, HttpMethod.PUT, entity, TestPlan.class ,testPlan.id),'TestResultRepository.updatePlan',testPlanUpdateEndpoint).body
     }
 }

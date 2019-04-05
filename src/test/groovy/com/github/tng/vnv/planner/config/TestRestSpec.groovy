@@ -32,46 +32,46 @@
  * partner consortium (www.5gtango.eu).
  */
 
-package com.github.tng.vnv.planner.app
+package com.github.tng.vnv.planner.config
 
+import com.github.mrduguo.spring.test.AbstractSpec
 import com.github.tng.vnv.planner.ScheduleManager
 import com.github.tng.vnv.planner.model.Package
 import com.github.tng.vnv.planner.model.TestSuite
 import com.github.tng.vnv.planner.restmock.CatalogueMock
-import com.github.tng.vnv.planner.restmock.CuratorMock
 import com.github.tng.vnv.planner.restmock.TestPlanRepositoryMock
-import com.github.mrduguo.spring.test.AbstractSpec
+import com.github.tng.vnv.planner.service.TestPlanService
+import com.github.tng.vnv.planner.utils.TEST_PLAN_STATUS
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Qualifier
+import org.springframework.boot.test.TestRestTemplate
+import org.springframework.http.ResponseEntity
+import org.springframework.web.client.RestTemplate
 
-import java.util.concurrent.CompletableFuture
-
-class ScheduleManagerTest extends AbstractSpec {
-
-    public static final String MULTIPLE_TEST_PLANS_PACKAGE_ID ='multiple_scheduler:test:0.0.1'
-
-    @Autowired
-    ScheduleManager scheduler
+class TestRestSpec extends AbstractSpec {
 
     @Autowired
-    CuratorMock curatorMock
-
-    @Autowired
-    CatalogueMock testCatalogueMock
+    TestPlanService testPlanService
 
     @Autowired
     TestPlanRepositoryMock testPlanRepositoryMock
 
-    void 'schedule multiple test plans should produce success result'() {
 
-        when:
-        TestSuite testSuite = scheduler.create(new Package(packageId: MULTIPLE_TEST_PLANS_PACKAGE_ID))
-
-        then:
-        testSuite.testPlans.size() == 6
-
-        testPlanRepositoryMock.testPlans.size()==6
-
-        cleanup:
+    void cleanTestPlansRepo() {
         testPlanRepositoryMock.reset()
+    }
+
+    void cleanTestPlanDB() {
+        testPlanService.testPlanRepository.findAll()?.collect {
+            it.status = TEST_PLAN_STATUS.REJECTED
+            testPlanService.save(it)}
+    }
+
+    @Autowired
+    @Qualifier('restTemplateWithAuth')
+    RestTemplate restTemplate
+
+    void delete(String path, Object urlVariable){
+        restTemplate.delete(url(path),urlVariable)
     }
 }

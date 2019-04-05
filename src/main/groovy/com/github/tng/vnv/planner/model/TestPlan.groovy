@@ -123,8 +123,7 @@ class TestPlanRequest {
 
 @EqualsAndHashCode
 class TestPlanResponse {
-    String id
-    TestPlan testPlan
+    String uuid
     String status
 }
 
@@ -152,7 +151,10 @@ class TestPlanCallback {
     @NotNull
     String status
 
-    @ApiModelProperty(required = true)
+    @ApiModelProperty(
+            value = 'Test Plan uuid',
+            allowEmptyValue = false,
+            required = true)
     @NotNull
     String testPlanUuid
 
