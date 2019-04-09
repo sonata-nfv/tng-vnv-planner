@@ -73,6 +73,7 @@ class CuratorCallbackController {
             @ApiResponse(code = 404, message = 'Could not find package with that package_id'),
     ])
     @PostMapping('/on-change/')
+    @ResponseBody
     void onChange(@Valid @RequestBody TestPlanCallback callback) {
         testPlanService.update(callback.testPlanUuid, callback.status)
     }
