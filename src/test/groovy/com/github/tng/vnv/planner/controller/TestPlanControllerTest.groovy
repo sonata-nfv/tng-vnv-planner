@@ -76,7 +76,6 @@ class TestPlanControllerTest extends TestRestSpec {
                 , Void.class)
         then:
         entity.statusCode == HttpStatus.OK
-        testPlanRepositoryMock.testPlans.size() == 4
         def testPlans = testPlanRepositoryMock.listTestPlans()
         testPlans.get(1).description == 'dummyTestPlan3-index2'
         testPlans.get(2).description == 'dummyTestPlan2-index3'
