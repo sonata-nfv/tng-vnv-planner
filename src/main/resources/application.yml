@@ -69,7 +69,7 @@ app:
 
   tpr:
     host: tng-rep
-    base.url: http://${app.tpr.host}:4012/tpr
+    base.url: http://${app.tpr.host}:4012/trr
     test.plan.create.endpoint: ${app.tpr.base.url}/test-plans
     test.plan.update.endpoint: ${app.tpr.base.url}/test-plans/{uuid}
 
