@@ -138,18 +138,20 @@ class TestPlanCallback {
     String eventActor
 
     @ApiModelProperty(
-            value = 'Callback URL',
-            allowEmptyValue = false,
-            example = '/test-plans/on-change')
-    String url
-
-    @ApiModelProperty(
             value = 'Test Plan Status',
             allowEmptyValue = false,
             example = 'STARTING, COMPLETED, CANCELLING, CANCELLED, ERROR',
             required = true)
     @NotNull
     String status
+
+    @ApiModelProperty(
+            value = 'Callback URL',
+            allowEmptyValue = false,
+            example = '/test-plans/on-change')
+    String url
+
+    List<TestResult> testResults
 
     @ApiModelProperty(
             value = 'Test Plan uuid',
