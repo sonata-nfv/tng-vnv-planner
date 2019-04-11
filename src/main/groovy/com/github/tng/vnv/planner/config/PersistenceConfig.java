@@ -52,7 +52,18 @@ public class PersistenceConfig {
 //        hibernateProperties.setProperty("hibernate.implicit_naming_strategy","spring.jpa.hibernate.naming.implicit-strategy");
         return hibernateProperties;
     }
-
+    @Bean(name = "entityManagerFactory") //
+    @Profile("test")
+    public LocalContainerEntityManagerFactoryBean h2EntityManagerFactoryBean() {
+        LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
+        em.setDataSource(dataSource());
+        em.setPackagesToScan(new String[] { "com.github.tng.vnv.planner.model" });
+        em.setPersistenceUnitName("builderPU");
+        JpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
+        em.setJpaVendorAdapter(vendorAdapter);
+        em.setJpaProperties(hibernateProperties());
+        return em;
+    }
     @Bean(name = "entityManagerFactory") //
     @Profile("!test")
     public LocalContainerEntityManagerFactoryBean entityManagerFactoryBean() {
@@ -66,8 +77,7 @@ public class PersistenceConfig {
         return em;
     }
 
-    @Bean(name = "transactionManager") //
-    @Profile("!test")
+    @Bean(name = "transactionManager") 
     public PlatformTransactionManager transactionManager(@Qualifier("entityManagerFactory") EntityManagerFactory emf) {
         JpaTransactionManager transactionManager = new JpaTransactionManager();
         transactionManager.setEntityManagerFactory(emf);
