@@ -32,7 +32,7 @@ public class PersistenceConfig {
     private Environment env;
 
     @Bean() 
-    @Profile("!test")
+//    @Profile("!test")
     public DataSource dataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setDriverClassName(env.getProperty("spring.datasource.driver"));
