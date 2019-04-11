@@ -52,3 +52,8 @@ spring.jpa.connection.release_mode: on_close
 spring.jpa.format_sql: true
 spring.jpa.show-sql: true
 spring.jpa.hibernate.ddl-auto: create-drop
+
+spring.datasource.url: jdbc:h2:mem:tng-planner;DB_CLOSE_DELAY=-1
+spring.datasource.username: tango
+spring.datasource.password: tango
+spring.datasource.driver: org.h2.Driver
