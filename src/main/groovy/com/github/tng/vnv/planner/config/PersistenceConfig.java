@@ -37,8 +37,8 @@ public class PersistenceConfig {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setDriverClassName(env.getProperty("spring.datasource.driver"));
         dataSource.setUrl(env.getProperty("spring.datasource.url"));
-        dataSource.setUsername(env.getProperty("spring.datasource.username"));
-        dataSource.setPassword(env.getProperty("spring.datasource.password"));
+        dataSource.setUsername(env.getProperty("POSTGRES_USER") !=null ? env.getProperty("POSTGRES_USER") : env.getProperty("spring.datasource.username"));
+        dataSource.setPassword(env.getProperty("POSTGRES_PASSWORD") !=null ? env.getProperty("POSTGRES_PASSWORD") : env.getProperty("spring.datasource.password"));
         return dataSource;
     }
     final Properties hibernateProperties() {
@@ -55,18 +55,6 @@ public class PersistenceConfig {
     @Bean(name = "entityManagerFactory") //
     @Profile("test")
     public LocalContainerEntityManagerFactoryBean h2EntityManagerFactoryBean() {
-        LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
-        em.setDataSource(dataSource());
-        em.setPackagesToScan(new String[] { "com.github.tng.vnv.planner.model" });
-        em.setPersistenceUnitName("builderPU");
-        JpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
-        em.setJpaVendorAdapter(vendorAdapter);
-        em.setJpaProperties(hibernateProperties());
-        return em;
-    }
-    @Bean(name = "entityManagerFactory") //
-    @Profile("!test")
-    public LocalContainerEntityManagerFactoryBean entityManagerFactoryBean() {
         LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
         em.setDataSource(dataSource());
         em.setPackagesToScan(new String[] { "com.github.tng.vnv.planner.model" });
