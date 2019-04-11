@@ -76,8 +76,9 @@ app:
   curator:
     host: tng-vnv-curator
     base.url: http://${app.curator.host}:6200/api/v1
-    test.plan.curate.endpoint: ${app.curator.base.url}/test-preparations
-    cancel.test.plan.curate.endpoint: ${app.curator.base.url}/test-preparations/{uuid}
+    test.plan.ping.endpoint: ${app.curator.base.url}/ping
+    test.plan.prepare.endpoint: ${app.curator.base.url}/test-preparations
+    test.plan.cancel.endpoint: ${app.curator.base.url}/test-preparations/{uuid}
 
   queue.capacity: 500
   pool:

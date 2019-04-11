@@ -124,7 +124,21 @@ class TestPlanRequest {
 @EqualsAndHashCode
 class TestPlanResponse {
     String uuid
+    @ApiModelProperty(
+            value = 'Test Plan Status',
+            allowEmptyValue = false,
+            example = 'STARTING, COMPLETED, CANCELLING, CANCELLED, ERROR',
+            required = true)
+    @NotNull
     String status
+
+    @ApiModelProperty(
+            value = 'Test Plan Exception message',
+            allowEmptyValue = false,
+            example = 'run time exception')
+    @NotNull
+    String exception
+
 }
 
 class TestPlanCallback {

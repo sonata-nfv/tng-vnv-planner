@@ -774,9 +774,21 @@
         },
         "TestPlanResponse": {
             "type": "object",
+            "required": [
+                "status"
+            ],
             "properties": {
+                "exception": {
+                    "type": "string",
+                    "example": "run time exception",
+                    "description": "Test Plan Exception message",
+                    "allowEmptyValue": false
+                },
                 "status": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "STARTING, COMPLETED, CANCELLING, CANCELLED, ERROR",
+                    "description": "Test Plan Status",
+                    "allowEmptyValue": false
                 },
                 "uuid": {
                     "type": "string"
