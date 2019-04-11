@@ -616,6 +616,12 @@
                     "description": "Test Plan uuid",
                     "allowEmptyValue": false
                 },
+                "test_results": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/TestResult"
+                    }
+                },
                 "test_results_repository": {
                     "type": "string",
                     "example": "tng-res, results, or xx.xx",
@@ -634,6 +640,33 @@
                 }
             },
             "title": "TestPlanCallback"
+        },
+        "TestResult": {
+            "type": "object",
+            "required": [
+                "test_result_uuid",
+                "test_status",
+                "test_uuid"
+            ],
+            "properties": {
+                "test_result_uuid": {
+                    "type": "string",
+                    "description": "Test result uuid",
+                    "allowEmptyValue": false
+                },
+                "test_status": {
+                    "type": "string",
+                    "example": "STARTING, COMPLETED, CANCELLING, CANCELLED, ERROR",
+                    "description": "Test Plan Status",
+                    "allowEmptyValue": false
+                },
+                "test_uuid": {
+                    "type": "string",
+                    "description": "Test uuid",
+                    "allowEmptyValue": false
+                }
+            },
+            "title": "TestResult"
         },
         "TestSuite": {
             "type": "object",
