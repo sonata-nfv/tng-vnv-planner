@@ -40,5 +40,6 @@ import org.springframework.stereotype.Repository
 
 @Repository
 interface TestSuiteRepository extends JpaRepository<TestSuite, Long> {
+    TestSuite findById(Long id);
 
 }
