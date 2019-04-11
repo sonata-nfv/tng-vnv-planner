@@ -50,9 +50,6 @@ class TestSuiteService {
     @Autowired
     TestSuiteRepository testSuiteRepository
 
-    TestSuite getOne(Long id){
-        testSuiteRepository.getOne(id)
-    }
     TestSuite save(TestSuite testSuite){
         testSuiteRepository.save(testSuite)
     }

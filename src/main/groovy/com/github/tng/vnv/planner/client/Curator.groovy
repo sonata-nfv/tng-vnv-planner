@@ -58,20 +58,28 @@ class Curator {
     @Qualifier('restTemplateWithAuth')
     RestTemplate restTemplate
 
-    @Value('${app.curator.test.plan.curate.endpoint}')
-    def testPlanCurateEndpoint
-    @Value('${app.curator.cancel.test.plan.curate.endpoint}')
-    def cancelTestPlanCurateEndpoint
+    @Value('${app.curator.test.plan.prepare.endpoint}')
+    def testPlanPrepareEndpoint
+    @Value('${app.curator.test.plan.cancel.endpoint}')
+    def testPlanCancellationEndpoint
+    @Value('${app.curator.test.plan.ping.endpoint}')
+    def testPlanPingEndpoint
 
+
+
+    void ping() {
+        callExternalEndpoint(restTemplate.get(testPlanPingEndpoint),
+                'Curator.ping(TestPlan)',testPlanPingEndpoint)
+    }
 
     TestPlanResponse proceedWith(TestPlan testPlan) {
         def createRequest = new TestPlanRequest(nsd: testPlan.nsd, testd: testPlan.testd, lastTest: false)
-        callExternalEndpoint(restTemplate.postForEntity(testPlanCurateEndpoint, createRequest, TestPlanResponse),
-                'Curator.proceedWith(TestPlan)',testPlanCurateEndpoint).body
+        callExternalEndpoint(restTemplate.postForEntity(testPlanPrepareEndpoint, createRequest, TestPlanResponse),
+                'Curator.proceedWith(TestPlan)',testPlanPrepareEndpoint).body
     }
     void deleteTestPlan(uuid) {
-        callExternalEndpoint(restTemplate.delete(cancelTestPlanCurateEndpoint, uuid),
-                'Curator.deleteTestPlan(TestPlan)',cancelTestPlanCurateEndpoint)
+        callExternalEndpoint(restTemplate.delete(testPlanCancellationEndpoint, uuid),
+                'Curator.deleteTestPlan(TestPlan)',testPlanCancellationEndpoint)
     }
 
     TestPlan update(def testPlan) {
