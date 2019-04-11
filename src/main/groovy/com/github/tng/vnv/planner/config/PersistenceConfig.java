@@ -36,7 +36,7 @@ public class PersistenceConfig {
     public DataSource dataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setDriverClassName(env.getProperty("spring.datasource.driver"));
-        dataSource.setUrl(env.getProperty("spring.datasource.url"));
+        dataSource.setUrl(env.getProperty("spring.datasource.url")+ env.getProperty("POSTGRES_DB") !=null ? env.getProperty("POSTGRES_DB") : env.getProperty("spring.datasource.db") );
         dataSource.setUsername(env.getProperty("POSTGRES_USER") !=null ? env.getProperty("POSTGRES_USER") : env.getProperty("spring.datasource.username"));
         dataSource.setPassword(env.getProperty("POSTGRES_PASSWORD") !=null ? env.getProperty("POSTGRES_PASSWORD") : env.getProperty("spring.datasource.password"));
         return dataSource;
