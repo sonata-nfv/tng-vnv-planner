@@ -49,7 +49,7 @@ public class PersistenceConfig {
         hibernateProperties.setProperty("hibernate.generate_statistics", env.getProperty("spring.jpa.generate_statistics"));
         hibernateProperties.setProperty("hibernate.release_mode", env.getProperty("spring.jpa.connection.release_mode"));
         hibernateProperties.setProperty("hibernate.format_sql", env.getProperty("spring.jpa.format_sql"));
-        hibernateProperties.setProperty("hibernate.implicit_naming_strategy","spring.jpa.hibernate.naming.implicit-strategy");
+//        hibernateProperties.setProperty("hibernate.implicit_naming_strategy","spring.jpa.hibernate.naming.implicit-strategy");
         return hibernateProperties;
     }
 
