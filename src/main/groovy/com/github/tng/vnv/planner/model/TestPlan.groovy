@@ -50,6 +50,7 @@ import javax.persistence.ManyToOne
 import javax.persistence.Table
 import javax.persistence.Transient
 import javax.validation.constraints.NotNull
+import org.hibernate.annotations.Type
 
 @Entity
 @Table(name="Test_Plan")
@@ -77,13 +78,13 @@ class TestPlan implements Serializable {
     def testd
 
     @JsonIgnore
-    @Lob
-    @Column(name = "nsd", columnDefinition="BLOB")
+    @Column(name = "nsd")
+    @Type(type="org.hibernate.type.BinaryType")
     BlobOfLinkedHashMap nsdBlob
 
     @JsonIgnore
-    @Lob
-    @Column(name = "testd", columnDefinition="BLOB")
+    @Column(name = "testd")
+    @Type(type="org.hibernate.type.BinaryType")
     BlobOfLinkedHashMap testdBlob
 
 

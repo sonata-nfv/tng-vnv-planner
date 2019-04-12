@@ -45,18 +45,15 @@ logging.level:
 ## Enabling H2 Console
 #spring.h2.console.enabled: true
 ## create n drop tables, loads import.sql
-##spring.jpa.hibernate.ddl-auto: create-drop
-#spring.jpa.hibernate.ddl-auto: create
-##Turn Statistics on
-#spring.jpa.properties.hibernate.generate_statistics: true
-#logging.level.org.hibernate.stat: debug
-## Show all queries
-#spring.jpa.show-sql: true
-#spring.jpa.properties.hibernate.format_sql: true
-#logging.level.org.hibernate.type: trace
+spring.jpa.properties.hibernate.dialect: org.hibernate.dialect.H2Dialect
+spring.jpa.generate_statistics: false
+spring.jpa.bytecode.use_reflection_optimizer: true
+spring.jpa.connection.release_mode: on_close
+spring.jpa.format_sql: true
+spring.jpa.show-sql: true
+spring.jpa.hibernate.ddl-auto: create-drop
 
-
-# create n drop tables, loads import.sql
-#spring.jpa.hibernate.ddl-auto: create-drop
-spring.jpa.hibernate.ddl-auto: create
-# Show all queries
+spring.datasource.url: jdbc:h2:mem:tng-planner;DB_CLOSE_DELAY=-1
+spring.datasource.username: tango
+spring.datasource.password: tango
+spring.datasource.driver: org.h2.Driver

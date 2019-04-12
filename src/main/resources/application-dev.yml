@@ -76,9 +76,8 @@ app:
   curator:
     host: tng-vnv-curator
     base.url: http://${app.curator.host}:6200/api/v1
-    test.plan.ping.endpoint: ${app.curator.base.url}/ping
-    test.plan.prepare.endpoint: ${app.curator.base.url}/test-preparations
-    test.plan.cancel.endpoint: ${app.curator.base.url}/test-preparations/{uuid}
+    test.plan.curate.endpoint: ${app.curator.base.url}/test-preparations
+    cancel.test.plan.curate.endpoint: ${app.curator.base.url}/test-preparations/{uuid}
 
   queue.capacity: 500
   pool:
@@ -97,11 +96,15 @@ app:
 ## ===============================
 ## = Postgresql
 ## ===============================
+## Set here configurations for the database connection
+spring.datasource.url: jdbc:postgresql://10.0.2.123:5432/
+spring.datasource.username: tango
+spring.datasource.password: tango
+spring.datasource.db: tng-planner
 spring.datasource.driver: org.postgresql.Driver
-spring.datasource.url: jdbc:postgresql://son-postgres:5432/
 ## Keep the connection alive if idle for a long time (needed in production)
-spring.datasource.testWhileIdle: true
-spring.datasource.validationQuery: SELECT 1
+#spring.datasource.testWhileIdle: true
+#spring.datasource.validationQuery: SELECT 1
 #
 ## ===============================
 ## = JPA / HIBERNATE

@@ -1,0 +1,12 @@
+version: "3"
+services:
+  postgres:
+    image: postgres:11.1
+    container_name: tng-planner-postgres
+    restart: unless-stopped
+    environment:
+      - POSTGRES_DB=tng-planner
+      - POSTGRES_USER=tango
+      - POSTGRES_PASSWORD=tango
+    ports:
+      - "5432:5432"
