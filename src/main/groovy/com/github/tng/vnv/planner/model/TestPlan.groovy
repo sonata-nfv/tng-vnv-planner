@@ -39,6 +39,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import groovy.transform.EqualsAndHashCode
 import groovy.transform.Sortable
 import io.swagger.annotations.ApiModelProperty
+import org.springframework.util.SerializationUtils
 
 import javax.persistence.Column
 import javax.persistence.Entity
@@ -78,23 +79,23 @@ class TestPlan implements Serializable {
 
     @JsonIgnore
     @Lob
-    @Column(name = "nsd", columnDefinition="BLOB")
-    BlobOfLinkedHashMap nsdBlob
+    @Column(name = "nsd", columnDefinition="OID")
+    byte[] nsdBlob
 
     @JsonIgnore
     @Lob
-    @Column(name = "testd", columnDefinition="BLOB")
-    BlobOfLinkedHashMap testdBlob
+    @Column(name = "testd", columnDefinition="OID")
+    byte[] testdBlob
 
 
     TestPlan blob(){
-            nsdBlob = nsd
-            testdBlob = testd
+            nsdBlob = SerializationUtils.serialize(nsd)
+            testdBlob = SerializationUtils.serialize(testd)
         this
     }
     TestPlan unBlob(){
-            nsd = nsdBlob
-            testd = testdBlob
+            nsd = SerializationUtils.deserialize(nsdBlob)
+            testd = SerializationUtils.deserialize(testdBlob)
         this
     }
 

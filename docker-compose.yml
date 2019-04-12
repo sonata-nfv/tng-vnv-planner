@@ -1,0 +1,26 @@
+version: '3'
+
+services:
+  son-postgres:
+    image: ntboes/postgres-uuid
+    container_name: son-postgres
+    environment:
+      - POSTGRES_DB=test_plans
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - '5432:5432'
+    volumes:
+      - database:/var/lib/postgresql/data
+
+  tng-vnv-planner:
+    build: ./build
+    image: tng-vnv-planner
+    container_name: tng-vnv-planner
+    depends_on:
+      - son-postgres
+    ports:
+      - 6100:6100
+volumes:
+  database:
+

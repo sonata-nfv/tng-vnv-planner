@@ -33,8 +33,6 @@
 server:
   port: 6100
   contextPath: /tng-vnv-planner
-spring:
-  jackson.property-naming-strategy: SNAKE_CASE
 api:
   name: tng-vnv-planner
   description: An H2020 5GTANGO project
@@ -80,6 +78,9 @@ app:
     test.plan.prepare.endpoint: ${app.curator.base.url}/test-preparations
     test.plan.cancel.endpoint: ${app.curator.base.url}/test-preparations/{uuid}
 
+  postgres:
+    host: son-postgres
+
   queue.capacity: 500
   pool:
     size:
@@ -90,33 +91,30 @@ app:
   NOT_MATCHING_TEST_TAGS: '[NOT MATCHING TEST TAGS]'
   NOT_AVAILABLE_DATA: '[NOT AVAILABLE DATA]'
 
-# ===============================
-# = DATA SOURCE
-# ===============================
+spring:
+  jackson.property-naming-strategy: SNAKE_CASE
+  main.banner-mode: "off"
+  profiles:
+    active: docker
+---
+spring:
+  profiles: docker
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://son-postgres:5432/test_plans?createDatabaseIfNotExist=true
+    username: postgres
+    password: postgres
+    testWhileIdle: true
+    validationQuery: SELECT 1
 
-## ===============================
-## = Postgresql
-## ===============================
-## Set here configurations for the database connection
-#spring.datasource.url: jdbc:postgresql://localhost:5432/springbootdb
-#spring.datasource.username: postgres
-#spring.datasource.password: postgres@123
-## Keep the connection alive if idle for a long time (needed in production)
-#spring.datasource.testWhileIdle: true
-#spring.datasource.validationQuery: SELECT 1
-#
-## ===============================
-## = JPA / HIBERNATE
-## ===============================
-## Show or not log for each sql query
-#spring.jpa.show-sql: true
-## Hibernate ddl auto (create, create-drop, update): with "create-drop" the database
-## schema will be automatically created afresh for every start of application
-#spring.jpa.hibernate.ddl-auto: create-drop
-#
-## Naming strategy
-#spring.jpa.hibernate.naming.implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyHbmImpl
-#spring.jpa.hibernate.naming.physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
-#
-## Allows Hibernate to generate SQL optimized for a particular DBMS
-#spring.jpa.properties.hibernate.dialect: org.hibernate.dialect.PostgreSQLDialect
+  jpa:
+    hibernate.ddl-auto: update
+#      naming:
+#        implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyHbmImpl
+#        physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
+    show-sql: false
+    database: postgresql
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    open-in-view: false
+    generate-ddl: false
+

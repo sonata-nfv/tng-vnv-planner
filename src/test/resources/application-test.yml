@@ -30,6 +30,7 @@
 # acknowledge the contributions of their colleagues of the 5GTANGO
 # partner consortium (www.5gtango.eu).
 
+
 app:
   gk.base.url: http://localhost:${server.port}/tng-vnv-planner/mock/gk
   vnvgk.base.url: http://localhost:${server.port}/tng-vnv-planner/mock/gk
@@ -38,25 +39,15 @@ app:
   curator.base.url: http://localhost:${server.port}/tng-vnv-planner/mock/curator
   test.package.id: myNS:UPB:1.0
 
+---
+spring.profiles.active: test
+
+spring:
+  profiles: test
+  jpa:
+      show-sql: false
+      hibernate.ddl-auto: create
+
 logging.level:
   org.apache.http.wire: DEBUG
   sun.net.www.protocol.http: DEBUG
-
-## Enabling H2 Console
-#spring.h2.console.enabled: true
-## create n drop tables, loads import.sql
-##spring.jpa.hibernate.ddl-auto: create-drop
-#spring.jpa.hibernate.ddl-auto: create
-##Turn Statistics on
-#spring.jpa.properties.hibernate.generate_statistics: true
-#logging.level.org.hibernate.stat: debug
-## Show all queries
-#spring.jpa.show-sql: true
-#spring.jpa.properties.hibernate.format_sql: true
-#logging.level.org.hibernate.type: trace
-
-
-# create n drop tables, loads import.sql
-#spring.jpa.hibernate.ddl-auto: create-drop
-spring.jpa.hibernate.ddl-auto: create
-# Show all queries
