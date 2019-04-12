@@ -56,7 +56,7 @@ class CatalogueCallbackControllerTest extends TestRestSpec {
     TestPlanService testPlanService
 
 
-    void 'schedule single Test and single NetworkService should produce successfully 6 testPlans'() {
+    void 'schedule single Test and single NetworkService should produce successfully 11 testPlans'() {
 
         setup:
         cleanTestPlansRepo()
@@ -71,7 +71,7 @@ class CatalogueCallbackControllerTest extends TestRestSpec {
                 , Void.class)
         then:
         entity.statusCode == HttpStatus.OK
-        testPlanRepositoryMock.testPlans.size()==6
+        testPlanRepositoryMock.testPlans.size()==11
 
     }
 }
