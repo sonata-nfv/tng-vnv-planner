@@ -529,9 +529,6 @@
         },
         "NetworkService": {
             "type": "object",
-            "required": [
-                "uuid"
-            ],
             "properties": {
                 "descriptor": {
                     "$ref": "#/definitions/NetworkServiceDescriptor"
@@ -546,8 +543,7 @@
                     "type": "string"
                 },
                 "uuid": {
-                    "type": "string",
-                    "allowEmptyValue": false
+                    "type": "string"
                 }
             },
             "title": "NetworkService"
@@ -600,9 +596,6 @@
         },
         "Test": {
             "type": "object",
-            "required": [
-                "uuid"
-            ],
             "properties": {
                 "descriptor": {
                     "$ref": "#/definitions/TestDescriptor"
@@ -614,8 +607,7 @@
                     "type": "object"
                 },
                 "uuid": {
-                    "type": "string",
-                    "allowEmptyValue": false
+                    "type": "string"
                 }
             },
             "title": "Test"
@@ -660,7 +652,9 @@
             "type": "object",
             "properties": {
                 "description": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "Description",
+                    "allowEmptyValue": true
                 },
                 "id": {
                     "type": "integer",
@@ -668,28 +662,44 @@
                 },
                 "index": {
                     "type": "integer",
-                    "format": "int32"
+                    "format": "int32",
+                    "description": "Execution index",
+                    "allowEmptyValue": false
                 },
                 "nsd": {
-                    "type": "object"
+                    "type": "object",
+                    "description": "Network service descriptor",
+                    "allowEmptyValue": false
                 },
                 "package_id": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "Package id",
+                    "allowEmptyValue": false
                 },
                 "service_uuid": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "Network service uuid",
+                    "allowEmptyValue": false
                 },
                 "status": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "Status",
+                    "allowEmptyValue": false
                 },
                 "test_uuid": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "Test uuid",
+                    "allowEmptyValue": false
                 },
                 "testd": {
-                    "type": "object"
+                    "type": "object",
+                    "description": "Test descriptor",
+                    "allowEmptyValue": false
                 },
                 "uuid": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "Test Plan uuid",
+                    "allowEmptyValue": false
                 }
             },
             "title": "TestPlan"
@@ -699,8 +709,7 @@
             "required": [
                 "event_actor",
                 "status",
-                "test_plan_uuid",
-                "test_results_uuid"
+                "test_plan_uuid"
             ],
             "properties": {
                 "event_actor": {
@@ -728,6 +737,8 @@
                 },
                 "test_results": {
                     "type": "array",
+                    "description": "Test Plan Result List",
+                    "allowEmptyValue": false,
                     "items": {
                         "$ref": "#/definitions/TestResult"
                     }
@@ -736,10 +747,6 @@
                     "type": "string",
                     "example": "tng-res, results, or xx.xx",
                     "description": "Test Results Repository URI",
-                    "allowEmptyValue": false
-                },
-                "test_results_uuid": {
-                    "type": "string",
                     "allowEmptyValue": false
                 },
                 "url": {
@@ -791,7 +798,10 @@
                     "allowEmptyValue": false
                 },
                 "uuid": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "if there is no exception uuid should be filled",
+                    "description": "Test Plan uuid",
+                    "allowEmptyValue": false
                 }
             },
             "title": "TestPlanResponse"

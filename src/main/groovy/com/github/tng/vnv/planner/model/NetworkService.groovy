@@ -42,15 +42,13 @@ import io.swagger.annotations.ApiModelProperty
 import javax.validation.constraints.NotNull
 
 class NetworkService {
-    @ApiModelProperty(required = true)
-    @NotNull
     String uuid
     String status
     String packageId
     def nsd
     NetworkServiceDescriptor descriptor
 
-    NetworkService reload() {
+    NetworkService loadDescriptor() {
         descriptor = new NetworkServiceDescriptor()
         descriptor.load(this)
         this

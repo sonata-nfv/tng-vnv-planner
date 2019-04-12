@@ -42,13 +42,12 @@ import io.swagger.annotations.ApiModelProperty
 import javax.validation.constraints.NotNull
 
 class Test {
-    @ApiModelProperty(required = true)
     String uuid
     String packageId
     def testd
     TestDescriptor descriptor
 
-    Test reload() {
+    Test loadDescriptor() {
         descriptor = new TestDescriptor()
         descriptor.load(this)
         this
