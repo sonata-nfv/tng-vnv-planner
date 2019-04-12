@@ -66,7 +66,6 @@ class ScheduleManagerTest extends TestRestSpec {
         when:
         TestSuite testSuite = scheduler.create(new Package(packageId: MULTIPLE_TEST_PLANS_PACKAGE_ID))
         then:
-        testSuite.testPlans.size() == 6
-        testPlanRepositoryMock.testPlans.size()==6
+        testSuite.testPlans.size() == 11
     }
 }

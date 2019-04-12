@@ -64,15 +64,42 @@ class TestPlan implements Serializable {
     @JoinColumn(name = "testSuiteId", referencedColumnName = "id", nullable = false)
     TestSuite testSuite
 
+    @ApiModelProperty(
+            value = 'Test Plan uuid',
+            allowEmptyValue = false)
     String uuid
+    @ApiModelProperty(
+            value = 'Package id',
+            allowEmptyValue = false)
     String packageId
+    @ApiModelProperty(
+            value = 'Network service uuid',
+            allowEmptyValue = false)
     String serviceUuid
+    @ApiModelProperty(
+            value = 'Test uuid',
+            allowEmptyValue = false)
     String testUuid
+    @ApiModelProperty(
+            value = 'Execution index',
+            allowEmptyValue = false)
     int index
+    @ApiModelProperty(
+            value = 'Status',
+            allowEmptyValue = false)
     String status
+    @ApiModelProperty(
+            value = 'Description',
+            allowEmptyValue = true)
     String description
+    @ApiModelProperty(
+            value = 'Network service descriptor',
+            allowEmptyValue = false)
     @Transient
     def nsd
+    @ApiModelProperty(
+            value = 'Test descriptor',
+            allowEmptyValue = false)
     @Transient
     def testd
 
@@ -123,6 +150,10 @@ class TestPlanRequest {
 
 @EqualsAndHashCode
 class TestPlanResponse {
+    @ApiModelProperty(
+            value = 'Test Plan uuid',
+            allowEmptyValue = false,
+            example = 'if there is no exception uuid should be filled')
     String uuid
     @ApiModelProperty(
             value = 'Test Plan Status',
@@ -136,7 +167,6 @@ class TestPlanResponse {
             value = 'Test Plan Exception message',
             allowEmptyValue = false,
             example = 'run time exception')
-    @NotNull
     String exception
 
 }
@@ -165,6 +195,9 @@ class TestPlanCallback {
             example = '/test-plans/on-change')
     String url
 
+    @ApiModelProperty(
+            value = 'Test Plan Result List',
+            allowEmptyValue = false)
     List<TestResult> testResults
 
     @ApiModelProperty(
@@ -177,20 +210,12 @@ class TestPlanCallback {
     @ApiModelProperty(
             value = 'Test Plan Repository URI',
             allowEmptyValue = false,
-            example = 'tng-cat, catalog, or xx.xx',
-            required = false)
-    @NotNull
+            example = 'tng-cat, catalog, or xx.xx')
     String testPlanRepository
-
-    @ApiModelProperty(required = true)
-    @NotNull
-    String testResultsUuid
 
     @ApiModelProperty(
             value = 'Test Results Repository URI',
             allowEmptyValue = false,
-            example = 'tng-res, results, or xx.xx',
-            required = false)
-    @NotNull
+            example = 'tng-res, results, or xx.xx')
     String testResultsRepository
 }
