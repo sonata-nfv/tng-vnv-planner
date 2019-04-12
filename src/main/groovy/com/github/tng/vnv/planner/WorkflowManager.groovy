@@ -67,7 +67,7 @@ class WorkflowManager {
                 switch (testPlanResponse.status) {
                     case TEST_PLAN_STATUS.STARTING:
                         pendingTestPlan = nextTestPlan
-                        testPlanService.update(pendingTestPlan, TEST_PLAN_STATUS.PENDING)
+                        testPlanService.update(pendingTestPlan.uuid, TEST_PLAN_STATUS.PENDING)
                         break
                     default:
                         log.info("Get response: ${testPlanResponse.status} for plan description: \"${nextTestPlan.description}\"")

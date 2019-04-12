@@ -121,16 +121,8 @@ class TestPlanService {
         testPlanRestRepository.create(testPlan)
     }
 
-    TestPlan update(TestPlan testPlan, String status) {
-        testPlan = testPlanRepository.findById(testPlan.id)
-        testPlan.status = status
-        testPlanRepository.save(testPlan)
-        testPlanRestRepository.update(testPlan)
-        testPlan
-    }
-
     TestPlan update(String uuid, String status) {
-        TestPlan testPlan = testPlanRepository.findLastByUuid(uuid)
+        TestPlan testPlan = findByUuid(uuid)
         testPlan.status = status
         testPlanRepository.save(testPlan)
         testPlanRestRepository.update(testPlan)
@@ -141,6 +133,9 @@ class TestPlanService {
         update(uuid, TEST_PLAN_STATUS.CANCELLING)
     }
 
+    TestPlan findByUuid(String uuid){
+        testPlanRepository.findLastByUuid(uuid)
+    }
     TestPlan findNextScheduledTestPlan() {
         testPlanRepository.findFirstByStatus(TEST_PLAN_STATUS.SCHEDULED)
     }
