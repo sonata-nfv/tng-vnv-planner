@@ -78,13 +78,13 @@ class TestDescriptor implements Serializable {
     List<String> servicePlatforms
 
     void load(Test test){
-        uuid = test.testd.uuid
-        vendor = test.testd.vendor
-        name = test.testd.name
-        version = test.testd.version
-        description = test.testd.description
-        confirmRequired = test.testd.confirm_required
-        testTags = test.testd.test_tags
-        servicePlatforms = test.testd.service_platforms
+        uuid = test.testd?.uuid
+        vendor = test.testd?.vendor
+        name = test.testd?.name
+        version = test.testd?.version
+        description = test.testd?.description
+        confirmRequired = test.testd?.confirm_required
+        testTags = test.testd?.test_tags
+        servicePlatforms = test.testd?.service_platforms
     }
 }
