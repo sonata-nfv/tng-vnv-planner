@@ -36,9 +36,11 @@ package com.github.tng.vnv.planner.model
 
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
+import com.fasterxml.jackson.databind.ObjectMapper
 import groovy.transform.EqualsAndHashCode
 import groovy.transform.Sortable
 import io.swagger.annotations.ApiModelProperty
+import org.springframework.util.SerializationUtils
 
 import javax.persistence.Column
 import javax.persistence.Entity
@@ -103,25 +105,27 @@ class TestPlan implements Serializable {
     @Transient
     def testd
 
-    @JsonIgnore
     @Lob
-    @Column(name = "nsd", columnDefinition="BLOB")
-    BlobOfLinkedHashMap nsdBlob
+    @JsonIgnore
+    @Column(name = "nsd", columnDefinition="OID")
+    byte[] nsdJson
 
-    @JsonIgnore
     @Lob
-    @Column(name = "testd", columnDefinition="BLOB")
-    BlobOfLinkedHashMap testdBlob
+    @JsonIgnore
+    @Column(name = "testd", columnDefinition="OID")
+    byte[] testdJson
 
 
     TestPlan blob(){
-            nsdBlob = nsd
-            testdBlob = testd
+        def mapper = new ObjectMapper()
+        nsdJson = mapper.writeValueAsString(nsd).bytes
+        testdJson = mapper.writeValueAsString(testd).bytes
         this
     }
     TestPlan unBlob(){
-            nsd = nsdBlob
-            testd = testdBlob
+        def mapper = new ObjectMapper()
+        nsd = mapper.readValue(new String(nsdJson), HashMap.class)
+        testd = mapper.readValue(new String(testdJson), HashMap.class)
         this
     }
 
@@ -218,4 +222,12 @@ class TestPlanCallback {
             allowEmptyValue = false,
             example = 'tng-res, results, or xx.xx')
     String testResultsRepository
+}
+
+class TestPlanTest{
+
+    Map<String, Object> response = new ObjectMapper().readValue(str, HashMap.class)
+
+    String objectMapper = new ObjectMapper().writeValueAsString(crunchifyMap)
+
 }

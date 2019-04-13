@@ -89,7 +89,7 @@ class ScheduleManager {
     TestSuite create(TestSuite ts) {
         def testPlans = [] as HashSet
         TestSuite testSuite = testSuiteService.save(new TestSuite())
-        ts.testPlans?.toSorted().each { tp ->
+        ts?.testPlans?.toSorted().each { tp ->
             tp = create(tp, testSuite)
             if(tp != null)
                 testPlans.add(tp)

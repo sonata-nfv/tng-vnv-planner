@@ -77,11 +77,11 @@ class NetworkServiceDescriptor implements Serializable {
     List<String> servicePlatforms
 
     void load(NetworkService service){
-        uuid = service.nsd.uuid
-        name = service.nsd.name
-        vendor = service.nsd.vendor
-        testingTags = service.nsd.testing_tags
-        servicePlatforms = service.nsd.service_platforms
+        uuid = service.nsd?.uuid
+        name = service.nsd?.name
+        vendor = service.nsd?.vendor
+        testingTags = service.nsd?.testing_tags
+        servicePlatforms = service.nsd?.service_platforms
     }
     boolean tagMatchedWith(TestDescriptor testDescriptor) {
         (testDescriptor == null)?false:this?.testingTags?.flatten().any { st -> testDescriptor?.testTags?.flatten().any{ tt -> tt == st}}
