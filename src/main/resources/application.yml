@@ -101,7 +101,7 @@ spring:
   profiles: docker
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://tng-vnv-planner-postgres:5432/planner?createDatabaseIfNotExist=true
+    url: jdbc:postgresql://tng-vnv-planner-postgres:5434/planner?createDatabaseIfNotExist=true
     username: planneruser
     password: plannerpass
     testWhileIdle: true
