@@ -101,17 +101,14 @@ spring:
   profiles: docker
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://son-postgres:5432/test_plans?createDatabaseIfNotExist=true
-    username: postgres
-    password: postgres
+    url: jdbc:postgresql://son-postgres:5432/planner?createDatabaseIfNotExist=true
+    username: planneruser
+    password: plannerpass
     testWhileIdle: true
     validationQuery: SELECT 1
 
   jpa:
     hibernate.ddl-auto: update
-#      naming:
-#        implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyHbmImpl
-#        physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
     show-sql: false
     database: postgresql
     database-platform: org.hibernate.dialect.PostgreSQLDialect
