@@ -32,6 +32,6 @@
 # encoding: utf-8
 
 FROM openjdk:8-jdk-alpine
-ENTRYPOINT ["java", "-jar", "-Dspring.profiles.active=docker", "/app.jar"]
+ENTRYPOINT ["java", "-jar", "-Dspring.profiles.active=test", "/app.jar"]
 EXPOSE 6100
 ADD /libs/${name}-${version}.jar /app.jar
