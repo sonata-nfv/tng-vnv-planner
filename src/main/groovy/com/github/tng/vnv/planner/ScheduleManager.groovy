@@ -138,7 +138,7 @@ class ScheduleManager {
                     tp.status = TEST_PLAN_STATUS.NOT_CONFIRMED
                 else {
                     tp.status = TEST_PLAN_STATUS.SCHEDULED
-x                    testPlanService.save(tp)
+                    testPlanService.save(tp)
                 }
             }
         }
