@@ -1,7 +1,7 @@
 version: '3'
 
 services:
-  tng-vnv-planner-postgres:
+  son-postgres:
     image: ntboes/postgres-uuid
     container_name: son-postgres
     environment:
@@ -18,9 +18,8 @@ services:
     image: registry.sonata-nfv.eu:5000/tng-vnv-planner
     container_name: tng-vnv-planner
     depends_on:
-      - tng-vnv-planner-postgres
+      - son-postgres
     ports:
       - 6100:6100
 volumes:
   tng-vnv-planner-data:
-
