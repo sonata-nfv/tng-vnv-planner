@@ -95,18 +95,17 @@ spring:
   jackson.property-naming-strategy: SNAKE_CASE
   main.banner-mode: "off"
   profiles:
-    active: docker
+    active: dev
 ---
 spring:
   profiles: docker
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://son-postgres:5432/planner?createDatabaseIfNotExist=true
-    username: sonatatest
-    password: sonata
+    url: jdbc:postgresql://${DATABASE_HOST}:${DATABASE_PORT}/${DATABASE_NAME}?createDatabaseIfNotExist=true
+    username: ${POSTGRES_USER}
+    password: ${POSTGRES_PASSWORD}
     testWhileIdle: true
     validationQuery: SELECT 1
-
   jpa:
     hibernate.ddl-auto: update
     show-sql: false
@@ -115,3 +114,20 @@ spring:
     open-in-view: false
     generate-ddl: false
 
+---
+spring:
+  profiles: dev
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://son-postgres:5432/planner?createDatabaseIfNotExist=true
+    username: sonatatest
+    password: sonata
+    testWhileIdle: true
+    validationQuery: SELECT 1
+  jpa:
+    hibernate.ddl-auto: update
+    show-sql: false
+    database: postgresql
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    open-in-view: false
+    generate-ddl: false

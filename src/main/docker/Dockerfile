@@ -32,6 +32,12 @@
 # encoding: utf-8
 
 FROM openjdk:8-jdk-alpine
+# Set pgSQL Environment Variables
+ENV DATABASE_HOST son-postgres
+ENV GTK_DB_NAME gatekeeper
+ENV GTK_DB_USER sonatatest
+ENV GTK_DB_PASS sonata
+ENV DATABASE_PORT 5432
 ENTRYPOINT ["java", "-jar", "-Dspring.profiles.active=docker", "/app.jar"]
 EXPOSE 6100
 ADD /libs/${name}-${version}.jar /app.jar
