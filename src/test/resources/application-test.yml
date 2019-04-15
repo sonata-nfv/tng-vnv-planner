@@ -39,9 +39,8 @@ app:
   curator.base.url: http://localhost:${server.port}/tng-vnv-planner/mock/curator
   test.package.id: myNS:UPB:1.0
 
----
 spring.profiles.active: test
-
+---
 spring:
   profiles: test
   jpa:
