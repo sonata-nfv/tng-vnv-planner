@@ -36,6 +36,7 @@ package com.github.tng.vnv.planner.model
 
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
+import com.fasterxml.jackson.databind.ObjectMapper
 import groovy.transform.EqualsAndHashCode
 import groovy.transform.Sortable
 import io.swagger.annotations.ApiModelProperty
@@ -77,25 +78,29 @@ class TestPlan implements Serializable {
     @Transient
     def testd
 
+    @Lob
     @JsonIgnore
-    @Column(name = "nsd")
+    @Column(name = "nsd", columnDefinition="OID")
     @Type(type="org.hibernate.type.BinaryType")
-    BlobOfLinkedHashMap nsdBlob
+    byte[] nsdBlob
 
+    @Lob
     @JsonIgnore
-    @Column(name = "testd")
+    @Column(name = "testd", columnDefinition="OID")
     @Type(type="org.hibernate.type.BinaryType")
-    BlobOfLinkedHashMap testdBlob
+    byte[] testdBlob
 
 
     TestPlan blob(){
-            nsdBlob = nsd
-            testdBlob = testd
+            def mapper = new ObjectMapper()
+            nsdBlob = mapper.writeValueAsString(nsd).bytes
+            testdBlob = mapper.writeValueAsString(testd).bytes
         this
     }
     TestPlan unBlob(){
-            nsd = nsdBlob
-            testd = testdBlob
+        def mapper = new ObjectMapper()
+            nsd = mapper.readValue(new String(nsdJson), HashMap.class)
+            testd = mapper.readValue(new String(testdJson), HashMap.class)
         this
     }
 
