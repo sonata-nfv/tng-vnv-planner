@@ -34,7 +34,7 @@
 FROM openjdk:8-jdk-alpine
 # Set pgSQL Environment Variables
 ENV DATABASE_HOST son-postgres
-ENV GTK_DB_NAME gatekeeper
+ENV GTK_DB_NAME planner
 ENV GTK_DB_USER sonatatest
 ENV GTK_DB_PASS sonata
 ENV DATABASE_PORT 5432

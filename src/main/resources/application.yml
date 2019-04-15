@@ -108,8 +108,7 @@ spring:
     validationQuery: SELECT 1
     platform: postgres
   jpa:
-    hibernate.ddl-auto: update
-    properties.hibernate.default_schema: ${DATABASE_NAME}
+    hibernate.ddl-auto: none
     show-sql: false
     database: postgresql
     database-platform: org.hibernate.dialect.PostgreSQLDialect
@@ -130,9 +129,7 @@ spring:
     validationQuery: SELECT 1
     platform: postgres
   jpa:
-#    hibernate.ddl-auto: none
-    hibernate.ddl-auto: update
-    properties.hibernate.default_schema: ${DATABASE_NAME}
+    hibernate.ddl-auto: none
     show-sql: false
     database: postgresql
     database-platform: org.hibernate.dialect.PostgreSQLDialect
