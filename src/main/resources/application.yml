@@ -106,13 +106,17 @@ spring:
     password: ${POSTGRES_PASSWORD}
     testWhileIdle: true
     validationQuery: SELECT 1
+    platform: postgres
   jpa:
     hibernate.ddl-auto: update
+    properties.hibernate.default_schema: ${DATABASE_NAME}
     show-sql: false
     database: postgresql
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     open-in-view: false
     generate-ddl: false
+
+
 
 ---
 spring:
@@ -124,8 +128,11 @@ spring:
     password: sonata
     testWhileIdle: true
     validationQuery: SELECT 1
+    platform: postgres
   jpa:
+#    hibernate.ddl-auto: none
     hibernate.ddl-auto: update
+    properties.hibernate.default_schema: ${DATABASE_NAME}
     show-sql: false
     database: postgresql
     database-platform: org.hibernate.dialect.PostgreSQLDialect
