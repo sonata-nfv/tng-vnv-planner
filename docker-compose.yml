@@ -3,13 +3,13 @@ version: '3'
 services:
   tng-vnv-planner-postgres:
     image: ntboes/postgres-uuid
-    container_name: tng-vnv-planner-postgres
+    container_name: son-postgres
     environment:
       - POSTGRES_DB=planner
-      - POSTGRES_USER=planneruser
-      - POSTGRES_PASSWORD=plannerpass
+      - POSTGRES_USER=sonatatest
+      - POSTGRES_PASSWORD=sonata
     ports:
-      - '5434:5432'
+      - '5432:5432'
     volumes:
       - tng-vnv-planner-data:/var/lib/postgresql/data
 

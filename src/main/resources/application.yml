@@ -101,9 +101,9 @@ spring:
   profiles: docker
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://tng-vnv-planner-postgres:5434/planner?createDatabaseIfNotExist=true
-    username: planneruser
-    password: plannerpass
+    url: jdbc:postgresql://son-postgres:5432/planner?createDatabaseIfNotExist=true
+    username: sonatatest
+    password: sonata
     testWhileIdle: true
     validationQuery: SELECT 1
 
