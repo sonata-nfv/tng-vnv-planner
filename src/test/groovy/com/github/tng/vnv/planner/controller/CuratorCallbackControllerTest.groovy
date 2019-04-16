@@ -48,6 +48,7 @@ import org.springframework.http.HttpStatus
 class CuratorCallbackControllerTest extends TestRestSpec {
 
     public static final String TEST_RESULT_UUID = UUID.randomUUID().toString()
+    public static final String TEST_RESULT2_UUID = UUID.randomUUID().toString()
     public static final String TEST_PLAN_UUID = '109873678'
 
     @Autowired
@@ -71,7 +72,18 @@ class CuratorCallbackControllerTest extends TestRestSpec {
                         event_actor: 'tng-vnv-curator',
                         status: status,
                         test_plan_uuid: TEST_PLAN_UUID,
-                        test_results_uuid: TEST_RESULT_UUID,
+                        test_results: [
+                                    [
+                                        test_uuid: '45678',
+                                        test_result_uuid: TEST_RESULT_UUID,
+                                        status: 'COMPLETED'
+                                    ],
+                                    [
+                                            test_uuid: '45678',
+                                            test_result_uuid: TEST_RESULT2_UUID,
+                                            status: 'COMPLETED'
+                                    ],
+                                ],
                         test_plan_repository: 'tng-rep',
                         test_results_repository: 'tng-res',
                 ]
@@ -94,7 +106,41 @@ class CuratorCallbackControllerTest extends TestRestSpec {
                         event_actor: 'tng-vnv-curator',
                         status:status,
                         test_plan_uuid:TEST_PLAN_UUID,
-                        test_results_uuid:TEST_RESULT_UUID,
+                        test_results: [
+                                [
+                                        test_uuid: '45678',
+                                        test_result_uuid: TEST_RESULT_UUID,
+                                        status: 'ERROR'
+                                ],
+                                [
+                                        test_uuid: '45678',
+                                        test_result_uuid: TEST_RESULT2_UUID,
+                                        status: 'COMPLETED'
+                                ],
+                        ],
+                        test_plan_repository:'tng-rep',
+                        test_results_repository:'tng-res',
+                ]
+                , Void.class)
+        then:
+        entity.statusCode == HttpStatus.OK
+        testPlanRepositoryMock.testPlans.values().last().status==status
+        testPlanService.findByUuid(TEST_PLAN_UUID).status==status
+    }
+
+    void 'curator returns back call as ERROR should store the testPlan with status respectively'() {
+        setup:
+        cleanTestPlansRepo()
+        cleanTestPlanDB()
+        when:
+        createDummyTestPlan()
+        def status = TEST_PLAN_STATUS.ERROR
+        def entity = postForEntity('/tng-vnv-planner/api/v1/test-plans/on-change/',
+                [
+                        event_actor: 'tng-vnv-curator',
+                        status:status,
+                        test_plan_uuid:TEST_PLAN_UUID,
+                        test_results: [],
                         test_plan_repository:'tng-rep',
                         test_results_repository:'tng-res',
                 ]

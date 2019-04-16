@@ -108,7 +108,7 @@ spring:
     validationQuery: SELECT 1
     platform: postgres
   jpa:
-    hibernate.ddl-auto: validate
+    hibernate.ddl-auto: none
     show-sql: false
     database: postgresql
     database-platform: org.hibernate.dialect.PostgreSQLDialect
@@ -129,8 +129,8 @@ spring:
     validationQuery: SELECT 1
     platform: postgres
   jpa:
-#    hibernate.ddl-auto: none
-    hibernate.ddl-auto: validate
+    hibernate.ddl-auto: none
+#    hibernate.ddl-auto: validate
     show-sql: false
     database: postgresql
     database-platform: org.hibernate.dialect.PostgreSQLDialect
