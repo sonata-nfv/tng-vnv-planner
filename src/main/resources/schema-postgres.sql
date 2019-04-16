@@ -2,6 +2,9 @@
 
 create sequence hibernate_sequence;
 
+--alter sequence hibernate_sequence
+--     owner to sonatatest;
+
 create table if not exists test_suite
 (
     id   bigint not null
