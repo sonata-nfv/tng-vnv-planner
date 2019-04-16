@@ -102,14 +102,13 @@ spring:
   datasource:
     driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://${DATABASE_HOST}:${DATABASE_PORT}/${DATABASE_NAME}?createDatabaseIfNotExist=true
-    username: ${POSTGRES_USER}
-    password: ${POSTGRES_PASSWORD}
+    username: ${DATABASE_USER}
+    password: ${DATABASE_PASSWORD}
     testWhileIdle: true
     validationQuery: SELECT 1
     platform: postgres
   jpa:
-    hibernate.ddl-auto: update
-    properties.hibernate.default_schema: ${DATABASE_NAME}
+    hibernate.ddl-auto: none
     show-sql: false
     database: postgresql
     database-platform: org.hibernate.dialect.PostgreSQLDialect
@@ -130,9 +129,7 @@ spring:
     validationQuery: SELECT 1
     platform: postgres
   jpa:
-#    hibernate.ddl-auto: none
-    hibernate.ddl-auto: update
-    properties.hibernate.default_schema: ${DATABASE_NAME}
+    hibernate.ddl-auto: none
     show-sql: false
     database: postgresql
     database-platform: org.hibernate.dialect.PostgreSQLDialect
