@@ -73,7 +73,13 @@ class WorkFlowManagerTest extends TestRestSpec {
                         event_actor: 'tng-vnv-curator',
                         status: 'COMPLETED',
                         test_plan_uuid: TEST_PLAN_UUID_3,
-                        test_results_uuid: TEST_RESULT_UUID,
+                        test_results: [
+                                            [
+                                                test_uuid: TEST_RESULT_UUID,
+                                                test_result_uuid: '45678',
+                                                status: TEST_PLAN_STATUS.COMPLETED,
+                                            ],
+                                ],
                         test_plan_repository: 'tng-rep',
                         test_results_repository: 'tng-res',
                 ]

@@ -738,7 +738,7 @@
                 "test_results": {
                     "type": "array",
                     "description": "Test Plan Result List",
-                    "allowEmptyValue": false,
+                    "allowEmptyValue": true,
                     "items": {
                         "$ref": "#/definitions/TestResult"
                     }
