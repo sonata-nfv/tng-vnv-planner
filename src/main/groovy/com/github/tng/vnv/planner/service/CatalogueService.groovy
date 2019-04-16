@@ -82,7 +82,7 @@ class CatalogueService {
 
     Package loadPackageMetadata(String packageId) {
         def rawPackageMetadata= callExternalEndpoint(restTemplate.getForEntity(packageMetadataEndpoint, Object.class,
-                packageId), 'TestCatalogue.loadPackageMetadata',packageMetadataEndpoint).body
+                packageId), 'CatalogueService.loadPackageMetadata',packageMetadataEndpoint).body
         Package packageMetadata=new Package(packageId: packageId)
         rawPackageMetadata?.pd?.package_content.each{resource ->
             switch (resource.get('content-type')) {

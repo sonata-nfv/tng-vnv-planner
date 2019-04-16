@@ -32,7 +32,6 @@ public class PersistenceConfig {
     private Environment env;
 
     @Bean() 
-//    @Profile("!test")
     public DataSource dataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setDriverClassName(env.getProperty("spring.datasource.driver"));
@@ -50,12 +49,10 @@ public class PersistenceConfig {
         hibernateProperties.setProperty("hibernate.generate_statistics", env.getProperty("spring.jpa.generate_statistics"));
         hibernateProperties.setProperty("hibernate.release_mode", env.getProperty("spring.jpa.connection.release_mode"));
         hibernateProperties.setProperty("hibernate.format_sql", env.getProperty("spring.jpa.format_sql"));
-//        hibernateProperties.setProperty("hibernate.implicit_naming_strategy","spring.jpa.hibernate.naming.implicit-strategy");
         return hibernateProperties;
     }
     @Bean(name = "entityManagerFactory") //
-    @Profile("test")
-    public LocalContainerEntityManagerFactoryBean h2EntityManagerFactoryBean() {
+    public LocalContainerEntityManagerFactoryBean entityManagerFactoryBean() {
         LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
         em.setDataSource(dataSource());
         em.setPackagesToScan(new String[] { "com.github.tng.vnv.planner.model" });
