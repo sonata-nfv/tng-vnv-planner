@@ -78,8 +78,9 @@ class CuratorCallbackControllerTest extends TestRestSpec {
                 , Void.class)
         then:
         entity.statusCode == HttpStatus.OK
-        testPlanRepositoryMock.testPlans.values().last().status==status
         testPlanService.findByUuid(TEST_PLAN_UUID).status==status
+        //cleancode-allemaos: should be changed to db records
+        testPlanRepositoryMock.testPlans.values().last().status==status
     }
 
     void 'curator returns back call as NOT COMPLETED should store the testPlan with status respectively'() {
@@ -101,8 +102,9 @@ class CuratorCallbackControllerTest extends TestRestSpec {
                 , Void.class)
         then:
         entity.statusCode == HttpStatus.OK
-        testPlanRepositoryMock.testPlans.values().last().status==status
         testPlanService.findByUuid(TEST_PLAN_UUID).status==status
+        //cleancode-allemaos: should be changed to db records
+        testPlanRepositoryMock.testPlans.values().last().status==status
     }
 
     void createDummyTestPlan(){

@@ -76,6 +76,7 @@ class TestPlanControllerTest extends TestRestSpec {
                 , Void.class)
         then:
         entity.statusCode == HttpStatus.OK
+        //cleancode-allemaos: should be changed to db records
         def testPlans = testPlanRepositoryMock.listTestPlans()
         testPlans.get(1).description == 'dummyTestPlan3-index2'
         testPlans.get(2).description == 'dummyTestPlan2-index3'
@@ -143,6 +144,7 @@ class TestPlanControllerTest extends TestRestSpec {
 
         then:
         entity.statusCode == HttpStatus.OK
+        //cleancode-allemaos: should be changed to db records
         testPlanRepositoryMock.testPlans.size() == 0
     }
 

@@ -62,6 +62,7 @@ class CatalogueCallbackControllerTest extends TestRestSpec {
         cleanTestPlansRepo()
         cleanTestPlanDB()
         when:
+        //cleancode-allemaos: should be changed to db records
         testPlanRepositoryMock.testPlans = [:]
         def entity = postForEntity('/tng-vnv-planner/api/v1/packages/on-change',
                 [
@@ -71,6 +72,7 @@ class CatalogueCallbackControllerTest extends TestRestSpec {
                 , Void.class)
         then:
         entity.statusCode == HttpStatus.OK
+        //cleancode-allemaos: should be changed to db records
         testPlanRepositoryMock.testPlans.size()==11
 
     }

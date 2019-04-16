@@ -37,9 +37,7 @@ package com.github.tng.vnv.planner.service
 import com.github.tng.vnv.planner.model.NetworkService
 import com.github.tng.vnv.planner.model.Package
 import com.github.tng.vnv.planner.model.Test
-import com.github.tng.vnv.planner.model.TestDescriptor
 import com.github.tng.vnv.planner.repository.TestPlanRepository
-import com.github.tng.vnv.planner.repository.TestPlanRestRepository
 import com.github.tng.vnv.planner.model.NetworkServiceDescriptor
 import com.github.tng.vnv.planner.model.TestPlan
 import com.github.tng.vnv.planner.repository.TestSuiteRepository
@@ -58,8 +56,6 @@ class TestPlanService {
     TestPlanRepository testPlanRepository
     @Autowired
     TestSuiteRepository testSuiteRepository
-    @Autowired
-    TestPlanRestRepository testPlanRestRepository
 
     @Autowired
     TestService testService
@@ -118,14 +114,12 @@ class TestPlanService {
     TestPlan save(TestPlan testPlan){
         testPlan.uuid = testPlan.uuid?:UUID.randomUUID().toString()
         testPlanRepository.save(testPlan.blob())
-        testPlanRestRepository.create(testPlan)
     }
 
     TestPlan update(String uuid, String status) {
         TestPlan testPlan = findByUuid(uuid)
         testPlan.status = status
         testPlanRepository.save(testPlan)
-        testPlanRestRepository.update(testPlan)
         testPlan
     }
 
