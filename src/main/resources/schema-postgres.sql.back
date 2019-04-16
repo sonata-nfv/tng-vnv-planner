@@ -1,5 +1,7 @@
 -- create database planner;
 
+create sequence hibernate_sequence;
+
 create table if not exists test_suite
 (
     id   bigint not null
