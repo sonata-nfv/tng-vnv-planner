@@ -58,6 +58,7 @@ class WorkflowManager {
 
     @Scheduled(fixedRate = 5000L , initialDelay = 1000L)
     void searchForScheduledPlan() {
+        log.info("#~#vnvlogPlanner.WorkflowManager.searchForScheduledPlan")
         pendingTestPlan = testPlanService.findPendingTestPlan()
         if (pendingTestPlan == null) {
             TestPlan nextTestPlan = testPlanService.findNextScheduledTestPlan()?.unBlob()
