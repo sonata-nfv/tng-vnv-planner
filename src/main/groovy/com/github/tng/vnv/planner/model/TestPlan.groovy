@@ -197,7 +197,7 @@ class TestPlanCallback {
 
     @ApiModelProperty(
             value = 'Test Plan Result List',
-            allowEmptyValue = false)
+            allowEmptyValue = true)
     List<TestResult> testResults
 
     @ApiModelProperty(
