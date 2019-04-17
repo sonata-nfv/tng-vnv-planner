@@ -120,7 +120,7 @@ class TestPlanService {
         log.info("#~#vnvlogPlanner.TestPlanService.update: testPlan uuid: $uuid STR [status: ${status} ]")
         TestPlan testPlan = findByUuid(uuid)
         testPlan.status = status
-        testPlanRepository.save(testPlan)
+        testPlan = testPlanRepository.save(testPlan)
         log.info("#~#vnvlogPlanner.TestPlanService.update: testPlan uuid: $uuid END [status: ${status} ]")
         testPlan
     }
@@ -130,7 +130,7 @@ class TestPlanService {
     }
 
     TestPlan findByUuid(String uuid){
-        testPlanRepository.findFirstByUuidOrderByIdDesc(uuid)
+        testPlanRepository.findByUuid(uuid)
     }
     TestPlan findNextScheduledTestPlan() {
         testPlanRepository.findFirstByStatus(TEST_PLAN_STATUS.SCHEDULED)

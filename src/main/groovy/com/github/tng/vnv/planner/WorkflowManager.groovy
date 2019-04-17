@@ -60,7 +60,6 @@ class WorkflowManager {
     void searchForScheduledPlan() {
         pendingTestPlan = testPlanService.findPendingTestPlan()
         if (pendingTestPlan == null) {
-            log.info("#~#vnvlogPlanner.WorkflowManager.searchForScheduledPlan - pendingTestPlan in NULL")
             TestPlan nextTestPlan = testPlanService.findNextScheduledTestPlan()?.unBlob()
             if (nextTestPlan != null) {
                 log.info("#~#vnvlogPlanner.WorkflowManager.searchForScheduledPlan - Available scheduled Plan Descr: [\"" + nextTestPlan.description + "\"]")
