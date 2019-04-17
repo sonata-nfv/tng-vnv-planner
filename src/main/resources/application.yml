@@ -64,12 +64,6 @@ app:
     host: tng-cat
     base.url: http://${app.cat.host}:4011/api/catalogues/v2
 
-  tpr:
-    host: tng-rep
-    base.url: http://${app.tpr.host}:4012/trr
-    test.plan.create.endpoint: ${app.tpr.base.url}/test-plans
-    test.plan.update.endpoint: ${app.tpr.base.url}/test-plans/{uuid}
-
   curator:
     host: tng-vnv-curator
     base.url: http://${app.curator.host}:6200/api/v1
