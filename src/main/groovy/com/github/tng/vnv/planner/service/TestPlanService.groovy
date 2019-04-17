@@ -113,13 +113,18 @@ class TestPlanService {
 
     TestPlan save(TestPlan testPlan){
         testPlan.uuid = testPlan.uuid?:UUID.randomUUID().toString()
+        log.info("#~#vnvlogPlanner.TestPlanService.save: testPlan.uuid: ${testPlan?.uuid} STR [status: ${testPlan?.status} ]")
         testPlanRepository.save(testPlan.blob())
+        log.info("#~#vnvlogPlanner.TestPlanService.save: testPlan.uuid: ${testPlan?.uuid} END [status: ${testPlan?.status} ]")
+        testPlan
     }
 
     TestPlan update(String uuid, String status) {
+        log.info("#~#vnvlogPlanner.TestPlanService.update: testPlan uuid: $uuid STR [status: ${status} ]")
         TestPlan testPlan = findByUuid(uuid)
         testPlan.status = status
         testPlanRepository.save(testPlan)
+        log.info("#~#vnvlogPlanner.TestPlanService.update: testPlan uuid: $uuid END [status: ${status} ]")
         testPlan
     }
 
@@ -138,8 +143,9 @@ class TestPlanService {
         testPlanRepository.findFirstByStatus(TEST_PLAN_STATUS.PENDING)
     }
 
-    List<TestPlan> findByTestSuite(Log uuid) {
-        testSuiteRepository.findById(uuid)?.testPlans
+    List<TestPlan> findByTestSuiteUuid(String uuid){
+        def testSuite = testSuiteRepository.findFirstByUuid(uuid)
+        (testSuite != null)?testPlanRepository.findByTestSuite(testSuite) : []
     }
 }
 

@@ -53,4 +53,8 @@ class TestSuiteService {
     TestSuite save(TestSuite testSuite){
         testSuiteRepository.save(testSuite)
     }
+
+    TestSuite findByUuid(String uuid) {
+        testSuiteRepository.findFirstByUuid(uuid)
+    }
 }

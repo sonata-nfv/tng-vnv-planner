@@ -35,31 +35,16 @@
 package com.github.tng.vnv.planner.config
 
 import com.github.mrduguo.spring.test.AbstractSpec
-import com.github.tng.vnv.planner.ScheduleManager
-import com.github.tng.vnv.planner.model.Package
-import com.github.tng.vnv.planner.model.TestSuite
-import com.github.tng.vnv.planner.restmock.CatalogueMock
-import com.github.tng.vnv.planner.restmock.TestPlanRepositoryMock
 import com.github.tng.vnv.planner.service.TestPlanService
 import com.github.tng.vnv.planner.utils.TEST_PLAN_STATUS
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier
-import org.springframework.boot.test.TestRestTemplate
-import org.springframework.http.ResponseEntity
 import org.springframework.web.client.RestTemplate
 
 class TestRestSpec extends AbstractSpec {
 
     @Autowired
     TestPlanService testPlanService
-
-    @Autowired
-    TestPlanRepositoryMock testPlanRepositoryMock
-
-
-    void cleanTestPlansRepo() {
-        testPlanRepositoryMock.reset()
-    }
 
     void cleanTestPlanDB() {
         testPlanService.testPlanRepository.findAll()?.collect {

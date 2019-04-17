@@ -60,9 +60,10 @@ class WorkflowManager {
     void searchForScheduledPlan() {
         pendingTestPlan = testPlanService.findPendingTestPlan()
         if (pendingTestPlan == null) {
+            log.info("#~#vnvlogPlanner.WorkflowManager.searchForScheduledPlan - pendingTestPlan in NULL")
             TestPlan nextTestPlan = testPlanService.findNextScheduledTestPlan()?.unBlob()
             if (nextTestPlan != null) {
-                log.info("No Pending plan. Available scheduled Plan Descr: [\"" + nextTestPlan.description + "\"]")
+                log.info("#~#vnvlogPlanner.WorkflowManager.searchForScheduledPlan - Available scheduled Plan Descr: [\"" + nextTestPlan.description + "\"]")
                 TestPlanResponse testPlanResponse = curator.proceedWith(nextTestPlan)
                 switch (testPlanResponse.status) {
                     case TEST_PLAN_STATUS.STARTING:

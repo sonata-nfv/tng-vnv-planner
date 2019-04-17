@@ -41,6 +41,7 @@ import com.github.tng.vnv.planner.model.TestDescriptor
 import com.github.tng.vnv.planner.model.TestPlan
 import com.github.tng.vnv.planner.model.TestSuite
 import com.github.tng.vnv.planner.service.TestPlanService
+import groovy.util.logging.Log
 import io.swagger.annotations.ApiResponse
 import io.swagger.annotations.ApiResponses
 import org.springframework.beans.factory.annotation.Autowired
@@ -48,6 +49,7 @@ import org.springframework.web.bind.annotation.*
 
 import javax.validation.Valid
 
+@Log
 @RestController
 @RequestMapping('/api/v1/test-plans')
 class TestPlanController {
@@ -61,28 +63,34 @@ class TestPlanController {
 
     @GetMapping('/{testPlanListUuid}')
     @ResponseBody
-    TestSuite listByTestSuite(@PathVariable('testPlanListUuid') String uuid) {
-        testPlanService.findByTestSuite(uuid)
+    List<TestPlan> listByTestSuite(@PathVariable('testPlanListUuid') String uuid) {
+        testPlanService.findByTestSuiteUuid(uuid)
     }
 
     @ApiResponses(value = [@ApiResponse(code = 400, message = 'Bad Request')])
     @PostMapping('')
     @ResponseBody
     TestSuite save(@Valid @RequestBody TestSuite testSuite) {
+        log.info("#~#vnvlogPlanner.TestPlanController.save: TestSuite.uuid: ${testSuite?.uuid} STR [PackageCallback: ${testSuite}]")
         scheduler.create(testSuite)
+        log.info("#~#vnvlogPlanner.TestPlanController.save: TestSuite.uuid: ${testSuite?.uuid} END [PackageCallback: ${testSuite}]")
     }
 
     @ApiResponses(value = [@ApiResponse(code = 400, message = 'Bad Request')])
     @PutMapping('{uuid}')
     @ResponseBody
     TestSuite update(@Valid @RequestBody TestSuite testSuite) {
+        log.info("#~#vnvlogPlanner.TestPlanController.update: TestSuite.uuid: ${testSuite?.uuid} STR [PackageCallback: ${testSuite}]")
         scheduler.update(testSuite)
+        log.info("#~#vnvlogPlanner.TestPlanController.update: TestSuite.uuid: ${testSuite?.uuid} END [PackageCallback: ${testSuite}]")
     }
 
     @DeleteMapping('{uuid}')
     @ResponseBody
     void deleteTestPlan(@PathVariable String uuid) {
+        log.info("#~#vnvlogPlanner.TestPlanController.deleteTestPlan: TestSuite.uuid: $uuid STR")
         manager.deleteTestPlan(uuid)
+        log.info("#~#vnvlogPlanner.TestPlanController.deleteTestPlan: TestSuite.uuid: $uuid END")
     }
 
     @ApiResponses(value = [@ApiResponse(code = 400, message = 'Bad Request')])

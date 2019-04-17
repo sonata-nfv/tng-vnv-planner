@@ -1,20 +1,15 @@
 package com.github.tng.vnv.planner.service
 
 import com.github.tng.vnv.planner.config.TestRestSpec
-import com.github.tng.vnv.planner.restmock.TestPlanRepositoryMock
 import com.github.tng.vnv.planner.utils.TEST_PLAN_STATUS
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 
 class TestPlanServiceTest extends TestRestSpec {
 
-    @Autowired
-    TestPlanRepositoryMock testPlanRepositoryMock
-
     void 'request for 2 test plans should store in the db and consequently schedule 2 test plans hopefully'(){
 
         setup:
-        cleanTestPlansRepo()
         cleanTestPlanDB()
         when:
         def entity = postForEntity('/tng-vnv-planner/api/v1/test-plans',

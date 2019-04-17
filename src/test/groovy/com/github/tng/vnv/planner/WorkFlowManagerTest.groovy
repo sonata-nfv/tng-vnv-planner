@@ -4,7 +4,6 @@ import com.github.tng.vnv.planner.config.TestRestSpec
 import com.github.tng.vnv.planner.model.TestPlan
 import com.github.tng.vnv.planner.model.TestSuite
 import com.github.tng.vnv.planner.restmock.CuratorMock
-import com.github.tng.vnv.planner.restmock.TestPlanRepositoryMock
 import com.github.tng.vnv.planner.service.TestPlanService
 import com.github.tng.vnv.planner.service.TestSuiteService
 import com.github.tng.vnv.planner.utils.TEST_PLAN_STATUS
@@ -19,9 +18,6 @@ class WorkFlowManagerTest extends TestRestSpec {
     TestSuiteService testSuiteService
 
     @Autowired
-    TestPlanRepositoryMock testPlanRepositoryMock
-
-    @Autowired
     CuratorMock curatorMock
 
     public static final String TEST_RESULT_UUID = UUID.randomUUID().toString()
@@ -33,7 +29,6 @@ class WorkFlowManagerTest extends TestRestSpec {
     void 'when workflowManager checks the scheduled test plans should send the oldest SCHEDULED test plan to Curator'() {
 
         setup:
-        cleanTestPlansRepo()
         cleanTestPlanDB()
         when:
         curatorMock.active = false
@@ -47,7 +42,6 @@ class WorkFlowManagerTest extends TestRestSpec {
     void 'when workflowManager checks the scheduled test plans and there is Curator to get the testPlan should testPlan status changed to PENDING'() {
 
         setup:
-        cleanTestPlansRepo()
         cleanTestPlanDB()
         when:
         curatorMock.active = true
@@ -73,7 +67,13 @@ class WorkFlowManagerTest extends TestRestSpec {
                         event_actor: 'tng-vnv-curator',
                         status: 'COMPLETED',
                         test_plan_uuid: TEST_PLAN_UUID_3,
-                        test_results_uuid: TEST_RESULT_UUID,
+                        test_results: [
+                                            [
+                                                test_uuid: TEST_RESULT_UUID,
+                                                test_result_uuid: '45678',
+                                                status: TEST_PLAN_STATUS.COMPLETED,
+                                            ],
+                                ],
                         test_plan_repository: 'tng-rep',
                         test_results_repository: 'tng-res',
                 ]

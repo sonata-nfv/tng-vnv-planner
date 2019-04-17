@@ -79,7 +79,7 @@ class CatalogueCallbackController {
     @PostMapping('/on-change')
     @ResponseBody
     TestSuite onChange(@Valid @RequestBody PackageCallback body) {
-        log.info("##vnvlog Executor.executeTests request. ")
+        log.info("#~#vnvlogPlanner.CatalogueCallbackController.onChange: PackageId: ${body?.packageId} STR [PackageCallback: ${body}]")
         TestSuite testSuite = new TestSuite();
         switch (body.eventName) {
             case PACKAGE_DELETED:
@@ -89,6 +89,7 @@ class CatalogueCallbackController {
             default:
                testSuite = scheduler.create(new Package(packageId: body.packageId))
         }
+        log.info("#~#vnvlogPlanner.CatalogueCallbackController.onChange: PackageId: ${body?.packageId} END [PackageCallback: ${body}]")
         testSuite
     }
 

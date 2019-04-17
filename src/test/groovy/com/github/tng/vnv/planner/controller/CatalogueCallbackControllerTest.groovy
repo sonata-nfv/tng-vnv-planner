@@ -36,8 +36,6 @@ package com.github.tng.vnv.planner.controller
 
 
 import com.github.tng.vnv.planner.config.TestRestSpec
-import com.github.tng.vnv.planner.restmock.CatalogueMock
-import com.github.tng.vnv.planner.restmock.TestPlanRepositoryMock
 import com.github.tng.vnv.planner.service.TestPlanService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
@@ -47,23 +45,14 @@ class CatalogueCallbackControllerTest extends TestRestSpec {
     public static final String MULTIPLE_TEST_PLANS_PACKAGE_ID ='multiple_scheduler:test:0.0.1'
 
     @Autowired
-    CatalogueMock testCatalogueMock
-
-    @Autowired
-    TestPlanRepositoryMock testPlanRepositoryMock
-
-    @Autowired
     TestPlanService testPlanService
 
 
     void 'schedule single Test and single NetworkService should produce successfully 11 testPlans'() {
 
         setup:
-        cleanTestPlansRepo()
         cleanTestPlanDB()
         when:
-        //cleancode-allemaos: should be changed to db records
-        testPlanRepositoryMock.testPlans = [:]
         def entity = postForEntity('/tng-vnv-planner/api/v1/packages/on-change',
                 [
                         event_name: UUID.randomUUID().toString(),
@@ -72,8 +61,9 @@ class CatalogueCallbackControllerTest extends TestRestSpec {
                 , Void.class)
         then:
         entity.statusCode == HttpStatus.OK
-        //cleancode-allemaos: should be changed to db records
-        testPlanRepositoryMock.testPlans.size()==11
+        testPlanService.testPlanRepository.findAll()
+                .findAll{it.status == "SCHEDULED"}.size() == 11
+
 
     }
 }
