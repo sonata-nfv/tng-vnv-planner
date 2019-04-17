@@ -12,7 +12,7 @@ class TestPlanServiceTest extends TestRestSpec {
         setup:
         cleanTestPlanDB()
         when:
-        def entity = postForEntity('/tng-vnv-planner/api/v1/test-plans',
+        def entity = postForEntity('/api/v1/test-plans',
                 [
                         uuid: UUID.randomUUID(),
                         test_plans:

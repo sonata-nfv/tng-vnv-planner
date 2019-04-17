@@ -38,6 +38,7 @@ package com.github.tng.vnv.planner.controller
 import com.github.tng.vnv.planner.config.TestRestSpec
 import com.github.tng.vnv.planner.restmock.CatalogueMock
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.HttpStatus
 
 class NetworkServiceControllerTest extends TestRestSpec {
 
@@ -48,8 +49,9 @@ class NetworkServiceControllerTest extends TestRestSpec {
 
     void "retrieval of a single test suite's related tests should successfully all the tag related tests"() {
         when:
-        List tss = getForEntity('/tng-vnv-planner/api/v1/test-plans/services/{serviceUuid}/tests', List, NETWORK_SERVICE_ID).body
+        def entity = getForEntity('/api/v1/test-plans/services/{serviceUuid}/tests', List, NETWORK_SERVICE_ID)
         then:
-        tss.size() == 4
+        entity.statusCode == HttpStatus.OK
+        entity.body.size() == 4
     }
 }

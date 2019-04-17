@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository
 
 interface TestPlanRepository extends JpaRepository<TestPlan, Long> {
     TestPlan findFirstByStatus(String status)
-    TestPlan findLastByUuid(String uuid)
+    TestPlan findFirstByUuidOrderByIdDesc(String uuid)
     List<TestPlan> findByTestSuite(TestSuite t)
     List<TestPlan> findAll()
 }

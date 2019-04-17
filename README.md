@@ -44,18 +44,18 @@ docker run -d --name tng-vnv-planner -p 6100:6100 registry.sonata-nfv.eu:5000/tn
 
 Once the component finish start, you can access (change IP depends on your docker setup) the component health endpoint at:
 
-http://locahost:6100/tng-vnv-planner/health
+http://locahost:6100/health
 
 ### Swagger UI
 
 * static
-    * http://petstore.swagger.io/?url=https://raw.githubusercontent.com/sonata-nfv/tng-vnv-planner/master/src/main/resources/static/swagger.json
-    * http://petstore.swagger.io/?url=https://raw.githubusercontent.com/sonata-nfv/tng-vnv-planner/master/src/main/resources/static/swagger-dependencies.json
+    * http://petstore.swagger.io/?url=https://raw.githubusercontent.com/sonata-nfv/master/src/main/resources/static/swagger.json
+    * http://petstore.swagger.io/?url=https://raw.githubusercontent.com/sonata-nfv/master/src/main/resources/static/swagger-dependencies.json
 * pre integration 
-    * http://pre-int-vnv-ave.5gtango.eu:6100/tng-vnv-planner/swagger-ui.html
+    * http://pre-int-vnv-ave.5gtango.eu:6100/swagger-ui.html
 * local 
-    * http://localhost:6100/tng-vnv-planner/swagger-ui.html
-    * http://localhost:6100/tng-vnv-planner/swagger-ui.html?urls.primaryName=dependencies
+    * http://localhost:6100/swagger-ui.html
+    * http://localhost:6100/swagger-ui.html?urls.primaryName=dependencies
 
 
 

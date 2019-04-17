@@ -49,6 +49,7 @@ class CuratorCallbackControllerTest extends TestRestSpec {
     public static final String TEST_RESULT_UUID = UUID.randomUUID().toString()
     public static final String TEST_RESULT2_UUID = UUID.randomUUID().toString()
     public static final String TEST_PLAN_UUID = '109873678'
+    public static final String TEST_PLAN2_UUID = '561ba353-234c-44ba-9f17-f3e48caca4a5'
 
     @Autowired
     TestPlanService testPlanService
@@ -60,9 +61,9 @@ class CuratorCallbackControllerTest extends TestRestSpec {
         setup:
         cleanTestPlanDB()
         when:
-        createDummyTestPlan()
+        createDummyTestPlan(TEST_PLAN_UUID)
         def status = TEST_PLAN_STATUS.COMPLETED
-        def entity = postForEntity('/tng-vnv-planner/api/v1/test-plans/on-change/completed',
+        def entity = postForEntity('/api/v1/test-plans/on-change/completed',
                 [
                         event_actor: 'tng-vnv-curator',
                         status: status,
@@ -92,9 +93,9 @@ class CuratorCallbackControllerTest extends TestRestSpec {
         setup:
         cleanTestPlanDB()
         when:
-        createDummyTestPlan()
+        createDummyTestPlan(TEST_PLAN_UUID)
         def status = TEST_PLAN_STATUS.CANCELLING
-        def entity = postForEntity('/tng-vnv-planner/api/v1/test-plans/on-change/',
+        def entity = postForEntity('/api/v1/test-plans/on-change/',
                 [
                         event_actor: 'tng-vnv-curator',
                         status:status,
@@ -124,9 +125,9 @@ class CuratorCallbackControllerTest extends TestRestSpec {
         setup:
         cleanTestPlanDB()
         when:
-        createDummyTestPlan()
+        createDummyTestPlan(TEST_PLAN_UUID)
         def status = TEST_PLAN_STATUS.ERROR
-        def entity = postForEntity('/tng-vnv-planner/api/v1/test-plans/on-change/',
+        def entity = postForEntity('/api/v1/test-plans/on-change/',
                 [
                         event_actor: 'tng-vnv-curator',
                         status:status,
@@ -141,8 +142,33 @@ class CuratorCallbackControllerTest extends TestRestSpec {
         testPlanService.findByUuid(TEST_PLAN_UUID).status==status
     }
 
-    void createDummyTestPlan(){
-        def testPlan = new TestPlan(uuid: TEST_PLAN_UUID, status: 'dummyTestPlan')
+    void 'following an completed testPlan in Paris should store the testPlan as completed'() {
+        setup:
+        cleanTestPlanDB()
+        when:
+        createDummyTestPlan(TEST_PLAN2_UUID)
+        def entity = postForEntity('/api/v1/test-plans/on-change/completed',
+                [
+                        event_actor: 'Curator',
+                        status: 'COMPLETED',
+                        test_plan_uuid: TEST_PLAN2_UUID,
+                        test_results: [
+                                [
+                                    test_uuid: '639ce960-5a76-4722-9d5c-ee7c476ece10',
+                                    test_results_uuid: '1af9de2d-15c0-4dee-a8b1-6801e4e38bec',
+                                    test_status: 'COMPLETED'
+                                ]
+
+                        ],
+                ]
+                , Void.class)
+        then:
+        entity.statusCode == HttpStatus.OK
+        testPlanService.findByUuid(TEST_PLAN2_UUID).status=='COMPLETED'
+    }
+
+    void createDummyTestPlan(String test_plan_uuid){
+        def testPlan = new TestPlan(uuid: test_plan_uuid, status: 'dummyTestPlan')
         def testSuite = new TestSuite()
         testSuite = testSuiteService.save(testSuite)
         testPlan.testSuite = testSuite
