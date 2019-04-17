@@ -38,15 +38,12 @@ import com.github.tng.vnv.planner.model.NetworkService
 import com.github.tng.vnv.planner.model.Package
 import com.github.tng.vnv.planner.model.Test
 import com.github.tng.vnv.planner.repository.TestPlanRepository
-import com.github.tng.vnv.planner.model.NetworkServiceDescriptor
 import com.github.tng.vnv.planner.model.TestPlan
 import com.github.tng.vnv.planner.repository.TestSuiteRepository
 import com.github.tng.vnv.planner.utils.TEST_PLAN_STATUS
 import groovy.util.logging.Log
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
-
-import static com.github.tng.vnv.planner.utils.TEST_PLAN_STATUS.DELETED
 
 @Log
 @Service
@@ -133,7 +130,7 @@ class TestPlanService {
     }
 
     TestPlan findByUuid(String uuid){
-        testPlanRepository.findLastByUuid(uuid)
+        testPlanRepository.findFirstByUuidOrderByIdDesc(uuid)
     }
     TestPlan findNextScheduledTestPlan() {
         testPlanRepository.findFirstByStatus(TEST_PLAN_STATUS.SCHEDULED)

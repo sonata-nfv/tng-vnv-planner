@@ -152,7 +152,7 @@ class TestPlanControllerTest extends TestRestSpec {
         scheduleTestPlan(TEST_PLAN_UUID, TEST_PLAN_STATUS.CREATED, 'scheduled testPlan\'s status which will turn into canceling')
         delete('/api/v1/test-plans/{uuid}',TEST_PLAN_UUID)
         then:
-        testPlanService.testPlanRepository.findAll().find {it.uuid == TEST_PLAN_UUID}.status == TEST_PLAN_STATUS.CANCELLING
+        testPlanService.testPlanRepository.findAll().findAll {it.uuid == TEST_PLAN_UUID}.last().status == TEST_PLAN_STATUS.CANCELLING
     }
 
     void "list test plans request for one testPlan list uuid test plan should successfully return the list of corresponding test plans"() {
