@@ -8,4 +8,5 @@ interface TestPlanRepository extends JpaRepository<TestPlan, Long> {
     TestPlan findFirstByStatus(String status)
     TestPlan findLastByUuid(String uuid)
     List<TestPlan> findByTestSuite(TestSuite t)
+    List<TestPlan> findAll()
 }
