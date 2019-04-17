@@ -147,6 +147,10 @@ class TestPlanService {
         def testSuite = testSuiteRepository.findFirstByUuid(uuid)
         (testSuite != null)?testPlanRepository.findByTestSuite(testSuite) : []
     }
+
+    List<TestPlan> findAll(){
+        testPlanRepository.findAll()
+    }
 }
 
 

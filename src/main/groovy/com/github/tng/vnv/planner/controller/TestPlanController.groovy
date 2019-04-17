@@ -61,6 +61,12 @@ class TestPlanController {
     @Autowired
     TestPlanService testPlanService
 
+    @GetMapping('/')
+    @ResponseBody
+    List<TestPlan> list() {
+        testPlanService.findAll()
+    }
+
     @GetMapping('/{testPlanListUuid}')
     @ResponseBody
     List<TestPlan> listByTestSuite(@PathVariable('testPlanListUuid') String uuid) {

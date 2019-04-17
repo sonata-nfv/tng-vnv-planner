@@ -10,6 +10,7 @@ import com.github.tng.vnv.planner.service.TestSuiteService
 import com.github.tng.vnv.planner.utils.TEST_PLAN_STATUS
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
+import spock.lang.Ignore
 
 class TestPlanControllerTest extends TestRestSpec {
 
@@ -32,7 +33,8 @@ class TestPlanControllerTest extends TestRestSpec {
     public static final String DIY_DESCRIPTOR_TEST_PLAN_VALIDATION_REQUIRED_TEST_UUID ='b68dbe19-5c02-4865-8c4b-5e43ada1b67c'
     public static final String DIY_DESCRIPTOR_TEST_PLAN_CONFIRMED_TEST_UUID ='b68dbe19-5c02-4865-8c4b-5e43ada1b67b'
 
-    public static final String TEST_PLAN_UUID = '109873688'
+    public static final String TEST_PLAN_UUID = '109873681'
+    public static final String TEST_PLAN_UUID2 = '109873682'
 
     void "schedule request of a test plan list should successfully save all test plans"() {
 
@@ -158,9 +160,22 @@ class TestPlanControllerTest extends TestRestSpec {
         setup:
         cleanTestPlanDB()
         when:
-        def testPlan = scheduleTestPlan(TEST_PLAN_UUID, TEST_PLAN_STATUS.CREATED, 'scheduled testPlan\'s status which will turn into canceling')
+        def testPlan = scheduleTestPlan(TEST_PLAN_UUID, TEST_PLAN_STATUS.CREATED, 'scheduled testPlan\'s status which will be listed for a specific testPlanListUuid')
         then:
         getForEntity('/tng-vnv-planner/api/v1/test-plans/{testPlanListUuid}', TestPlan[], testPlan.testSuite.uuid).body.size() == 1
+    }
+
+    @Ignore
+    void "list all test plans request should successfully return the list of all test plans"() {
+
+        setup:
+        cleanTestPlansRepo()
+        when:
+        scheduleTestPlan(TEST_PLAN_UUID, "TEST_LIST_ALL_STATUS", '')
+        scheduleTestPlan(TEST_PLAN_UUID2, "TEST_LIST_ALL_STATUS", '')
+        then:
+        def testPlans = getForEntity('/tng-vnv-planner/api/v1/test-plans/', TestPlan[]).body
+                testPlans.collect {it.status == "TEST_LIST_ALL_STATUS"}.size()==2
     }
 
     TestPlan scheduleTestPlan(String uuid, String status, String description){

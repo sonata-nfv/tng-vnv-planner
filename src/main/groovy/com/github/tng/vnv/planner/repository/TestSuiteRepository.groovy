@@ -41,4 +41,5 @@ import org.springframework.stereotype.Repository
 @Repository
 interface TestSuiteRepository extends JpaRepository<TestSuite, Long> {
     TestSuite findFirstByUuid(String uuid);
+    List<TestSuite> findAll();
 }
