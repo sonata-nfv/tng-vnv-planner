@@ -5,7 +5,6 @@ import com.github.tng.vnv.planner.model.TestPlan
 import com.github.tng.vnv.planner.model.TestSuite
 import com.github.tng.vnv.planner.restmock.CuratorMock
 import com.github.tng.vnv.planner.restmock.DataMock
-import com.github.tng.vnv.planner.restmock.TestPlanRepositoryMock
 import com.github.tng.vnv.planner.service.TestPlanService
 import com.github.tng.vnv.planner.service.TestSuiteService
 import com.github.tng.vnv.planner.utils.TEST_PLAN_STATUS
@@ -19,9 +18,6 @@ class TestPlanControllerTest extends TestRestSpec {
     TestPlanService testPlanService
     @Autowired
     TestSuiteService testSuiteService
-
-    @Autowired
-    TestPlanRepositoryMock testPlanRepositoryMock
 
     @Autowired
     CuratorMock curatorMock
@@ -43,7 +39,7 @@ class TestPlanControllerTest extends TestRestSpec {
     void "schedule request of a test plan list should successfully save all test plans"() {
 
         setup:
-        cleanTestPlansRepo()
+        cleanTestPlanDB()
         when:
         def entity = postForEntity('/tng-vnv-planner/api/v1/test-plans',
                 [
@@ -78,7 +74,7 @@ class TestPlanControllerTest extends TestRestSpec {
                 , Void.class)
         then:
         entity.statusCode == HttpStatus.OK
-        def testPlans = testPlanRepositoryMock.listTestPlans()
+        def testPlans = testPlanService.testPlanRepository.findAll().findAll{it.status == "SCHEDULED"}
         testPlans.get(1).description == 'dummyTestPlan3-index2'
         testPlans.get(2).description == 'dummyTestPlan2-index3'
     }
@@ -86,7 +82,6 @@ class TestPlanControllerTest extends TestRestSpec {
     void "schedule request with validation required for one test plan should successfully schedule only the not validation required test plans"() {
 
         setup:
-        cleanTestPlansRepo()
         cleanTestPlanDB()
         when:
         def entity = postForEntity('/tng-vnv-planner/api/v1/test-plans',
@@ -127,7 +122,7 @@ class TestPlanControllerTest extends TestRestSpec {
     void "schedule request with validation required for one test plan should successfully schedule no test plans"() {
 
         setup:
-        cleanTestPlansRepo()
+        cleanTestPlanDB()
         when:
         def entity = postForEntity('/tng-vnv-planner/api/v1/test-plans',
                 [
@@ -145,13 +140,14 @@ class TestPlanControllerTest extends TestRestSpec {
 
         then:
         entity.statusCode == HttpStatus.OK
-        testPlanRepositoryMock.testPlans.size() == 0
+        testPlanService.testPlanRepository.findAll()
+                .findAll{it.status == "SCHEDULED"}.size() == 0
     }
 
     void "delete request for one test plan should successfully change the status of the test plan to CANCELING scheduled test plan"() {
 
         setup:
-        cleanTestPlansRepo()
+        cleanTestPlanDB()
         when:
         scheduleTestPlan(TEST_PLAN_UUID, TEST_PLAN_STATUS.CREATED, 'scheduled testPlan\'s status which will turn into canceling')
         delete('/tng-vnv-planner/api/v1/test-plans/{uuid}',TEST_PLAN_UUID)
@@ -162,7 +158,7 @@ class TestPlanControllerTest extends TestRestSpec {
     void "list test plans request for one testPlan list uuid test plan should successfully return the list of corresponding test plans"() {
 
         setup:
-        cleanTestPlansRepo()
+        cleanTestPlanDB()
         when:
         def testPlan = scheduleTestPlan(TEST_PLAN_UUID, TEST_PLAN_STATUS.CREATED, 'scheduled testPlan\'s status which will be listed for a specific testPlanListUuid')
         then:

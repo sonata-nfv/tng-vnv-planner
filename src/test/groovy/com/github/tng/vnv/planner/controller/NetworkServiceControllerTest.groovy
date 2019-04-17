@@ -37,7 +37,6 @@ package com.github.tng.vnv.planner.controller
 
 import com.github.tng.vnv.planner.config.TestRestSpec
 import com.github.tng.vnv.planner.restmock.CatalogueMock
-import com.github.tng.vnv.planner.restmock.TestPlanRepositoryMock
 import org.springframework.beans.factory.annotation.Autowired
 
 class NetworkServiceControllerTest extends TestRestSpec {
@@ -47,12 +46,7 @@ class NetworkServiceControllerTest extends TestRestSpec {
     @Autowired
     CatalogueMock catalogueMock
 
-    @Autowired
-    TestPlanRepositoryMock testPlanRepositoryMock
-
     void "retrieval of a single test suite's related tests should successfully all the tag related tests"() {
-        setup:
-        cleanTestPlansRepo()
         when:
         List tss = getForEntity('/tng-vnv-planner/api/v1/test-plans/services/{serviceUuid}/tests', List, NETWORK_SERVICE_ID).body
         then:

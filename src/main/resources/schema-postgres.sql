@@ -1,21 +1,5 @@
 -- create database planner;
 
-create sequence hibernate_sequence;
-
---alter sequence hibernate_sequence
---     owner to sonatatest;
-
-create table if not exists test_suite
-(
-    id   bigint not null
-    constraint test_suite_pkey
-    primary key,
-    uuid varchar(255)
-    );
-
--- alter table test_suite
---     owner to sonatatest;
-
 create table if not exists test_plan
 (
     id            bigint  not null
@@ -38,3 +22,13 @@ create table if not exists test_plan
 -- alter table test_plan
 --     owner to sonatatest;
 
+create table if not exists test_suite
+(
+    id   bigint not null
+    constraint test_suite_pkey
+    primary key,
+    uuid varchar(255)
+    );
+
+-- alter table test_suite
+--     owner to sonatatest;

@@ -38,7 +38,6 @@ package com.github.tng.vnv.planner.controller
 import com.github.tng.vnv.planner.config.TestRestSpec
 import com.github.tng.vnv.planner.model.TestPlan
 import com.github.tng.vnv.planner.model.TestSuite
-import com.github.tng.vnv.planner.restmock.TestPlanRepositoryMock
 import com.github.tng.vnv.planner.service.TestPlanService
 import com.github.tng.vnv.planner.service.TestSuiteService
 import com.github.tng.vnv.planner.utils.TEST_PLAN_STATUS
@@ -56,13 +55,9 @@ class CuratorCallbackControllerTest extends TestRestSpec {
     @Autowired
     TestSuiteService testSuiteService
 
-    @Autowired
-    TestPlanRepositoryMock testPlanRepositoryMock
-
     void 'curator returns back call as COMPLETED should store the testPlan with status respectively'() {
 
         setup:
-        cleanTestPlansRepo()
         cleanTestPlanDB()
         when:
         createDummyTestPlan()
@@ -90,13 +85,11 @@ class CuratorCallbackControllerTest extends TestRestSpec {
                 , Void.class)
         then:
         entity.statusCode == HttpStatus.OK
-        testPlanRepositoryMock.testPlans.values().last().status==status
         testPlanService.findByUuid(TEST_PLAN_UUID).status==status
     }
 
     void 'curator returns back call as NOT COMPLETED should store the testPlan with status respectively'() {
         setup:
-        cleanTestPlansRepo()
         cleanTestPlanDB()
         when:
         createDummyTestPlan()
@@ -124,13 +117,11 @@ class CuratorCallbackControllerTest extends TestRestSpec {
                 , Void.class)
         then:
         entity.statusCode == HttpStatus.OK
-        testPlanRepositoryMock.testPlans.values().last().status==status
         testPlanService.findByUuid(TEST_PLAN_UUID).status==status
     }
 
     void 'curator returns back call as ERROR should store the testPlan with status respectively'() {
         setup:
-        cleanTestPlansRepo()
         cleanTestPlanDB()
         when:
         createDummyTestPlan()
@@ -147,7 +138,6 @@ class CuratorCallbackControllerTest extends TestRestSpec {
                 , Void.class)
         then:
         entity.statusCode == HttpStatus.OK
-        testPlanRepositoryMock.testPlans.values().last().status==status
         testPlanService.findByUuid(TEST_PLAN_UUID).status==status
     }
 
