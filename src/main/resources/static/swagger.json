@@ -389,7 +389,10 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/TestSuite"
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/TestPlan"
+                            }
                         }
                     },
                     "401": {

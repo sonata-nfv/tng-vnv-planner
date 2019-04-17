@@ -149,8 +149,9 @@ class TestPlanService {
         testPlanRepository.findFirstByStatus(TEST_PLAN_STATUS.PENDING)
     }
 
-    List<TestPlan> findByTestSuite(Log uuid) {
-        testSuiteRepository.findById(uuid)?.testPlans
+    List<TestPlan> findByTestSuiteUuid(String uuid){
+        def testSuite = testSuiteRepository.findFirstByUuid(uuid)
+        (testSuite != null)?testPlanRepository.findByTestSuite(testSuite) : []
     }
 }
 
