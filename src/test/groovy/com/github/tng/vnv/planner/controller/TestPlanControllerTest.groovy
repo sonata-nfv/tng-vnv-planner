@@ -157,9 +157,19 @@ class TestPlanControllerTest extends TestRestSpec {
         testPlanService.testPlanRepository.findAll().find {it.uuid == TEST_PLAN_UUID}.status == TEST_PLAN_STATUS.CANCELLING
     }
 
+    void "list test plans request for one testPlan list uuid test plan should successfully return the list of corresponding test plans"() {
+
+        setup:
+        cleanTestPlansRepo()
+        when:
+        def testPlan = scheduleTestPlan(TEST_PLAN_UUID, TEST_PLAN_STATUS.CREATED, 'scheduled testPlan\'s status which will turn into canceling')
+        then:
+        getForEntity('/tng-vnv-planner/api/v1/test-plans/{testPlanListUuid}', TestPlan[], testPlan.testSuite.uuid).body.size() == 1
+    }
+
     TestPlan scheduleTestPlan(String uuid, String status, String description){
         def testPlan = new TestPlan(uuid: uuid, status: status, description: description)
-        def testSuite = new TestSuite()
+        def testSuite = new TestSuite(uuid: UUID.randomUUID().toString())
         testSuite = testSuiteService.save(testSuite)
         testPlan.testSuite = testSuite
         testSuite.testPlans.add(testPlan)

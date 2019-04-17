@@ -63,8 +63,8 @@ class TestPlanController {
 
     @GetMapping('/{testPlanListUuid}')
     @ResponseBody
-    TestSuite listByTestSuite(@PathVariable('testPlanListUuid') String uuid) {
-        testPlanService.findByTestSuite(uuid)
+    List<TestPlan> listByTestSuite(@PathVariable('testPlanListUuid') String uuid) {
+        testPlanService.findByTestSuiteUuid(uuid)
     }
 
     @ApiResponses(value = [@ApiResponse(code = 400, message = 'Bad Request')])
