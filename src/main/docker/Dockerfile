@@ -34,10 +34,10 @@
 FROM openjdk:8-jdk-alpine
 # Set pgSQL Environment Variables
 ENV DATABASE_HOST son-postgres
-ENV GTK_DB_NAME planner
-ENV GTK_DB_USER sonatatest
-ENV GTK_DB_PASS sonata
+ENV DATABASE_NAME planner
+ENV DATABASE_USER sonatatest
+ENV DATABASE_PASSWORD sonata
 ENV DATABASE_PORT 5432
-ENTRYPOINT ["java", "-jar", "-Dspring.profiles.active=docker", "/app.jar"]
+ENTRYPOINT ["java", "-jar", "-Dspring.profiles.active=test", "/app.jar"]
 EXPOSE 6100
 ADD /libs/${name}-${version}.jar /app.jar
