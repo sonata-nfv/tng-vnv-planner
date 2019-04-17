@@ -42,6 +42,7 @@ import com.github.tng.vnv.planner.repository.TestPlanRepository
 import com.github.tng.vnv.planner.repository.TestPlanRestRepository
 import com.github.tng.vnv.planner.model.NetworkServiceDescriptor
 import com.github.tng.vnv.planner.model.TestPlan
+import com.github.tng.vnv.planner.repository.TestSuiteRepository
 import com.github.tng.vnv.planner.utils.TEST_PLAN_STATUS
 import groovy.util.logging.Log
 import org.springframework.beans.factory.annotation.Autowired
@@ -55,6 +56,8 @@ class TestPlanService {
 
     @Autowired
     TestPlanRepository testPlanRepository
+    @Autowired
+    TestSuiteRepository testSuiteRepository
     @Autowired
     TestPlanRestRepository testPlanRestRepository
 
@@ -138,9 +141,13 @@ class TestPlanService {
         update(uuid, TEST_PLAN_STATUS.CANCELLING)
     }
 
+    TestPlan findByUuid(String uuid){
+        testPlanRepository.findLastByUuid(uuid)
+    }
     TestPlan findNextScheduledTestPlan() {
         testPlanRepository.findFirstByStatus(TEST_PLAN_STATUS.SCHEDULED)
     }
+
     TestPlan findPendingTestPlan() {
         testPlanRepository.findFirstByStatus(TEST_PLAN_STATUS.PENDING)
     }

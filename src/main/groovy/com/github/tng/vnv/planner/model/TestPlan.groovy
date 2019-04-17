@@ -93,14 +93,14 @@ class TestPlan implements Serializable {
 
     TestPlan blob(){
             def mapper = new ObjectMapper()
-            nsdBlob = mapper.writeValueAsString(nsd).bytes
-            testdBlob = mapper.writeValueAsString(testd).bytes
+            nsdBlob = nsd!=null? mapper.writeValueAsString(nsd).bytes : null
+            testdBlob = testd!=null? mapper.writeValueAsString(testd).bytes : null
         this
     }
     TestPlan unBlob(){
         def mapper = new ObjectMapper()
-            nsd = mapper.readValue(new String(nsdJson), HashMap.class)
-            testd = mapper.readValue(new String(testdJson), HashMap.class)
+            nsd = nsdBlob!=null?  mapper.readValue(new String(nsdBlob), HashMap.class) : null
+            testd = testdBlob!=null?  mapper.readValue(new String(testdBlob), HashMap.class) : null
         this
     }
 

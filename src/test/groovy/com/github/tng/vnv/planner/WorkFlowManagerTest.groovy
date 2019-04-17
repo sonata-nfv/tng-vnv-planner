@@ -81,7 +81,7 @@ class WorkFlowManagerTest extends TestRestSpec {
         then:
         Thread.sleep(25000L);
         entity.statusCode == HttpStatus.OK
-        testPlanService.testPlanRepository.findLastByUuid(TEST_PLAN_UUID_3).status == TEST_PLAN_STATUS.COMPLETED
+        testPlanService.findByUuid(TEST_PLAN_UUID_3).status == TEST_PLAN_STATUS.COMPLETED
         cleanup:
         cleanTestPlanDB()
     }
