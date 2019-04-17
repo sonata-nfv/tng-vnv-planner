@@ -147,8 +147,8 @@ class TestPlanRequest {
     def testd
     Boolean lastTest = false
     List<TestPlanCallback> testPlanCallbacks = [
-            new TestPlanCallback(eventActor: 'Curator', url: '/tng-vnv-planner/api/v1/test-plans/on-change/completed/', status:'COMPLETED'),
-            new TestPlanCallback(eventActor: 'Curator', url: '/tng-vnv-planner/api/v1/test-plans/on-change/'),
+            new TestPlanCallback(eventActor: 'Curator', url: '/api/v1/test-plans/on-change/completed/', status:'COMPLETED'),
+            new TestPlanCallback(eventActor: 'Curator', url: '/api/v1/test-plans/on-change/'),
     ]
 }
 
