@@ -53,7 +53,7 @@ class CatalogueCallbackControllerTest extends TestRestSpec {
         setup:
         cleanTestPlanDB()
         when:
-        def entity = postForEntity('/tng-vnv-planner/api/v1/packages/on-change',
+        def entity = postForEntity('/api/v1/packages/on-change',
                 [
                         event_name: UUID.randomUUID().toString(),
                         package_id:  MULTIPLE_TEST_PLANS_PACKAGE_ID,

@@ -11,7 +11,7 @@
         }
     },
     "host": "tng-vnv-planner:6100",
-    "basePath": "/tng-vnv-planner",
+    "basePath": "/",
     "tags": [
         {
             "name": "catalogue-mock",

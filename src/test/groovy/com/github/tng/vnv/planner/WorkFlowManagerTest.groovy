@@ -62,7 +62,7 @@ class WorkFlowManagerTest extends TestRestSpec {
         scheduleTestPlan(TEST_PLAN_UUID_4, TEST_PLAN_STATUS.SCHEDULED, '2nd scheduled testPlan')
         and:
         Thread.sleep(1500L);
-        def entity = postForEntity('/tng-vnv-planner/api/v1/test-plans/on-change/completed',
+        def entity = postForEntity('/api/v1/test-plans/on-change/completed',
                 [
                         event_actor: 'tng-vnv-curator',
                         status: 'COMPLETED',

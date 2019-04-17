@@ -62,7 +62,7 @@ class CuratorCallbackControllerTest extends TestRestSpec {
         when:
         createDummyTestPlan()
         def status = TEST_PLAN_STATUS.COMPLETED
-        def entity = postForEntity('/tng-vnv-planner/api/v1/test-plans/on-change/completed',
+        def entity = postForEntity('/api/v1/test-plans/on-change/completed',
                 [
                         event_actor: 'tng-vnv-curator',
                         status: status,
@@ -94,7 +94,7 @@ class CuratorCallbackControllerTest extends TestRestSpec {
         when:
         createDummyTestPlan()
         def status = TEST_PLAN_STATUS.CANCELLING
-        def entity = postForEntity('/tng-vnv-planner/api/v1/test-plans/on-change/',
+        def entity = postForEntity('/api/v1/test-plans/on-change/',
                 [
                         event_actor: 'tng-vnv-curator',
                         status:status,
@@ -126,7 +126,7 @@ class CuratorCallbackControllerTest extends TestRestSpec {
         when:
         createDummyTestPlan()
         def status = TEST_PLAN_STATUS.ERROR
-        def entity = postForEntity('/tng-vnv-planner/api/v1/test-plans/on-change/',
+        def entity = postForEntity('/api/v1/test-plans/on-change/',
                 [
                         event_actor: 'tng-vnv-curator',
                         status:status,
