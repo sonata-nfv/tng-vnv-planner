@@ -37,9 +37,7 @@ package com.github.tng.vnv.planner.service
 import com.github.tng.vnv.planner.model.NetworkService
 import com.github.tng.vnv.planner.model.Package
 import com.github.tng.vnv.planner.model.Test
-import com.github.tng.vnv.planner.model.TestDescriptor
 import com.github.tng.vnv.planner.repository.TestPlanRepository
-import com.github.tng.vnv.planner.repository.TestPlanRestRepository
 import com.github.tng.vnv.planner.model.NetworkServiceDescriptor
 import com.github.tng.vnv.planner.model.TestPlan
 import com.github.tng.vnv.planner.repository.TestSuiteRepository
@@ -58,8 +56,6 @@ class TestPlanService {
     TestPlanRepository testPlanRepository
     @Autowired
     TestSuiteRepository testSuiteRepository
-    @Autowired
-    TestPlanRestRepository testPlanRestRepository
 
     @Autowired
     TestService testService
@@ -119,7 +115,6 @@ class TestPlanService {
         testPlan.uuid = testPlan.uuid?:UUID.randomUUID().toString()
         log.info("#~#vnvlogPlanner.TestPlanService.save: testPlan.uuid: ${testPlan?.uuid} STR [status: ${testPlan?.status} ]")
         testPlanRepository.save(testPlan.blob())
-        testPlanRestRepository.create(testPlan)
         log.info("#~#vnvlogPlanner.TestPlanService.save: testPlan.uuid: ${testPlan?.uuid} END [status: ${testPlan?.status} ]")
         testPlan
     }
@@ -129,7 +124,6 @@ class TestPlanService {
         TestPlan testPlan = findByUuid(uuid)
         testPlan.status = status
         testPlanRepository.save(testPlan)
-        testPlanRestRepository.update(testPlan)
         log.info("#~#vnvlogPlanner.TestPlanService.update: testPlan uuid: $uuid END [status: ${status} ]")
         testPlan
     }

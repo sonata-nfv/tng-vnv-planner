@@ -38,7 +38,6 @@ package com.github.tng.vnv.planner
 import com.github.tng.vnv.planner.model.Package
 import com.github.tng.vnv.planner.model.TestSuite
 import com.github.tng.vnv.planner.restmock.CatalogueMock
-import com.github.tng.vnv.planner.restmock.TestPlanRepositoryMock
 import com.github.tng.vnv.planner.config.TestRestSpec
 import com.github.tng.vnv.planner.service.TestPlanService
 import org.springframework.beans.factory.annotation.Autowired
@@ -54,15 +53,10 @@ class ScheduleManagerTest extends TestRestSpec {
     CatalogueMock testCatalogueMock
 
     @Autowired
-    TestPlanRepositoryMock testPlanRepositoryMock
-
-    @Autowired
     TestPlanService testPlanService
 
     void 'schedule multiple test plans should produce success result'() {
 
-        setup:
-        cleanTestPlansRepo()
         when:
         TestSuite testSuite = scheduler.create(new Package(packageId: MULTIPLE_TEST_PLANS_PACKAGE_ID))
         then:
