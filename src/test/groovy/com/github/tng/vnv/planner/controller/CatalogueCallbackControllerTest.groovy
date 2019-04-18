@@ -49,9 +49,6 @@ class CatalogueCallbackControllerTest extends TestRestSpec {
 
 
     void 'schedule single Test and single NetworkService should produce successfully 11 testPlans'() {
-
-        setup:
-        cleanTestPlanDB()
         when:
         def entity = postForEntity('/api/v1/packages/on-change',
                 [
@@ -62,8 +59,8 @@ class CatalogueCallbackControllerTest extends TestRestSpec {
         then:
         entity.statusCode == HttpStatus.OK
         testPlanService.testPlanRepository.findAll()
-                .findAll{it.status == "SCHEDULED"}.size() == 11
-
-
+                .findAll{it.status == "SCHEDULED"}.size() == 11 - 1 //one which will be triggered at the end of this post request
+        cleanup:
+        cleanTestPlanDB()
     }
 }

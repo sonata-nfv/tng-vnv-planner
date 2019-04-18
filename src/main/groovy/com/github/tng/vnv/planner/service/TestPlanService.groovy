@@ -137,8 +137,8 @@ class TestPlanService {
         testPlanRepository.findFirstByStatus(TEST_PLAN_STATUS.SCHEDULED)
     }
 
-    TestPlan findPendingTestPlan() {
-        testPlanRepository.findFirstByStatus(TEST_PLAN_STATUS.PENDING)
+    boolean existsByStartingStatus() {
+        (testPlanRepository.findFirstByStatus(TEST_PLAN_STATUS.STARTING) != null)
     }
 
     List<TestPlan> findAll(){

@@ -54,27 +54,25 @@ class WorkflowManager {
     @Autowired
     TestPlanService testPlanService
 
-    TestPlan pendingTestPlan
-
-    @Scheduled(fixedRate = 5000L , initialDelay = 1000L)
     void searchForScheduledPlan() {
-        pendingTestPlan = testPlanService.findPendingTestPlan()
-        if (pendingTestPlan == null) {
+        if (!testPlanService.existsByStartingStatus()) {
+            log.info("#~#vnvlogPlanner.WorkflowManager.searchForScheduledPlan - STR - Non Starting Test Plan")
             TestPlan nextTestPlan = testPlanService.findNextScheduledTestPlan()?.unBlob()
             if (nextTestPlan != null) {
                 log.info("#~#vnvlogPlanner.WorkflowManager.searchForScheduledPlan - Available scheduled Plan Descr: [\"" + nextTestPlan.description + "\"]")
                 TestPlanResponse testPlanResponse = curator.proceedWith(nextTestPlan)
                 switch (testPlanResponse.status) {
                     case TEST_PLAN_STATUS.STARTING:
-                        pendingTestPlan = nextTestPlan
-                        testPlanService.update(pendingTestPlan.uuid, TEST_PLAN_STATUS.PENDING)
+                        nextTestPlan.uuid = testPlanResponse.uuid
+                        nextTestPlan.status = testPlanResponse.status
+                        testPlanService.save(nextTestPlan)
                         break
                     default:
                         log.info("Get response: ${testPlanResponse.status} for plan description: \"${nextTestPlan.description}\"")
                         break
                 }
-
             }
+            log.info("#~#vnvlogPlanner.WorkflowManager.searchForScheduledPlan - END - Non Starting Test Plan")
         }
     }
 

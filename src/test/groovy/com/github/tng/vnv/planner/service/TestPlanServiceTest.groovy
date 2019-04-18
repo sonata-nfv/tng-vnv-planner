@@ -8,9 +8,6 @@ import org.springframework.http.HttpStatus
 class TestPlanServiceTest extends TestRestSpec {
 
     void 'request for 2 test plans should store in the db and consequently schedule 2 test plans hopefully'(){
-
-        setup:
-        cleanTestPlanDB()
         when:
         def entity = postForEntity('/api/v1/test-plans',
                 [
@@ -46,11 +43,11 @@ class TestPlanServiceTest extends TestRestSpec {
                             ],
                     ]
                 , Void.class)
-
         then:
-        Thread.sleep(10000L);
         entity.statusCode == HttpStatus.OK
-        testPlanService.testPlanRepository.findAll().findAll {[TEST_PLAN_STATUS.SCHEDULED, TEST_PLAN_STATUS.PENDING].contains(it.status)}.size()==2
+        testPlanService.testPlanRepository.findAll().findAll {[TEST_PLAN_STATUS.SCHEDULED, TEST_PLAN_STATUS.STARTING].contains(it.status)}.size()==2
+        cleanup:
+        cleanTestPlanDB()
     }
 
 }

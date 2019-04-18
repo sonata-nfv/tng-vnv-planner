@@ -70,20 +70,17 @@ class ScheduleManager {
     @Autowired
     TestSuiteService testSuiteService
 
+    @Autowired
+    WorkflowManager workflowManager
+
     @Value('${app.NOT_AVAILABLE_DATA}')
     String not_available_data
     @Value('${app.NOT_MATCHING_TEST_TAGS}')
     String not_matching_test_tags
 
     TestSuite create(Package packageMetadata) {
-
-        TestSuite testSuite = new TestSuite(testPlans: new ArrayList<>(
-                testPlanService.createByPackage(packageMetadata)))
-        testSuite = create(testSuite)
-
-        //todo-allemaos: test the impl (the not_Confirmed testPlans of the test descriptors with t.testd.status == 'confirm_required' by returning testPlan.status as TEST_PLAN_STATUS.NOT_CONFIRMED)
-
-        testSuite
+        create(new TestSuite(testPlans: new ArrayList<>(
+                testPlanService.createByPackage(packageMetadata))))
     }
 
     TestSuite create(TestSuite ts) {
@@ -94,6 +91,7 @@ class ScheduleManager {
             if(tp != null)
                 testPlans.add(tp)
         }
+        workflowManager.searchForScheduledPlan()
         testSuite.testPlans = new ArrayList<>(testPlans)
         testSuite
     }
@@ -105,6 +103,7 @@ class ScheduleManager {
             update(tp, testSuite)
             testPlans.add(tp)
         })
+        workflowManager.searchForScheduledPlan()
         testSuite.testPlans = new ArrayList<>(testPlans)
         testSuite
     }
