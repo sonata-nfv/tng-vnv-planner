@@ -132,6 +132,7 @@ class TestPlanService {
     TestPlan findByUuid(String uuid){
         testPlanRepository.findByUuid(uuid)
     }
+
     TestPlan findNextScheduledTestPlan() {
         testPlanRepository.findFirstByStatus(TEST_PLAN_STATUS.SCHEDULED)
     }
@@ -140,13 +141,13 @@ class TestPlanService {
         testPlanRepository.findFirstByStatus(TEST_PLAN_STATUS.PENDING)
     }
 
-    List<TestPlan> findByTestSuiteUuid(String uuid){
-        def testSuite = testSuiteRepository.findFirstByUuid(uuid)
-        (testSuite != null)?testPlanRepository.findByTestSuite(testSuite) : []
-    }
-
     List<TestPlan> findAll(){
         testPlanRepository.findAll()
+    }
+
+    List<TestPlan> findByTestSuiteUuid(String uuid){
+        def testSuite = testSuiteRepository.findByUuid(uuid)
+        (testSuite != null)?testPlanRepository.findByTestSuite(testSuite) : []
     }
 }
 
