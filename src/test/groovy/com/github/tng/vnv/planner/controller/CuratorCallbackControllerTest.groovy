@@ -147,6 +147,7 @@ class CuratorCallbackControllerTest extends TestRestSpec {
         cleanTestPlanDB()
         when:
         createDummyTestPlan(TEST_PLAN2_UUID)
+
         def entity = postForEntity('/api/v1/test-plans/on-change/completed',
                 [
                         event_actor: 'Curator',
@@ -174,5 +175,6 @@ class CuratorCallbackControllerTest extends TestRestSpec {
         testPlan.testSuite = testSuite
         testSuite.testPlans.add(testPlan)
         testPlanService.save(testPlan)
+        testPlanService.update(testPlan.uuid, TEST_PLAN_STATUS.PENDING)
     }
 }

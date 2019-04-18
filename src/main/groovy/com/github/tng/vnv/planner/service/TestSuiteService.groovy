@@ -54,7 +54,11 @@ class TestSuiteService {
         testSuiteRepository.save(testSuite)
     }
 
+    List<TestSuite> findAll() {
+        testSuiteRepository.findAll()
+    }
+
     TestSuite findByUuid(String uuid) {
-        testSuiteRepository.findFirstByUuid(uuid)
+        testSuiteRepository.findByUuid(uuid)
     }
 }
