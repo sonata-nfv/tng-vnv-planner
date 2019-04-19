@@ -62,7 +62,7 @@ class Curator {
     def testPlanPrepareEndpoint
     @Value('${app.curator.test.plan.cancel.endpoint}')
     def testPlanCancellationEndpoint
-    @Value('${app.curator.test.plan.ping.endpoint}')
+    @Value('${app.curator.ping.endpoint}')
     def testPlanPingEndpoint
 
 
