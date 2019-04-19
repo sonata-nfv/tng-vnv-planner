@@ -591,9 +591,6 @@
         },
         "TestPlanResponse": {
             "type": "object",
-            "required": [
-                "status"
-            ],
             "properties": {
                 "exception": {
                     "type": "string",
