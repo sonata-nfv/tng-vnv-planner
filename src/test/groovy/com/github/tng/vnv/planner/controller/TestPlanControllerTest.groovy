@@ -37,8 +37,9 @@ class TestPlanControllerTest extends TestRestSpec {
     public static final String TEST_PLAN_UUID2 = '109873682'
 
     void "when curator is busy, schedule request of a test plan list should successfully save all test plans"() {
+        setup:
+        curatorMock.isBusy(true)
         when:
-        curatorMock.active = false
         def entity = postForEntity('/api/v1/test-plans',
                 [
                         'test_plans':
@@ -80,8 +81,9 @@ class TestPlanControllerTest extends TestRestSpec {
     }
 
     void "schedule request with validation required for one test plan should successfully schedule only the not validation required test plans"() {
+        setup:
+        curatorMock.isBusy(false)
         when:
-        curatorMock.active = true
         def entity = postForEntity('/api/v1/test-plans',
                 [
                         'test_plans':
@@ -119,8 +121,9 @@ class TestPlanControllerTest extends TestRestSpec {
     }
 
     void "schedule request with validation required for one test plan should successfully schedule no test plans"() {
+        setup:
+        curatorMock.isBusy(false)
         when:
-        curatorMock.active = true
         def entity = postForEntity('/api/v1/test-plans',
                 [
                         'test_plans':

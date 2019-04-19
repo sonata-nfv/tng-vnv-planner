@@ -27,8 +27,9 @@ class WorkFlowManagerTest extends TestRestSpec {
     public static final String TEST_PLAN_UUID_4 = '109873684'
 
     void 'Curator sends a COMPLETED testPlan should the next test plan become STARTING'() {
+        setup:
+        curatorMock.isBusy(false)
         when:
-        curatorMock.active = true
         scheduleTestPlan( TEST_PLAN_UUID_3, TEST_PLAN_STATUS.SCHEDULED, '1st scheduled testPlan')
         and:
         def entity = postForEntity('/api/v1/test-plans/on-change/completed',
