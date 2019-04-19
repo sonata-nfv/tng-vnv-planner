@@ -62,8 +62,9 @@ class WorkflowManager {
         if (pendingTestPlan == null) {
             TestPlan nextTestPlan = testPlanService.findNextScheduledTestPlan()?.unBlob()
             if (nextTestPlan != null) {
-                log.info("#~#vnvlogPlanner.WorkflowManager.searchForScheduledPlan - Available scheduled Plan Descr: [\"" + nextTestPlan.description + "\"]")
+                log.info("#~#vnvlogPlanner.WorkflowManager.searchForScheduledPlan - STR Planner: test_plan_uuid: ${nextTestPlan.uuid} [ status: ${nextTestPlan.status} ]")
                 TestPlanResponse testPlanResponse = curator.proceedWith(nextTestPlan)
+                log.info("#~#vnvlogPlanner.WorkflowManager.searchForScheduledPlan - END Curator: test_plan_uuid: ${testPlanResponse.uuid} [ testPlanResponse: ${testPlanResponse} ]")
                 switch (testPlanResponse.status) {
                     case TEST_PLAN_STATUS.STARTING:
                         pendingTestPlan = nextTestPlan
