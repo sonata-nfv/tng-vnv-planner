@@ -146,7 +146,7 @@ class BlobOfLinkedHashMap extends LinkedHashMap implements Serializable {}
 class TestPlanRequest {
     def nsd
     def testd
-    def testPlanUuid
+    String testPlanUuid
     Boolean lastTest = false
     List<TestPlanCallback> testPlanCallbacks = [
             new TestPlanCallback(eventActor: 'Curator', url: '/api/v1/test-plans/on-change/completed/', status:'COMPLETED'),
