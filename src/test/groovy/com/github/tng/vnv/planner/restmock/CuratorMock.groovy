@@ -49,10 +49,9 @@ import org.springframework.web.bind.annotation.*
 class CuratorMock {
 
     def busy = true
-    def testPlanResponseUuid
     @PostMapping('/mock/curator/test-preparations')
     ResponseEntity<TestPlanResponse> curateTestPlan(@RequestBody TestPlanRequest testPlanRequest) {
-                TestPlanResponse tpr = new TestPlanResponse(uuid: testPlanResponseUuid, status:
+                TestPlanResponse tpr = new TestPlanResponse(uuid: UUID.randomUUID().toString(), status:
                         (busy)? TEST_PLAN_STATUS.REJECTED:TEST_PLAN_STATUS.STARTING)
         ResponseEntity.status(HttpStatus.OK).body(tpr)
     }
