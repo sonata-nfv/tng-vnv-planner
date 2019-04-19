@@ -1006,8 +1006,8 @@
       "uuid": "17898765567"
     },
     {
-      "description": "Test Plan Description: Adhoc TD,NSD request for testing at 10:50utc  before brexit",
-      "id": 7,
+      "description": "Test Plan Description: Adhoc TD,NSD request for testing  [integrationtests at 18:04utc 2019/04/19]",
+      "id": 17,
       "index": 3,
       "nsd": {
         "descriptor_schema": "https://raw.githubusercontent.com/sonata-nfv/tng-schema/master/service-descriptor/nsd-schema.yml",
@@ -1015,7 +1015,7 @@
         "name": "mediapilot-service",
         "version": "0.2",
         "author": "Ignacio Dominguez @: atos",
-        "description": "This NS provides the video streaming service for the immersive media pilot.. [integrationtests at 10:10utc 2019/04/17]",
+        "description": "This NS provides the video streaming service for the immersive media pilot.. [integrationtests at 18:04utc 2019/04/19]",
         "network_functions": [
           {
             "vnf_id": "vnf-ma",
@@ -1078,7 +1078,7 @@
       "status": "string",
       "testd": {
         "author": "Ignacio Dominguez, Felipe Vicens (ATOS)",
-        "description": "Performance test for video analysis",
+        "description": "Performance test for video analysis  [integrationtests at 18:04utc 2019/04/19]",
         "descriptor_schema": "https://raw.githubusercontent.com/sonata-nfv/tng-schema/master/test-descriptor/testdescriptor-schema.yml",
         "name": "test-immersive-media",
         "phases": [

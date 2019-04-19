@@ -68,9 +68,9 @@ class CuratorCallbackController {
     @PostMapping('/on-change/completed')
     @ResponseBody
     void onChangeCompleted(@Valid @RequestBody TestPlanCallback callback) {
-        log.info("#~#vnvlogPlanner.CuratorCallbackController.onChangeCompleted: testPlan.uuid: ${callback?.testPlanUuid}, status: ${callback?.status} STR [CallbackBody.status: ${callback?.status}]")
+        log.info("#~#vnvlogPlanner.CuratorCallbackController.onChangeCompleted: test_plan_uuid: ${callback?.testPlanUuid}, status: ${callback?.status} STR [CallbackBody.status: ${callback?.status}]")
         testPlanService.update(callback.testPlanUuid, callback.status)
-        log.info("#~#vnvlogPlanner.CuratorCallbackController.onChangeCompleted: testPlan.uuid: ${callback?.testPlanUuid}, status: ${callback?.status} END [CallbackBody.status: ${callback?.status}]")
+        log.info("#~#vnvlogPlanner.CuratorCallbackController.onChangeCompleted: test_plan_uuid: ${callback?.testPlanUuid}, status: ${callback?.status} END [CallbackBody.status: ${callback?.status}]")
         workflowManager.searchForScheduledPlan()
     }
 
@@ -81,9 +81,9 @@ class CuratorCallbackController {
     @PostMapping('/on-change/')
     @ResponseBody
     void onChange(@Valid @RequestBody TestPlanCallback callback) {
-        log.info("#~#vnvlogPlanner.CuratorCallbackController.onChange: testPlan.uuid: ${callback?.testPlanUuid}, status: ${callback?.status} STR [CallbackBody.status: ${callback?.status}]")
+        log.info("#~#vnvlogPlanner.CuratorCallbackController.onChange: test_plan_uuid: ${callback?.testPlanUuid}, status: ${callback?.status} STR [CallbackBody.status: ${callback?.status}]")
         testPlanService.update(callback.testPlanUuid, callback.status)
-        log.info("#~#vnvlogPlanner.CuratorCallbackController.onChange: testPlan.uuid: ${callback?.testPlanUuid}, status: ${callback?.status} END [CallbackBody.status: ${callback?.status}]")
+        log.info("#~#vnvlogPlanner.CuratorCallbackController.onChange: test_plan_uuid: ${callback?.testPlanUuid}, status: ${callback?.status} END [CallbackBody.status: ${callback?.status}]")
         workflowManager.searchForScheduledPlan()
     }
 }
