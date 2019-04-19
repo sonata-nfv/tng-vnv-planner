@@ -62,21 +62,22 @@ class Curator {
     def testPlanPrepareEndpoint
     @Value('${app.curator.test.plan.cancel.endpoint}')
     def testPlanCancellationEndpoint
-    @Value('${app.curator.test.plan.ping.endpoint}')
+    @Value('${app.curator.ping.endpoint}')
     def testPlanPingEndpoint
 
 
 
-    void ping() {
-        callExternalEndpoint(restTemplate.get(testPlanPingEndpoint),
-                'Curator.ping(TestPlan)',testPlanPingEndpoint)
+    boolean inRunning() {
+        (callExternalEndpoint(restTemplate.getForEntity(testPlanPingEndpoint, Object.class),
+                'Curator.isRunning()',testPlanPingEndpoint).body.alive_since != null )
     }
 
     TestPlanResponse proceedWith(TestPlan testPlan) {
-        def createRequest = new TestPlanRequest(nsd: testPlan.nsd, testd: testPlan.testd, lastTest: false)
-        callExternalEndpoint(restTemplate.postForEntity(testPlanPrepareEndpoint, createRequest, TestPlanResponse),
+        def testPlanRequest = new TestPlanRequest(testPlanUuid: testPlan.uuid, nsd: testPlan.nsd, testd: testPlan.testd)
+        callExternalEndpoint(restTemplate.postForEntity(testPlanPrepareEndpoint, testPlanRequest, TestPlanResponse),
                 'Curator.proceedWith(TestPlan)',testPlanPrepareEndpoint).body
     }
+
     void deleteTestPlan(uuid) {
         callExternalEndpoint(restTemplate.delete(testPlanCancellationEndpoint, uuid),
                 'Curator.deleteTestPlan(TestPlan)',testPlanCancellationEndpoint)
