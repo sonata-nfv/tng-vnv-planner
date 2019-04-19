@@ -59,19 +59,23 @@ class WorkflowManager {
             log.info("#~#vnvlogPlanner.WorkflowManager.searchForScheduledPlan - STR - Non Starting Test Plan")
             TestPlan nextTestPlan = testPlanService.findNextScheduledTestPlan()?.unBlob()
             if (nextTestPlan != null) {
-                log.info("#~#vnvlogPlanner.WorkflowManager.searchForScheduledPlan - STR requestToCurator: test_plan_uuid: ${nextTestPlan.uuid} [ status: ${nextTestPlan.status} ]")
-                TestPlanResponse testPlanResponse = curator.proceedWith(nextTestPlan)
-                log.info("#~#vnvlogPlanner.WorkflowManager.searchForScheduledPlan - END responseFromCurator: test_plan_uuid: ${testPlanResponse.uuid} [ testPlanResponse: ${testPlanResponse} ]")
-                switch (testPlanResponse.status) {
-                    case TEST_PLAN_STATUS.STARTING:
-                        nextTestPlan.uuid = testPlanResponse.uuid
-                        nextTestPlan.status = testPlanResponse.status
-                        testPlanService.save(nextTestPlan)
-                        break
-                    default:
-                        log.info("Get response: ${testPlanResponse.status} for plan description: \"${nextTestPlan.description}\"")
-                        break
+                if(curator.inRunning()) {
+                    log.info("#~#vnvlogPlanner.WorkflowManager.searchForScheduledPlan.proceedWith - STR requestToCurator: test_plan_uuid: ${nextTestPlan.uuid} [ status: ${nextTestPlan.status} ]")
+                    TestPlanResponse testPlanResponse = curator.proceedWith(nextTestPlan)
+                    log.info("#~#vnvlogPlanner.WorkflowManager.searchForScheduledPlan.proceedWith - END responseFromCurator: test_plan_uuid: ${testPlanResponse.uuid} [ testPlanResponse: ${testPlanResponse} ]")
+                    switch (testPlanResponse.status) {
+                        case TEST_PLAN_STATUS.STARTING:
+                            nextTestPlan.uuid = testPlanResponse.uuid
+                            nextTestPlan.status = testPlanResponse.status
+                            testPlanService.save(nextTestPlan)
+                            break
+                        default:
+                            log.info("Get response: ${testPlanResponse.status} for plan description: \"${nextTestPlan.description}\"")
+                            break
+                    }
                 }
+            } else {
+                log.info("#~#vnvlogPlanner.WorkflowManager.searchForScheduledPlan - Curator status is not RUNNING")
             }
             log.info("#~#vnvlogPlanner.WorkflowManager.searchForScheduledPlan - END - Non Starting Test Plan")
         }
