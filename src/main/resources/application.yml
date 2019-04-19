@@ -66,7 +66,7 @@ app:
 
   curator:
     host: tng-vnv-curator
-    ping.endpoint: ${app.curator.host}/ping
+    ping.endpoint: http://${app.curator.host}/ping
     base.url: http://${app.curator.host}:6200/api/v1
     test.plan.prepare.endpoint: ${app.curator.base.url}/test-preparations
     test.plan.cancel.endpoint: ${app.curator.base.url}/test-preparations/{uuid}
