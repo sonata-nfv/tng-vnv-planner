@@ -48,12 +48,12 @@ import org.springframework.web.bind.annotation.*
 @RestController
 class CuratorMock {
 
-    def active = false
+    def busy = true
     def testPlanResponseUuid
     @PostMapping('/mock/curator/test-preparations')
     ResponseEntity<TestPlanResponse> curateTestPlan(@RequestBody TestPlanRequest testPlanRequest) {
                 TestPlanResponse tpr = new TestPlanResponse(uuid: testPlanResponseUuid, status:
-                        (active)? TEST_PLAN_STATUS.STARTING:TEST_PLAN_STATUS.REJECTED)
+                        (busy)? TEST_PLAN_STATUS.REJECTED:TEST_PLAN_STATUS.STARTING)
         ResponseEntity.status(HttpStatus.OK).body(tpr)
     }
 
@@ -61,5 +61,9 @@ class CuratorMock {
     ResponseEntity<Void> deleteTestPlan(@PathVariable('testPlanUuid') String uuid) {
         log.info("The testPlan with uuid: \"$uuid\" has been cancelled")
         ResponseEntity.status(HttpStatus.OK).build()
+    }
+
+    void isBusy(boolean b){
+        busy = b
     }
 }

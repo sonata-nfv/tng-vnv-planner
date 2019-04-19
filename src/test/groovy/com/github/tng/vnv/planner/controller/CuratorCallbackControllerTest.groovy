@@ -57,9 +57,6 @@ class CuratorCallbackControllerTest extends TestRestSpec {
     TestSuiteService testSuiteService
 
     void 'curator returns back call as COMPLETED should store the testPlan with status respectively'() {
-
-        setup:
-        cleanTestPlanDB()
         when:
         createDummyTestPlan(TEST_PLAN_UUID)
         def status = TEST_PLAN_STATUS.COMPLETED
@@ -87,11 +84,11 @@ class CuratorCallbackControllerTest extends TestRestSpec {
         then:
         entity.statusCode == HttpStatus.OK
         testPlanService.findByUuid(TEST_PLAN_UUID).status==status
+        cleanup:
+        cleanTestPlanDB()
     }
 
     void 'curator returns back call as NOT COMPLETED should store the testPlan with status respectively'() {
-        setup:
-        cleanTestPlanDB()
         when:
         createDummyTestPlan(TEST_PLAN_UUID)
         def status = TEST_PLAN_STATUS.CANCELLING
@@ -119,11 +116,11 @@ class CuratorCallbackControllerTest extends TestRestSpec {
         then:
         entity.statusCode == HttpStatus.OK
         testPlanService.findByUuid(TEST_PLAN_UUID).status==status
+        cleanup:
+        cleanTestPlanDB()
     }
 
     void 'curator returns back call as ERROR should store the testPlan with status respectively'() {
-        setup:
-        cleanTestPlanDB()
         when:
         createDummyTestPlan(TEST_PLAN_UUID)
         def status = TEST_PLAN_STATUS.ERROR
@@ -140,11 +137,11 @@ class CuratorCallbackControllerTest extends TestRestSpec {
         then:
         entity.statusCode == HttpStatus.OK
         testPlanService.findByUuid(TEST_PLAN_UUID).status==status
+        cleanup:
+        cleanTestPlanDB()
     }
 
     void 'following an completed testPlan in Paris should store the testPlan as completed'() {
-        setup:
-        cleanTestPlanDB()
         when:
         createDummyTestPlan(TEST_PLAN2_UUID)
 
@@ -166,6 +163,8 @@ class CuratorCallbackControllerTest extends TestRestSpec {
         then:
         entity.statusCode == HttpStatus.OK
         testPlanService.findByUuid(TEST_PLAN2_UUID).status=='COMPLETED'
+        cleanup:
+        cleanTestPlanDB()
     }
 
     void createDummyTestPlan(String test_plan_uuid){
@@ -175,6 +174,6 @@ class CuratorCallbackControllerTest extends TestRestSpec {
         testPlan.testSuite = testSuite
         testSuite.testPlans.add(testPlan)
         testPlanService.save(testPlan)
-        testPlanService.update(testPlan.uuid, TEST_PLAN_STATUS.PENDING)
+        testPlanService.update(testPlan.uuid, TEST_PLAN_STATUS.STARTING)
     }
 }

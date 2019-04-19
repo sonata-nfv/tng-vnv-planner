@@ -56,10 +56,11 @@ class ScheduleManagerTest extends TestRestSpec {
     TestPlanService testPlanService
 
     void 'schedule multiple test plans should produce success result'() {
-
         when:
         TestSuite testSuite = scheduler.create(new Package(packageId: MULTIPLE_TEST_PLANS_PACKAGE_ID))
         then:
         testSuite.testPlans.size() == 11
+        cleanup:
+        cleanTestPlanDB()
     }
 }

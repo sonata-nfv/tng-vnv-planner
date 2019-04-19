@@ -36,6 +36,7 @@ package com.github.tng.vnv.planner.controller
 
 
 import com.github.tng.vnv.planner.config.TestRestSpec
+import com.github.tng.vnv.planner.restmock.CuratorMock
 import com.github.tng.vnv.planner.service.TestPlanService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
@@ -47,11 +48,13 @@ class CatalogueCallbackControllerTest extends TestRestSpec {
     @Autowired
     TestPlanService testPlanService
 
+    @Autowired
+    CuratorMock curatorMock
 
     void 'schedule single Test and single NetworkService should produce successfully 11 testPlans'() {
-
         setup:
-        cleanTestPlanDB()
+        curatorMock.isBusy(true)
+        setup:
         when:
         def entity = postForEntity('/api/v1/packages/on-change',
                 [
@@ -63,7 +66,7 @@ class CatalogueCallbackControllerTest extends TestRestSpec {
         entity.statusCode == HttpStatus.OK
         testPlanService.testPlanRepository.findAll()
                 .findAll{it.status == "SCHEDULED"}.size() == 11
-
-
+        cleanup:
+        cleanTestPlanDB()
     }
 }

@@ -26,42 +26,12 @@ class WorkFlowManagerTest extends TestRestSpec {
     public static final String TEST_PLAN_UUID_3 = '109873683'
     public static final String TEST_PLAN_UUID_4 = '109873684'
 
-    void 'when workflowManager checks the scheduled test plans should send the oldest SCHEDULED test plan to Curator'() {
-
+    void 'Curator sends a COMPLETED testPlan should the next test plan become STARTING'() {
         setup:
-        cleanTestPlanDB()
+        curatorMock.isBusy(false)
         when:
-        curatorMock.active = false
-        scheduleTestPlan(TEST_PLAN_UUID_1, TEST_PLAN_STATUS.SCHEDULED, 'Single scheduled testPlan')
-        then:
-        testPlanService.findNextScheduledTestPlan().status==TEST_PLAN_STATUS.SCHEDULED
-
-
-    }
-
-    void 'when workflowManager checks the scheduled test plans and there is Curator to get the testPlan should testPlan status changed to PENDING'() {
-
-        setup:
-        cleanTestPlanDB()
-        when:
-        curatorMock.active = true
-        curatorMock.testPlanResponseUuid = TEST_PLAN_UUID_2
-        scheduleTestPlan(TEST_PLAN_UUID_2, TEST_PLAN_STATUS.SCHEDULED, 'Single scheduled testPlan')
-        then:
-        Thread.sleep(6500L);
-        testPlanService.testPlanRepository.findAll().find { it.uuid == TEST_PLAN_UUID_2}.status ==TEST_PLAN_STATUS.PENDING
-    }
-
-    void 'checks the test plans and successfully passes a test plan to Curator should the oldest SCHEDULED test plan become initially PENDING and finally COMPLETED'() {
-
-        setup:
-
-        when:
-        curatorMock.active = true
         scheduleTestPlan( TEST_PLAN_UUID_3, TEST_PLAN_STATUS.SCHEDULED, '1st scheduled testPlan')
-        scheduleTestPlan(TEST_PLAN_UUID_4, TEST_PLAN_STATUS.SCHEDULED, '2nd scheduled testPlan')
         and:
-        Thread.sleep(1500L);
         def entity = postForEntity('/api/v1/test-plans/on-change/completed',
                 [
                         event_actor: 'tng-vnv-curator',
@@ -79,7 +49,6 @@ class WorkFlowManagerTest extends TestRestSpec {
                 ]
                 , Void.class)
         then:
-        Thread.sleep(25000L);
         entity.statusCode == HttpStatus.OK
         testPlanService.findByUuid(TEST_PLAN_UUID_3).status == TEST_PLAN_STATUS.COMPLETED
         cleanup:
