@@ -39,6 +39,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.databind.ObjectMapper
 import groovy.transform.EqualsAndHashCode
 import groovy.transform.Sortable
+import groovy.transform.ToString
 import io.swagger.annotations.ApiModelProperty
 import org.springframework.util.SerializationUtils
 
@@ -151,7 +152,7 @@ class TestPlanRequest {
             new TestPlanCallback(eventActor: 'Curator', url: '/api/v1/test-plans/on-change/'),
     ]
 }
-
+@ToString
 @EqualsAndHashCode
 class TestPlanResponse {
     @ApiModelProperty(
@@ -162,9 +163,7 @@ class TestPlanResponse {
     @ApiModelProperty(
             value = 'Test Plan Status',
             allowEmptyValue = false,
-            example = 'STARTING, COMPLETED, CANCELLING, CANCELLED, ERROR',
-            required = true)
-    @NotNull
+            example = 'STARTING, COMPLETED, CANCELLING, CANCELLED, ERROR')
     String status
 
     @ApiModelProperty(

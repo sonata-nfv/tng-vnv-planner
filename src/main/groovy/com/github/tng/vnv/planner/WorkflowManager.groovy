@@ -59,9 +59,9 @@ class WorkflowManager {
             log.info("#~#vnvlogPlanner.WorkflowManager.searchForScheduledPlan - STR - Non Starting Test Plan")
             TestPlan nextTestPlan = testPlanService.findNextScheduledTestPlan()?.unBlob()
             if (nextTestPlan != null) {
-                log.info("#~#vnvlogPlanner.WorkflowManager.searchForScheduledPlan - STR Planner: test_plan_uuid: ${nextTestPlan.uuid} [ status: ${nextTestPlan.status} ]")
+                log.info("#~#vnvlogPlanner.WorkflowManager.searchForScheduledPlan - STR requestToCurator: test_plan_uuid: ${nextTestPlan.uuid} [ status: ${nextTestPlan.status} ]")
                 TestPlanResponse testPlanResponse = curator.proceedWith(nextTestPlan)
-                log.info("#~#vnvlogPlanner.WorkflowManager.searchForScheduledPlan - END Curator: test_plan_uuid: ${testPlanResponse.uuid} [ testPlanResponse: ${testPlanResponse} ]")
+                log.info("#~#vnvlogPlanner.WorkflowManager.searchForScheduledPlan - END responseFromCurator: test_plan_uuid: ${testPlanResponse.uuid} [ testPlanResponse: ${testPlanResponse} ]")
                 switch (testPlanResponse.status) {
                     case TEST_PLAN_STATUS.STARTING:
                         nextTestPlan.uuid = testPlanResponse.uuid
