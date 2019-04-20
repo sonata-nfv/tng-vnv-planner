@@ -118,10 +118,10 @@ class ScheduleManager {
             tp.description = tp.description+" $not_available_data"
         } else {
             def service = (!isEmpty(tp.serviceUuid)) ? networkServiceService.findByUuid(tp.serviceUuid) :
-                    new NetworkService(uuid: tp.nsd?.uuid?: UUID.randomUUID().toString() + 'DIY', nsd: tp.nsd)
+                    new NetworkService(uuid: (!isEmpty(tp.nsd?.uuid))?tp.nsd.uuid:UUID.randomUUID().toString() + 'DIY', nsd: tp.nsd)
             service?.loadDescriptor()
             def test = (!isEmpty(tp.testUuid)) ? testService.findByUuid(tp.testUuid) :
-                    new Test(uuid: tp.testd?.uuid ?: UUID.randomUUID().toString() + 'DIY', testd: tp.testd)
+                    new Test(uuid: (!isEmpty(tp.testd?.uuid))?tp.testd.uuid:UUID.randomUUID().toString() + 'DIY', testd: tp.testd)
             test?.loadDescriptor()
             if(service == null || test == null){
                 tp.status = TEST_PLAN_STATUS.REJECTED
@@ -129,7 +129,6 @@ class ScheduleManager {
             } else {
                 tp.nsd = service.nsd
                 tp.testd = test.testd
-                tp.uuid = service.uuid?:tp.nsd?.uuid?:UUID.randomUUID().toString() + test.uuid?:tp.testd?.uuid?:UUID.randomUUID().toString()
                 if (!(service?.descriptor.tagMatchedWith(test?.descriptor))) {
                     tp.status = TEST_PLAN_STATUS.REJECTED
                     tp.description = tp.description +" $not_matching_test_tags"

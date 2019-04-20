@@ -111,8 +111,8 @@ class TestPlanService {
     }
 
     TestPlan save(TestPlan testPlan){
-        testPlan.uuid = (testPlan.uuid!=null)?testPlan.uuid:UUID.randomUUID().toString()
         log.info("#~#vnvlog save STR [test_plan_uuid: ${testPlan?.uuid}, status: ${testPlan?.status} ]")
+        testPlan.uuid = (!isEmpty(testPlan.uuid))?testPlan.uuid:UUID.randomUUID().toString()
         testPlan = testPlanRepository.save(testPlan.blob())
         log.info("#~#vnvlog save END [test_plan_uuid: ${testPlan?.uuid}, status: ${testPlan?.status} ]")
         testPlan
