@@ -56,13 +56,12 @@ class WorkflowManager {
 
     void searchForScheduledPlan() {
         if (!testPlanService.existsByStartingStatus()) {
-            log.info("#~#vnvlogPlanner.WorkflowManager.searchForScheduledPlan - STR - Non Starting Test Plan")
             TestPlan nextTestPlan = testPlanService.findNextScheduledTestPlan()?.unBlob()
             if (nextTestPlan != null) {
                 if(curator.inRunning()) {
-                    log.info("#~#vnvlogPlanner.WorkflowManager.searchForScheduledPlan.proceedWith - STR requestToCurator: test_plan_uuid: ${nextTestPlan.uuid} [ status: ${nextTestPlan.status} ]")
+                    log.info("#~#vnvlog searchForScheduledPlan.proceedWith - STR requestToCurator [test_plan_uuid: ${nextTestPlan.uuid}, status: ${nextTestPlan.status} ]")
                     TestPlanResponse testPlanResponse = curator.proceedWith(nextTestPlan)
-                    log.info("#~#vnvlogPlanner.WorkflowManager.searchForScheduledPlan.proceedWith - END responseFromCurator: test_plan_uuid: ${testPlanResponse.uuid} [ testPlanResponse: ${testPlanResponse} ]")
+                    log.info("#~#vnvlog searchForScheduledPlan.proceedWith - END responseFromCurator [test_plan_uuid: ${testPlanResponse.uuid}, status: ${testPlanResponse.status} ]")
                     switch (testPlanResponse.status) {
                         case TEST_PLAN_STATUS.STARTING:
                             nextTestPlan.uuid = testPlanResponse.uuid
@@ -74,15 +73,14 @@ class WorkflowManager {
                             break
                     }
                 }
-            } else {
-                log.info("#~#vnvlogPlanner.WorkflowManager.searchForScheduledPlan - Curator status is not RUNNING")
             }
-            log.info("#~#vnvlogPlanner.WorkflowManager.searchForScheduledPlan - END - Non Starting Test Plan")
         }
     }
 
     void deleteTestPlan(String uuid){
+        log.info("#~#vnvlog deleteTestPlan STR [test_plan_uuid: ${uuid}]")
         curator.deleteTestPlan(uuid)
         testPlanService.delete(uuid)
+        log.info("#~#vnvlog deleteTestPlan END [test_plan_uuid: ${uuid}]")
     }
 }

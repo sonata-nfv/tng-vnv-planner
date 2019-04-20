@@ -50,9 +50,12 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Component
+import org.springframework.util.StringUtils
 
 import java.security.AllPermission
 import java.util.concurrent.CompletableFuture
+
+import static org.springframework.util.StringUtils.isEmpty
 
 @Log
 @Component
@@ -86,10 +89,9 @@ class ScheduleManager {
     TestSuite create(TestSuite ts) {
         def testPlans = [] as HashSet
         TestSuite testSuite = testSuiteService.save(new TestSuite())
-        ts?.testPlans?.toSorted().each { tp ->
-            tp = create(tp, testSuite)
-            if(tp != null)
-                testPlans.add(tp)
+        ts?.testPlans?.each{ it.uuid=(!isEmpty(it.uuid))?it.uuid:UUID.randomUUID().toString()}
+                .toSorted().each { tp -> tp = create(tp, testSuite)
+            if(tp != null) testPlans.add(tp)
         }
         workflowManager.searchForScheduledPlan()
         testSuite.testPlans = new ArrayList<>(testPlans)
@@ -111,14 +113,14 @@ class ScheduleManager {
 
     TestPlan create(TestPlan tp, TestSuite ts) {
         tp.testSuite = ts
-        if (!((tp.serviceUuid != null || tp.nsd != null) && (tp.testUuid != null || tp.testd != null))){
+        if (!(( !isEmpty(tp.serviceUuid) || tp.nsd!=null) && ( !isEmpty(tp.testUuid) || tp.testd!=null))){
             tp.status = TEST_PLAN_STATUS.REJECTED
             tp.description = tp.description+" $not_available_data"
         } else {
-            def service = (tp.serviceUuid != null) ? networkServiceService.findByUuid(tp.serviceUuid) :
+            def service = (!isEmpty(tp.serviceUuid)) ? networkServiceService.findByUuid(tp.serviceUuid) :
                     new NetworkService(uuid: tp.nsd?.uuid?: UUID.randomUUID().toString() + 'DIY', nsd: tp.nsd)
             service?.loadDescriptor()
-            def test = (tp.testUuid != null) ? testService.findByUuid(tp.testUuid) :
+            def test = (!isEmpty(tp.testUuid)) ? testService.findByUuid(tp.testUuid) :
                     new Test(uuid: tp.testd?.uuid ?: UUID.randomUUID().toString() + 'DIY', testd: tp.testd)
             test?.loadDescriptor()
             if(service == null || test == null){
@@ -127,17 +129,16 @@ class ScheduleManager {
             } else {
                 tp.nsd = service.nsd
                 tp.testd = test.testd
-                tp.uuid = service.uuid?:tp.nsd?.uuid?:UUID.randomUUID().toString() + test.uuid?:tp.testd?.uuid?:UUID.randomUUID().toString()
                 if (!(service?.descriptor.tagMatchedWith(test?.descriptor))) {
                     tp.status = TEST_PLAN_STATUS.REJECTED
                     tp.description = tp.description +" $not_matching_test_tags"
                 }
-                if (tp.testd?.confirm_required != null && tp.testd?.confirm_required == '1'
-                        && (tp.testd?.confirmed == null || tp.testd?.confirmed != '1'))
+                if ( !isEmpty(tp.testd?.confirm_required) && tp.testd?.confirm_required == '1'
+                        && ( isEmpty(tp.testd?.confirmed) || tp.testd?.confirmed != '1'))
                     tp.status = TEST_PLAN_STATUS.NOT_CONFIRMED
                 else {
                     tp.status = TEST_PLAN_STATUS.SCHEDULED
-                    testPlanService.save(tp)
+                    tp = testPlanService.save(tp)
                 }
             }
         }

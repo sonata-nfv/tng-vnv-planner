@@ -49,6 +49,7 @@ import org.springframework.stereotype.Component
 import org.springframework.web.client.RestTemplate
 
 import static com.github.tng.vnv.planner.utils.DebugHelper.callExternalEndpoint
+import static org.springframework.util.StringUtils.isEmpty
 
 @Component
 @Log
@@ -68,8 +69,8 @@ class Curator {
 
 
     boolean inRunning() {
-        (callExternalEndpoint(restTemplate.getForEntity(testPlanPingEndpoint, Object.class),
-                'Curator.isRunning()',testPlanPingEndpoint).body.alive_since != null )
+        !isEmpty(callExternalEndpoint(restTemplate.getForEntity(testPlanPingEndpoint, Object.class),
+                'Curator.isRunning()',testPlanPingEndpoint).body.alive_since)
     }
 
     TestPlanResponse proceedWith(TestPlan testPlan) {

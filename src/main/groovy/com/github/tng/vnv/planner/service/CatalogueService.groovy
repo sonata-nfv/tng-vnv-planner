@@ -48,6 +48,7 @@ import org.springframework.stereotype.Service
 import org.springframework.web.client.RestTemplate
 
 import static com.github.tng.vnv.planner.utils.DebugHelper.callExternalEndpoint
+import static org.springframework.util.StringUtils.isEmpty
 
 @Log
 @Service
@@ -64,7 +65,7 @@ class CatalogueService {
     def packageMetadataEndpoint
 
     Set<TestPlan> createByPackage(Package pack){
-        if(pack.packageId != null){
+        if(!isEmpty(pack.packageId)){
             def newPack = loadPackageMetadata(pack.packageId)
             pack.networkServices.addAll(newPack.networkServices)
             pack.tests.addAll(newPack.tests)
