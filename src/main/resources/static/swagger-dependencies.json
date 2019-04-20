@@ -616,7 +616,7 @@
                     }
                 },
                 "test_plan_uuid": {
-                    "type": "object"
+                    "type": "string"
                 },
                 "testd": {
                     "type": "object"

@@ -129,6 +129,7 @@ class ScheduleManager {
             } else {
                 tp.nsd = service.nsd
                 tp.testd = test.testd
+                tp.uuid = service.uuid?:tp.nsd?.uuid?:UUID.randomUUID().toString() + test.uuid?:tp.testd?.uuid?:UUID.randomUUID().toString()
                 if (!(service?.descriptor.tagMatchedWith(test?.descriptor))) {
                     tp.status = TEST_PLAN_STATUS.REJECTED
                     tp.description = tp.description +" $not_matching_test_tags"

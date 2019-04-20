@@ -75,7 +75,7 @@ class Curator {
 
     TestPlanResponse proceedWith(TestPlan testPlan) {
         def testPlanRequest = new TestPlanRequest(testPlanUuid: testPlan.uuid, nsd: testPlan.nsd, testd: testPlan.testd)
-        callExternalEndpoint(restTemplate.postForEntity(testPlanPrepareEndpoint, testPlanRequest, testPlanRequest),
+        callExternalEndpoint(restTemplate.postForEntity(testPlanPrepareEndpoint, testPlanRequest, TestPlanResponse),
                 'Curator.proceedWith(TestPlan)',testPlanPrepareEndpoint).body
     }
 
