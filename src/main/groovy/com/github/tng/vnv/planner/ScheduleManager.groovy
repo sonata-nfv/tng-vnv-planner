@@ -86,10 +86,9 @@ class ScheduleManager {
     TestSuite create(TestSuite ts) {
         def testPlans = [] as HashSet
         TestSuite testSuite = testSuiteService.save(new TestSuite())
-        ts?.testPlans?.toSorted().each { tp ->
-            tp = create(tp, testSuite)
-            if(tp != null)
-                testPlans.add(tp)
+        ts?.testPlans?.each{ it.uuid=(it.uuid!=null)?it.uuid:UUID.randomUUID().toString()}
+                .toSorted().each { tp -> tp = create(tp, testSuite)
+            if(tp != null) testPlans.add(tp)
         }
         workflowManager.searchForScheduledPlan()
         testSuite.testPlans = new ArrayList<>(testPlans)

@@ -131,12 +131,11 @@ class TestPlan implements Serializable {
     }
 
     boolean equals(o) {
-        if ((o.uuid).contains(uuid)) return true
-        return false
+        (o.uuid).contains(uuid)? true:false
     }
 
     int hashCode() {
-        return uuid.hashCode()
+        uuid.hashCode()
     }
 }
 
