@@ -44,6 +44,8 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Component
 
+import static org.springframework.util.StringUtils.isEmpty
+
 @Log
 @Component
 class WorkflowManager {
@@ -64,6 +66,11 @@ class WorkflowManager {
                     log.info("#~#vnvlog searchForScheduledPlan.proceedWith - END responseFromCurator [test_plan_uuid: ${testPlanResponse.uuid}, status: ${testPlanResponse.status} ]")
                     switch (testPlanResponse.status) {
                         case TEST_PLAN_STATUS.STARTING:
+                            if(isEmpty(testPlanResponse.uuid)) {
+                                //cleancode-allemaos: remove this code and add @NotNull in testPlanUuid in testPlanResponse object
+                                testPlanResponse.uuid = UUID.randomUUID().toString()
+                                log.severe("#~#vnvlog test_plann_uuid is null. [new test_plan_uuid: ${testPlanResponse.uuid}]")
+                            }
                             testPlanService.update(testPlanResponse.uuid,testPlanResponse.status)
                             break
                         //todo-allemaos: handle the rest of status or exception from curator response
