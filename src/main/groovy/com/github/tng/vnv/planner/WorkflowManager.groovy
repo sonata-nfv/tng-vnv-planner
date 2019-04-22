@@ -44,6 +44,8 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Component
 
+import static org.springframework.util.StringUtils.isEmpty
+
 @Log
 @Component
 class WorkflowManager {
@@ -56,28 +58,33 @@ class WorkflowManager {
 
     void searchForScheduledPlan() {
         if (!testPlanService.existsByStartingStatus()) {
-            log.info("#~#vnvlogPlanner.WorkflowManager.searchForScheduledPlan - STR - Non Starting Test Plan")
             TestPlan nextTestPlan = testPlanService.findNextScheduledTestPlan()?.unBlob()
             if (nextTestPlan != null) {
-                log.info("#~#vnvlogPlanner.WorkflowManager.searchForScheduledPlan - Available scheduled Plan Descr: [\"" + nextTestPlan.description + "\"]")
-                TestPlanResponse testPlanResponse = curator.proceedWith(nextTestPlan)
-                switch (testPlanResponse.status) {
-                    case TEST_PLAN_STATUS.STARTING:
-                        nextTestPlan.uuid = testPlanResponse.uuid
-                        nextTestPlan.status = testPlanResponse.status
-                        testPlanService.save(nextTestPlan)
-                        break
-                    default:
-                        log.info("Get response: ${testPlanResponse.status} for plan description: \"${nextTestPlan.description}\"")
-                        break
+                if(curator.inRunning()) {
+                    log.info("#~#vnvlog searchForScheduledPlan.proceedWith - STR requestToCurator [test_plan_uuid: ${nextTestPlan.uuid}, status: ${nextTestPlan.status} ]")
+                    TestPlanResponse testPlanResponse = curator.proceedWith(nextTestPlan)
+                    log.info("#~#vnvlog searchForScheduledPlan.proceedWith - END responseFromCurator [test_plan_uuid: ${testPlanResponse.uuid}, status: ${testPlanResponse.status} ]")
+                    switch (testPlanResponse.status) {
+                        case TEST_PLAN_STATUS.STARTING:
+                            if(isEmpty(testPlanResponse.uuid)) {
+                                log.severe("#~#vnvlog test_plann_uuid is null. [testPlanResponse.test_plan_uuid: ${testPlanResponse.uuid}]")
+                            }
+                            testPlanService.update(testPlanResponse.uuid,testPlanResponse.status)
+                            break
+                        //todo-allemaos: handle the rest of status or exception from curator response
+                        default:
+                            log.info("Get response: ${testPlanResponse.status} for plan description: \"${nextTestPlan.description}\"")
+                            break
+                    }
                 }
             }
-            log.info("#~#vnvlogPlanner.WorkflowManager.searchForScheduledPlan - END - Non Starting Test Plan")
         }
     }
 
     void deleteTestPlan(String uuid){
+        log.info("#~#vnvlog deleteTestPlan STR [test_plan_uuid: ${uuid}]")
         curator.deleteTestPlan(uuid)
         testPlanService.delete(uuid)
+        log.info("#~#vnvlog deleteTestPlan END [test_plan_uuid: ${uuid}]")
     }
 }

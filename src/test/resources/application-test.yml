@@ -36,6 +36,7 @@ app:
   vnvgk.base.url: http://localhost:${server.port}/mock/gk
   cat.base.url: http://localhost:${server.port}/mock/catalogue
   curator.base.url: http://localhost:${server.port}/mock/curator
+  curator.ping.endpoint: http://localhost:${server.port}/mock/curator/ping
   test.package.id: myNS:UPB:1.0
 
 spring.profiles.active: test

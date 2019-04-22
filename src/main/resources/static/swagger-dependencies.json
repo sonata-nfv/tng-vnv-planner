@@ -27,6 +27,38 @@
         }
     ],
     "paths": {
+        "/mock/curator/ping": {
+            "get": {
+                "tags": [
+                    "curator-mock"
+                ],
+                "summary": "pingMe",
+                "operationId": "pingMeUsingGET",
+                "produces": [
+                    "*/*"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "object"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                }
+            }
+        },
         "/mock/curator/test-preparations": {
             "post": {
                 "tags": [
@@ -583,6 +615,9 @@
                         "$ref": "#/definitions/TestPlanCallback"
                     }
                 },
+                "test_plan_uuid": {
+                    "type": "string"
+                },
                 "testd": {
                     "type": "object"
                 }
@@ -591,9 +626,6 @@
         },
         "TestPlanResponse": {
             "type": "object",
-            "required": [
-                "status"
-            ],
             "properties": {
                 "exception": {
                     "type": "string",

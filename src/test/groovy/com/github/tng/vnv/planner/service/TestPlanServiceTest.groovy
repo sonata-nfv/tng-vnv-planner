@@ -7,7 +7,7 @@ import org.springframework.http.HttpStatus
 
 class TestPlanServiceTest extends TestRestSpec {
 
-    void 'request for 2 test plans should store in the db and consequently schedule 2 test plans hopefully'(){
+    void 'request for 2 test plans should store in the db and consequently schedule 2 test plans'(){
         when:
         def entity = postForEntity('/api/v1/test-plans',
                 [

@@ -39,6 +39,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.databind.ObjectMapper
 import groovy.transform.EqualsAndHashCode
 import groovy.transform.Sortable
+import groovy.transform.ToString
 import io.swagger.annotations.ApiModelProperty
 import org.springframework.util.SerializationUtils
 
@@ -130,12 +131,11 @@ class TestPlan implements Serializable {
     }
 
     boolean equals(o) {
-        if ((o.uuid).contains(uuid)) return true
-        return false
+        (o.uuid).contains(uuid)? true:false
     }
 
     int hashCode() {
-        return uuid.hashCode()
+        uuid.hashCode()
     }
 }
 
@@ -145,26 +145,26 @@ class BlobOfLinkedHashMap extends LinkedHashMap implements Serializable {}
 class TestPlanRequest {
     def nsd
     def testd
+    String testPlanUuid
     Boolean lastTest = false
     List<TestPlanCallback> testPlanCallbacks = [
             new TestPlanCallback(eventActor: 'Curator', url: '/api/v1/test-plans/on-change/completed/', status:'COMPLETED'),
             new TestPlanCallback(eventActor: 'Curator', url: '/api/v1/test-plans/on-change/'),
     ]
 }
-
+@ToString
 @EqualsAndHashCode
 class TestPlanResponse {
     @ApiModelProperty(
             value = 'Test Plan uuid',
             allowEmptyValue = false,
             example = 'if there is no exception uuid should be filled')
+    @NotNull
     String uuid
     @ApiModelProperty(
             value = 'Test Plan Status',
             allowEmptyValue = false,
-            example = 'STARTING, COMPLETED, CANCELLING, CANCELLED, ERROR',
-            required = true)
-    @NotNull
+            example = 'STARTING, COMPLETED, CANCELLING, CANCELLED, ERROR')
     String status
 
     @ApiModelProperty(

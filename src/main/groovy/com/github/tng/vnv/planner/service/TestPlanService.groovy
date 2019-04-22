@@ -45,6 +45,8 @@ import groovy.util.logging.Log
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
+import static org.springframework.util.StringUtils.isEmpty
+
 @Log
 @Service
 class TestPlanService {
@@ -65,7 +67,7 @@ class TestPlanService {
         def testPlans = [] as HashSet
         service = networkServiceService.findByUuid(service.uuid)?.loadDescriptor()
         testService.findByService(service)?.each { test ->
-            if(service.uuid != null && test.uuid!=null)
+            if( !isEmpty(service.uuid) && !isEmpty(test.uuid))
                 testPlans.add(new TestPlan(uuid: service.uuid+test.uuid, nsd:service.nsd, testd:test.testd, status: TEST_PLAN_STATUS.CREATED))
         }
         testPlans
@@ -75,7 +77,7 @@ class TestPlanService {
         def testPlans = [] as HashSet
         test = testService.findByUuid(test.uuid)
         networkServiceService.findByTest(test)?.each { service ->
-            if(service.uuid != null && test.uuid!=null)
+            if(!isEmpty(service.uuid) && !isEmpty(test.uuid))
                 testPlans.add(new TestPlan(uuid: service.uuid+test.uuid, nsd:service.nsd, testd:test.testd, status: TEST_PLAN_STATUS.CREATED))
         }
         testPlans
@@ -109,19 +111,18 @@ class TestPlanService {
     }
 
     TestPlan save(TestPlan testPlan){
-        testPlan.uuid = testPlan.uuid?:UUID.randomUUID().toString()
-        log.info("#~#vnvlogPlanner.TestPlanService.save: testPlan.uuid: ${testPlan?.uuid} STR [status: ${testPlan?.status} ]")
-        testPlanRepository.save(testPlan.blob())
-        log.info("#~#vnvlogPlanner.TestPlanService.save: testPlan.uuid: ${testPlan?.uuid} END [status: ${testPlan?.status} ]")
+        log.info("#~#vnvlog save STR [test_plan_uuid: ${testPlan?.uuid}, status: ${testPlan?.status} ]")
+        testPlan = testPlanRepository.save(testPlan.blob())
+        log.info("#~#vnvlog save END [test_plan_uuid: ${testPlan?.uuid}, status: ${testPlan?.status} ]")
         testPlan
     }
 
     TestPlan update(String uuid, String status) {
-        log.info("#~#vnvlogPlanner.TestPlanService.update: testPlan uuid: $uuid STR [status: ${status} ]")
+        log.info("#~#vnvlog update STR [test_plan_uuid: ${uuid}, status: ${status} ]")
         TestPlan testPlan = findByUuid(uuid)
         testPlan.status = status
         testPlan = testPlanRepository.save(testPlan)
-        log.info("#~#vnvlogPlanner.TestPlanService.update: testPlan uuid: $uuid END [status: ${status} ]")
+        log.info("#~#vnvlog update END [test_plan_uuid: ${uuid}, status: ${status} ]")
         testPlan
     }
 
