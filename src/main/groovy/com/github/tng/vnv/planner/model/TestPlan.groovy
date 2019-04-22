@@ -156,12 +156,6 @@ class TestPlanRequest {
 @EqualsAndHashCode
 class TestPlanResponse {
     @ApiModelProperty(
-            value = 'Test Plan uuid',
-            allowEmptyValue = false,
-            example = 'if there is no exception uuid should be filled')
-    @NotNull
-    String uuid
-    @ApiModelProperty(
             value = 'Test Plan Status',
             allowEmptyValue = false,
             example = 'STARTING, COMPLETED, CANCELLING, CANCELLED, ERROR')

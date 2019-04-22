@@ -66,10 +66,7 @@ class WorkflowManager {
                     log.info("#~#vnvlog searchForScheduledPlan.proceedWith - END responseFromCurator [test_plan_uuid: ${testPlanResponse.uuid}, status: ${testPlanResponse.status} ]")
                     switch (testPlanResponse.status) {
                         case TEST_PLAN_STATUS.STARTING:
-                            if(isEmpty(testPlanResponse.uuid)) {
-                                log.severe("#~#vnvlog test_plann_uuid is null. [testPlanResponse.test_plan_uuid: ${testPlanResponse.uuid}]")
-                            }
-                            testPlanService.update(testPlanResponse.uuid,testPlanResponse.status)
+                            testPlanService.update(nextTestPlan.uuid,testPlanResponse.status)
                             break
                         //todo-allemaos: handle the rest of status or exception from curator response
                         default:
