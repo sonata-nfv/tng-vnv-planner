@@ -67,9 +67,7 @@ class WorkflowManager {
                     switch (testPlanResponse.status) {
                         case TEST_PLAN_STATUS.STARTING:
                             if(isEmpty(testPlanResponse.uuid)) {
-                                //cleancode-allemaos: remove this code and add @NotNull in testPlanUuid in testPlanResponse object
-                                testPlanResponse.uuid = UUID.randomUUID().toString()
-                                log.severe("#~#vnvlog test_plann_uuid is null. [new test_plan_uuid: ${testPlanResponse.uuid}]")
+                                log.severe("#~#vnvlog test_plann_uuid is null. [testPlanResponse.test_plan_uuid: ${testPlanResponse.uuid}]")
                             }
                             testPlanService.update(testPlanResponse.uuid,testPlanResponse.status)
                             break
