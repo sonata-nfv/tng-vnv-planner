@@ -54,6 +54,8 @@ import javax.persistence.Table
 import javax.persistence.Transient
 import javax.validation.constraints.NotNull
 
+import static org.springframework.util.StringUtils.isEmpty
+
 @Entity
 @Table(name="Test_Plan")
 @Sortable(includes = ['index'])
@@ -118,15 +120,19 @@ class TestPlan implements Serializable {
 
 
     TestPlan blob(){
-        def mapper = new ObjectMapper()
-        nsdJson = mapper.writeValueAsString(nsd).bytes
-        testdJson = mapper.writeValueAsString(testd).bytes
+        if(!(isEmpty(nsd)||isEmpty(testd))) {
+            def mapper = new ObjectMapper()
+            nsdJson = mapper.writeValueAsString(nsd).bytes
+            testdJson = mapper.writeValueAsString(testd).bytes
+        }
         this
     }
     TestPlan unBlob(){
-        def mapper = new ObjectMapper()
-        nsd = mapper.readValue(new String(nsdJson), HashMap.class)
-        testd = mapper.readValue(new String(testdJson), HashMap.class)
+        if(!(isEmpty(nsdJson) || isEmpty(testdJson))) {
+            def mapper = new ObjectMapper()
+            nsd = mapper.readValue(new String(nsdJson), HashMap.class)
+            testd = mapper.readValue(new String(testdJson), HashMap.class)
+        }
         this
     }
 

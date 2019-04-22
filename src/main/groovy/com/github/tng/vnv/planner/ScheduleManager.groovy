@@ -88,7 +88,7 @@ class ScheduleManager {
 
     TestSuite create(TestSuite ts) {
         def testPlans = [] as HashSet
-        TestSuite testSuite = testSuiteService.save(new TestSuite())
+        TestSuite testSuite = testSuiteService.save(new TestSuite(uuid:(!isEmpty(ts.uuid))?ts.uuid:UUID.randomUUID().toString()))
         ts?.testPlans?.each{ it.uuid=(!isEmpty(it.uuid))?it.uuid:UUID.randomUUID().toString()}
                 .toSorted().each { tp -> tp = create(tp, testSuite)
             if(tp != null) testPlans.add(tp)
@@ -100,7 +100,7 @@ class ScheduleManager {
 
     TestSuite update(TestSuite ts) {
         def testPlans = [] as HashSet
-        TestSuite testSuite = testSuiteService.save(new TestSuite())
+        TestSuite testSuite = testSuiteService.findByUuid(ts.uuid)
         ts.testPlans?.toSorted().forEach({ tp ->
             update(tp, testSuite)
             testPlans.add(tp)
@@ -113,16 +113,24 @@ class ScheduleManager {
 
     TestPlan create(TestPlan tp, TestSuite ts) {
         tp.testSuite = ts
-        if (!(( !isEmpty(tp.serviceUuid) || tp.nsd!=null) && ( !isEmpty(tp.testUuid) || tp.testd!=null))){
+        if (( isEmpty(tp.serviceUuid) && tp.nsd==null) || ( isEmpty(tp.testUuid) && tp.testd==null)){
             tp.status = TEST_PLAN_STATUS.REJECTED
             tp.description = tp.description+" $not_available_data"
         } else {
-            def service = (!isEmpty(tp.serviceUuid)) ? networkServiceService.findByUuid(tp.serviceUuid) :
-                    new NetworkService(uuid: (!isEmpty(tp.nsd?.uuid))?tp.nsd.uuid:UUID.randomUUID().toString() + 'DIY', nsd: tp.nsd)
-            service?.loadDescriptor()
-            def test = (!isEmpty(tp.testUuid)) ? testService.findByUuid(tp.testUuid) :
-                    new Test(uuid: (!isEmpty(tp.testd?.uuid))?tp.testd.uuid:UUID.randomUUID().toString() + 'DIY', testd: tp.testd)
-            test?.loadDescriptor()
+            NetworkService service;
+            if(isEmpty(tp.serviceUuid)){
+                service = new NetworkService(uuid: (tp.nsd.uuid), nsd: tp.nsd)
+                service?.loadDescriptor()
+            } else {
+                service = networkServiceService.findByUuid(tp.serviceUuid)
+            }
+            Test test
+            if(isEmpty(tp.testUuid)){
+                test = new Test(uuid: tp.testd.uuid, testd: tp.testd)
+                test.loadDescriptor()
+            } else {
+                test = testService.findByUuid(tp.testUuid)
+            }
             if(service == null || test == null){
                 tp.status = TEST_PLAN_STATUS.REJECTED
                 tp.description = tp.description +" $not_available_data"

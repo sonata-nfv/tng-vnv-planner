@@ -11,11 +11,9 @@ class TestPlanServiceTest extends TestRestSpec {
         when:
         def entity = postForEntity('/api/v1/test-plans',
                 [
-                        uuid: UUID.randomUUID(),
                         test_plans:
                             [
                                     [
-                                            uuid: '',
                                             nsd:
                                                     [
                                                             uuid: 'd07742ed-9429-4a07-b7af-d0b24a6d5c4c',
@@ -28,7 +26,6 @@ class TestPlanServiceTest extends TestRestSpec {
                                                     ],
                                     ],
                                     [
-                                            uuid: '',
                                             nsd:
                                                     [
                                                             uuid: 'input0ns-f213-4fae-8d3f-04358e1e1445',

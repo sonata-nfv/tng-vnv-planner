@@ -72,8 +72,9 @@ class TestPlanController {
     @ResponseBody
     TestSuite save(@Valid @RequestBody TestSuite testSuite) {
         log.info("#~#vnvlog save STR [test_suite.uuid: ${testSuite?.uuid}]")
-        scheduler.create(testSuite)
+        testSuite = scheduler.create(testSuite)
         log.info("#~#vnvlog save END [test_suite.uuid: ${testSuite?.uuid}]")
+        testSuite
     }
 
     @ApiResponses(value = [@ApiResponse(code = 400, message = 'Bad Request')])
@@ -81,8 +82,9 @@ class TestPlanController {
     @ResponseBody
     TestSuite update(@Valid @RequestBody TestSuite testSuite) {
         log.info("#~#vnvlog update STR [test_suite.uuid: ${testSuite?.uuid}]")
-        scheduler.update(testSuite)
+        testSuite = scheduler.update(testSuite)
         log.info("#~#vnvlog update END [test_suite.uuid: ${testSuite?.uuid}]")
+        testSuite
     }
 
     @DeleteMapping('{uuid}')
