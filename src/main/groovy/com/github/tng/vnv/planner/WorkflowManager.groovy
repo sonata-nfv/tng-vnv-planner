@@ -61,15 +61,11 @@ class WorkflowManager {
             TestPlan nextTestPlan = testPlanService.findNextScheduledTestPlan()?.unBlob()
             if (nextTestPlan != null) {
                 if(curator.inRunning()) {
-                    log.info("#~#vnvlog searchForScheduledPlan.proceedWith - STR requestToCurator [test_plan_uuid: ${nextTestPlan.uuid}, status: ${nextTestPlan.status} ]")
                     TestPlanResponse testPlanResponse = curator.proceedWith(nextTestPlan)
-                    log.info("#~#vnvlog searchForScheduledPlan.proceedWith - END responseFromCurator [test_plan_uuid: ${testPlanResponse.uuid}, status: ${testPlanResponse.status} ]")
+                    log.info("#~#vnvlog searchForScheduledPlan.proceedWith - END responseFromCurator [status: ${testPlanResponse.status}, exception: ${!isEmpty(testPlanResponse.exception)?testPlanResponse.exception:""}  ]")
                     switch (testPlanResponse.status) {
                         case TEST_PLAN_STATUS.STARTING:
-                            if(isEmpty(testPlanResponse.uuid)) {
-                                log.severe("#~#vnvlog test_plann_uuid is null. [testPlanResponse.test_plan_uuid: ${testPlanResponse.uuid}]")
-                            }
-                            testPlanService.update(testPlanResponse.uuid,testPlanResponse.status)
+                            testPlanService.update(nextTestPlan.uuid,testPlanResponse.status)
                             break
                         //todo-allemaos: handle the rest of status or exception from curator response
                         default:

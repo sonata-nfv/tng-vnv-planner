@@ -638,12 +638,6 @@
                     "example": "STARTING, COMPLETED, CANCELLING, CANCELLED, ERROR",
                     "description": "Test Plan Status",
                     "allowEmptyValue": false
-                },
-                "uuid": {
-                    "type": "string",
-                    "example": "if there is no exception uuid should be filled",
-                    "description": "Test Plan uuid",
-                    "allowEmptyValue": false
                 }
             },
             "title": "TestPlanResponse"

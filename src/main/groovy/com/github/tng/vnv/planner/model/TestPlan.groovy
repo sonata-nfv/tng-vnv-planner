@@ -152,15 +152,9 @@ class TestPlanRequest {
             new TestPlanCallback(eventActor: 'Curator', url: '/api/v1/test-plans/on-change/'),
     ]
 }
-@ToString
+
 @EqualsAndHashCode
 class TestPlanResponse {
-    @ApiModelProperty(
-            value = 'Test Plan uuid',
-            allowEmptyValue = false,
-            example = 'if there is no exception uuid should be filled')
-    @NotNull
-    String uuid
     @ApiModelProperty(
             value = 'Test Plan Status',
             allowEmptyValue = false,
