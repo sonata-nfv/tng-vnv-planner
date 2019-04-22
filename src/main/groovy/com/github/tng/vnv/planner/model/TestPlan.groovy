@@ -159,6 +159,7 @@ class TestPlanResponse {
             value = 'Test Plan uuid',
             allowEmptyValue = false,
             example = 'if there is no exception uuid should be filled')
+    @NotNull
     String uuid
     @ApiModelProperty(
             value = 'Test Plan Status',
