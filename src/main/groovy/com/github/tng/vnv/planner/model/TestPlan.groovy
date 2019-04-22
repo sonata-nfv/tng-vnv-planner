@@ -152,7 +152,7 @@ class TestPlanRequest {
             new TestPlanCallback(eventActor: 'Curator', url: '/api/v1/test-plans/on-change/'),
     ]
 }
-@ToString
+
 @EqualsAndHashCode
 class TestPlanResponse {
     @ApiModelProperty(
