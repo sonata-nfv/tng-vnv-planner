@@ -68,17 +68,17 @@ class TestPlanService {
         service = networkServiceService.findByUuid(service.uuid)?.loadDescriptor()
         testService.findByService(service)?.each { test ->
             if( !isEmpty(service.uuid) && !isEmpty(test.uuid))
-                testPlans.add(new TestPlan(uuid: service.uuid+test.uuid, nsd:service.nsd, testd:test.testd, status: TEST_PLAN_STATUS.CREATED))
+                testPlans.add(new TestPlan(uuid: service.uuid+test.uuid, serviceUuid: service.uuid, testUuid: test.uuid, nsd:service.nsd, testd:test.testd, status: TEST_PLAN_STATUS.CREATED))
         }
         testPlans
     }
 
     Set<TestPlan> createByTest(Test test) {
         def testPlans = [] as HashSet
-        test = testService.findByUuid(test.uuid)
+        test = testService.findByUuid(test.uuid)?.loadDescriptor()
         networkServiceService.findByTest(test)?.each { service ->
             if(!isEmpty(service.uuid) && !isEmpty(test.uuid))
-                testPlans.add(new TestPlan(uuid: service.uuid+test.uuid, nsd:service.nsd, testd:test.testd, status: TEST_PLAN_STATUS.CREATED))
+                testPlans.add(new TestPlan(uuid: service.uuid+test.uuid, serviceUuid: service.uuid, testUuid: test.uuid, nsd:service.nsd, testd:test.testd, status: TEST_PLAN_STATUS.CREATED))
         }
         testPlans
     }
@@ -106,13 +106,9 @@ class TestPlanService {
         catalogueService.createByPackage(pack)
     }
 
-    TestPlan getLast(){
-        testPlanRepository.getOne(testPlanRepository.count())
-    }
-
     TestPlan save(TestPlan testPlan){
         log.info("#~#vnvlog save STR [test_plan_uuid: ${testPlan?.uuid}, status: ${testPlan?.status} ]")
-        testPlan = testPlanRepository.save(testPlan.blob())
+        testPlan = testPlanRepository.save(testPlan)
         log.info("#~#vnvlog save END [test_plan_uuid: ${testPlan?.uuid}, status: ${testPlan?.status} ]")
         testPlan
     }
