@@ -67,6 +67,7 @@ class TestPlanService {
 
     Set<TestPlan> createByService(NetworkService service) {
         def testPlans = [] as HashSet
+        service = networkServiceService.findByUuid(service.uuid)?.loadDescriptor()
         testService.findByService(service)?.each { test ->
             if( !isEmpty(service.uuid) && !isEmpty(test.uuid))
                 testPlans.add(new TestPlan(uuid: service.uuid+test.uuid, nsd:service.nsd, testd:test.testd, status: TEST_PLAN_STATUS.CREATED))
@@ -106,7 +107,9 @@ class TestPlanService {
 
     Set<TestPlan> createByServices(Set<NetworkService> nss) {
         def testPlans = [] as HashSet
-        nss?.each { it -> testPlans.addAll(createByService(it)) }
+        nss?.each { 
+            it -> testPlans.addAll(createByService(it)) 
+            }
         testPlans
     }
 

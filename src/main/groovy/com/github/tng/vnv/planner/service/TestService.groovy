@@ -54,7 +54,7 @@ class TestService {
 
     Set<Test> findByService(NetworkService service) {
         def ts = [] as HashSet<Test>
-        service?.nsd?.testing_tags?.each { tt ->
+        service?.descriptor?.testingTags?.each { tt ->
             testRepository.findTssByTestTag(tt)?.each { test ->
 				println test.dump()
                 if(test?.descriptor?.testTags.any{ it -> it.contains(tt) }){
@@ -62,6 +62,6 @@ class TestService {
                 }
             }
         }
-        ts
+        new ArrayList(ts)
     }
 }
