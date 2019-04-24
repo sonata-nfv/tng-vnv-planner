@@ -113,20 +113,23 @@ class ScheduleManager {
 
     TestPlan create(TestPlan tp, TestSuite ts) {
         tp.testSuite = ts
-        tp.status = TEST_PLAN_STATUS.REJECTED
-        if (!isEmpty(tp.serviceUuid) || !isEmpty(tp.testUuid)){
-            tp.nsd = networkServiceService.findByUuid(tp.serviceUuid).nsd
-            tp.testd = testService.findByUuid(tp.testUuid).testd
-            if(tp.nsd != null && tp.testd != null) {
-                if ( !isEmpty(tp.testd.confirm_required) && tp.testd.confirm_required == '1'
-                        && ( isEmpty(tp.testd.confirmed) || tp.testd.confirmed != '1')) {
+        boolean valid = false
+        if (!isEmpty(tp.serviceUuid) && !isEmpty(tp.testUuid)) {
+            tp.nsd = networkServiceService.findByUuid(tp.serviceUuid)?.nsd
+            tp.testd = testService.findByUuid(tp.testUuid)?.testd
+            if (tp.nsd != null && tp.testd != null) {
+                valid = true
+                if (!isEmpty(tp.testd.confirm_required) && tp.testd.confirm_required == '1'
+                        && (isEmpty(tp.testd.confirmed) || tp.testd.confirmed != '1')) {
                     tp.status = TEST_PLAN_STATUS.NOT_CONFIRMED
                 } else {
                     tp.status = TEST_PLAN_STATUS.SCHEDULED
                 }
             }
-        } else {
-            tp.description = tp.description +" $not_available_data"
+        }
+        if(!valid) {
+            tp.status = TEST_PLAN_STATUS.REJECTED
+            tp.description += " $not_available_data"
         }
         testPlanService.save(tp)
     }
