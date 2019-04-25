@@ -35,13 +35,10 @@
 package com.github.tng.vnv.planner.model
 
 import com.fasterxml.jackson.annotation.JsonIgnore
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.databind.ObjectMapper
 import groovy.transform.EqualsAndHashCode
 import groovy.transform.Sortable
-import groovy.transform.ToString
 import io.swagger.annotations.ApiModelProperty
-import org.springframework.util.SerializationUtils
 
 import javax.persistence.Column
 import javax.persistence.Entity
@@ -53,8 +50,6 @@ import javax.persistence.ManyToOne
 import javax.persistence.Table
 import javax.persistence.Transient
 import javax.validation.constraints.NotNull
-
-import static org.springframework.util.StringUtils.isEmpty
 
 @Entity
 @Table(name="Test_Plan")
@@ -108,34 +103,6 @@ class TestPlan implements Serializable {
     @Transient
     def testd
 
-    @Lob
-    @JsonIgnore
-    @Column(name = "nsd", columnDefinition="OID")
-    byte[] nsdJson
-
-    @Lob
-    @JsonIgnore
-    @Column(name = "testd", columnDefinition="OID")
-    byte[] testdJson
-
-
-    TestPlan blob(){
-        if(!(isEmpty(nsd)||isEmpty(testd))) {
-            def mapper = new ObjectMapper()
-            nsdJson = mapper.writeValueAsString(nsd).bytes
-            testdJson = mapper.writeValueAsString(testd).bytes
-        }
-        this
-    }
-    TestPlan unBlob(){
-        if(!(isEmpty(nsdJson) || isEmpty(testdJson))) {
-            def mapper = new ObjectMapper()
-            nsd = mapper.readValue(new String(nsdJson), HashMap.class)
-            testd = mapper.readValue(new String(testdJson), HashMap.class)
-        }
-        this
-    }
-
     boolean equals(o) {
         (o.uuid).contains(uuid)? true:false
     }
@@ -144,8 +111,6 @@ class TestPlan implements Serializable {
         uuid.hashCode()
     }
 }
-
-class BlobOfLinkedHashMap extends LinkedHashMap implements Serializable {}
 
 @EqualsAndHashCode
 class TestPlanRequest {

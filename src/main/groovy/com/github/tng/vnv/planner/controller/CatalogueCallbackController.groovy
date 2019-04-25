@@ -80,15 +80,7 @@ class CatalogueCallbackController {
     @ResponseBody
     TestSuite onChange(@Valid @RequestBody PackageCallback body) {
         log.info("#~#vnvlog onChange STR [PackageId: ${body?.packageId}]")
-        TestSuite testSuite = new TestSuite();
-        switch (body.eventName) {
-            case PACKAGE_DELETED:
-                break
-            case PACKAGE_CREATED:
-                break
-            default:
-               testSuite = scheduler.create(new Package(packageId: body.packageId))
-        }
+        TestSuite testSuite = scheduler.create(new Package(packageId: body.packageId))
         log.info("#~#vnvlog onChange: END [PackageId: ${body?.packageId}]")
         testSuite
     }

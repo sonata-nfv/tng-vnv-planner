@@ -58,7 +58,7 @@ class WorkflowManager {
 
     void searchForScheduledPlan() {
         if (!testPlanService.existsByStartingStatus()) {
-            TestPlan nextTestPlan = testPlanService.findNextScheduledTestPlan()?.unBlob()
+            TestPlan nextTestPlan = testPlanService.findNextScheduledTestPlan()
             if (nextTestPlan != null) {
                 if(curator.inRunning()) {
                     TestPlanResponse testPlanResponse = curator.proceedWith(nextTestPlan)
