@@ -72,7 +72,7 @@ class TestPlanService {
             if( !isEmpty(service.uuid) && !isEmpty(test.uuid))
                 testPlans.add(new TestPlan(uuid: service.uuid+test.uuid, nsd:service.nsd, testd:test.testd, status: TEST_PLAN_STATUS.CREATED))
         }
-        new ArrayList(testPlans)
+        new ArrayList<TestPlan>(testPlans)
     }
     
     Set<TestPlan> createByServiceDescriptor(NetworkServiceDescriptor service) {
