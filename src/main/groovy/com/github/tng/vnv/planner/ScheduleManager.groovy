@@ -34,10 +34,8 @@
 
 package com.github.tng.vnv.planner
 
-import com.github.tng.vnv.planner.model.NetworkService
 import com.github.tng.vnv.planner.model.Test
 import com.github.tng.vnv.planner.model.TestSuite
-import com.github.tng.vnv.planner.service.CatalogueService
 import com.github.tng.vnv.planner.service.NetworkServiceService
 import com.github.tng.vnv.planner.service.TestPlanService
 import com.github.tng.vnv.planner.model.Package
@@ -115,12 +113,12 @@ class ScheduleManager {
         tp.testSuite = ts
         boolean valid = false
         if (!isEmpty(tp.serviceUuid) && !isEmpty(tp.testUuid)) {
-            tp.nsd = networkServiceService.findByUuid(tp.serviceUuid)?.nsd
-            tp.testd = testService.findByUuid(tp.testUuid)?.testd
-            if (tp.nsd != null && tp.testd != null) {
+            def service = networkServiceService.findByUuid(tp.serviceUuid)
+            Test test = testService.findByUuid(tp.testUuid)
+            if (service != null && test != null) {
                 valid = true
-                if (!isEmpty(tp.testd.confirm_required) && tp.testd.confirm_required == '1'
-                        && (isEmpty(tp.testd.confirmed) || tp.testd.confirmed != '1')) {
+                if (!isEmpty(test.confirmRequired) && test.confirmRequired == '1'
+                        && (isEmpty(test.confirmed) || test.confirmed != '1')) {
                     tp.status = TEST_PLAN_STATUS.NOT_CONFIRMED
                 } else {
                     tp.status = TEST_PLAN_STATUS.SCHEDULED

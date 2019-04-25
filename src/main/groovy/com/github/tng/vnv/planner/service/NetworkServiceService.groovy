@@ -54,7 +54,7 @@ class NetworkServiceService {
 
     Set<NetworkService> findByTest(Test test) {
         def nss = [] as HashSet<NetworkService>
-        test?.descriptor?.testTags?.each { tt ->
+        test?.testingTags?.each { tt ->
             networkServiceRepository.findNssByTestTag(tt)?.each { service ->
                 nss.add(service)
             }

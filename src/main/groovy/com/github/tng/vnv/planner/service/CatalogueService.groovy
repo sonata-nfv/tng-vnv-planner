@@ -35,10 +35,8 @@
 package com.github.tng.vnv.planner.service
 
 import com.github.tng.vnv.planner.model.NetworkService
-import com.github.tng.vnv.planner.model.NetworkServiceDescriptor
 import com.github.tng.vnv.planner.model.Package
 import com.github.tng.vnv.planner.model.Test
-import com.github.tng.vnv.planner.model.TestDescriptor
 import com.github.tng.vnv.planner.model.TestPlan
 import groovy.util.logging.Log
 import org.springframework.beans.factory.annotation.Autowired
@@ -89,10 +87,10 @@ class CatalogueService {
         rawPackageMetadata?.pd?.package_content.each{resource ->
             switch (resource.get('content-type')) {
                 case 'application/vnd.5gtango.tstd':
-                    packageMetadata.tests << new Test(uuid:resource.uuid, packageId: packageId, testd: new TestDescriptor(uuid: resource.uuid))
+                    packageMetadata.tests << new Test(uuid:resource.uuid, packageId: packageId)
                     break
                 case 'application/vnd.5gtango.nsd':
-                        packageMetadata.networkServices << new NetworkService(uuid: resource.uuid, packageId: packageId, nsd: new NetworkServiceDescriptor(uuid: resource.uuid))
+                        packageMetadata.networkServices << new NetworkService(uuid: resource.uuid, packageId: packageId)
                     break
             }
         }

@@ -37,11 +37,12 @@ package com.github.tng.vnv.planner
 import com.github.tng.vnv.planner.client.Curator
 import com.github.tng.vnv.planner.model.TestPlan
 import com.github.tng.vnv.planner.model.TestPlanResponse
+import com.github.tng.vnv.planner.service.NetworkServiceService
 import com.github.tng.vnv.planner.service.TestPlanService
+import com.github.tng.vnv.planner.service.TestService
 import com.github.tng.vnv.planner.utils.TEST_PLAN_STATUS
 import groovy.util.logging.Log
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Component
 
 import static org.springframework.util.StringUtils.isEmpty
@@ -56,12 +57,18 @@ class WorkflowManager {
     @Autowired
     TestPlanService testPlanService
 
+    @Autowired
+    TestService testService
+    @Autowired
+    NetworkServiceService networkServiceService
+
     void searchForScheduledPlan() {
         if (!testPlanService.existsByStartingStatus()) {
             TestPlan nextTestPlan = testPlanService.findNextScheduledTestPlan()
             if (nextTestPlan != null) {
+                //cleanCode-allemaos does catalog give the same ping functionality?
                 if(curator.inRunning()) {
-                    TestPlanResponse testPlanResponse = curator.proceedWith(nextTestPlan)
+                    TestPlanResponse testPlanResponse = curator.proceedWith(complete(nextTestPlan))
                     log.info("#~#vnvlog searchForScheduledPlan.proceedWith - END responseFromCurator [status: ${testPlanResponse.status}, exception: ${!isEmpty(testPlanResponse.exception)?testPlanResponse.exception:""}  ]")
                     switch (testPlanResponse.status) {
                         case TEST_PLAN_STATUS.STARTING:
@@ -75,6 +82,14 @@ class WorkflowManager {
                 }
             }
         }
+    }
+
+    TestPlan complete(TestPlan testPlan){
+        log.info("#~#vnvlog postTestPlan STR [test_plan_uuid: ${testPlan.uuid}]")
+        testPlan.testd = testService.findByUuid(testPlan.testUuid)
+        testPlan.nsd = networkServiceService.findByUuid(testPlan.serviceUuid)
+        log.info("#~#vnvlog postTestPlan END [test_plan_uuid: ${uuid}]")
+        testPlan
     }
 
     void deleteTestPlan(String uuid){

@@ -45,13 +45,12 @@ class NetworkService {
     String uuid
     String status
     String packageId
+    List<String> testingTags
+    List<String> servicePlatforms
     def nsd
-    NetworkServiceDescriptor descriptor
 
-    NetworkService loadDescriptor() {
-        descriptor = new NetworkServiceDescriptor()
-        descriptor.load(this)
-        this
+    boolean tagMatchedWith(Test test) {
+        (test == null)?false:this?.testingTags?.flatten().any { st -> test?.testingTags?.flatten().any{ tt -> tt == st}}
     }
 
     boolean equals(o) {
@@ -64,26 +63,5 @@ class NetworkService {
 
     int hashCode() {
         return uuid.hashCode()
-    }
-}
-
-@ToString(excludes = ['name','vendor'])
-class NetworkServiceDescriptor implements Serializable {
-    String uuid
-    String name
-    String vendor
-    String version
-    List<String> testingTags
-    List<String> servicePlatforms
-
-    void load(NetworkService service){
-        uuid = service.nsd?.uuid
-        name = service.nsd?.name
-        vendor = service.nsd?.vendor
-        testingTags = service.nsd?.testing_tags
-        servicePlatforms = service.nsd?.service_platforms
-    }
-    boolean tagMatchedWith(TestDescriptor testDescriptor) {
-        (testDescriptor == null)?false:this?.testingTags?.flatten().any { st -> testDescriptor?.testTags?.flatten().any{ tt -> tt == st}}
     }
 }

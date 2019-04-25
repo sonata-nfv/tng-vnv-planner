@@ -52,12 +52,12 @@ class TestService {
         testRepository.findByUuid(uuid)
     }
 
-    Set<Test> findByService(NetworkService service) {
+    List<Test> findByService(NetworkService service) {
         def ts = [] as HashSet<Test>
-        service?.descriptor?.testingTags?.each { tt ->
+        service?.testingTags?.each { tt ->
             testRepository.findTssByTestTag(tt)?.each { test ->
 				println test.dump()
-                if(test?.descriptor?.testTags.any{ it -> it.contains(tt) }){
+                if(test?.testingTags.any{ it -> it.contains(tt) }){
                     ts.add(test)
                 }
             }

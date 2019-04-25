@@ -62,14 +62,6 @@ class TestPlanControllerTest extends TestRestSpec {
                                                 'description' : 'dummyTestPlan3-index2',
                                                 'index'       : '2',
                                         ],
-                                        [
-                                                'service_uuid': DIY_DESCRIPTOR_TEST_PLAN_SERVICE_UUID,
-                                                'test_uuid'   : DIY_DESCRIPTOR_TEST_PLAN_TEST_UUID,
-                                                'nsd'        : DataMock.getService(DIY_DESCRIPTOR_TEST_PLAN_SERVICE_UUID).nsd,
-                                                'testd'      : DataMock.getTest(DIY_DESCRIPTOR_TEST_PLAN_TEST_UUID).testd,
-                                                'description': 'dummyTestPlan4-index4',
-                                                'index'      : '4',
-                                        ],
                                 ]
                 ]
                 , Void.class)

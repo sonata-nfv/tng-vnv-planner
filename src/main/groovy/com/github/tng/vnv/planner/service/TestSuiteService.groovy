@@ -36,9 +36,6 @@ package com.github.tng.vnv.planner.service
 
 import com.github.tng.vnv.planner.model.TestSuite
 import com.github.tng.vnv.planner.repository.TestSuiteRepository
-
-
-//import com.github.tng.vnv.planner.repository.TestSuiteJpaRepository
 import groovy.util.logging.Log
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service

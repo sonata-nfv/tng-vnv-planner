@@ -35,8 +35,6 @@
 package com.github.tng.vnv.planner.repository
 
 import com.github.tng.vnv.planner.model.Test
-import com.github.tng.vnv.planner.utils.DebugHelper
-import com.github.tng.vnv.planner.model.TestDescriptor
 import groovy.util.logging.Log
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier
@@ -68,8 +66,6 @@ class TestRepository {
     Test findByUuid(String uuid) {
         callExternalEndpoint(restTemplateWithAuth.getForEntity(testMetadataEndpoint, Test.class, uuid),
                 'TestRepository.findByUuid',testMetadataEndpoint).body
-                ?.loadDescriptor()
-
     }
 
     List<Test> findTssByTestTag(String tag) {
@@ -79,7 +75,6 @@ class TestRepository {
 		println builder.toUriString()
         callExternalEndpoint(restTemplateWithAuth.getForEntity(builder.toUriString(), Test[]),
                 'TestRepository.findTssByTestTag',testListByTagEndpoint).body
-                .collect { it?.loadDescriptor() }
     }
 
 }
