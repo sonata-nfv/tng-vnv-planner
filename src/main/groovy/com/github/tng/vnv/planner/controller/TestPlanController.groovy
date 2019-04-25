@@ -83,6 +83,7 @@ class TestPlanController {
     @PutMapping('{uuid}')
     @ResponseBody
     TestSuite update(@Valid @RequestBody TestSuite testSuite) {
+        //todo-allemaos: IT's for testing & debugging
         log.info("#~#vnvlog update STR [test_suite.uuid: ${testSuite?.uuid}]")
         testSuite = scheduler.update(testSuite)
         log.info("#~#vnvlog update END [test_suite.uuid: ${testSuite?.uuid}]")

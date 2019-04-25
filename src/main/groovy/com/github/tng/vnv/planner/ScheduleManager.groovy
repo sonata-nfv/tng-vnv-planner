@@ -113,44 +113,25 @@ class ScheduleManager {
 
     TestPlan create(TestPlan tp, TestSuite ts) {
         tp.testSuite = ts
-        if (( isEmpty(tp.serviceUuid) && tp.nsd==null) || ( isEmpty(tp.testUuid) && tp.testd==null)){
-            tp.status = TEST_PLAN_STATUS.REJECTED
-            tp.description = tp.description+" $not_available_data"
-        } else {
-            NetworkService service;
-            if(isEmpty(tp.serviceUuid)){
-                service = new NetworkService(uuid: (tp.nsd.uuid), nsd: tp.nsd)
-                service?.loadDescriptor()
-            } else {
-                service = networkServiceService.findByUuid(tp.serviceUuid)
-            }
-            Test test
-            if(isEmpty(tp.testUuid)){
-                test = new Test(uuid: tp.testd.uuid, testd: tp.testd)
-                test.loadDescriptor()
-            } else {
-                test = testService.findByUuid(tp.testUuid)
-            }
-            if(service == null || test == null){
-                tp.status = TEST_PLAN_STATUS.REJECTED
-                tp.description = tp.description +" $not_available_data"
-            } else {
-                tp.nsd = service.nsd
-                tp.testd = test.testd
-                if (!(service?.descriptor.tagMatchedWith(test?.descriptor))) {
-                    tp.status = TEST_PLAN_STATUS.REJECTED
-                    tp.description = tp.description +" $not_matching_test_tags"
-                }
-                if ( !isEmpty(tp.testd?.confirm_required) && tp.testd?.confirm_required == '1'
-                        && ( isEmpty(tp.testd?.confirmed) || tp.testd?.confirmed != '1'))
+        boolean valid = false
+        if (!isEmpty(tp.serviceUuid) && !isEmpty(tp.testUuid)) {
+            tp.nsd = networkServiceService.findByUuid(tp.serviceUuid)?.nsd
+            tp.testd = testService.findByUuid(tp.testUuid)?.testd
+            if (tp.nsd != null && tp.testd != null) {
+                valid = true
+                if (!isEmpty(tp.testd.confirm_required) && tp.testd.confirm_required == '1'
+                        && (isEmpty(tp.testd.confirmed) || tp.testd.confirmed != '1')) {
                     tp.status = TEST_PLAN_STATUS.NOT_CONFIRMED
-                else {
+                } else {
                     tp.status = TEST_PLAN_STATUS.SCHEDULED
-                    tp = testPlanService.save(tp)
                 }
             }
         }
-        tp
+        if(!valid) {
+            tp.status = TEST_PLAN_STATUS.REJECTED
+            tp.description += " $not_available_data"
+        }
+        testPlanService.save(tp)
     }
 
     TestPlan update(TestPlan tp, TestSuite ts) {
