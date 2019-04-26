@@ -210,6 +210,7 @@ class TestPlanControllerTest extends TestRestSpec {
     void "delete request for one test plan should successfully change the status of the test plan to CANCELING scheduled test plan"() {
         when:
         scheduleTestPlan(TEST_PLAN_UUID, TEST_PLAN_STATUS.CREATED, 'scheduled testPlan\'s status which will turn into canceling')
+        and:
         delete('/api/v1/test-plans/{uuid}',TEST_PLAN_UUID)
         then:
         testPlanService.testPlanRepository.findByUuid(TEST_PLAN_UUID).status == TEST_PLAN_STATUS.CANCELLING
@@ -217,22 +218,24 @@ class TestPlanControllerTest extends TestRestSpec {
         cleanTestPlanDB()
     }
 
-    void "list test plans request for one testPlan list uuid test plan should successfully return the list of corresponding test plans"() {
+    void "test plan request for one testPlan should successfully return the corresponding test plan"() {
         when:
-        def testPlan = scheduleTestPlan(TEST_PLAN_UUID, TEST_PLAN_STATUS.CREATED, 'scheduled testPlan\'s status which will be listed for a specific testPlanListUuid')
-        def entity = getForEntity('/api/v1/test-plans/{testPlanListUuid}', TestPlan[], testPlan.testSuite.uuid)
+        def testPlan = scheduleTestPlan(TEST_PLAN_UUID, TEST_PLAN_STATUS.CREATED, '')
+        and:
+        def entity = getForEntity('/api/v1/test-plans/{uuid}', TestPlan, testPlan.uuid)
         then:
         entity.statusCode == HttpStatus.OK
-        entity.body.size() == 1
+        entity.body.status == TEST_PLAN_STATUS.CREATED
         cleanup:
         cleanTestPlanDB()
     }
 
-    void "test plans request for testPlan list equal to 0 should successfully return the list of all test plans"() {
+    void "request of all test plans should successfully return the list of all test plans"() {
         when:
         scheduleTestPlan(TEST_PLAN_UUID, "TEST_LIST_ALL_STATUS", '')
+        and:
+        def testPlans = getForEntity('/api/v1/test-plans/',TestPlan[]).body
         then:
-        def testPlans = getForEntity('/api/v1/test-plans/{testPlanListUuid}', TestPlan[],'0').body
         testPlans.size()>=1
         cleanup:
         cleanTestPlanDB()

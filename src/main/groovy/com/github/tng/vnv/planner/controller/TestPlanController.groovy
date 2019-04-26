@@ -51,6 +51,8 @@ import org.springframework.web.bind.annotation.*
 
 import javax.validation.Valid
 
+import static org.springframework.util.StringUtils.isEmpty
+
 @Log
 @RestController
 @RequestMapping('/api/v1/test-plans')
@@ -63,10 +65,24 @@ class TestPlanController {
     @Autowired
     TestPlanService testPlanService
 
-    @GetMapping('/{testPlanListUuid}')
+    @GetMapping
     @ResponseBody
-    List<TestPlan> listByTestSuite(@PathVariable('testPlanListUuid') String uuid) {
-        (uuid == '0')? testPlanService.findAll():testPlanService.findByTestSuiteUuid(uuid)
+    List<TestPlan> listAllTestPlans() {
+        testPlanService.findAll()
+    }
+
+    @GetMapping('/{uuid}')
+    @ResponseBody
+    TestPlan findTestPlan(@PathVariable String uuid) {
+        testPlanService.findByUuid(uuid)
+    }
+
+    @DeleteMapping('{uuid}')
+    @ResponseBody
+    void deleteTestPlan(@PathVariable String uuid) {
+        log.info("#~#vnvlog deleteTestPlan STR [test_suite.uuid: ${uuid}]")
+        manager.deleteTestPlan(uuid)
+        log.info("#~#vnvlog deleteTestPlan END [test_suite.uuid: ${uuid}]")
     }
 
     @ApiResponses(value = [@ApiResponse(code = 400, message = 'Bad Request')])
@@ -88,14 +104,6 @@ class TestPlanController {
         testSuite = scheduler.update(testSuite)
         log.info("#~#vnvlog update END [test_suite.uuid: ${testSuite?.uuid}]")
         testSuite
-    }
-
-    @DeleteMapping('{uuid}')
-    @ResponseBody
-    void deleteTestPlan(@PathVariable String uuid) {
-        log.info("#~#vnvlog deleteTestPlan STR [test_suite.uuid: ${uuid}]")
-        manager.deleteTestPlan(uuid)
-        log.info("#~#vnvlog deleteTestPlan END [test_suite.uuid: ${uuid}]")
     }
 
     @ApiResponses(value = [@ApiResponse(code = 400, message = 'Bad Request')])
