@@ -34,6 +34,7 @@
 
 package com.github.tng.vnv.planner.repository
 
+import com.github.tng.vnv.planner.aspect.Timed
 import com.github.tng.vnv.planner.utils.DebugHelper
 import com.github.tng.vnv.planner.model.NetworkService
 import com.github.tng.vnv.planner.model.NetworkServiceDescriptor
@@ -62,6 +63,7 @@ class NetworkServiceRepository {
     def serviceMetadataEndpoint
 
 
+    @Timed
     NetworkService findByUuid(String uuid) {
         callExternalEndpoint(restTemplateWithAuth.getForEntity(serviceMetadataEndpoint,
                 NetworkService.class, uuid),'NetworkServiceRepository.findByUuid',
@@ -69,7 +71,8 @@ class NetworkServiceRepository {
                 ?.loadDescriptor()
     }
 
-	List<NetworkService> findNssByTestTag(String tag) {
+    @Timed
+    List<NetworkService> findNssByTestTag(String tag) {
 		UriComponentsBuilder builder = UriComponentsBuilder
 		.fromUriString(serviceListByTagEndpoint)
 		.queryParam("testing_tags", tag);

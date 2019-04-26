@@ -34,6 +34,7 @@
 
 package com.github.tng.vnv.planner.service
 
+import com.github.tng.vnv.planner.aspect.Timed
 import com.github.tng.vnv.planner.model.NetworkService
 import com.github.tng.vnv.planner.model.NetworkServiceDescriptor
 import com.github.tng.vnv.planner.model.Package
@@ -81,7 +82,7 @@ class CatalogueService {
             testPlans = testPlanService.createByServices(pack.networkServices)
         testPlans
     }
-
+    @Timed
     Package loadPackageMetadata(String packageId) {
         def rawPackageMetadata= callExternalEndpoint(restTemplate.getForEntity(packageMetadataEndpoint, Object.class,
                 packageId), 'TestCatalogue.loadPackageMetadata',packageMetadataEndpoint).body
