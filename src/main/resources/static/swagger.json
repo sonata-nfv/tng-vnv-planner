@@ -226,8 +226,8 @@
                 "tags": [
                     "test-plan-controller"
                 ],
-                "summary": "createTestPlansByServiceDescriptor",
-                "operationId": "createTestPlansByServiceDescriptorUsingPOST",
+                "summary": "createTestPlansByService",
+                "operationId": "createTestPlansByServiceUsingPOST",
                 "consumes": [
                     "application/json"
                 ],
@@ -298,7 +298,7 @@
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/TestDescriptor"
+                                "$ref": "#/definitions/Test"
                             }
                         }
                     },
@@ -319,8 +319,8 @@
                 "tags": [
                     "test-plan-controller"
                 ],
-                "summary": "createTestPlansByTestDescriptor",
-                "operationId": "createTestPlansByTestDescriptorUsingPOST",
+                "summary": "createTestPlansByTest",
+                "operationId": "createTestPlansByTestUsingPOST",
                 "consumes": [
                     "application/json"
                 ],
@@ -334,7 +334,7 @@
                         "description": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/TestDescriptor"
+                            "$ref": "#/definitions/Test"
                         }
                     }
                 ],
@@ -494,28 +494,10 @@
         "NetworkService": {
             "type": "object",
             "properties": {
-                "descriptor": {
-                    "$ref": "#/definitions/NetworkServiceDescriptor"
-                },
                 "nsd": {
                     "type": "object"
                 },
                 "package_id": {
-                    "type": "string"
-                },
-                "status": {
-                    "type": "string"
-                },
-                "uuid": {
-                    "type": "string"
-                }
-            },
-            "title": "NetworkService"
-        },
-        "NetworkServiceDescriptor": {
-            "type": "object",
-            "properties": {
-                "name": {
                     "type": "string"
                 },
                 "service_platforms": {
@@ -523,6 +505,9 @@
                     "items": {
                         "type": "string"
                     }
+                },
+                "status": {
+                    "type": "string"
                 },
                 "testing_tags": {
                     "type": "array",
@@ -532,15 +517,9 @@
                 },
                 "uuid": {
                     "type": "string"
-                },
-                "vendor": {
-                    "type": "string"
-                },
-                "version": {
-                    "type": "string"
                 }
             },
-            "title": "NetworkServiceDescriptor"
+            "title": "NetworkService"
         },
         "PackageCallback": {
             "type": "object",
@@ -572,16 +551,16 @@
             },
             "title": "PackageCallback"
         },
-        "TestDescriptor": {
+        "Test": {
             "type": "object",
             "properties": {
                 "confirm_required": {
                     "type": "string"
                 },
-                "description": {
+                "confirmed": {
                     "type": "string"
                 },
-                "name": {
+                "package_id": {
                     "type": "string"
                 },
                 "service_platforms": {
@@ -590,7 +569,7 @@
                         "type": "string"
                     }
                 },
-                "test_tags": {
+                "testing_tags": {
                     "type": "array",
                     "items": {
                         "type": "string"
@@ -598,15 +577,9 @@
                 },
                 "uuid": {
                     "type": "string"
-                },
-                "vendor": {
-                    "type": "string"
-                },
-                "version": {
-                    "type": "string"
                 }
             },
-            "title": "TestDescriptor"
+            "title": "Test"
         },
         "TestPlan": {
             "type": "object",
