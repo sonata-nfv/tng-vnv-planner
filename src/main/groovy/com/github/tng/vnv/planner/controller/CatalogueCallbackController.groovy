@@ -34,7 +34,7 @@
 
 package com.github.tng.vnv.planner.controller
 
-import com.github.tng.vnv.planner.model.TestSuite
+import com.github.tng.vnv.planner.model.TestPlan
 import org.springframework.web.bind.annotation.ResponseBody
 
 import javax.validation.Valid
@@ -78,11 +78,11 @@ class CatalogueCallbackController {
     ])
     @PostMapping('/on-change')
     @ResponseBody
-    TestSuite onChange(@Valid @RequestBody PackageCallback body) {
+    List<TestPlan> onChange(@Valid @RequestBody PackageCallback body) {
         log.info("#~#vnvlog onChange STR [PackageId: ${body?.packageId}]")
-        TestSuite testSuite = scheduler.create(new Package(packageId: body.packageId))
+        List<TestPlan> testPlans = scheduler.create(new Package(packageId: body.packageId))
         log.info("#~#vnvlog onChange: END [PackageId: ${body?.packageId}]")
-        testSuite
+        testPlans
     }
 
 }

@@ -2,10 +2,8 @@ package com.github.tng.vnv.planner
 
 import com.github.tng.vnv.planner.config.TestRestSpec
 import com.github.tng.vnv.planner.model.TestPlan
-import com.github.tng.vnv.planner.model.TestSuite
 import com.github.tng.vnv.planner.restmock.CuratorMock
 import com.github.tng.vnv.planner.service.TestPlanService
-import com.github.tng.vnv.planner.service.TestSuiteService
 import com.github.tng.vnv.planner.utils.TEST_PLAN_STATUS
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
@@ -14,9 +12,6 @@ class WorkFlowManagerTest extends TestRestSpec {
 
     @Autowired
     TestPlanService testPlanService
-    @Autowired
-    TestSuiteService testSuiteService
-
     @Autowired
     CuratorMock curatorMock
 
@@ -56,12 +51,6 @@ class WorkFlowManagerTest extends TestRestSpec {
     }
 
     TestPlan scheduleTestPlan(String uuid, String status, String description){
-
-        def testPlan = new TestPlan(uuid: uuid, status: status, description: description)
-        def testSuite = new TestSuite()
-        testSuite = testSuiteService.save(testSuite)
-        testPlan.testSuite = testSuite
-        testSuite.testPlans.add(testPlan)
-        testPlanService.save(testPlan)
+        testPlanService.save(new TestPlan(uuid: uuid, status: status, description: description))
     }
 }
