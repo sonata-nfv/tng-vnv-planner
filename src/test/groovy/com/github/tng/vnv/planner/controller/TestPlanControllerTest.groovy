@@ -1,6 +1,7 @@
 package com.github.tng.vnv.planner.controller
 
 import com.github.tng.vnv.planner.config.TestRestSpec
+import com.github.tng.vnv.planner.model.NetworkService
 import com.github.tng.vnv.planner.model.TestPlan
 import com.github.tng.vnv.planner.model.TestSuite
 import com.github.tng.vnv.planner.restmock.CuratorMock
@@ -32,6 +33,8 @@ class TestPlanControllerTest extends TestRestSpec {
     public static final String DIY_DESCRIPTOR_TEST_PLAN_VALIDATION_REQUIRED_TEST_UUID = 'b68dbe19-5c02-4865-8c4b-5e43ada1b67c'
     public static final String DIY_DESCRIPTOR_TEST_PLAN_CONFIRMED_TEST_UUID = 'b68dbe19-5c02-4865-8c4b-5e43ada1b67b'
     public static final String UNKNOWN_UUID = '00000000-5c02-4865-8c4b-5e43ada1b67b'
+     public static final String TEST_DESCRIPTOR_UUID = 'input0ts-75f5-4ca1-90c8-12ec80a79836'
+    
 
     public static final String TEST_PLAN_UUID = '109873681'
     public static final String TEST_PLAN_UUID2 = '109873682'
@@ -234,7 +237,21 @@ class TestPlanControllerTest extends TestRestSpec {
         cleanup:
         cleanTestPlanDB()
     }
-
+    
+    void "create test plan from NetworkService"() {
+        def testPlans = postForEntity('/api/v1/test-plans/services', ['uuid' : LATENCY_TEST_PLAN_SERVICE_UUID], List ).body
+        testPlans.size()>=1
+        cleanup:
+        cleanTestPlanDB()
+    }
+    
+    void "create test plan from Test"() {
+        def testPlans = postForEntity('/api/v1/test-plans/tests', ['uuid' : TEST_DESCRIPTOR_UUID], List ).body
+        testPlans.size()>=1
+        cleanup:
+        cleanTestPlanDB()
+    }
+    
     TestPlan scheduleTestPlan(String uuid, String status, String description){
         def testPlan = new TestPlan(uuid: uuid, status: status, description: description)
         def testSuite = new TestSuite(uuid: UUID.randomUUID().toString())

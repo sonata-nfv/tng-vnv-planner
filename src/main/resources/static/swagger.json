@@ -226,8 +226,8 @@
                 "tags": [
                     "test-plan-controller"
                 ],
-                "summary": "createTestPlansByServiceDescriptor",
-                "operationId": "createTestPlansByServiceDescriptorUsingPOST",
+                "summary": "createTestPlansByService",
+                "operationId": "createTestPlansByServiceUsingPOST",
                 "consumes": [
                     "application/json"
                 ],
@@ -319,8 +319,8 @@
                 "tags": [
                     "test-plan-controller"
                 ],
-                "summary": "createTestPlansByTestDescriptor",
-                "operationId": "createTestPlansByTestDescriptorUsingPOST",
+                "summary": "createTestPlansByTest",
+                "operationId": "createTestPlansByTestUsingPOST",
                 "consumes": [
                     "application/json"
                 ],
@@ -334,7 +334,7 @@
                         "description": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/TestDescriptor"
+                            "$ref": "#/definitions/Test"
                         }
                     }
                 ],
@@ -571,6 +571,24 @@
                 }
             },
             "title": "PackageCallback"
+        },
+        "Test": {
+            "type": "object",
+            "properties": {
+                "descriptor": {
+                    "$ref": "#/definitions/TestDescriptor"
+                },
+                "package_id": {
+                    "type": "string"
+                },
+                "testd": {
+                    "type": "object"
+                },
+                "uuid": {
+                    "type": "string"
+                }
+            },
+            "title": "Test"
         },
         "TestDescriptor": {
             "type": "object",
