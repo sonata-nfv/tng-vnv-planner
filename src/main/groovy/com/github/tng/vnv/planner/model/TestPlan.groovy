@@ -59,11 +59,6 @@ class TestPlan implements Serializable {
     @GeneratedValue
     Long id
 
-    @JsonIgnore
-    @ManyToOne
-    @JoinColumn(name = "testSuiteId", referencedColumnName = "id", nullable = false)
-    TestSuite testSuite
-
     @ApiModelProperty(
             value = 'Test Plan uuid',
             allowEmptyValue = false)
@@ -187,12 +182,4 @@ class TestPlanCallback {
             allowEmptyValue = false,
             example = 'tng-res, results, or xx.xx')
     String testResultsRepository
-}
-
-class TestPlanTest{
-
-    Map<String, Object> response = new ObjectMapper().readValue(str, HashMap.class)
-
-    String objectMapper = new ObjectMapper().writeValueAsString(crunchifyMap)
-
 }

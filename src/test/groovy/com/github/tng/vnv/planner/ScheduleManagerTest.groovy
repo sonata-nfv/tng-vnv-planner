@@ -36,7 +36,7 @@ package com.github.tng.vnv.planner
 
 
 import com.github.tng.vnv.planner.model.Package
-import com.github.tng.vnv.planner.model.TestSuite
+import com.github.tng.vnv.planner.model.TestPlan
 import com.github.tng.vnv.planner.restmock.CatalogueMock
 import com.github.tng.vnv.planner.config.TestRestSpec
 import com.github.tng.vnv.planner.service.TestPlanService
@@ -57,9 +57,9 @@ class ScheduleManagerTest extends TestRestSpec {
 
     void 'schedule multiple test plans should produce success result'() {
         when:
-        TestSuite testSuite = scheduler.create(new Package(packageId: MULTIPLE_TEST_PLANS_PACKAGE_ID))
+        List<TestPlan> testPlans = scheduler.create(new Package(packageId: MULTIPLE_TEST_PLANS_PACKAGE_ID))
         then:
-        testSuite.testPlans.size() == 11
+        testPlans.size() == 11
         cleanup:
         cleanTestPlanDB()
     }

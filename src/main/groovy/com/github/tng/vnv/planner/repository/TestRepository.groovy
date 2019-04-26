@@ -34,6 +34,7 @@
 
 package com.github.tng.vnv.planner.repository
 
+import com.github.tng.vnv.planner.aspect.Timed
 import com.github.tng.vnv.planner.model.Test
 import com.github.tng.vnv.planner.utils.DebugHelper
 import com.github.tng.vnv.planner.model.TestDescriptor
@@ -65,6 +66,7 @@ class TestRepository {
     def serviceMetadataEndpoint
 
 
+    @Timed
     Test findByUuid(String uuid) {
         callExternalEndpoint(restTemplateWithAuth.getForEntity(testMetadataEndpoint, Test.class, uuid),
                 'TestRepository.findByUuid',testMetadataEndpoint).body
@@ -72,6 +74,7 @@ class TestRepository {
 
     }
 
+    @Timed
     List<Test> findTssByTestTag(String tag) {
 		UriComponentsBuilder builder = UriComponentsBuilder
 		.fromUriString(testListByTagEndpoint)

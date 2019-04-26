@@ -34,6 +34,7 @@
 
 package com.github.tng.vnv.planner.client
 
+import com.github.tng.vnv.planner.aspect.Timed
 import com.github.tng.vnv.planner.model.TestPlanRequest
 import com.github.tng.vnv.planner.model.TestPlanResponse
 import com.github.tng.vnv.planner.model.TestPlan
@@ -68,22 +69,26 @@ class Curator {
 
 
 
+    @Timed
     boolean inRunning() {
         !isEmpty(callExternalEndpoint(restTemplate.getForEntity(testPlanPingEndpoint, Object.class),
                 'Curator.isRunning()',testPlanPingEndpoint).body.alive_since)
     }
 
+    @Timed
     TestPlanResponse proceedWith(TestPlan testPlan) {
         def testPlanRequest = new TestPlanRequest(testPlanUuid: testPlan.uuid, nsd: testPlan.nsd, testd: testPlan.testd)
         callExternalEndpoint(restTemplate.postForEntity(testPlanPrepareEndpoint, testPlanRequest, TestPlanResponse),
                 'Curator.proceedWith(TestPlan)',testPlanPrepareEndpoint).body
     }
 
+    @Timed
     void deleteTestPlan(uuid) {
         callExternalEndpoint(restTemplate.delete(testPlanCancellationEndpoint, uuid),
                 'Curator.deleteTestPlan(TestPlan)',testPlanCancellationEndpoint)
     }
 
+    @Timed
     TestPlan update(def testPlan) {
         def headers = new HttpHeaders()
         headers.setContentType(MediaType.APPLICATION_JSON)

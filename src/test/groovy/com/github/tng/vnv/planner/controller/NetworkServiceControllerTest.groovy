@@ -47,7 +47,7 @@ class NetworkServiceControllerTest extends TestRestSpec {
     @Autowired
     CatalogueMock catalogueMock
 
-    void "retrieval of a single test suite's related tests should successfully all the tag related tests"() {
+    void "retrieval of a single test plans's related tests should successfully all the tag related tests"() {
         when:
         def entity = getForEntity('/api/v1/test-plans/services/{serviceUuid}/tests', List, NETWORK_SERVICE_ID)
         then:

@@ -59,7 +59,10 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/TestSuite"
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/TestPlan"
+                            }
                         }
                     },
                     "201": {
@@ -81,6 +84,36 @@
             }
         },
         "/api/v1/test-plans": {
+            "get": {
+                "tags": [
+                    "test-plan-controller"
+                ],
+                "summary": "listAllTestPlans",
+                "operationId": "listAllTestPlansUsingGET",
+                "produces": [
+                    "*/*"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/TestPlan"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                }
+            },
             "post": {
                 "tags": [
                     "test-plan-controller"
@@ -96,11 +129,11 @@
                 "parameters": [
                     {
                         "in": "body",
-                        "name": "testSuite",
-                        "description": "testSuite",
+                        "name": "testPlan",
+                        "description": "testPlan",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/TestSuite"
+                            "$ref": "#/definitions/TestPlan"
                         }
                     }
                 ],
@@ -108,7 +141,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/TestSuite"
+                            "$ref": "#/definitions/TestPlan"
                         }
                     },
                     "201": {
@@ -366,21 +399,21 @@
                 }
             }
         },
-        "/api/v1/test-plans/{testPlanListUuid}": {
+        "/api/v1/test-plans/{uuid}": {
             "get": {
                 "tags": [
                     "test-plan-controller"
                 ],
-                "summary": "listByTestSuite",
-                "operationId": "listByTestSuiteUsingGET",
+                "summary": "findTestPlan",
+                "operationId": "findTestPlanUsingGET",
                 "produces": [
                     "*/*"
                 ],
                 "parameters": [
                     {
-                        "name": "testPlanListUuid",
+                        "name": "uuid",
                         "in": "path",
-                        "description": "testPlanListUuid",
+                        "description": "uuid",
                         "required": true,
                         "type": "string"
                     }
@@ -389,10 +422,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/TestPlan"
-                            }
+                            "$ref": "#/definitions/TestPlan"
                         }
                     },
                     "401": {
@@ -405,9 +435,7 @@
                         "description": "Not Found"
                     }
                 }
-            }
-        },
-        "/api/v1/test-plans/{uuid}": {
+            },
             "put": {
                 "tags": [
                     "test-plan-controller"
@@ -423,11 +451,11 @@
                 "parameters": [
                     {
                         "in": "body",
-                        "name": "testSuite",
-                        "description": "testSuite",
+                        "name": "testPlan",
+                        "description": "testPlan",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/TestSuite"
+                            "$ref": "#/definitions/TestPlan"
                         }
                     }
                 ],
@@ -435,7 +463,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/TestSuite"
+                            "$ref": "#/definitions/TestPlan"
                         }
                     },
                     "201": {
@@ -762,32 +790,6 @@
                 }
             },
             "title": "TestResult"
-        },
-        "TestSuite": {
-            "type": "object",
-            "required": [
-                "test_plans"
-            ],
-            "properties": {
-                "id": {
-                    "type": "integer",
-                    "format": "int64"
-                },
-                "test_plans": {
-                    "type": "array",
-                    "description": "Test plan list",
-                    "allowEmptyValue": false,
-                    "items": {
-                        "$ref": "#/definitions/TestPlan"
-                    }
-                },
-                "uuid": {
-                    "type": "string",
-                    "description": "Test plan list uuid",
-                    "allowEmptyValue": false
-                }
-            },
-            "title": "TestSuite"
         }
     }
 }
