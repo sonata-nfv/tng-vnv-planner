@@ -220,9 +220,9 @@ class TestPlanControllerTest extends TestRestSpec {
 
     void "test plan request for one testPlan should successfully return the corresponding test plan"() {
         when:
-        def testPlan = scheduleTestPlan(TEST_PLAN_UUID, TEST_PLAN_STATUS.CREATED, '')
+        scheduleTestPlan(LATENCY_TEST_PLAN_SERVICE_UUID, TEST_PLAN_STATUS.CREATED, '')
         and:
-        def entity = getForEntity('/api/v1/test-plans/{uuid}', TestPlan, testPlan.uuid)
+        def entity = getForEntity('/api/v1/test-plans/{uuid}', TestPlan, LATENCY_TEST_PLAN_SERVICE_UUID)
         then:
         entity.statusCode == HttpStatus.OK
         entity.body.status == TEST_PLAN_STATUS.CREATED

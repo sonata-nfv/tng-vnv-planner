@@ -81,6 +81,36 @@
             }
         },
         "/api/v1/test-plans": {
+            "get": {
+                "tags": [
+                    "test-plan-controller"
+                ],
+                "summary": "listAllTestPlans",
+                "operationId": "listAllTestPlansUsingGET",
+                "produces": [
+                    "*/*"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/TestPlan"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                }
+            },
             "post": {
                 "tags": [
                     "test-plan-controller"
@@ -366,21 +396,21 @@
                 }
             }
         },
-        "/api/v1/test-plans/{testPlanListUuid}": {
+        "/api/v1/test-plans/{uuid}": {
             "get": {
                 "tags": [
                     "test-plan-controller"
                 ],
-                "summary": "listByTestSuite",
-                "operationId": "listByTestSuiteUsingGET",
+                "summary": "findTestPlan",
+                "operationId": "findTestPlanUsingGET",
                 "produces": [
                     "*/*"
                 ],
                 "parameters": [
                     {
-                        "name": "testPlanListUuid",
+                        "name": "uuid",
                         "in": "path",
-                        "description": "testPlanListUuid",
+                        "description": "uuid",
                         "required": true,
                         "type": "string"
                     }
@@ -389,10 +419,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/TestPlan"
-                            }
+                            "$ref": "#/definitions/TestPlan"
                         }
                     },
                     "401": {
@@ -405,9 +432,7 @@
                         "description": "Not Found"
                     }
                 }
-            }
-        },
-        "/api/v1/test-plans/{uuid}": {
+            },
             "put": {
                 "tags": [
                     "test-plan-controller"
