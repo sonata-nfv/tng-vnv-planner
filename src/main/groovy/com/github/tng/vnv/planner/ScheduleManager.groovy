@@ -81,20 +81,32 @@ class ScheduleManager {
     }
 
     List<TestPlan> create(List<TestPlan> testPlans) {
-        testPlans?.each{ it.uuid=(!isEmpty(it.uuid))?it.uuid:UUID.randomUUID().toString()}
-                .toSorted().each{create(it)}
+        testPlans?.each{create(it)}
         workflowManager.searchForScheduledPlan()
         testPlans
     }
 
+    TestPlan createOne(TestPlan testPlan) {
+        testPlan = create(testPlan)
+        workflowManager.searchForScheduledPlan()
+        testPlan
+    }
+
     List<TestPlan> update(List<TestPlan> testPlans) {
-        testPlans?.toSorted().each {update(tp)}
+        testPlans?.each {update(tp)}
         workflowManager.searchForScheduledPlan()
         testPlans
+    }
+
+    TestPlan updateOne(TestPlan testPlan) {
+        testPlan = update(testPlan)
+        workflowManager.searchForScheduledPlan()
+        testPlan
     }
 
 
     TestPlan create(TestPlan tp) {
+        tp.uuid=(!isEmpty(tp.uuid))?tp.uuid:UUID.randomUUID().toString()
         boolean valid = false
         if (!isEmpty(tp.serviceUuid) && !isEmpty(tp.testUuid)) {
             tp.nsd = networkServiceService.findByUuid(tp.serviceUuid)?.nsd

@@ -87,7 +87,7 @@ class TestPlanController {
     @ResponseBody
     TestPlan save(@Valid @RequestBody TestPlan testPlan) {
         log.info("#~#vnvlog save STR [test_plan.uuid: ${testPlan?.uuid}]")
-        testPlan = scheduler.create(testPlan)
+        testPlan = scheduler.createOne(testPlan)
         log.info("#~#vnvlog save END [test_plan.uuid: ${testPlan?.uuid}]")
         testPlan
     }
@@ -98,7 +98,7 @@ class TestPlanController {
     TestPlan update(@Valid @RequestBody TestPlan testPlan) {
         //todo-allemaos: IT's for testing & debugging
         log.info("#~#vnvlog update STR [test_plan.uuid: ${testPlan?.uuid}]")
-        testPlan = scheduler.update(testPlan)
+        testPlan = scheduler.updateOne(testPlan)
         log.info("#~#vnvlog update END [test_plan.uuid: ${testPlan?.uuid}]")
         testPlan
     }
