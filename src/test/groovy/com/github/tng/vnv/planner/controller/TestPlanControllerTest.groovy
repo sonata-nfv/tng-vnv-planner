@@ -1,13 +1,10 @@
 package com.github.tng.vnv.planner.controller
 
 import com.github.tng.vnv.planner.config.TestRestSpec
-import com.github.tng.vnv.planner.model.NetworkService
 import com.github.tng.vnv.planner.model.TestPlan
-import com.github.tng.vnv.planner.model.TestSuite
 import com.github.tng.vnv.planner.restmock.CuratorMock
 import com.github.tng.vnv.planner.restmock.DataMock
 import com.github.tng.vnv.planner.service.TestPlanService
-import com.github.tng.vnv.planner.service.TestSuiteService
 import com.github.tng.vnv.planner.utils.TEST_PLAN_STATUS
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
