@@ -8,14 +8,10 @@ date_stamp=`date +"%Y-%m-%d %H:%M:%S"`
 
 cat <<EOF > planner-input.json
 {
-  "test_plans": [
-    {
       "description": "Request of an adhoc testPlan of stored TD,NSD [integration tests at $date_stamp]",
       "service_uuid": $service_uuid,
       "test_uuid": $test_uuid,
       "status": "INTEGRATION_TESTING"
-    }
-  ]
 }
 EOF
 
