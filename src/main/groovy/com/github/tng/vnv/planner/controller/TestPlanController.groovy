@@ -36,7 +36,9 @@ package com.github.tng.vnv.planner.controller
 
 import com.github.tng.vnv.planner.ScheduleManager
 import com.github.tng.vnv.planner.WorkflowManager
+import com.github.tng.vnv.planner.model.NetworkService
 import com.github.tng.vnv.planner.model.NetworkServiceDescriptor
+import com.github.tng.vnv.planner.model.Test
 import com.github.tng.vnv.planner.model.TestDescriptor
 import com.github.tng.vnv.planner.model.TestPlan
 import com.github.tng.vnv.planner.model.TestSuite
@@ -99,14 +101,14 @@ class TestPlanController {
     @ApiResponses(value = [@ApiResponse(code = 400, message = 'Bad Request')])
     @PostMapping('/services')
     @ResponseBody
-    List<TestPlan> createTestPlansByServiceDescriptor(@Valid @RequestBody NetworkServiceDescriptor body) {
-        testPlanService.createByService(body)
+    List<TestPlan> createTestPlansByServiceDescriptor(@Valid @RequestBody NetworkService body) {
+        new ArrayList(testPlanService.createByService(body))
     }
 
     @ApiResponses(value = [@ApiResponse(code = 400, message = 'Bad Request')])
     @PostMapping('/tests')
     @ResponseBody
     List<TestPlan> createTestPlansByTestDescriptor(@Valid @RequestBody TestDescriptor body) {
-        testPlanService.createByTest(body)
+        testPlanService.createByTestDescriptor(body)
     }
 }

@@ -241,7 +241,7 @@
                         "description": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/NetworkServiceDescriptor"
+                            "$ref": "#/definitions/NetworkService"
                         }
                     }
                 ],
@@ -491,6 +491,27 @@
         }
     },
     "definitions": {
+        "NetworkService": {
+            "type": "object",
+            "properties": {
+                "descriptor": {
+                    "$ref": "#/definitions/NetworkServiceDescriptor"
+                },
+                "nsd": {
+                    "type": "object"
+                },
+                "package_id": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "uuid": {
+                    "type": "string"
+                }
+            },
+            "title": "NetworkService"
+        },
         "NetworkServiceDescriptor": {
             "type": "object",
             "properties": {

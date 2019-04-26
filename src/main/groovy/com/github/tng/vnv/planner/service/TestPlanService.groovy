@@ -35,8 +35,10 @@
 package com.github.tng.vnv.planner.service
 
 import com.github.tng.vnv.planner.model.NetworkService
+import com.github.tng.vnv.planner.model.NetworkServiceDescriptor
 import com.github.tng.vnv.planner.model.Package
 import com.github.tng.vnv.planner.model.Test
+import com.github.tng.vnv.planner.model.TestDescriptor
 import com.github.tng.vnv.planner.repository.TestPlanRepository
 import com.github.tng.vnv.planner.model.TestPlan
 import com.github.tng.vnv.planner.repository.TestSuiteRepository
@@ -70,6 +72,16 @@ class TestPlanService {
             if( !isEmpty(service.uuid) && !isEmpty(test.uuid))
                 testPlans.add(new TestPlan(uuid: service.uuid+test.uuid, serviceUuid: service.uuid, testUuid: test.uuid, nsd:service.nsd, testd:test.testd, status: TEST_PLAN_STATUS.CREATED))
         }
+        new ArrayList(testPlans)
+    }
+    
+    Set<TestPlan> createByServiceDescriptor(NetworkServiceDescriptor service) {
+        def testPlans = [] as HashSet
+        service = networkServiceService.findByUuid(service.uuid)
+        testService.findByService(service)?.each { test ->
+            if( !isEmpty(service.uuid) && !isEmpty(test.uuid))
+                testPlans.add(new TestPlan(uuid: service.uuid+test.uuid, nsd:service.nsd, testd:test.testd, status: TEST_PLAN_STATUS.CREATED))
+        }
         testPlans
     }
 
@@ -82,10 +94,22 @@ class TestPlanService {
         }
         testPlans
     }
+    
+    Set<TestPlan> createByTestDescriptor(TestDescriptor test) {
+        def testPlans = [] as HashSet
+        test = testService.findByUuid(test.uuid)
+        networkServiceService.findByTest(test)?.each { service ->
+            if(!isEmpty(service.uuid) && !isEmpty(test.uuid))
+                testPlans.add(new TestPlan(uuid: service.uuid+test.uuid, nsd:service.nsd, testd:test.testd, status: TEST_PLAN_STATUS.CREATED))
+        }
+        testPlans
+    }
 
     Set<TestPlan> createByServices(Set<NetworkService> nss) {
         def testPlans = [] as HashSet
-        nss?.each { it -> testPlans.addAll(createByService(it)) }
+        nss?.each { 
+            it -> testPlans.addAll(createByService(it)) 
+            }
         testPlans
     }
 
