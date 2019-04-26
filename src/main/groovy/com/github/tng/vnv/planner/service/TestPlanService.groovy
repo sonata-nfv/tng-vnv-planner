@@ -41,7 +41,6 @@ import com.github.tng.vnv.planner.model.Test
 import com.github.tng.vnv.planner.model.TestDescriptor
 import com.github.tng.vnv.planner.repository.TestPlanRepository
 import com.github.tng.vnv.planner.model.TestPlan
-import com.github.tng.vnv.planner.repository.TestSuiteRepository
 import com.github.tng.vnv.planner.utils.TEST_PLAN_STATUS
 import groovy.util.logging.Log
 import org.springframework.beans.factory.annotation.Autowired
@@ -55,9 +54,6 @@ class TestPlanService {
 
     @Autowired
     TestPlanRepository testPlanRepository
-    @Autowired
-    TestSuiteRepository testSuiteRepository
-
     @Autowired
     TestService testService
     @Autowired
@@ -164,11 +160,6 @@ class TestPlanService {
 
     List<TestPlan> findAll(){
         testPlanRepository.findAll()
-    }
-
-    List<TestPlan> findByTestSuiteUuid(String uuid){
-        def testSuite = testSuiteRepository.findByUuid(uuid)
-        (testSuite != null)?testPlanRepository.findByTestSuite(testSuite) : []
     }
 }
 

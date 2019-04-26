@@ -37,9 +37,7 @@ package com.github.tng.vnv.planner.controller
 
 import com.github.tng.vnv.planner.config.TestRestSpec
 import com.github.tng.vnv.planner.model.TestPlan
-import com.github.tng.vnv.planner.model.TestSuite
 import com.github.tng.vnv.planner.service.TestPlanService
-import com.github.tng.vnv.planner.service.TestSuiteService
 import com.github.tng.vnv.planner.utils.TEST_PLAN_STATUS
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
@@ -53,8 +51,6 @@ class CuratorCallbackControllerTest extends TestRestSpec {
 
     @Autowired
     TestPlanService testPlanService
-    @Autowired
-    TestSuiteService testSuiteService
 
     void 'curator returns back call as COMPLETED should store the testPlan with status respectively'() {
         when:
@@ -169,10 +165,6 @@ class CuratorCallbackControllerTest extends TestRestSpec {
 
     void createDummyTestPlan(String test_plan_uuid){
         def testPlan = new TestPlan(uuid: test_plan_uuid, status: 'dummyTestPlan')
-        def testSuite = new TestSuite()
-        testSuite = testSuiteService.save(testSuite)
-        testPlan.testSuite = testSuite
-        testSuite.testPlans.add(testPlan)
         testPlanService.save(testPlan)
         testPlanService.update(testPlan.uuid, TEST_PLAN_STATUS.STARTING)
     }

@@ -37,11 +37,8 @@ package com.github.tng.vnv.planner.controller
 import com.github.tng.vnv.planner.ScheduleManager
 import com.github.tng.vnv.planner.WorkflowManager
 import com.github.tng.vnv.planner.model.NetworkService
-import com.github.tng.vnv.planner.model.NetworkServiceDescriptor
 import com.github.tng.vnv.planner.model.Test
-import com.github.tng.vnv.planner.model.TestDescriptor
 import com.github.tng.vnv.planner.model.TestPlan
-import com.github.tng.vnv.planner.model.TestSuite
 import com.github.tng.vnv.planner.service.TestPlanService
 import groovy.util.logging.Log
 import io.swagger.annotations.ApiResponse
@@ -88,22 +85,22 @@ class TestPlanController {
     @ApiResponses(value = [@ApiResponse(code = 400, message = 'Bad Request')])
     @PostMapping('')
     @ResponseBody
-    TestSuite save(@Valid @RequestBody TestSuite testSuite) {
-        log.info("#~#vnvlog save STR [test_suite.uuid: ${testSuite?.uuid}]")
-        testSuite = scheduler.create(testSuite)
-        log.info("#~#vnvlog save END [test_suite.uuid: ${testSuite?.uuid}]")
-        testSuite
+    TestPlan save(@Valid @RequestBody TestPlan testPlan) {
+        log.info("#~#vnvlog save STR [test_plan.uuid: ${testPlan?.uuid}]")
+        testPlan = scheduler.create(testPlan)
+        log.info("#~#vnvlog save END [test_plan.uuid: ${testPlan?.uuid}]")
+        testPlan
     }
 
     @ApiResponses(value = [@ApiResponse(code = 400, message = 'Bad Request')])
     @PutMapping('{uuid}')
     @ResponseBody
-    TestSuite update(@Valid @RequestBody TestSuite testSuite) {
+    TestPlan update(@Valid @RequestBody TestPlan testPlan) {
         //todo-allemaos: IT's for testing & debugging
-        log.info("#~#vnvlog update STR [test_suite.uuid: ${testSuite?.uuid}]")
-        testSuite = scheduler.update(testSuite)
-        log.info("#~#vnvlog update END [test_suite.uuid: ${testSuite?.uuid}]")
-        testSuite
+        log.info("#~#vnvlog update STR [test_plan.uuid: ${testPlan?.uuid}]")
+        testPlan = scheduler.update(testPlan)
+        log.info("#~#vnvlog update END [test_plan.uuid: ${testPlan?.uuid}]")
+        testPlan
     }
 
     @ApiResponses(value = [@ApiResponse(code = 400, message = 'Bad Request')])

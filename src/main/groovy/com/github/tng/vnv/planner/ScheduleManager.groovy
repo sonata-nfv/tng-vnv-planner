@@ -36,14 +36,12 @@ package com.github.tng.vnv.planner
 
 import com.github.tng.vnv.planner.model.NetworkService
 import com.github.tng.vnv.planner.model.Test
-import com.github.tng.vnv.planner.model.TestSuite
 import com.github.tng.vnv.planner.service.CatalogueService
 import com.github.tng.vnv.planner.service.NetworkServiceService
 import com.github.tng.vnv.planner.service.TestPlanService
 import com.github.tng.vnv.planner.model.Package
 import com.github.tng.vnv.planner.model.TestPlan
 import com.github.tng.vnv.planner.service.TestService
-import com.github.tng.vnv.planner.service.TestSuiteService
 import com.github.tng.vnv.planner.utils.TEST_PLAN_STATUS
 import groovy.util.logging.Log
 import org.springframework.beans.factory.annotation.Autowired
@@ -71,9 +69,6 @@ class ScheduleManager {
     TestPlanService testPlanService
 
     @Autowired
-    TestSuiteService testSuiteService
-
-    @Autowired
     WorkflowManager workflowManager
 
     @Value('${app.NOT_AVAILABLE_DATA}')
@@ -81,38 +76,25 @@ class ScheduleManager {
     @Value('${app.NOT_MATCHING_TEST_TAGS}')
     String not_matching_test_tags
 
-    TestSuite create(Package packageMetadata) {
-        create(new TestSuite(testPlans: new ArrayList<>(
-                testPlanService.createByPackage(packageMetadata))))
+    List<TestPlan> create(Package packageMetadata) {
+        create(new ArrayList<>(testPlanService.createByPackage(packageMetadata)))
     }
 
-    TestSuite create(TestSuite ts) {
-        def testPlans = [] as HashSet
-        TestSuite testSuite = testSuiteService.save(new TestSuite(uuid:(!isEmpty(ts.uuid))?ts.uuid:UUID.randomUUID().toString()))
-        ts?.testPlans?.each{ it.uuid=(!isEmpty(it.uuid))?it.uuid:UUID.randomUUID().toString()}
-                .toSorted().each { tp -> tp = create(tp, testSuite)
-            if(tp != null) testPlans.add(tp)
-        }
+    List<TestPlan> create(List<TestPlan> testPlans) {
+        testPlans?.each{ it.uuid=(!isEmpty(it.uuid))?it.uuid:UUID.randomUUID().toString()}
+                .toSorted().each{create(it)}
         workflowManager.searchForScheduledPlan()
-        testSuite.testPlans = new ArrayList<>(testPlans)
-        testSuite
+        testPlans
     }
 
-    TestSuite update(TestSuite ts) {
-        def testPlans = [] as HashSet
-        TestSuite testSuite = testSuiteService.findByUuid(ts.uuid)
-        ts.testPlans?.toSorted().forEach({ tp ->
-            update(tp, testSuite)
-            testPlans.add(tp)
-        })
+    List<TestPlan> update(List<TestPlan> testPlans) {
+        testPlans?.toSorted().each {update(tp)}
         workflowManager.searchForScheduledPlan()
-        testSuite.testPlans = new ArrayList<>(testPlans)
-        testSuite
+        testPlans
     }
 
 
-    TestPlan create(TestPlan tp, TestSuite ts) {
-        tp.testSuite = ts
+    TestPlan create(TestPlan tp) {
         boolean valid = false
         if (!isEmpty(tp.serviceUuid) && !isEmpty(tp.testUuid)) {
             tp.nsd = networkServiceService.findByUuid(tp.serviceUuid)?.nsd
@@ -134,12 +116,7 @@ class ScheduleManager {
         testPlanService.save(tp)
     }
 
-    TestPlan update(TestPlan tp, TestSuite ts) {
-        TestPlan tpOld = testPlanService.testPlanRepository.find { it.uuid == tp.uuid}
-        tpOld.status = TEST_PLAN_STATUS.UPDATED
-        testPlanService.testPlanRepository.save(tpOld)
-        tp.id = null
-        tp.testSuite = ts
+    TestPlan update(TestPlan tp) {
         tp.status = TEST_PLAN_STATUS.SCHEDULED
         testPlanService.save(tp)
     }

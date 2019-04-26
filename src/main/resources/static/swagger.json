@@ -59,7 +59,10 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/TestSuite"
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/TestPlan"
+                            }
                         }
                     },
                     "201": {
@@ -126,11 +129,11 @@
                 "parameters": [
                     {
                         "in": "body",
-                        "name": "testSuite",
-                        "description": "testSuite",
+                        "name": "testPlan",
+                        "description": "testPlan",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/TestSuite"
+                            "$ref": "#/definitions/TestPlan"
                         }
                     }
                 ],
@@ -138,7 +141,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/TestSuite"
+                            "$ref": "#/definitions/TestPlan"
                         }
                     },
                     "201": {
@@ -448,11 +451,11 @@
                 "parameters": [
                     {
                         "in": "body",
-                        "name": "testSuite",
-                        "description": "testSuite",
+                        "name": "testPlan",
+                        "description": "testPlan",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/TestSuite"
+                            "$ref": "#/definitions/TestPlan"
                         }
                     }
                 ],
@@ -460,7 +463,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/TestSuite"
+                            "$ref": "#/definitions/TestPlan"
                         }
                     },
                     "201": {
@@ -787,32 +790,6 @@
                 }
             },
             "title": "TestResult"
-        },
-        "TestSuite": {
-            "type": "object",
-            "required": [
-                "test_plans"
-            ],
-            "properties": {
-                "id": {
-                    "type": "integer",
-                    "format": "int64"
-                },
-                "test_plans": {
-                    "type": "array",
-                    "description": "Test plan list",
-                    "allowEmptyValue": false,
-                    "items": {
-                        "$ref": "#/definitions/TestPlan"
-                    }
-                },
-                "uuid": {
-                    "type": "string",
-                    "description": "Test plan list uuid",
-                    "allowEmptyValue": false
-                }
-            },
-            "title": "TestSuite"
         }
     }
 }
