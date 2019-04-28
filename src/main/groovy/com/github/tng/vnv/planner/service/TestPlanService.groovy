@@ -39,7 +39,6 @@ import com.github.tng.vnv.planner.model.Package
 import com.github.tng.vnv.planner.model.Test
 import com.github.tng.vnv.planner.repository.TestPlanRepository
 import com.github.tng.vnv.planner.model.TestPlan
-import com.github.tng.vnv.planner.repository.TestSuiteRepository
 import com.github.tng.vnv.planner.utils.TEST_PLAN_STATUS
 import groovy.util.logging.Log
 import org.springframework.beans.factory.annotation.Autowired
@@ -54,9 +53,6 @@ class TestPlanService {
     @Autowired
     TestPlanRepository testPlanRepository
     @Autowired
-    TestSuiteRepository testSuiteRepository
-
-    @Autowired
     TestService testService
     @Autowired
     NetworkServiceService networkServiceService
@@ -70,7 +66,7 @@ class TestPlanService {
             if( !isEmpty(service.uuid) && !isEmpty(test.uuid))
                 testPlans.add(new TestPlan(uuid: service.uuid+test.uuid, serviceUuid: service.uuid, testUuid: test.uuid, status: TEST_PLAN_STATUS.CREATED))
         }
-        new ArrayList(testPlans)
+        testPlans
     }
     
     Set<TestPlan> createByTest(Test test) {
@@ -80,7 +76,7 @@ class TestPlanService {
             if(!isEmpty(service.uuid) && !isEmpty(test.uuid))
                 testPlans.add(new TestPlan(uuid: service.uuid+test.uuid, serviceUuid: service.uuid, testUuid: test.uuid, status: TEST_PLAN_STATUS.CREATED))
         }
-        new ArrayList(testPlans)
+        testPlans
     }
     
     Set<TestPlan> createByServices(Set<NetworkService> nss) {
@@ -142,11 +138,6 @@ class TestPlanService {
 
     List<TestPlan> findAll(){
         testPlanRepository.findAll()
-    }
-
-    List<TestPlan> findByTestSuiteUuid(String uuid){
-        def testSuite = testSuiteRepository.findByUuid(uuid)
-        (testSuite != null)?testPlanRepository.findByTestSuite(testSuite) : []
     }
 }
 

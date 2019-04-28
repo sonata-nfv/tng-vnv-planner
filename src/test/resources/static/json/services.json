@@ -46,13 +46,13 @@
             "nscpexternal"
           ]
         }
-      ],
-      "testing_tags": [
-        "latency","aux_test"
       ]
     },
     "signature": null,
     "status": "active",
+    "testing_tags": [
+      "latency","aux_test"
+    ],
     "updated_at": "2018-08-07T16:09:34.935+00:00",
     "username": null,
     "uuid": "input0ns-f213-4fae-8d3f-04358e1e1451"
@@ -85,9 +85,6 @@
           "vnf_version": "0.3"
         }
       ],
-      "testing_tags": [
-        "latency"
-      ],
       "vendor": "atos",
       "version": "0.3",
       "virtual_links": [
@@ -111,6 +108,9 @@
     },
     "signature": null,
     "status": "active",
+    "testing_tags": [
+      "latency"
+    ],
     "updated_at": "2018-08-07T16:09:34.935+00:00",
     "username": null,
     "uuid": "4763bde6-f213-4fae-8d3f-04358e1e1489"
@@ -143,9 +143,6 @@
           "vnf_version": "0.2"
         }
       ],
-      "testing_tags": [
-        "latency"
-      ],
       "vendor": "atos",
       "version": "0.2",
       "virtual_links": [
@@ -169,6 +166,9 @@
     },
     "signature": null,
     "status": "active",
+    "testing_tags": [
+      "latency"
+    ],
     "updated_at": "2018-08-07T16:08:28.588+00:00",
     "username": null,
     "uuid": "a0c112ac-8c06-49e0-a34b-16693a50e147"
@@ -251,9 +251,6 @@
           "vnf_version": "0.1"
         }
       ],
-      "testing_tags": [
-        "proxy-advanced"
-      ],
       "vendor": "eu.5gtango",
       "version": "0.1",
       "virtual_links": [
@@ -269,6 +266,9 @@
     },
     "signature": null,
     "status": "active",
+    "testing_tags": [
+      "proxy-advanced"
+    ],
     "updated_at": "2018-09-11T07:22:28.591+00:00",
     "username": null,
     "uuid": "4dd4cb15-76b8-46fd-b3c0-1b165cc332f9"
@@ -328,9 +328,6 @@
           ]
         }
       ],
-      "testing_tags": [
-        "proxy-advanced"
-      ],
       "vendor": "eu.5gtango",
       "version": "0.2",
       "virtual_links": [
@@ -363,6 +360,9 @@
     },
     "signature": null,
     "status": "active",
+    "testing_tags": [
+      "proxy-advanced"
+    ],
     "updated_at": "2018-09-11T10:37:10.072+00:00",
     "username": null,
     "uuid": "d442e5d6-a67c-4862-bdbc-91f961651bde"
@@ -395,9 +395,6 @@
           "vnf_version": "0.1"
         }
       ],
-      "testing_tags": [
-        "http-advanced"
-      ],
       "vendor": "atos",
       "version": "0.1",
       "virtual_links": [
@@ -421,6 +418,9 @@
     },
     "signature": null,
     "status": "active",
+    "testing_tags": [
+      "http-advanced"
+    ],
     "updated_at": "2018-09-12T09:09:16.319+00:00",
     "username": null,
     "uuid": "d07742ed-9429-4a07-b7af-d0b24a6d5c4c"
@@ -462,9 +462,6 @@
           "type": "external"
         }
       ],
-      "testing_tags": [
-        "rtmp-media-service"
-      ],
       "virtual_links": [
         {
           "id": "vlexternal",
@@ -496,6 +493,9 @@
     },
     "signature": null,
     "status": "active",
+    "testing_tags": [
+      "rtmp-media-service"
+    ],
     "updated_at": "2019-03-28T09:09:16.319+00:00",
     "username": null,
     "uuid": "immedia0-9429-4a07-b7af-dd429d6d04o3"

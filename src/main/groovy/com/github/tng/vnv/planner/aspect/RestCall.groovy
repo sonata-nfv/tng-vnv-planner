@@ -32,30 +32,14 @@
  * partner consortium (www.5gtango.eu).
  */
 
-package com.github.tng.vnv.planner.service
+package com.github.tng.vnv.planner.aspect
 
-import com.github.tng.vnv.planner.model.TestSuite
-import com.github.tng.vnv.planner.repository.TestSuiteRepository
-import groovy.util.logging.Log
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.stereotype.Service
+import java.lang.annotation.ElementType
+import java.lang.annotation.Retention
+import java.lang.annotation.RetentionPolicy
+import java.lang.annotation.Target
 
-@Log
-@Service
-class TestSuiteService {
-
-    @Autowired
-    TestSuiteRepository testSuiteRepository
-
-    TestSuite save(TestSuite testSuite){
-        testSuiteRepository.save(testSuite)
-    }
-
-    List<TestSuite> findAll() {
-        testSuiteRepository.findAll()
-    }
-
-    TestSuite findByUuid(String uuid) {
-        testSuiteRepository.findByUuid(uuid)
-    }
+@Target(ElementType.METHOD)
+@Retention(RetentionPolicy.RUNTIME)
+@interface RestCall {
 }

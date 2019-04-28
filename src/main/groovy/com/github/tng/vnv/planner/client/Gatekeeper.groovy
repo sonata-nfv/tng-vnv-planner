@@ -32,49 +32,31 @@
  * partner consortium (www.5gtango.eu).
  */
 
-package com.github.tng.vnv.planner.repository
+package com.github.tng.vnv.planner.client
 
-import com.github.tng.vnv.planner.model.Test
-import groovy.util.logging.Log
+import com.github.tng.vnv.planner.aspect.RestCall
+import com.github.tng.vnv.planner.aspect.AfterRestCall
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.beans.factory.annotation.Value
-import org.springframework.stereotype.Repository
+import org.springframework.http.ResponseEntity
+import org.springframework.stereotype.Component
 import org.springframework.web.client.RestTemplate
-import org.springframework.web.util.UriComponentsBuilder
 
-import static com.github.tng.vnv.planner.utils.DebugHelper.callExternalEndpoint
-
-@Log
-@Repository
-class TestRepository {
-
+@Component
+class Gatekeeper {
     @Autowired
-    @Qualifier('restTemplateWithAuth')
-    RestTemplate restTemplateWithAuth
+    @Qualifier('restTemplateWithoutAuth')
+    RestTemplate restTemplate
 
-    @Value('${app.vnvgk.test.metadata.endpoint}')
-    def testMetadataEndpoint
+    @Value('${app.gk.package.metadata.endpoint}')
+    def packageMetadataEndpoint
 
-    @Value('${app.vnvgk.test.list.by.tag.endpoint}')
-    def testListByTagEndpoint
-
-    @Value('${app.gk.service.metadata.endpoint}')
-    def serviceMetadataEndpoint
-
-
-    Test findByUuid(String uuid) {
-        callExternalEndpoint(restTemplateWithAuth.getForEntity(testMetadataEndpoint, Test.class, uuid),
-                'TestRepository.findByUuid',testMetadataEndpoint).body
+    @AfterRestCall
+    ResponseEntity getPackage(def packageId){
+        restTemplate.getForEntity(packageMetadataEndpoint, Object.class, packageId)
     }
 
-    List<Test> findTssByTestTag(String tag) {
-		UriComponentsBuilder builder = UriComponentsBuilder
-		.fromUriString(testListByTagEndpoint)
-		.queryParam("test_tag", tag)
-		println builder.toUriString()
-        callExternalEndpoint(restTemplateWithAuth.getForEntity(builder.toUriString(), Test[]),
-                'TestRepository.findTssByTestTag',testListByTagEndpoint).body
-    }
+
 
 }

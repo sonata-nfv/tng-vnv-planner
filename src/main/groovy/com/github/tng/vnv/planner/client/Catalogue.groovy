@@ -32,27 +32,31 @@
  * partner consortium (www.5gtango.eu).
  */
 
-package com.github.tng.vnv.planner.repository
+package com.github.tng.vnv.planner.client
 
-import com.github.tng.vnv.planner.utils.DebugHelper
+import com.github.tng.vnv.planner.aspect.AfterRestCall
 import com.github.tng.vnv.planner.model.NetworkService
-import groovy.util.logging.Log
+import com.github.tng.vnv.planner.model.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.beans.factory.annotation.Value
-import org.springframework.stereotype.Repository
+import org.springframework.http.ResponseEntity
+import org.springframework.stereotype.Component
 import org.springframework.web.client.RestTemplate
 import org.springframework.web.util.UriComponentsBuilder
 
-import static com.github.tng.vnv.planner.utils.DebugHelper.callExternalEndpoint
-
-@Log
-@Repository
-class NetworkServiceRepository {
+@Component
+class Catalogue {
 
     @Autowired
     @Qualifier('restTemplateWithAuth')
     RestTemplate restTemplateWithAuth
+
+    @Value('${app.vnvgk.test.metadata.endpoint}')
+    def testMetadataEndpoint
+
+    @Value('${app.vnvgk.test.list.by.tag.endpoint}')
+    def testListByTagEndpoint
 
     @Value('${app.gk.service.list.by.tag.endpoint}')
     def serviceListByTagEndpoint
@@ -60,20 +64,36 @@ class NetworkServiceRepository {
     @Value('${app.gk.service.metadata.endpoint}')
     def serviceMetadataEndpoint
 
-
-    NetworkService findByUuid(String uuid) {
-        callExternalEndpoint(restTemplateWithAuth.getForEntity(serviceMetadataEndpoint,
-                NetworkService.class, uuid),'NetworkServiceRepository.findByUuid',
-                serviceMetadataEndpoint).body
+    @AfterRestCall
+    ResponseEntity getTest(def uuid){
+        restTemplateWithAuth.getForEntity(testMetadataEndpoint, Test.class, uuid)
     }
 
-	List<NetworkService> findNssByTestTag(String tag) {
-		UriComponentsBuilder builder = UriComponentsBuilder
-		.fromUriString(serviceListByTagEndpoint)
-		.queryParam("testing_tags", tag);
+    @AfterRestCall
+    ResponseEntity getTests(def tag){
+        UriComponentsBuilder builder = UriComponentsBuilder
+                .fromUriString(testListByTagEndpoint)
+                .queryParam("test_tag", tag)
         //cleanCode-auraliano
-		println "*****************  "+builder.toUriString()+" ****************************"
-		DebugHelper.callExternalEndpoint(restTemplateWithAuth.getForEntity(builder.toUriString(),  NetworkService[]),
-				'NetworkServiceRepository.findNssByTestTag',serviceListByTagEndpoint).body
-	}
+        println builder.toUriString()
+        restTemplateWithAuth.getForEntity(builder.toUriString(), Test[])
+    }
+
+    @AfterRestCall
+    ResponseEntity getService(def uuid){
+        restTemplateWithAuth.getForEntity(serviceMetadataEndpoint, NetworkService.class, uuid)
+    }
+
+    @AfterRestCall
+    ResponseEntity getServices(def tag){
+        UriComponentsBuilder builder = UriComponentsBuilder
+                .fromUriString(serviceListByTagEndpoint)
+                .queryParam("testing_tags", tag);
+        //cleanCode-auraliano
+        println "*****************  "+builder.toUriString()+" ****************************"
+        restTemplateWithAuth.getForEntity(builder.toUriString(),  NetworkService[])
+    }
+
+
+
 }

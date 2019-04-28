@@ -32,13 +32,14 @@
  * partner consortium (www.5gtango.eu).
  */
 
-package com.github.tng.vnv.planner.repository
+package com.github.tng.vnv.planner.aspect
 
-import com.github.tng.vnv.planner.model.TestSuite
-import org.springframework.data.jpa.repository.JpaRepository
-import org.springframework.stereotype.Repository
+import java.lang.annotation.ElementType
+import java.lang.annotation.Retention
+import java.lang.annotation.RetentionPolicy
+import java.lang.annotation.Target
 
-@Repository
-interface TestSuiteRepository extends JpaRepository<TestSuite, Long> {
-    TestSuite findByUuid(String uuid);
+@Target(ElementType.METHOD)
+@Retention(RetentionPolicy.RUNTIME)
+@interface AfterRestCall {
 }

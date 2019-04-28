@@ -34,19 +34,12 @@
 
 package com.github.tng.vnv.planner.model
 
-import com.fasterxml.jackson.annotation.JsonIgnore
-import com.fasterxml.jackson.databind.ObjectMapper
 import groovy.transform.EqualsAndHashCode
 import groovy.transform.Sortable
 import io.swagger.annotations.ApiModelProperty
-
-import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.GeneratedValue
 import javax.persistence.Id
-import javax.persistence.JoinColumn
-import javax.persistence.Lob
-import javax.persistence.ManyToOne
 import javax.persistence.Table
 import javax.persistence.Transient
 import javax.validation.constraints.NotNull
@@ -58,11 +51,6 @@ class TestPlan implements Serializable {
     @Id
     @GeneratedValue
     Long id
-
-    @JsonIgnore
-    @ManyToOne
-    @JoinColumn(name = "testSuiteId", referencedColumnName = "id", nullable = false)
-    TestSuite testSuite
 
     @ApiModelProperty(
             value = 'Test Plan uuid',
@@ -137,7 +125,6 @@ class TestPlanResponse {
             allowEmptyValue = false,
             example = 'run time exception')
     String exception
-
 }
 
 class TestPlanCallback {
@@ -187,12 +174,4 @@ class TestPlanCallback {
             allowEmptyValue = false,
             example = 'tng-res, results, or xx.xx')
     String testResultsRepository
-}
-
-class TestPlanTest{
-
-    Map<String, Object> response = new ObjectMapper().readValue(str, HashMap.class)
-
-    String objectMapper = new ObjectMapper().writeValueAsString(crunchifyMap)
-
 }

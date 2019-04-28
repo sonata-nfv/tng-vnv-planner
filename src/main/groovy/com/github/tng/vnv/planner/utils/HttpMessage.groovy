@@ -32,43 +32,10 @@
  * partner consortium (www.5gtango.eu).
  */
 
-package com.github.tng.vnv.planner.client
+package com.github.tng.vnv.planner.utils
 
-import com.github.tng.vnv.planner.aspect.AfterRestCall
-import com.github.tng.vnv.planner.model.TestPlanResponse
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.beans.factory.annotation.Qualifier
-import org.springframework.beans.factory.annotation.Value
-import org.springframework.http.ResponseEntity
-import org.springframework.stereotype.Component
-import org.springframework.web.client.RestTemplate
-
-@Component
-class Curator {
-
-    @Autowired
-    @Qualifier('restTemplateWithAuth')
-    RestTemplate restTemplate
-
-    @Value('${app.curator.test.plan.prepare.endpoint}')
-    def testPlanPrepareEndpoint
-    @Value('${app.curator.test.plan.cancel.endpoint}')
-    def testPlanCancellationEndpoint
-    @Value('${app.curator.ping.endpoint}')
-    def testPlanPingEndpoint
-
-
-    @AfterRestCall
-    ResponseEntity getPing() {
-        restTemplate.getForEntity(testPlanPingEndpoint, Object.class)
-    }
-    @AfterRestCall
-    ResponseEntity post(def testPlanRequest){
-        restTemplate.postForEntity(testPlanPrepareEndpoint, testPlanRequest, TestPlanResponse)
-    }
-    @AfterRestCall
-    ResponseEntity delete(def uuid) {
-        restTemplate.delete(testPlanCancellationEndpoint, uuid)
-    }
+class HttpMessage {
+    String status
+    String message
 
 }

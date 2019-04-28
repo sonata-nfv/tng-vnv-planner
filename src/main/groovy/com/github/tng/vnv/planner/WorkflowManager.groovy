@@ -36,6 +36,7 @@ package com.github.tng.vnv.planner
 
 import com.github.tng.vnv.planner.client.Curator
 import com.github.tng.vnv.planner.model.TestPlan
+import com.github.tng.vnv.planner.model.TestPlanRequest
 import com.github.tng.vnv.planner.model.TestPlanResponse
 import com.github.tng.vnv.planner.service.NetworkServiceService
 import com.github.tng.vnv.planner.service.TestPlanService
@@ -43,6 +44,7 @@ import com.github.tng.vnv.planner.service.TestService
 import com.github.tng.vnv.planner.utils.TEST_PLAN_STATUS
 import groovy.util.logging.Log
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 
 import static org.springframework.util.StringUtils.isEmpty
@@ -62,19 +64,23 @@ class WorkflowManager {
     @Autowired
     NetworkServiceService networkServiceService
 
+    @Value('${app.NOT_AVAILABLE_DATA}')
+    String not_available_data
+
+
     void searchForScheduledPlan() {
         if (!testPlanService.existsByStartingStatus()) {
             TestPlan nextTestPlan = testPlanService.findNextScheduledTestPlan()
             if (nextTestPlan != null) {
-                //cleanCode-allemaos does catalog give the same ping functionality?
-                if(curator.inRunning()) {
-                    TestPlanResponse testPlanResponse = curator.proceedWith(complete(nextTestPlan))
+                //cleanCode-allemaos does catalogue give the same ping functionality?
+                if(isCuratorActive()) {
+                    TestPlanResponse testPlanResponse = proceedWith(complete(nextTestPlan))
                     log.info("#~#vnvlog searchForScheduledPlan.proceedWith - END responseFromCurator [status: ${testPlanResponse.status}, exception: ${!isEmpty(testPlanResponse.exception)?testPlanResponse.exception:""}  ]")
                     switch (testPlanResponse.status) {
                         case TEST_PLAN_STATUS.STARTING:
                             testPlanService.update(nextTestPlan.uuid,testPlanResponse.status)
                             break
-                        //todo-allemaos: handle the rest of status or exception from curator response
+                    //todo-allemaos: handle the rest of status or exception from curator response
                         default:
                             log.info("Get response: ${testPlanResponse.status} for plan description: \"${nextTestPlan.description}\"")
                             break
@@ -85,17 +91,26 @@ class WorkflowManager {
     }
 
     TestPlan complete(TestPlan testPlan){
-        log.info("#~#vnvlog postTestPlan STR [test_plan_uuid: ${testPlan.uuid}]")
-        testPlan.testd = testService.findByUuid(testPlan.testUuid)
-        testPlan.nsd = networkServiceService.findByUuid(testPlan.serviceUuid)
-        log.info("#~#vnvlog postTestPlan END [test_plan_uuid: ${uuid}]")
+        log.info("#~#vnvlog complete STR [test_plan_uuid: ${testPlan.uuid}, testPlan.nsd.name: NOT_AVAILABLE_YET, testPlan.testd.name: NOT_AVAILABLE_YET]")
+        testPlan.testd = testService.findByUuid(testPlan.testUuid).testd
+        testPlan.nsd = networkServiceService.findByUuid(testPlan.serviceUuid).nsd
+        log.info("#~#vnvlog complete END [test_plan_uuid: ${testPlan.uuid}, testPlan.nsd.name: ${testPlan.nsd.name}, testPlan.testd.name: ${testPlan.testd.name}]")
         testPlan
     }
 
     void deleteTestPlan(String uuid){
         log.info("#~#vnvlog deleteTestPlan STR [test_plan_uuid: ${uuid}]")
-        curator.deleteTestPlan(uuid)
+        curator.delete(uuid)
         testPlanService.delete(uuid)
         log.info("#~#vnvlog deleteTestPlan END [test_plan_uuid: ${uuid}]")
+    }
+
+    boolean isCuratorActive() {
+        !isEmpty(curator.getPing().body.alive_since)
+    }
+
+    TestPlanResponse proceedWith(TestPlan testPlan) {
+        def testPlanRequest = new TestPlanRequest(testPlanUuid: testPlan.uuid, nsd: testPlan.nsd, testd: testPlan.testd)
+        curator.post(testPlanRequest).body
     }
 }

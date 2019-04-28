@@ -38,6 +38,7 @@ package com.github.tng.vnv.planner.restmock
 import com.github.tng.vnv.planner.model.TestPlan
 import com.github.tng.vnv.planner.model.TestPlanRequest
 import com.github.tng.vnv.planner.model.TestPlanResponse
+import com.github.tng.vnv.planner.utils.HttpMessage
 import com.github.tng.vnv.planner.utils.TEST_PLAN_STATUS
 import groovy.util.logging.Log
 import org.springframework.http.HttpStatus
@@ -49,11 +50,31 @@ import org.springframework.web.bind.annotation.*
 class CuratorMock {
 
     def busy = true
+    TestPlan currentTestPlan
+    def status = HttpStatus.OK
     @PostMapping('/mock/curator/test-preparations')
     ResponseEntity<TestPlanResponse> curateTestPlan(@RequestBody TestPlanRequest testPlanRequest) {
+                currentTestPlan = new TestPlan(uuid: testPlanRequest.testPlanUuid, nsd: testPlanRequest.nsd, testd: testPlanRequest.testd)
                 TestPlanResponse tpr = new TestPlanResponse(status:
                         (busy)? TEST_PLAN_STATUS.REJECTED:TEST_PLAN_STATUS.STARTING)
-        ResponseEntity.status(HttpStatus.OK).body(tpr)
+
+        switch (status) {
+            case HttpStatus.OK:
+                log.info('')
+                ResponseEntity.status(HttpStatus.OK).body(tpr)
+                break
+            case HttpStatus.BAD_REQUEST:
+                log.info('')
+                ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new HttpMessage(status: HttpStatus.BAD_REQUEST), "")
+                break
+            case HttpStatus.NOT_FOUND:
+                log.info('')
+                break
+            default:
+                log.info("Default")
+                ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new HttpMessage(status: HttpStatus.BAD_REQUEST), "")
+                break
+        }
     }
 
     @DeleteMapping('/mock/curator/test-preparations/{testPlanUuid}')

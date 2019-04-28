@@ -34,13 +34,6 @@
 
 package com.github.tng.vnv.planner.model
 
-import com.fasterxml.jackson.annotation.JsonProperty
-import groovy.transform.EqualsAndHashCode
-import groovy.transform.ToString
-import io.swagger.annotations.ApiModelProperty
-
-import javax.validation.constraints.NotNull
-
 class Test {
     String uuid
     String packageId
@@ -48,6 +41,7 @@ class Test {
     String confirmRequired
     List<String> servicePlatforms
     List<String> testingTags;
+    def testd
 
     boolean equals(o) {
         if (this.is(o)) return true

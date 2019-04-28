@@ -31,14 +31,14 @@
         {
           "category_type": "performance"
         }
-      ],
-      "test_tags": [
-        "http",
-        "latency"
       ]
     },
     "updated_at": "2018-08-07T15:19:57.887+00:00",
     "updated_at": "2018-08-07T15:19:57.887+00:00",
+    "testing_tags": [
+      "http",
+      "latency"
+    ],
     "uuid": "input0ts-75f5-4ca1-90c8-12ec80a79836"
   },
   {
@@ -70,10 +70,6 @@
           "parameter_value": "runner.sh"
         }
       ],
-      "test_tags": [
-        "http",
-        "latency"
-      ],
       "test_type": "bash",
       "validate": "true",
       "vendor": "eu.5gtango.atos.simple-test-descriptor",
@@ -81,6 +77,10 @@
     },
     "updated_at": "2018-08-07T15:19:57.887+00:00",
     "username": "paco",
+    "testing_tags": [
+      "http",
+      "latency"
+    ],
     "uuid": "9bbbd636-75f5-4ca1-90c8-12ec80a79875"
   },
   {
@@ -112,16 +112,16 @@
           "parameter_value": "runner.sh"
         }
       ],
-      "test_tags": [
-        "http",
-        "latency"
-      ],
       "test_type": "bash",
       "validate": "true",
       "vendor": "eu.5gtango.atos.simple-test-descriptor",
       "version": "0.2"
     },
     "updated_at": "2018-08-07T15:13:26.118+00:00",
+    "testing_tags": [
+      "http",
+      "latency"
+    ],
     "uuid": "ccbf8bad-2534-4308-b47c-4034133b3116"
   },
   {
@@ -153,16 +153,16 @@
           "parameter_value": "runner.sh"
         }
       ],
-      "test_tags": [
-        "http",
-        "latency"
-      ],
       "test_type": "bash",
       "validate": "false",
       "vendor": "eu.5gtango.atos.simple-test-descriptor",
       "version": "0.1"
     },
     "updated_at": "2018-08-05T10:00:17.184+00:00",
+    "testing_tags": [
+      "http",
+      "latency"
+    ],
     "uuid": "fe7ec2a8-644f-4788-9aa7-bc2ff0598157"
   },
   {
@@ -196,15 +196,15 @@
           "parameter_value": "runner.sh"
         }
       ],
-      "test_tags": [
-        "proxy-advanced"
-      ],
       "test_type": "bash",
       "validate": "1",
       "vendor": "eu.5gtango.atos",
       "version": "0.1"
     },
     "updated_at": "2018-09-11T07:23:04.942+00:00",
+    "testing_tags": [
+      "proxy-advanced"
+    ],
     "uuid": "b68dbe19-5c02-4865-8c4b-5e43ada1b67d"
   },
   {
@@ -238,16 +238,16 @@
           "parameter_value": "runner.sh"
         }
       ],
-      "test_tags": [
-        "proxy-advanced"
-      ],
       "test_type": "bash",
-      "confirm_required": "1",
-      "validate": "1",
       "vendor": "eu.5gtango.atos",
       "version": "0.2"
     },
     "updated_at": "2018-09-11T07:23:04.942+00:00",
+    "confirm_required": "1",
+    "validate": "1",
+    "testing_tags": [
+      "proxy-advanced"
+    ],
     "uuid": "b68dbe19-5c02-4865-8c4b-5e43ada1b67c"
   },
   {
@@ -281,17 +281,17 @@
           "parameter_value": "runner.sh"
         }
       ],
-      "test_tags": [
-        "proxy-advanced"
-      ],
       "test_type": "bash",
-      "confirm_required": "1",
-      "confirmed": "1",
       "validate": "1",
       "vendor": "eu.5gtango.atos",
       "version": "0.2"
     },
     "updated_at": "2018-09-11T07:23:04.942+00:00",
+    "confirm_required": "1",
+    "confirmed": "1",
+    "testing_tags": [
+      "proxy-advanced"
+    ],
     "uuid": "b68dbe19-5c02-4865-8c4b-5e43ada1b67b"
   },
   {
@@ -325,14 +325,14 @@
           "parameter_value": "runner.sh"
         }
       ],
-      "test_tags": [
-        "http-advanced"
-      ],
       "test_type": "bash",
       "vendor": "eu.5gtango.atos",
       "version": "0.1"
     },
     "updated_at": "2018-09-11T07:51:37.810+00:00",
+    "testing_tags": [
+      "http-advanced"
+    ],
     "uuid": "aa5c779a-8cc7-47a9-9112-d2ff348898b4"
   },
   {
@@ -585,13 +585,13 @@
       ],
       "test_category": [
         "benchmarking"
-      ],
-      "test_tags": [
-        "rtmp-media-service"
       ]
     },
 
     "updated_at": "2019-03-28T09:51:37.810+00:00",
+    "testing_tags": [
+      "rtmp-media-service"
+    ],
     "uuid": "immedia0-8cc7-47a9-9112-6wff9e88wu2k"
   }
 ]

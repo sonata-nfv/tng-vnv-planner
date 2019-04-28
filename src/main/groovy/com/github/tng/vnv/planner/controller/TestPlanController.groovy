@@ -36,10 +36,10 @@ package com.github.tng.vnv.planner.controller
 
 import com.github.tng.vnv.planner.ScheduleManager
 import com.github.tng.vnv.planner.WorkflowManager
+import com.github.tng.vnv.planner.aspect.TriggerNextTestPlan
 import com.github.tng.vnv.planner.model.NetworkService
 import com.github.tng.vnv.planner.model.Test
 import com.github.tng.vnv.planner.model.TestPlan
-import com.github.tng.vnv.planner.model.TestSuite
 import com.github.tng.vnv.planner.service.TestPlanService
 import groovy.util.logging.Log
 import io.swagger.annotations.ApiResponse
@@ -48,6 +48,8 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
 
 import javax.validation.Valid
+
+import static org.springframework.util.StringUtils.isEmpty
 
 @Log
 @RestController
@@ -61,39 +63,47 @@ class TestPlanController {
     @Autowired
     TestPlanService testPlanService
 
-    @GetMapping('/{testPlanListUuid}')
+    @GetMapping
     @ResponseBody
-    List<TestPlan> listByTestSuite(@PathVariable('testPlanListUuid') String uuid) {
-        (uuid == '0')? testPlanService.findAll():testPlanService.findByTestSuiteUuid(uuid)
+    List<TestPlan> listAllTestPlans() {
+        testPlanService.findAll()
     }
 
-    @ApiResponses(value = [@ApiResponse(code = 400, message = 'Bad Request')])
-    @PostMapping('')
+    @GetMapping('/{uuid}')
     @ResponseBody
-    TestSuite save(@Valid @RequestBody TestSuite testSuite) {
-        log.info("#~#vnvlog save STR [test_suite.uuid: ${testSuite?.uuid}]")
-        testSuite = scheduler.create(testSuite)
-        log.info("#~#vnvlog save END [test_suite.uuid: ${testSuite?.uuid}]")
-        testSuite
-    }
-
-    @ApiResponses(value = [@ApiResponse(code = 400, message = 'Bad Request')])
-    @PutMapping('{uuid}')
-    @ResponseBody
-    TestSuite update(@Valid @RequestBody TestSuite testSuite) {
-        //todo-allemaos: IT's for testing & debugging
-        log.info("#~#vnvlog update STR [test_suite.uuid: ${testSuite?.uuid}]")
-        testSuite = scheduler.update(testSuite)
-        log.info("#~#vnvlog update END [test_suite.uuid: ${testSuite?.uuid}]")
-        testSuite
+    TestPlan findTestPlan(@PathVariable String uuid) {
+        testPlanService.findByUuid(uuid)
     }
 
     @DeleteMapping('{uuid}')
     @ResponseBody
     void deleteTestPlan(@PathVariable String uuid) {
-        log.info("#~#vnvlog deleteTestPlan STR [test_suite.uuid: ${uuid}]")
+        log.info("#~#vnvlog deleteTestPlan STR [test_plan.uuid: ${uuid}]")
         manager.deleteTestPlan(uuid)
-        log.info("#~#vnvlog deleteTestPlan END [test_suite.uuid: ${uuid}]")
+        log.info("#~#vnvlog deleteTestPlan END [test_plan.uuid: ${uuid}]")
+    }
+
+    @TriggerNextTestPlan
+    @ApiResponses(value = [@ApiResponse(code = 400, message = 'Bad Request')])
+    @PostMapping('')
+    @ResponseBody
+    TestPlan save(@Valid @RequestBody TestPlan testPlan) {
+        log.info("#~#vnvlog save STR [test_plan.uuid: ${testPlan?.uuid}]")
+        testPlan = scheduler.create(testPlan)
+        log.info("#~#vnvlog save END [test_plan.uuid: ${testPlan?.uuid}]")
+        testPlan
+    }
+
+    @TriggerNextTestPlan
+    @ApiResponses(value = [@ApiResponse(code = 400, message = 'Bad Request')])
+    @PutMapping('{uuid}')
+    @ResponseBody
+    TestPlan update(@Valid @RequestBody TestPlan testPlan) {
+        //todo-allemaos: IT's for testing & debugging
+        log.info("#~#vnvlog update STR [test_plan.uuid: ${testPlan?.uuid}]")
+        testPlan = scheduler.update(testPlan)
+        log.info("#~#vnvlog update END [test_plan.uuid: ${testPlan?.uuid}]")
+        testPlan
     }
 
     @ApiResponses(value = [@ApiResponse(code = 400, message = 'Bad Request')])
@@ -107,6 +117,6 @@ class TestPlanController {
     @PostMapping('/tests')
     @ResponseBody
     List<TestPlan> createTestPlansByTest(@Valid @RequestBody Test body) {
-        testPlanService.createByTest(body)
+        new ArrayList(testPlanService.createByTest(body))
     }
 }

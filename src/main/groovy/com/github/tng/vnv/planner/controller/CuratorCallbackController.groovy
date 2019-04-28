@@ -35,6 +35,7 @@
 package com.github.tng.vnv.planner.controller
 
 import com.github.tng.vnv.planner.WorkflowManager
+import com.github.tng.vnv.planner.aspect.TriggerNextTestPlan
 import com.github.tng.vnv.planner.model.TestPlanCallback
 import com.github.tng.vnv.planner.service.TestPlanService
 import groovy.util.logging.Log
@@ -61,6 +62,7 @@ class CuratorCallbackController {
     @Autowired
     WorkflowManager workflowManager
 
+    @TriggerNextTestPlan
     @ApiResponses(value = [
             @ApiResponse(code = 400, message = 'Bad Request'),
             @ApiResponse(code = 404, message = 'Could not find package with that package_id'),
@@ -71,9 +73,9 @@ class CuratorCallbackController {
         log.info("#~#vnvlog onChangeCompleted STR callback:[test_plan_uuid: ${callback?.testPlanUuid}, status: ${callback.status}]")
         testPlanService.update(callback.testPlanUuid, callback.status)
         log.info("#~#vnvlog onChangeCompleted END callback:[test_plan_uuid: ${callback?.testPlanUuid}, status: ${callback.status}]")
-        workflowManager.searchForScheduledPlan()
     }
 
+    @TriggerNextTestPlan
     @ApiResponses(value = [
             @ApiResponse(code = 400, message = 'Bad Request'),
             @ApiResponse(code = 404, message = 'Could not find package with that package_id'),
@@ -84,7 +86,6 @@ class CuratorCallbackController {
         log.info("#~#vnvlog onChange STR callback:[test_plan_uuid: ${callback?.testPlanUuid}, status: ${callback.status}]")
         testPlanService.update(callback.testPlanUuid, callback.status)
         log.info("#~#vnvlog onChange END callback:[test_plan_uuid: ${callback?.testPlanUuid}, status: ${callback.status}]")
-        workflowManager.searchForScheduledPlan()
     }
 }
 
