@@ -52,7 +52,7 @@ class CatalogueService {
     @Autowired
     Gatekeeper gatekeeper
 
-    Set<TestPlan> createByPackage(Package pack){
+    Set<TestPlan> findByPackage(Package pack){
         if(!isEmpty(pack.packageId)){
             def newPack = loadPackageMetadata(pack.packageId)
             pack.networkServices.addAll(newPack.networkServices)
@@ -60,11 +60,11 @@ class CatalogueService {
         }
         def testPlans = [] as HashSet
         if(pack.networkServices.size()> 0 && pack.tests.size()>0 )
-            testPlans = testPlanService.createByServicesAndByTests(pack.networkServices,pack.tests)
+            testPlans = testPlanService.findByServicesAndByTests(pack.networkServices,pack.tests)
         else if(pack.networkServices.size() == 0)
-            testPlans = testPlanService.createByTests(pack.tests)
+            testPlans = testPlanService.findByTests(pack.tests)
         else if(pack.tests == 0)
-            testPlans = testPlanService.createByServices(pack.networkServices)
+            testPlans = testPlanService.findByServices(pack.networkServices)
         testPlans
     }
 

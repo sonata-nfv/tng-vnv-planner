@@ -49,8 +49,6 @@ import org.springframework.web.bind.annotation.*
 
 import javax.validation.Valid
 
-import static org.springframework.util.StringUtils.isEmpty
-
 @Log
 @RestController
 @RequestMapping('/api/v1/test-plans')
@@ -109,14 +107,14 @@ class TestPlanController {
     @ApiResponses(value = [@ApiResponse(code = 400, message = 'Bad Request')])
     @PostMapping('/services')
     @ResponseBody
-    List<TestPlan> createTestPlansByService(@Valid @RequestBody NetworkService body) {
-        new ArrayList(testPlanService.createByService(body))
+    List<TestPlan> findTestPlansByService(@Valid @RequestBody NetworkService body) {
+        new ArrayList(testPlanService.findByService(body))
     }
 
     @ApiResponses(value = [@ApiResponse(code = 400, message = 'Bad Request')])
     @PostMapping('/tests')
     @ResponseBody
-    List<TestPlan> createTestPlansByTest(@Valid @RequestBody Test body) {
-        new ArrayList(testPlanService.createByTest(body))
+    List<TestPlan> findTestPlansByTest(@Valid @RequestBody Test body) {
+        new ArrayList(testPlanService.findByTest(body))
     }
 }

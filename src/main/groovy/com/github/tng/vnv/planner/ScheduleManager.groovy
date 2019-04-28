@@ -65,7 +65,7 @@ class ScheduleManager {
 
     List<TestPlan> create(Package packageMetadata) {
         new ArrayList<>(
-                testPlanService.createByPackage(packageMetadata)
+                testPlanService.findByPackage(packageMetadata)
         )?.each{create(it)}
     }
 

@@ -472,7 +472,7 @@
                 "consumes": [
                     "application/json"
                 ],
-                "operationId": "createTestPlansByServiceUsingPOST",
+                "operationId": "findTestPlansByServiceUsingPOST",
                 "parameters": [
                     {
                         "description": "body",
@@ -513,7 +513,7 @@
                         "description": "Not Found"
                     }
                 },
-                "summary": "createTestPlansByService",
+                "summary": "findTestPlansByService",
                 "tags": [
                     "test-plan-controller"
                 ]
@@ -565,7 +565,7 @@
                 "consumes": [
                     "application/json"
                 ],
-                "operationId": "createTestPlansByTestUsingPOST",
+                "operationId": "findTestPlansByTestUsingPOST",
                 "parameters": [
                     {
                         "description": "body",
@@ -606,7 +606,7 @@
                         "description": "Not Found"
                     }
                 },
-                "summary": "createTestPlansByTest",
+                "summary": "findTestPlansByTest",
                 "tags": [
                     "test-plan-controller"
                 ]

@@ -59,7 +59,7 @@ class TestPlanService {
     @Autowired
     CatalogueService catalogueService
 
-    Set<TestPlan> createByService(NetworkService service) {
+    Set<TestPlan> findByService(NetworkService service) {
         def testPlans = [] as HashSet
         service = networkServiceService.findByUuid(service.uuid)
         testService.findByService(service)?.each { test ->
@@ -69,7 +69,7 @@ class TestPlanService {
         testPlans
     }
     
-    Set<TestPlan> createByTest(Test test) {
+    Set<TestPlan> findByTest(Test test) {
         def testPlans = [] as HashSet
         test = testService.findByUuid(test.uuid)
         networkServiceService.findByTest(test)?.each { service ->
@@ -79,29 +79,29 @@ class TestPlanService {
         testPlans
     }
     
-    Set<TestPlan> createByServices(Set<NetworkService> nss) {
+    Set<TestPlan> findByServices(Set<NetworkService> nss) {
         def testPlans = [] as HashSet
         nss?.each { 
-            it -> testPlans.addAll(createByService(it)) 
+            it -> testPlans.addAll(findByService(it))
             }
         testPlans
     }
 
-    Set<TestPlan> createByTests(Set<Test> ts) {
+    Set<TestPlan> findByTests(Set<Test> ts) {
         def testPlans = [] as HashSet
-        ts?.each { it -> testPlans.addAll(createByTest(it)) }
+        ts?.each { it -> testPlans.addAll(findByTest(it)) }
         testPlans
     }
 
-    Set<TestPlan> createByServicesAndByTests(Set nss, Set ts) {
+    Set<TestPlan> findByServicesAndByTests(Set nss, Set ts) {
         def testPlans = [] as HashSet
-        testPlans.addAll(createByServices(nss))
-        testPlans.addAll(createByTests(ts))
+        testPlans.addAll(findByServices(nss))
+        testPlans.addAll(findByTests(ts))
         testPlans
     }
 
-    Set<TestPlan> createByPackage(Package pack){
-        catalogueService.createByPackage(pack)
+    Set<TestPlan> findByPackage(Package pack){
+        catalogueService.findByPackage(pack)
     }
 
     TestPlan save(TestPlan testPlan){
