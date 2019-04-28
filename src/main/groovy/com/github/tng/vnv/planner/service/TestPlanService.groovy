@@ -105,19 +105,13 @@ class TestPlanService {
     }
 
     TestPlan save(TestPlan testPlan){
-        log.info("#~#vnvlog save STR [test_plan_uuid: ${testPlan?.uuid}, status: ${testPlan?.status} ]")
-        testPlan = testPlanRepository.save(testPlan)
-        log.info("#~#vnvlog save END [test_plan_uuid: ${testPlan?.uuid}, status: ${testPlan?.status} ]")
-        testPlan
+        testPlanRepository.save(testPlan)
     }
 
     TestPlan update(String uuid, String status) {
-        log.info("#~#vnvlog update STR [test_plan_uuid: ${uuid}, status: ${status} ]")
         TestPlan testPlan = findByUuid(uuid)
         testPlan.status = status
-        testPlan = testPlanRepository.save(testPlan)
-        log.info("#~#vnvlog update END [test_plan_uuid: ${uuid}, status: ${status} ]")
-        testPlan
+        testPlanRepository.save(testPlan)
     }
 
     void delete(String uuid) {

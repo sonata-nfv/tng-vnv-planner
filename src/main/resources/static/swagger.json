@@ -158,6 +158,12 @@
                     "example": "Curator, Executor",
                     "type": "string"
                 },
+                "exception": {
+                    "allowEmptyValue": false,
+                    "description": "Test Plan Exception message",
+                    "example": "run time exception",
+                    "type": "string"
+                },
                 "status": {
                     "allowEmptyValue": false,
                     "description": "Test Plan Status",

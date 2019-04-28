@@ -67,35 +67,16 @@ class WorkflowManager {
     @Value('${app.NOT_AVAILABLE_DATA}')
     String not_available_data
 
-
     void searchForScheduledPlan() {
         if (!testPlanService.existsByStartingStatus()) {
             TestPlan nextTestPlan = testPlanService.findNextScheduledTestPlan()
             if (nextTestPlan != null) {
-                //cleanCode-allemaos does catalogue give the same ping functionality?
-                if(isCuratorActive()) {
-                    TestPlanResponse testPlanResponse = proceedWith(complete(nextTestPlan))
-                    log.info("#~#vnvlog searchForScheduledPlan.proceedWith - END responseFromCurator [status: ${testPlanResponse.status}, exception: ${!isEmpty(testPlanResponse.exception)?testPlanResponse.exception:""}  ]")
-                    switch (testPlanResponse.status) {
-                        case TEST_PLAN_STATUS.STARTING:
-                            testPlanService.update(nextTestPlan.uuid,testPlanResponse.status)
-                            break
-                    //todo-allemaos: handle the rest of status or exception from curator response
-                        default:
-                            log.info("Get response: ${testPlanResponse.status} for plan description: \"${nextTestPlan.description}\"")
-                            break
-                    }
-                }
+                TestPlanResponse testPlanResponse = proceedWith(nextTestPlan)
+                log.info("#~#vnvlog searchForScheduledPlan.proceedWith - END responseFromCurator [status: ${testPlanResponse.status}, exception: ${!isEmpty(testPlanResponse.exception)?testPlanResponse.exception:""}  ]")
+                if(testPlanResponse != null)
+                        testPlanService.update(nextTestPlan.uuid,testPlanResponse.status)
             }
         }
-    }
-
-    TestPlan complete(TestPlan testPlan){
-        log.info("#~#vnvlog complete STR [test_plan_uuid: ${testPlan.uuid}, testPlan.nsd.name: NOT_AVAILABLE_YET, testPlan.testd.name: NOT_AVAILABLE_YET]")
-        testPlan.testd = testService.findByUuid(testPlan.testUuid).testd
-        testPlan.nsd = networkServiceService.findByUuid(testPlan.serviceUuid).nsd
-        log.info("#~#vnvlog complete END [test_plan_uuid: ${testPlan.uuid}, testPlan.nsd.name: ${testPlan.nsd.name}, testPlan.testd.name: ${testPlan.testd.name}]")
-        testPlan
     }
 
     void deleteTestPlan(String uuid){
@@ -105,12 +86,9 @@ class WorkflowManager {
         log.info("#~#vnvlog deleteTestPlan END [test_plan_uuid: ${uuid}]")
     }
 
-    boolean isCuratorActive() {
-        !isEmpty(curator.getPing().body.alive_since)
-    }
-
     TestPlanResponse proceedWith(TestPlan testPlan) {
-        def testPlanRequest = new TestPlanRequest(testPlanUuid: testPlan.uuid, nsd: testPlan.nsd, testd: testPlan.testd)
-        curator.post(testPlanRequest).body
+        curator.post(new TestPlanRequest(testPlanUuid: testPlan.uuid,
+                nsd: networkServiceService.findByUuid(testPlan.serviceUuid).nsd,
+                testd: testService.findByUuid(testPlan.testUuid).testd)).body
     }
 }

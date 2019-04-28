@@ -146,6 +146,12 @@ class TestPlanCallback {
     String status
 
     @ApiModelProperty(
+            value = 'Test Plan Exception message',
+            allowEmptyValue = false,
+            example = 'run time exception')
+    String exception
+
+    @ApiModelProperty(
             value = 'Callback URL',
             allowEmptyValue = false,
             example = '/test-plans/on-change')

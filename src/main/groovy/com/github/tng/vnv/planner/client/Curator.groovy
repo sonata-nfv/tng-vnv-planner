@@ -54,14 +54,7 @@ class Curator {
     def testPlanPrepareEndpoint
     @Value('${app.curator.test.plan.cancel.endpoint}')
     def testPlanCancellationEndpoint
-    @Value('${app.curator.ping.endpoint}')
-    def testPlanPingEndpoint
 
-
-    @AfterRestCall
-    ResponseEntity getPing() {
-        restTemplate.getForEntity(testPlanPingEndpoint, Object.class)
-    }
     @AfterRestCall
     ResponseEntity post(def testPlanRequest){
         restTemplate.postForEntity(testPlanPrepareEndpoint, testPlanRequest, TestPlanResponse)

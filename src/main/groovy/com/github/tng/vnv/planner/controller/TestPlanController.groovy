@@ -86,10 +86,7 @@ class TestPlanController {
     @PostMapping('')
     @ResponseBody
     TestPlan save(@Valid @RequestBody TestPlan testPlan) {
-        log.info("#~#vnvlog save STR [test_plan.uuid: ${testPlan?.uuid}]")
-        testPlan = scheduler.create(testPlan)
-        log.info("#~#vnvlog save END [test_plan.uuid: ${testPlan?.uuid}]")
-        testPlan
+        scheduler.create(testPlan)
     }
 
     @TriggerNextTestPlan
@@ -97,11 +94,7 @@ class TestPlanController {
     @PutMapping('{uuid}')
     @ResponseBody
     TestPlan update(@Valid @RequestBody TestPlan testPlan) {
-        //todo-allemaos: IT's for testing & debugging
-        log.info("#~#vnvlog update STR [test_plan.uuid: ${testPlan?.uuid}]")
-        testPlan = scheduler.update(testPlan)
-        log.info("#~#vnvlog update END [test_plan.uuid: ${testPlan?.uuid}]")
-        testPlan
+        scheduler.update(testPlan)
     }
 
     @ApiResponses(value = [@ApiResponse(code = 400, message = 'Bad Request')])
