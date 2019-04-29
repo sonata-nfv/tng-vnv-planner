@@ -36,14 +36,12 @@ package com.github.tng.vnv.planner
 
 import com.github.tng.vnv.planner.model.NetworkService
 import com.github.tng.vnv.planner.model.Test
-import com.github.tng.vnv.planner.model.TestSuite
 import com.github.tng.vnv.planner.service.CatalogueService
 import com.github.tng.vnv.planner.service.NetworkServiceService
 import com.github.tng.vnv.planner.service.TestPlanService
 import com.github.tng.vnv.planner.model.Package
 import com.github.tng.vnv.planner.model.TestPlan
 import com.github.tng.vnv.planner.service.TestService
-import com.github.tng.vnv.planner.service.TestSuiteService
 import com.github.tng.vnv.planner.utils.TEST_PLAN_STATUS
 import groovy.util.logging.Log
 import org.springframework.beans.factory.annotation.Autowired
@@ -71,9 +69,6 @@ class ScheduleManager {
     TestPlanService testPlanService
 
     @Autowired
-    TestSuiteService testSuiteService
-
-    @Autowired
     WorkflowManager workflowManager
 
     @Value('${app.NOT_AVAILABLE_DATA}')
@@ -81,76 +76,59 @@ class ScheduleManager {
     @Value('${app.NOT_MATCHING_TEST_TAGS}')
     String not_matching_test_tags
 
-    TestSuite create(Package packageMetadata) {
-        create(new TestSuite(testPlans: new ArrayList<>(
-                testPlanService.createByPackage(packageMetadata))))
+    List<TestPlan> create(Package packageMetadata) {
+        create(new ArrayList<>(testPlanService.createByPackage(packageMetadata)))
     }
 
-    TestSuite create(TestSuite ts) {
-        def testPlans = [] as HashSet
-        TestSuite testSuite = testSuiteService.save(new TestSuite())
-        ts?.testPlans?.each{ it.uuid=(!isEmpty(it.uuid))?it.uuid:UUID.randomUUID().toString()}
-                .toSorted().each { tp -> tp = create(tp, testSuite)
-            if(tp != null) testPlans.add(tp)
-        }
+    List<TestPlan> create(List<TestPlan> testPlans) {
+        testPlans?.each{create(it)}
         workflowManager.searchForScheduledPlan()
-        testSuite.testPlans = new ArrayList<>(testPlans)
-        testSuite
+        testPlans
     }
 
-    TestSuite update(TestSuite ts) {
-        def testPlans = [] as HashSet
-        TestSuite testSuite = testSuiteService.save(new TestSuite())
-        ts.testPlans?.toSorted().forEach({ tp ->
-            update(tp, testSuite)
-            testPlans.add(tp)
-        })
+    TestPlan createOne(TestPlan testPlan) {
+        testPlan = create(testPlan)
         workflowManager.searchForScheduledPlan()
-        testSuite.testPlans = new ArrayList<>(testPlans)
-        testSuite
+        testPlan
+    }
+
+    List<TestPlan> update(List<TestPlan> testPlans) {
+        testPlans?.each {update(tp)}
+        workflowManager.searchForScheduledPlan()
+        testPlans
+    }
+
+    TestPlan updateOne(TestPlan testPlan) {
+        testPlan = update(testPlan)
+        workflowManager.searchForScheduledPlan()
+        testPlan
     }
 
 
-    TestPlan create(TestPlan tp, TestSuite ts) {
-        tp.testSuite = ts
-        if (!(( !isEmpty(tp.serviceUuid) || tp.nsd!=null) && ( !isEmpty(tp.testUuid) || tp.testd!=null))){
-            tp.status = TEST_PLAN_STATUS.REJECTED
-            tp.description = tp.description+" $not_available_data"
-        } else {
-            def service = (!isEmpty(tp.serviceUuid)) ? networkServiceService.findByUuid(tp.serviceUuid) :
-                    new NetworkService(uuid: (!isEmpty(tp.nsd?.uuid))?tp.nsd.uuid:UUID.randomUUID().toString() + 'DIY', nsd: tp.nsd)
-            service?.loadDescriptor()
-            def test = (!isEmpty(tp.testUuid)) ? testService.findByUuid(tp.testUuid) :
-                    new Test(uuid: (!isEmpty(tp.testd?.uuid))?tp.testd.uuid:UUID.randomUUID().toString() + 'DIY', testd: tp.testd)
-            test?.loadDescriptor()
-            if(service == null || test == null){
-                tp.status = TEST_PLAN_STATUS.REJECTED
-                tp.description = tp.description +" $not_available_data"
-            } else {
-                tp.nsd = service.nsd
-                tp.testd = test.testd
-                if (!(service?.descriptor.tagMatchedWith(test?.descriptor))) {
-                    tp.status = TEST_PLAN_STATUS.REJECTED
-                    tp.description = tp.description +" $not_matching_test_tags"
-                }
-                if ( !isEmpty(tp.testd?.confirm_required) && tp.testd?.confirm_required == '1'
-                        && ( isEmpty(tp.testd?.confirmed) || tp.testd?.confirmed != '1'))
+    TestPlan create(TestPlan tp) {
+        tp.uuid=(!isEmpty(tp.uuid))?tp.uuid:UUID.randomUUID().toString()
+        boolean valid = false
+        if (!isEmpty(tp.serviceUuid) && !isEmpty(tp.testUuid)) {
+            tp.nsd = networkServiceService.findByUuid(tp.serviceUuid)?.nsd
+            tp.testd = testService.findByUuid(tp.testUuid)?.testd
+            if (tp.nsd != null && tp.testd != null) {
+                valid = true
+                if (!isEmpty(tp.testd.confirm_required) && tp.testd.confirm_required == '1'
+                        && (isEmpty(tp.testd.confirmed) || tp.testd.confirmed != '1')) {
                     tp.status = TEST_PLAN_STATUS.NOT_CONFIRMED
-                else {
+                } else {
                     tp.status = TEST_PLAN_STATUS.SCHEDULED
-                    tp = testPlanService.save(tp)
                 }
             }
         }
-        tp
+        if(!valid) {
+            tp.status = TEST_PLAN_STATUS.REJECTED
+            tp.description += " $not_available_data"
+        }
+        testPlanService.save(tp)
     }
 
-    TestPlan update(TestPlan tp, TestSuite ts) {
-        TestPlan tpOld = testPlanService.testPlanRepository.find { it.uuid == tp.uuid}
-        tpOld.status = TEST_PLAN_STATUS.UPDATED
-        testPlanService.testPlanRepository.save(tpOld)
-        tp.id = null
-        tp.testSuite = ts
+    TestPlan update(TestPlan tp) {
         tp.status = TEST_PLAN_STATUS.SCHEDULED
         testPlanService.save(tp)
     }

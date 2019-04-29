@@ -35,11 +35,12 @@
 package com.github.tng.vnv.planner.service
 
 import com.github.tng.vnv.planner.model.NetworkService
+import com.github.tng.vnv.planner.model.NetworkServiceDescriptor
 import com.github.tng.vnv.planner.model.Package
 import com.github.tng.vnv.planner.model.Test
+import com.github.tng.vnv.planner.model.TestDescriptor
 import com.github.tng.vnv.planner.repository.TestPlanRepository
 import com.github.tng.vnv.planner.model.TestPlan
-import com.github.tng.vnv.planner.repository.TestSuiteRepository
 import com.github.tng.vnv.planner.utils.TEST_PLAN_STATUS
 import groovy.util.logging.Log
 import org.springframework.beans.factory.annotation.Autowired
@@ -54,9 +55,6 @@ class TestPlanService {
     @Autowired
     TestPlanRepository testPlanRepository
     @Autowired
-    TestSuiteRepository testSuiteRepository
-
-    @Autowired
     TestService testService
     @Autowired
     NetworkServiceService networkServiceService
@@ -68,12 +66,32 @@ class TestPlanService {
         service = networkServiceService.findByUuid(service.uuid)?.loadDescriptor()
         testService.findByService(service)?.each { test ->
             if( !isEmpty(service.uuid) && !isEmpty(test.uuid))
+                testPlans.add(new TestPlan(uuid: service.uuid+test.uuid, serviceUuid: service.uuid, testUuid: test.uuid, nsd:service.nsd, testd:test.testd, status: TEST_PLAN_STATUS.CREATED))
+        }
+        new ArrayList<TestPlan>(testPlans)
+    }
+    
+    Set<TestPlan> createByServiceDescriptor(NetworkServiceDescriptor service) {
+        def testPlans = [] as HashSet
+        service = networkServiceService.findByUuid(service.uuid)
+        testService.findByService(service)?.each { test ->
+            if( !isEmpty(service.uuid) && !isEmpty(test.uuid))
                 testPlans.add(new TestPlan(uuid: service.uuid+test.uuid, nsd:service.nsd, testd:test.testd, status: TEST_PLAN_STATUS.CREATED))
         }
         testPlans
     }
 
     Set<TestPlan> createByTest(Test test) {
+        def testPlans = [] as HashSet
+        test = testService.findByUuid(test.uuid)?.loadDescriptor()
+        networkServiceService.findByTest(test)?.each { service ->
+            if(!isEmpty(service.uuid) && !isEmpty(test.uuid))
+                testPlans.add(new TestPlan(uuid: service.uuid+test.uuid, serviceUuid: service.uuid, testUuid: test.uuid, nsd:service.nsd, testd:test.testd, status: TEST_PLAN_STATUS.CREATED))
+        }
+        testPlans
+    }
+    
+    Set<TestPlan> createByTestDescriptor(TestDescriptor test) {
         def testPlans = [] as HashSet
         test = testService.findByUuid(test.uuid)
         networkServiceService.findByTest(test)?.each { service ->
@@ -85,7 +103,9 @@ class TestPlanService {
 
     Set<TestPlan> createByServices(Set<NetworkService> nss) {
         def testPlans = [] as HashSet
-        nss?.each { it -> testPlans.addAll(createByService(it)) }
+        nss?.each { 
+            it -> testPlans.addAll(createByService(it)) 
+            }
         testPlans
     }
 
@@ -106,13 +126,9 @@ class TestPlanService {
         catalogueService.createByPackage(pack)
     }
 
-    TestPlan getLast(){
-        testPlanRepository.getOne(testPlanRepository.count())
-    }
-
     TestPlan save(TestPlan testPlan){
         log.info("#~#vnvlog save STR [test_plan_uuid: ${testPlan?.uuid}, status: ${testPlan?.status} ]")
-        testPlan = testPlanRepository.save(testPlan.blob())
+        testPlan = testPlanRepository.save(testPlan)
         log.info("#~#vnvlog save END [test_plan_uuid: ${testPlan?.uuid}, status: ${testPlan?.status} ]")
         testPlan
     }
@@ -144,11 +160,6 @@ class TestPlanService {
 
     List<TestPlan> findAll(){
         testPlanRepository.findAll()
-    }
-
-    List<TestPlan> findByTestSuiteUuid(String uuid){
-        def testSuite = testSuiteRepository.findByUuid(uuid)
-        (testSuite != null)?testPlanRepository.findByTestSuite(testSuite) : []
     }
 }
 

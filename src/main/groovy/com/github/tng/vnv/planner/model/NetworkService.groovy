@@ -77,7 +77,7 @@ class NetworkServiceDescriptor implements Serializable {
     List<String> servicePlatforms
 
     void load(NetworkService service){
-        uuid = service.nsd?.uuid
+        uuid = service.nsd?.uuid?: service.nsd.uuid
         name = service.nsd?.name
         vendor = service.nsd?.vendor
         testingTags = service.nsd?.testing_tags

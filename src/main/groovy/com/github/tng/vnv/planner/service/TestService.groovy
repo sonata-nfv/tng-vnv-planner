@@ -62,6 +62,6 @@ class TestService {
                 }
             }
         }
-        ts
+        new ArrayList(ts)
     }
 }

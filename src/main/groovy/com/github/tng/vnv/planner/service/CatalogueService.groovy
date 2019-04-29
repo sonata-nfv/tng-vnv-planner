@@ -34,6 +34,7 @@
 
 package com.github.tng.vnv.planner.service
 
+import com.github.tng.vnv.planner.aspect.Timed
 import com.github.tng.vnv.planner.model.NetworkService
 import com.github.tng.vnv.planner.model.NetworkServiceDescriptor
 import com.github.tng.vnv.planner.model.Package
@@ -70,7 +71,8 @@ class CatalogueService {
             pack.networkServices.addAll(newPack.networkServices)
             pack.tests.addAll(newPack.tests)
         }
-        if(!pack) return
+        //cleancode-allemaos: remove that line, after this debugging.
+//        if(!pack) return
         def testPlans = [] as HashSet
         if(pack.networkServices.size()> 0 && pack.tests.size()>0 )
             testPlans = testPlanService.createByServicesAndByTests(pack.networkServices,pack.tests)
@@ -80,7 +82,7 @@ class CatalogueService {
             testPlans = testPlanService.createByServices(pack.networkServices)
         testPlans
     }
-
+    @Timed
     Package loadPackageMetadata(String packageId) {
         def rawPackageMetadata= callExternalEndpoint(restTemplate.getForEntity(packageMetadataEndpoint, Object.class,
                 packageId), 'TestCatalogue.loadPackageMetadata',packageMetadataEndpoint).body

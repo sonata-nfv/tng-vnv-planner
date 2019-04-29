@@ -35,13 +35,10 @@
 package com.github.tng.vnv.planner.model
 
 import com.fasterxml.jackson.annotation.JsonIgnore
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.databind.ObjectMapper
 import groovy.transform.EqualsAndHashCode
 import groovy.transform.Sortable
-import groovy.transform.ToString
 import io.swagger.annotations.ApiModelProperty
-import org.springframework.util.SerializationUtils
 
 import javax.persistence.Column
 import javax.persistence.Entity
@@ -61,11 +58,6 @@ class TestPlan implements Serializable {
     @Id
     @GeneratedValue
     Long id
-
-    @JsonIgnore
-    @ManyToOne
-    @JoinColumn(name = "testSuiteId", referencedColumnName = "id", nullable = false)
-    TestSuite testSuite
 
     @ApiModelProperty(
             value = 'Test Plan uuid',
@@ -106,30 +98,6 @@ class TestPlan implements Serializable {
     @Transient
     def testd
 
-    @Lob
-    @JsonIgnore
-    @Column(name = "nsd", columnDefinition="OID")
-    byte[] nsdJson
-
-    @Lob
-    @JsonIgnore
-    @Column(name = "testd", columnDefinition="OID")
-    byte[] testdJson
-
-
-    TestPlan blob(){
-        def mapper = new ObjectMapper()
-        nsdJson = mapper.writeValueAsString(nsd).bytes
-        testdJson = mapper.writeValueAsString(testd).bytes
-        this
-    }
-    TestPlan unBlob(){
-        def mapper = new ObjectMapper()
-        nsd = mapper.readValue(new String(nsdJson), HashMap.class)
-        testd = mapper.readValue(new String(testdJson), HashMap.class)
-        this
-    }
-
     boolean equals(o) {
         (o.uuid).contains(uuid)? true:false
     }
@@ -138,8 +106,6 @@ class TestPlan implements Serializable {
         uuid.hashCode()
     }
 }
-
-class BlobOfLinkedHashMap extends LinkedHashMap implements Serializable {}
 
 @EqualsAndHashCode
 class TestPlanRequest {
@@ -152,14 +118,9 @@ class TestPlanRequest {
             new TestPlanCallback(eventActor: 'Curator', url: '/api/v1/test-plans/on-change/'),
     ]
 }
-@ToString
+
 @EqualsAndHashCode
 class TestPlanResponse {
-    @ApiModelProperty(
-            value = 'Test Plan uuid',
-            allowEmptyValue = false,
-            example = 'if there is no exception uuid should be filled')
-    String uuid
     @ApiModelProperty(
             value = 'Test Plan Status',
             allowEmptyValue = false,
@@ -221,12 +182,4 @@ class TestPlanCallback {
             allowEmptyValue = false,
             example = 'tng-res, results, or xx.xx')
     String testResultsRepository
-}
-
-class TestPlanTest{
-
-    Map<String, Object> response = new ObjectMapper().readValue(str, HashMap.class)
-
-    String objectMapper = new ObjectMapper().writeValueAsString(crunchifyMap)
-
 }

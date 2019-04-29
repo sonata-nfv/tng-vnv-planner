@@ -2,22 +2,17 @@ package com.github.tng.vnv.planner.controller
 
 import com.github.tng.vnv.planner.config.TestRestSpec
 import com.github.tng.vnv.planner.model.TestPlan
-import com.github.tng.vnv.planner.model.TestSuite
 import com.github.tng.vnv.planner.restmock.CuratorMock
 import com.github.tng.vnv.planner.restmock.DataMock
 import com.github.tng.vnv.planner.service.TestPlanService
-import com.github.tng.vnv.planner.service.TestSuiteService
 import com.github.tng.vnv.planner.utils.TEST_PLAN_STATUS
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
-import spock.lang.Ignore
 
 class TestPlanControllerTest extends TestRestSpec {
 
     @Autowired
     TestPlanService testPlanService
-    @Autowired
-    TestSuiteService testSuiteService
 
     @Autowired
     CuratorMock curatorMock
@@ -32,90 +27,94 @@ class TestPlanControllerTest extends TestRestSpec {
     public static final String DIY_DESCRIPTOR_TEST_PLAN_TEST_UUID = 'b68dbe19-5c02-4865-8c4b-5e43ada1b67d'
     public static final String DIY_DESCRIPTOR_TEST_PLAN_VALIDATION_REQUIRED_TEST_UUID = 'b68dbe19-5c02-4865-8c4b-5e43ada1b67c'
     public static final String DIY_DESCRIPTOR_TEST_PLAN_CONFIRMED_TEST_UUID = 'b68dbe19-5c02-4865-8c4b-5e43ada1b67b'
+    public static final String UNKNOWN_UUID = '00000000-5c02-4865-8c4b-5e43ada1b67b'
+     public static final String TEST_DESCRIPTOR_UUID = 'input0ts-75f5-4ca1-90c8-12ec80a79836'
+    
 
     public static final String TEST_PLAN_UUID = '109873681'
     public static final String TEST_PLAN_UUID2 = '109873682'
 
-    void "when curator is busy, schedule request of a test plan list should successfully save all test plans"() {
+    void "when curator is busy, schedule request of a test plan list should successfully save all test plans unsorted"() {
         setup:
         curatorMock.isBusy(true)
         when:
         def entity = postForEntity('/api/v1/test-plans',
                 [
-                        'test_plans':
-                                [
-                                        [
-                                                'service_uuid': IMEDIA_TEST_PLAN_SERVICE_UUID,
-                                                'test_uuid'   : IMEDIA_TEST_PLAN_TEST_UUID,
-                                                'description' : 'dummyTestPlan1-index1',
-                                                'index'       : '1',
-                                        ],
-                                        [
-                                                'service_uuid': LATENCY_TEST_PLAN_SERVICE_UUID,
-                                                'test_uuid'   : LATENCY_TEST_PLAN_TEST_UUID,
-                                                'description' : 'dummyTestPlan2-index3',
-                                                'index'       : '3',
-                                        ],
-                                        [
-                                                'service_uuid': TAG_UNRELATED_TEST_PLAN_SERVICE_UUID,
-                                                'test_uuid'   : TAG_UNRELATED_TEST_PLAN_TEST_UUID,
-                                                'description' : 'dummyTestPlan3-index2',
-                                                'index'       : '2',
-                                        ],
-                                        [
-                                                'nsd'        : DataMock.getService(DIY_DESCRIPTOR_TEST_PLAN_SERVICE_UUID).nsd,
-                                                'testd'      : DataMock.getTest(DIY_DESCRIPTOR_TEST_PLAN_TEST_UUID).testd,
-                                                'description': 'dummyTestPlan4-index4',
-                                                'index'      : '4',
-                                        ],
-                                ]
+                        'service_uuid': IMEDIA_TEST_PLAN_SERVICE_UUID,
+                        'test_uuid'   : IMEDIA_TEST_PLAN_TEST_UUID,
+                        'description' : 'dummyTestPlan1-index1',
+                        'index'       : '1',
+                ]
+                , Void.class)
+        entity = postForEntity('/api/v1/test-plans',
+                [
+                        'service_uuid': LATENCY_TEST_PLAN_SERVICE_UUID,
+                        'test_uuid'   : LATENCY_TEST_PLAN_TEST_UUID,
+                        'description' : 'dummyTestPlan2-index3',
+                        'index'       : '3',
+                ]
+                , Void.class)
+        entity = postForEntity('/api/v1/test-plans',
+                [
+                        'service_uuid': TAG_UNRELATED_TEST_PLAN_SERVICE_UUID,
+                        'test_uuid'   : TAG_UNRELATED_TEST_PLAN_TEST_UUID,
+                        'description' : 'dummyTestPlan3-index2',
+                        'index'       : '2',
+                ]
+                , Void.class)
+        entity = postForEntity('/api/v1/test-plans',
+                [
+                    'service_uuid': DIY_DESCRIPTOR_TEST_PLAN_SERVICE_UUID,
+                    'test_uuid'   : DIY_DESCRIPTOR_TEST_PLAN_TEST_UUID,
+                    'nsd'        : DataMock.getService(DIY_DESCRIPTOR_TEST_PLAN_SERVICE_UUID).nsd,
+                    'testd'      : DataMock.getTest(DIY_DESCRIPTOR_TEST_PLAN_TEST_UUID).testd,
+                    'description': 'dummyTestPlan4-index4',
+                    'index'      : '4',
                 ]
                 , Void.class)
         then:
         entity.statusCode == HttpStatus.OK
         def testPlans = testPlanService.testPlanRepository.findAll().findAll { it.status == "SCHEDULED" }
-        testPlans[1].description == 'dummyTestPlan3-index2'
-        testPlans[2].description == 'dummyTestPlan2-index3'
+        testPlans[1].description == 'dummyTestPlan2-index3'
+        testPlans[2].description == 'dummyTestPlan3-index2'
         cleanup:
         cleanTestPlanDB()
     }
 
     void "schedule request with validation required for one test plan should successfully schedule only the not validation required test plans"() {
         setup:
-        curatorMock.isBusy(false)
+        curatorMock.isBusy(true)
         when:
         def entity = postForEntity('/api/v1/test-plans',
                 [
-                        'test_plans':
-                                [
-                                        [
-                                                'service_uuid': IMEDIA_TEST_PLAN_SERVICE_UUID,
-                                                'test_uuid'   : IMEDIA_TEST_PLAN_TEST_UUID,
-                                                'description' : 'dummyTestPlan1-non-validation_required',
-                                                'index'       : '1',
-                                        ],
-                                        [
-                                                'nsd'        : DataMock.getService(DIY_DESCRIPTOR_TEST_PLAN_SERVICE_UUID).nsd,
-                                                'testd'      : DataMock.getTest(DIY_DESCRIPTOR_TEST_PLAN_VALIDATION_REQUIRED_TEST_UUID).testd,
-                                                'description': 'dummyTestPlan-validation_required',
-                                                'index'      : '2',
-                                        ],
-                                        [
-                                                'nsd'        : DataMock.getService(DIY_DESCRIPTOR_TEST_PLAN_SERVICE_UUID).nsd,
-                                                'testd'      : DataMock.getTest(DIY_DESCRIPTOR_TEST_PLAN_CONFIRMED_TEST_UUID).testd,
-                                                'description': 'dummyTestPlan-validation_confirmed',
-                                                'index'      : '3',
-                                        ],
-                                ]
-                ]
-                , Void.class)
+                        'service_uuid': LATENCY_TEST_PLAN_SERVICE_UUID,
+                        'test_uuid'   : LATENCY_TEST_PLAN_TEST_UUID,
+                        'description' : 'dummyTestPlan1-non-validation_required',
+                        'index'       : '1',
+                ], Void.class)
+        entity = postForEntity('/api/v1/test-plans',
+                [
+                        'service_uuid': DIY_DESCRIPTOR_TEST_PLAN_SERVICE_UUID,
+                        'test_uuid'   : DIY_DESCRIPTOR_TEST_PLAN_VALIDATION_REQUIRED_TEST_UUID,
+                        'description': 'dummyTestPlan-validation_required',
+                        'index'      : '2',
+                ], Void.class)
+        entity = postForEntity('/api/v1/test-plans',
+                [
+                        'service_uuid': DIY_DESCRIPTOR_TEST_PLAN_SERVICE_UUID,
+                        'test_uuid'   : DIY_DESCRIPTOR_TEST_PLAN_CONFIRMED_TEST_UUID,
+                        'description': 'dummyTestPlan-validation_confirmed',
+                        'index'      : '3',
+                ], Void.class)
         then:
         entity.statusCode == HttpStatus.OK
-        def testPlans = testPlanService.testPlanRepository.findAll().takeRight(2)
-        testPlans.get(0).status == TEST_PLAN_STATUS.STARTING
+        def testPlans = testPlanService.testPlanRepository.findAll().findAll { it.status != TEST_PLAN_STATUS.REJECTED }
+        testPlans.get(0).status == TEST_PLAN_STATUS.SCHEDULED
         testPlans.get(0).description == 'dummyTestPlan1-non-validation_required'
-        testPlans.get(1).status == TEST_PLAN_STATUS.SCHEDULED
-        testPlans.get(1).description == 'dummyTestPlan-validation_confirmed'
+        testPlans.get(1).status == TEST_PLAN_STATUS.NOT_CONFIRMED
+        testPlans.get(1).description == 'dummyTestPlan-validation_required'
+        testPlans.get(2).status == TEST_PLAN_STATUS.SCHEDULED
+        testPlans.get(2).description == 'dummyTestPlan-validation_confirmed'
         cleanup:
         cleanTestPlanDB()
     }
@@ -125,18 +124,54 @@ class TestPlanControllerTest extends TestRestSpec {
         curatorMock.isBusy(false)
         when:
         def entity = postForEntity('/api/v1/test-plans',
+            [
+                    "service_uuid": DIY_DESCRIPTOR_TEST_PLAN_SERVICE_UUID,
+                    "test_uuid": DIY_DESCRIPTOR_TEST_PLAN_VALIDATION_REQUIRED_TEST_UUID,
+                    'description': 'dummyTestPlan1-validation_required',
+                    'index': '1',
+            ], Void.class)
+        then:
+        entity.statusCode == HttpStatus.OK
+        testPlanService.testPlanRepository.findAll()
+                .findAll{it.status == "SCHEDULED"}.size() == 0
+        cleanup:
+        cleanTestPlanDB()
+    }
+
+    void "schedule a non valid test.uuid OR non valid service.uuid OR a non existing test OR a non existing service should store only REJECTED testPlans"() {
+        setup:
+        curatorMock.isBusy(true)
+        when:
+        def entity = postForEntity('/api/v1/test-plans',
                 [
-                        'test_plans':
-                                [
-                                        [
-                                                "service_uuid": DIY_DESCRIPTOR_TEST_PLAN_SERVICE_UUID,
-                                                "test_uuid": DIY_DESCRIPTOR_TEST_PLAN_VALIDATION_REQUIRED_TEST_UUID,
-                                                'description': 'dummyTestPlan1-validation_required',
-                                                'index': '1',
-                                        ],
-                                ]
-                ]
-                , Void.class)
+                        "service_uuid": "",
+                        "test_uuid": "",
+                ],  Void.class)
+        entity = postForEntity('/api/v1/test-plans',
+                [
+                        "service_uuid": LATENCY_TEST_PLAN_SERVICE_UUID,
+                        "test_uuid": "",
+                ],  Void.class)
+        entity = postForEntity('/api/v1/test-plans',
+                [
+                        "service_uuid": "",
+                        "test_uuid": LATENCY_TEST_PLAN_TEST_UUID,
+                ],  Void.class)
+        entity = postForEntity('/api/v1/test-plans',
+                [
+                        "service_uuid": UNKNOWN_UUID,
+                        "test_uuid": LATENCY_TEST_PLAN_TEST_UUID,
+                ],  Void.class)
+        entity = postForEntity('/api/v1/test-plans',
+                [
+                        "service_uuid": LATENCY_TEST_PLAN_SERVICE_UUID,
+                        "test_uuid": UNKNOWN_UUID,
+                ],  Void.class)
+        entity = postForEntity('/api/v1/test-plans',
+                [
+                        "service_uuid": UNKNOWN_UUID,
+                        "test_uuid": UNKNOWN_UUID,
+                ],  Void.class)
         then:
         entity.statusCode == HttpStatus.OK
         testPlanService.testPlanRepository.findAll()
@@ -148,6 +183,7 @@ class TestPlanControllerTest extends TestRestSpec {
     void "delete request for one test plan should successfully change the status of the test plan to CANCELING scheduled test plan"() {
         when:
         scheduleTestPlan(TEST_PLAN_UUID, TEST_PLAN_STATUS.CREATED, 'scheduled testPlan\'s status which will turn into canceling')
+        and:
         delete('/api/v1/test-plans/{uuid}',TEST_PLAN_UUID)
         then:
         testPlanService.testPlanRepository.findByUuid(TEST_PLAN_UUID).status == TEST_PLAN_STATUS.CANCELLING
@@ -155,35 +191,47 @@ class TestPlanControllerTest extends TestRestSpec {
         cleanTestPlanDB()
     }
 
-    void "list test plans request for one testPlan list uuid test plan should successfully return the list of corresponding test plans"() {
+    void "test plan request for one testPlan should successfully return the corresponding test plan"() {
+        setup:
+        curatorMock.isBusy(true)
         when:
-        def testPlan = scheduleTestPlan(TEST_PLAN_UUID, TEST_PLAN_STATUS.CREATED, 'scheduled testPlan\'s status which will be listed for a specific testPlanListUuid')
-        def entity = getForEntity('/api/v1/test-plans/{testPlanListUuid}', TestPlan[], testPlan.testSuite.uuid)
+        def testPlan = scheduleTestPlan(TEST_PLAN_UUID2, TEST_PLAN_STATUS.CREATED, 'retrieve a testPlan throught its uuid')
+        and:
+        def entity = getForEntity('/api/v1/test-plans/{uuid}', TestPlan, testPlan.uuid)
         then:
         entity.statusCode == HttpStatus.OK
-        entity.body.size() == 1
+        entity.body.description == 'retrieve a testPlan throught its uuid'
+        entity.body.status == TEST_PLAN_STATUS.CREATED
         cleanup:
         cleanTestPlanDB()
     }
 
-    void "test plans request for testPlan list equal to 0 should successfully return the list of all test plans"() {
+    void "request of all test plans should successfully return the list of all test plans"() {
         when:
         scheduleTestPlan(TEST_PLAN_UUID, "TEST_LIST_ALL_STATUS", '')
+        and:
+        def testPlans = getForEntity('/api/v1/test-plans/',TestPlan[]).body
         then:
-        def testPlans = getForEntity('/api/v1/test-plans/{testPlanListUuid}', TestPlan[],'0').body
         testPlans.size()>=1
         cleanup:
         cleanTestPlanDB()
     }
-
-    TestPlan scheduleTestPlan(String uuid, String status, String description){
-        def testPlan = new TestPlan(uuid: uuid, status: status, description: description)
-        def testSuite = new TestSuite(uuid: UUID.randomUUID().toString())
-        testSuite = testSuiteService.save(testSuite)
-        testPlan.testSuite = testSuite
-        testSuite.testPlans.add(testPlan)
-        testPlanService.save(testPlan)
+    
+    void "create test plan from NetworkService"() {
+        def testPlans = postForEntity('/api/v1/test-plans/services', ['uuid' : LATENCY_TEST_PLAN_SERVICE_UUID], List ).body
+        testPlans.size()>=1
+        cleanup:
+        cleanTestPlanDB()
     }
-
-
+    
+    void "create test plan from Test"() {
+        def testPlans = postForEntity('/api/v1/test-plans/tests', ['uuid' : TEST_DESCRIPTOR_UUID], List ).body
+        testPlans.size()>=1
+        cleanup:
+        cleanTestPlanDB()
+    }
+    
+    TestPlan scheduleTestPlan(String uuid, String status, String description){
+        testPlanService.save(new TestPlan(uuid: uuid, status: status, description: description))
+    }
 }
