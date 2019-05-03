@@ -36,6 +36,7 @@ package com.github.tng.vnv.planner.controller
 
 import com.github.tng.vnv.planner.ScheduleManager
 import com.github.tng.vnv.planner.WorkflowManager
+import com.github.tng.vnv.planner.aspect.TriggerNextTestPlan
 import com.github.tng.vnv.planner.model.NetworkService
 import com.github.tng.vnv.planner.model.Test
 import com.github.tng.vnv.planner.model.TestPlan
@@ -47,8 +48,6 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
 
 import javax.validation.Valid
-
-import static org.springframework.util.StringUtils.isEmpty
 
 @Log
 @RestController
@@ -82,38 +81,33 @@ class TestPlanController {
         log.info("#~#vnvlog deleteTestPlan END [test_plan.uuid: ${uuid}]")
     }
 
+    @TriggerNextTestPlan
     @ApiResponses(value = [@ApiResponse(code = 400, message = 'Bad Request')])
     @PostMapping('')
     @ResponseBody
     TestPlan save(@Valid @RequestBody TestPlan testPlan) {
-        log.info("#~#vnvlog save STR [test_plan.uuid: ${testPlan?.uuid}]")
-        testPlan = scheduler.createOne(testPlan)
-        log.info("#~#vnvlog save END [test_plan.uuid: ${testPlan?.uuid}]")
-        testPlan
+        scheduler.create(testPlan)
     }
 
+    @TriggerNextTestPlan
     @ApiResponses(value = [@ApiResponse(code = 400, message = 'Bad Request')])
     @PutMapping('{uuid}')
     @ResponseBody
     TestPlan update(@Valid @RequestBody TestPlan testPlan) {
-        //todo-allemaos: IT's for testing & debugging
-        log.info("#~#vnvlog update STR [test_plan.uuid: ${testPlan?.uuid}]")
-        testPlan = scheduler.updateOne(testPlan)
-        log.info("#~#vnvlog update END [test_plan.uuid: ${testPlan?.uuid}]")
-        testPlan
+        scheduler.update(testPlan)
     }
 
     @ApiResponses(value = [@ApiResponse(code = 400, message = 'Bad Request')])
     @PostMapping('/services')
     @ResponseBody
-    Set<TestPlan> createTestPlansByService(@Valid @RequestBody NetworkService body) {
-        testPlanService.createByService(body)
+    List<TestPlan> findTestPlansByService(@Valid @RequestBody NetworkService body) {
+        new ArrayList(testPlanService.findByService(body))
     }
 
     @ApiResponses(value = [@ApiResponse(code = 400, message = 'Bad Request')])
     @PostMapping('/tests')
     @ResponseBody
-    Set<TestPlan> createTestPlansByTest(@Valid @RequestBody Test body) {
-        testPlanService.createByTest(body)
+    List<TestPlan> findTestPlansByTest(@Valid @RequestBody Test body) {
+        new ArrayList(testPlanService.findByTest(body))
     }
 }

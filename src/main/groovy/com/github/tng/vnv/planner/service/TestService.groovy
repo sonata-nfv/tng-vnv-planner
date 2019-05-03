@@ -34,30 +34,32 @@
 
 package com.github.tng.vnv.planner.service
 
+import com.github.tng.vnv.planner.client.Catalogue
 import com.github.tng.vnv.planner.model.NetworkService
 import com.github.tng.vnv.planner.model.Test
-import com.github.tng.vnv.planner.repository.TestRepository
-import groovy.util.logging.Log
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
-@Log
 @Service
 class TestService {
 
     @Autowired
-    TestRepository testRepository
+    Catalogue catalogue
 
     Test findByUuid(String uuid) {
-        testRepository.findByUuid(uuid)
+        catalogue.getTest(uuid).body
     }
 
-    Set<Test> findByService(NetworkService service) {
+    List<Test> findTssByTestTag(String tag) {
+        catalogue.getTests(tag).body
+    }
+
+    List<Test> findByService(NetworkService service) {
         def ts = [] as HashSet<Test>
-        service?.descriptor?.testingTags?.each { tt ->
-            testRepository.findTssByTestTag(tt)?.each { test ->
+        service?.testingTags?.each { tt ->
+            findTssByTestTag(tt)?.each { test ->
 				println test.dump()
-                if(test?.descriptor?.testTags.any{ it -> it.contains(tt) }){
+                if(test?.testingTags.any{ it -> it.contains(tt) }){
                     ts.add(test)
                 }
             }

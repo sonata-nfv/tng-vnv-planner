@@ -34,40 +34,27 @@
 
 package com.github.tng.vnv.planner
 
-import com.github.tng.vnv.planner.model.NetworkService
-import com.github.tng.vnv.planner.model.Test
-import com.github.tng.vnv.planner.service.CatalogueService
 import com.github.tng.vnv.planner.service.NetworkServiceService
 import com.github.tng.vnv.planner.service.TestPlanService
 import com.github.tng.vnv.planner.model.Package
 import com.github.tng.vnv.planner.model.TestPlan
 import com.github.tng.vnv.planner.service.TestService
 import com.github.tng.vnv.planner.utils.TEST_PLAN_STATUS
-import groovy.util.logging.Log
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
-import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Component
-import org.springframework.util.StringUtils
-
-import java.security.AllPermission
-import java.util.concurrent.CompletableFuture
 
 import static org.springframework.util.StringUtils.isEmpty
 
-@Log
 @Component
 class ScheduleManager {
 
     @Autowired
     TestService testService
-
     @Autowired
     NetworkServiceService networkServiceService
-
     @Autowired
     TestPlanService testPlanService
-
     @Autowired
     WorkflowManager workflowManager
 
@@ -77,44 +64,21 @@ class ScheduleManager {
     String not_matching_test_tags
 
     List<TestPlan> create(Package packageMetadata) {
-        create(new ArrayList<>(testPlanService.createByPackage(packageMetadata)))
+        new ArrayList<>(
+                testPlanService.findByPackage(packageMetadata)
+        )?.each{create(it)}
     }
-
-    List<TestPlan> create(List<TestPlan> testPlans) {
-        testPlans?.each{create(it)}
-        workflowManager.searchForScheduledPlan()
-        testPlans
-    }
-
-    TestPlan createOne(TestPlan testPlan) {
-        testPlan = create(testPlan)
-        workflowManager.searchForScheduledPlan()
-        testPlan
-    }
-
-    List<TestPlan> update(List<TestPlan> testPlans) {
-        testPlans?.each {update(tp)}
-        workflowManager.searchForScheduledPlan()
-        testPlans
-    }
-
-    TestPlan updateOne(TestPlan testPlan) {
-        testPlan = update(testPlan)
-        workflowManager.searchForScheduledPlan()
-        testPlan
-    }
-
 
     TestPlan create(TestPlan tp) {
         tp.uuid=(!isEmpty(tp.uuid))?tp.uuid:UUID.randomUUID().toString()
         boolean valid = false
         if (!isEmpty(tp.serviceUuid) && !isEmpty(tp.testUuid)) {
-            tp.nsd = networkServiceService.findByUuid(tp.serviceUuid)?.nsd
-            tp.testd = testService.findByUuid(tp.testUuid)?.testd
-            if (tp.nsd != null && tp.testd != null) {
+            def service = networkServiceService.findByUuid(tp.serviceUuid)
+            def test = testService.findByUuid(tp.testUuid)
+            if (service != null && test != null) {
                 valid = true
-                if (!isEmpty(tp.testd.confirm_required) && tp.testd.confirm_required == '1'
-                        && (isEmpty(tp.testd.confirmed) || tp.testd.confirmed != '1')) {
+                if (!isEmpty(test.confirmRequired) && test.confirmRequired == '1'
+                        && (isEmpty(test.confirmed) || test.confirmed != '1')) {
                     tp.status = TEST_PLAN_STATUS.NOT_CONFIRMED
                 } else {
                     tp.status = TEST_PLAN_STATUS.SCHEDULED

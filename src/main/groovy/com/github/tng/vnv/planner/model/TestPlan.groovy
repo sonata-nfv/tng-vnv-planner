@@ -34,19 +34,14 @@
 
 package com.github.tng.vnv.planner.model
 
-import com.fasterxml.jackson.annotation.JsonIgnore
-import com.fasterxml.jackson.databind.ObjectMapper
 import groovy.transform.EqualsAndHashCode
 import groovy.transform.Sortable
 import io.swagger.annotations.ApiModelProperty
-
-import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.GeneratedValue
+import javax.persistence.GenerationType
 import javax.persistence.Id
-import javax.persistence.JoinColumn
-import javax.persistence.Lob
-import javax.persistence.ManyToOne
+import javax.persistence.SequenceGenerator
 import javax.persistence.Table
 import javax.persistence.Transient
 import javax.validation.constraints.NotNull
@@ -56,7 +51,7 @@ import javax.validation.constraints.NotNull
 @Sortable(includes = ['index'])
 class TestPlan implements Serializable {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id
 
     @ApiModelProperty(
@@ -132,7 +127,6 @@ class TestPlanResponse {
             allowEmptyValue = false,
             example = 'run time exception')
     String exception
-
 }
 
 class TestPlanCallback {
@@ -154,6 +148,12 @@ class TestPlanCallback {
     String status
 
     @ApiModelProperty(
+            value = 'Test Plan Exception message',
+            allowEmptyValue = false,
+            example = 'run time exception')
+    String exception
+
+    @ApiModelProperty(
             value = 'Callback URL',
             allowEmptyValue = false,
             example = '/test-plans/on-change')
@@ -170,16 +170,4 @@ class TestPlanCallback {
             required = true)
     @NotNull
     String testPlanUuid
-
-    @ApiModelProperty(
-            value = 'Test Plan Repository URI',
-            allowEmptyValue = false,
-            example = 'tng-cat, catalog, or xx.xx')
-    String testPlanRepository
-
-    @ApiModelProperty(
-            value = 'Test Results Repository URI',
-            allowEmptyValue = false,
-            example = 'tng-res, results, or xx.xx')
-    String testResultsRepository
 }

@@ -58,6 +58,10 @@
       "package_file_uuid": "4dfb76a0-6011-4346-906f-75d62871c5ba",
       "package_type": "application/vnd.5gtango.package.tdp",
       "release_date_time": "2018-08-24T16:57:22Z",
+      "testing_tags": [
+        "http",
+        "latency"
+      ],
       "vendor": "eu.5gtango",
       "version": "0.1",
       "warning": null
@@ -127,6 +131,10 @@
       "package_file_uuid": "4dfb76a0-6011-4346-906f-75d62871c5ba",
       "package_type": "application/vnd.5gtango.package.tdp",
       "release_date_time": "2018-08-24T16:57:22Z",
+      "testing_tags": [
+        "http",
+        "latency"
+      ],
       "vendor": "eu.5gtango",
       "version": "0.1",
       "warning": null
@@ -217,6 +225,10 @@
       "package_file_uuid": "61c253ba-9175-42f7-82a8-a3bba4b8d6c3",
       "package_type": "application/vnd.5gtango.package.nsp",
       "release_date_time": "2018-08-22T15:43:13Z",
+      "testing_tags": [
+        "http",
+        "latency"
+      ],
       "vendor": "eu.5gtango",
       "version": "0.1",
       "warning": null
@@ -286,6 +298,10 @@
       "package_file_uuid": "08990ad7-9fc8-4729-a707-5ae5a2484233",
       "package_type": "application/vnd.5gtango.package.tdp",
       "release_date_time": "2018-08-07T10:09:29Z",
+      "testing_tags": [
+        "http",
+        "latency"
+      ],
       "vendor": "eu.5gtango",
       "version": "0.1",
       "warning": null
@@ -355,6 +371,9 @@
       "package_file_uuid": "9155508f-8855-4ef0-87c2-3dbb503bc9c7",
       "package_type": "application/vnd.5gtango.package.tdp",
       "release_date_time": "2018-08-23T12:34:14Z",
+      "testing_tags": [
+        "http-advanced"
+      ],
       "vendor": "eu.5gtango",
       "version": "0.1",
       "warning": null
@@ -445,6 +464,9 @@
       "package_file_uuid": "caab7954-b07c-4995-841e-ed4334de67e4",
       "package_type": "application/vnd.5gtango.package.nsp",
       "release_date_time": "2018-09-11T07:56:54Z",
+      "testing_tags": [
+        "proxy-advanced"
+      ],
       "vendor": "eu.5gtango",
       "version": "0.1",
       "warning": null
@@ -514,6 +536,9 @@
       "package_file_uuid": "efc97db6-5258-41b7-98bd-f3621b559b56",
       "package_type": "application/vnd.5gtango.package.tdp",
       "release_date_time": "2018-09-11T07:40:54Z",
+      "testing_tags": [
+        "proxy-advanced"
+      ],
       "vendor": "eu.5gtango",
       "version": "0.1",
       "warning": null
@@ -583,6 +608,9 @@
       "package_file_uuid": "1d832fb7-0768-48eb-b01e-486af5afd453",
       "package_type": "application/vnd.5gtango.package.tdp",
       "release_date_time": "2018-09-11T09:52:22Z",
+      "testing_tags": [
+        "http-advanced"
+      ],
       "vendor": "eu.5gtango",
       "version": "0.1",
       "warning": null
@@ -689,7 +717,7 @@
           "tags": [
             "etsi.osm"
           ],
-          "uuid": "0f2830a2-1b1f-4a35-8c32-17b4bcf4f992"
+          "uuid": "d442e5d6-a67c-4862-bdbc-91f961651bde"
         },
         {
           "algorithm": "SHA-256",
@@ -716,6 +744,9 @@
       "package_file_uuid": "2651a6e5-a963-4bba-8bf2-f8df3f407718",
       "package_type": "application/vnd.5gtango.package.nsp",
       "release_date_time": "2018-09-11T07:56:56Z",
+      "testing_tags": [
+        "proxy-advanced"
+      ],
       "vendor": "eu.5gtango",
       "version": "0.1",
       "warning": null
@@ -782,6 +813,9 @@
       "package_file_uuid": "990130ec-5246-40ab-8f04-eabf36693292",
       "package_type": "application/vnd.5gtango.package.nsp",
       "release_date_time": "2018-09-11T19:19:17Z",
+      "testing_tags": [
+        "http-advanced"
+      ],
       "vendor": "eu.5gtango",
       "version": "0.1",
       "warning": null

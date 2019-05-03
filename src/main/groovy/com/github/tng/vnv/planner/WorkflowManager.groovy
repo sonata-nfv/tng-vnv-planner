@@ -36,12 +36,15 @@ package com.github.tng.vnv.planner
 
 import com.github.tng.vnv.planner.client.Curator
 import com.github.tng.vnv.planner.model.TestPlan
+import com.github.tng.vnv.planner.model.TestPlanRequest
 import com.github.tng.vnv.planner.model.TestPlanResponse
+import com.github.tng.vnv.planner.service.NetworkServiceService
 import com.github.tng.vnv.planner.service.TestPlanService
+import com.github.tng.vnv.planner.service.TestService
 import com.github.tng.vnv.planner.utils.TEST_PLAN_STATUS
 import groovy.util.logging.Log
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.scheduling.annotation.Scheduled
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 
 import static org.springframework.util.StringUtils.isEmpty
@@ -56,31 +59,36 @@ class WorkflowManager {
     @Autowired
     TestPlanService testPlanService
 
+    @Autowired
+    TestService testService
+    @Autowired
+    NetworkServiceService networkServiceService
+
+    @Value('${app.NOT_AVAILABLE_DATA}')
+    String not_available_data
+
     void searchForScheduledPlan() {
         if (!testPlanService.existsByStartingStatus()) {
             TestPlan nextTestPlan = testPlanService.findNextScheduledTestPlan()
             if (nextTestPlan != null) {
-                if(curator.inRunning()) {
-                    TestPlanResponse testPlanResponse = curator.proceedWith(nextTestPlan)
-                    log.info("#~#vnvlog searchForScheduledPlan.proceedWith - END responseFromCurator [status: ${testPlanResponse.status}, exception: ${!isEmpty(testPlanResponse.exception)?testPlanResponse.exception:""}  ]")
-                    switch (testPlanResponse.status) {
-                        case TEST_PLAN_STATUS.STARTING:
-                            testPlanService.update(nextTestPlan.uuid,testPlanResponse.status)
-                            break
-                        //todo-allemaos: handle the rest of status or exception from curator response
-                        default:
-                            log.info("Get response: ${testPlanResponse.status} for plan description: \"${nextTestPlan.description}\"")
-                            break
-                    }
-                }
+                TestPlanResponse testPlanResponse = proceedWith(nextTestPlan)
+                log.info("#~#vnvlog searchForScheduledPlan.proceedWith - END responseFromCurator [status: ${testPlanResponse.status}, exception: ${!isEmpty(testPlanResponse.exception)?testPlanResponse.exception:""}  ]")
+                if(testPlanResponse != null)
+                        testPlanService.update(nextTestPlan.uuid,testPlanResponse.status)
             }
         }
     }
 
     void deleteTestPlan(String uuid){
         log.info("#~#vnvlog deleteTestPlan STR [test_plan_uuid: ${uuid}]")
-        curator.deleteTestPlan(uuid)
+        curator.delete(uuid)
         testPlanService.delete(uuid)
         log.info("#~#vnvlog deleteTestPlan END [test_plan_uuid: ${uuid}]")
+    }
+
+    TestPlanResponse proceedWith(TestPlan testPlan) {
+        curator.post(new TestPlanRequest(testPlanUuid: testPlan.uuid,
+                nsd: networkServiceService.findByUuid(testPlan.serviceUuid).nsd,
+                testd: testService.findByUuid(testPlan.testUuid).testd)).body
     }
 }

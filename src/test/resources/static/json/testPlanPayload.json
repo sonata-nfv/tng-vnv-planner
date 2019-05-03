@@ -16,12 +16,12 @@
         ]
       },
       "testd": {
-        "confirm_required": "1",
-        "validate": "1",
-        "test_tags": [
-          "rtmp-media-service"
-        ]
-      }
+      },
+      "confirm_required": "1",
+      "validate": "1",
+      "test_tags": [
+        "rtmp-media-service"
+      ]
     },
     {
       "description": "Test Plan Description: Confirm required and confirmed",
@@ -38,13 +38,13 @@
         ]
       },
       "testd": {
-        "confirm_required": "1",
-        "confirmed": "1",
-        "validate": "1",
-        "test_tags": [
-          "rtmp-media-service"
-        ]
-      }
+      },
+      "confirm_required": "1",
+      "confirmed": "1",
+      "validate": "1",
+      "test_tags": [
+        "rtmp-media-service"
+      ]
     },
     {
       "description": "Test Plan Description: Adhoc TD,NSD request for testing",
