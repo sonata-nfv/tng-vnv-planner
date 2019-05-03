@@ -44,6 +44,34 @@ services:
       - '5432:5432'
     volumes:
       - tng-vnv-planner-data:/var/lib/postgresql/data
+  mock-gtk:
+    build:  mocks/mock-gtk/app
+    image: allemaos/mock-gtk
+    container_name: mock-gtk
+    ports:
+      - '32002:32002'
+    volumes:
+      - ./mocks/mock-gtk/app:/usr/src/app # mount point
+  mock-vnv-curator:
+    build:  mocks/mock-vnv-curator/app
+    image: allemaos/mock-vnv-curator
+    container_name: mock-vnv-curator
+    ports:
+      - '6200:6200'
+    volumes:
+      - ./mocks/mock-vnv-curator/app:/usr/src/app # mount point
+  mock-vnv-gtk:
+    build:  mocks/mock-vnv-gtk/app
+    image: allemaos/mock-vnv-gtk
+    container_name: mock-vnv-gtk
+    ports:
+      - '5000:5000'
+    volumes:
+      - ./mocks/mock-vnv-gtk/app:/usr/src/app # mount point
+  mock-paco:
+    build:  mocks/mock-paco #docker run -it --network=tng-vnv-planner_default allemaos/mock-paco sh
+    image: allemaos/mock-paco
+    container_name: mock-paco
 
   tng-vnv-planner:
     build: ./build
@@ -51,7 +79,13 @@ services:
     container_name: tng-vnv-planner
     depends_on:
       - son-postgres
+    links:
+      - mock-gtk
+      - mock-vnv-gtk
+      - mock-vnv-curator
     ports:
-      - 6100:6100
+      - '6100:6100'
+
 volumes:
   tng-vnv-planner-data:
+

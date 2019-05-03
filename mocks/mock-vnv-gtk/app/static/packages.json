@@ -64,12 +64,9 @@
       ],
       "vendor": "eu.5gtango",
       "version": "0.1",
-      "warning": null
     },
-    "signature": null,
     "status": "active",
     "updated_at": "2018-08-24T17:15:34.957+00:00",
-    "username": null,
     "uuid": "2b410f39-8d3f-4540-bdfe-ff0e13e8ac97"
   },
   {
@@ -137,12 +134,9 @@
       ],
       "vendor": "eu.5gtango",
       "version": "0.1",
-      "warning": null
     },
-    "signature": null,
     "status": "active",
     "updated_at": "2018-08-24T17:15:34.957+00:00",
-    "username": null,
     "uuid": "0e410f39-803f-d5d2-b2fe-0f0e13ea2c12"
   },
   {
@@ -231,12 +225,9 @@
       ],
       "vendor": "eu.5gtango",
       "version": "0.1",
-      "warning": null
     },
-    "signature": null,
     "status": "active",
     "updated_at": "2018-08-24T17:00:19.814+00:00",
-    "username": null,
     "uuid": "551ad4c8-a249-43f7-b61b-bae6aab0f240"
   },
   {
@@ -304,12 +295,9 @@
       ],
       "vendor": "eu.5gtango",
       "version": "0.1",
-      "warning": null
     },
-    "signature": null,
     "status": "active",
     "updated_at": "2018-08-27T13:29:23.029+00:00",
-    "username": null,
     "uuid": "ba1eb156-792a-441c-bd88-a402b20317a6"
   },
   {
@@ -375,13 +363,10 @@
         "http-advanced"
       ],
       "vendor": "eu.5gtango",
-      "version": "0.1",
-      "warning": null
+      "version": "0.1"
     },
-    "signature": null,
     "status": "active",
     "updated_at": "2018-08-24T17:00:31.952+00:00",
-    "username": null,
     "uuid": "c097b966-354d-4395-9419-9b605f27017a"
   },
   {
@@ -469,12 +454,9 @@
       ],
       "vendor": "eu.5gtango",
       "version": "0.1",
-      "warning": null
     },
-    "signature": null,
     "status": "active",
     "updated_at": "2018-09-11T07:22:30.203+00:00",
-    "username": null,
     "uuid": "980d43cc-3cae-4c96-91e3-8a351e4d37a6"
   },
   {
@@ -540,13 +522,10 @@
         "proxy-advanced"
       ],
       "vendor": "eu.5gtango",
-      "version": "0.1",
-      "warning": null
+      "version": "0.1"
     },
-    "signature": null,
     "status": "active",
     "updated_at": "2018-09-11T07:23:05.245+00:00",
-    "username": null,
     "uuid": "da0fd3c8-0f20-4cd9-8473-a92e08085f24"
   },
   {
@@ -612,13 +591,10 @@
         "http-advanced"
       ],
       "vendor": "eu.5gtango",
-      "version": "0.1",
-      "warning": null
+      "version": "0.1"
     },
-    "signature": null,
     "status": "active",
     "updated_at": "2018-09-11T07:51:37.926+00:00",
-    "username": null,
     "uuid": "a3acb16d-c314-4122-9b3d-9c180547d580"
   },
   {
@@ -748,13 +724,9 @@
         "proxy-advanced"
       ],
       "vendor": "eu.5gtango",
-      "version": "0.1",
-      "warning": null
-    },
-    "signature": null,
+      "version": "0.1"    },
     "status": "active",
     "updated_at": "2018-09-11T10:37:10.323+00:00",
-    "username": null,
     "uuid": "c1a54ec2-9d60-4c2f-9b9a-e600e2e64c11"
   },
   {
@@ -817,13 +789,10 @@
         "http-advanced"
       ],
       "vendor": "eu.5gtango",
-      "version": "0.1",
-      "warning": null
+      "version": "0.1"
     },
-    "signature": null,
     "status": "active",
     "updated_at": "2018-09-12T09:09:16.448+00:00",
-    "username": null,
     "uuid": "b814a1cb-5d02-481b-a2c3-7746fd4bc6c9"
   }
 ]

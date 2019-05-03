@@ -1,4 +1,509 @@
-[
+null = None
+services=[
+  {
+    "created_at": "2018-08-07T16:09:34.935+00:00",
+    "md5": "f2e43735d408fb64e2ba2e56471ba1a8",
+    "nsd": {
+      "descriptor_version": "1.0",
+      "vendor": "atos",
+      "name": "haproxy",
+      "version": "0.3",
+      "author": "Luis Hensl @: atos",
+      "description": "Descriptor haproxy to y1demo",
+      "network_functions": [
+        {
+          "vnf_id": "vnf_haproxy",
+          "vnf_vendor": "atos",
+          "vnf_name": "haproxy-vnf",
+          "vnf_version": "0.3"
+        }
+      ],
+      "connection_points": [
+        {
+          "id": "nscpmgmt",
+          "interface": "ipv4",
+          "type": "management"
+        },
+        {
+          "id": "nscpexternal",
+          "interface": "ipv4",
+          "type": "external"
+        }
+      ],
+      "virtual_links": [
+        {
+          "id": "vlmgmt",
+          "connectivity_type": "E-LAN",
+          "connection_points_reference": [
+            "vnf_haproxy:cpmgmt",
+            "nscpmgmt"
+          ]
+        },
+        {
+          "id": "vlexternal",
+          "connectivity_type": "E-Line",
+          "connection_points_reference": [
+            "vnf_haproxy:cpexternal",
+            "nscpexternal"
+          ]
+        }
+      ]
+    },
+    "signature": null,
+    "status": "active",
+    "testing_tags": [
+      "latency","aux_test"
+    ],
+    "updated_at": "2018-08-07T16:09:34.935+00:00",
+    "username": null,
+    "uuid": "input0ns-f213-4fae-8d3f-04358e1e1451"
+  },
+  {
+    "created_at": "2018-08-07T16:09:34.935+00:00",
+    "md5": "f2e43735d408fb64e2ba2e56471ba1a8",
+    "nsd": {
+      "author": "Luis Hensl @: atos",
+      "connection_points": [
+        {
+          "id": "nscpmgmt",
+          "interface": "ipv4",
+          "type": "management"
+        },
+        {
+          "id": "nscpexternal",
+          "interface": "ipv4",
+          "type": "external"
+        }
+      ],
+      "description": "Descriptor haproxy to y1demo",
+      "descriptor_version": "1.0",
+      "name": "haproxy",
+      "network_functions": [
+        {
+          "vnf_id": "vnf_haproxy",
+          "vnf_name": "haproxy-vnf",
+          "vnf_vendor": "atos",
+          "vnf_version": "0.3"
+        }
+      ],
+      "vendor": "atos",
+      "version": "0.3",
+      "virtual_links": [
+        {
+          "connection_points_reference": [
+            "vnf_haproxy:cpmgmt",
+            "nscpmgmt"
+          ],
+          "connectivity_type": "E-LAN",
+          "id": "vlmgmt"
+        },
+        {
+          "connection_points_reference": [
+            "vnf_haproxy:cpexternal",
+            "nscpexternal"
+          ],
+          "connectivity_type": "E-Line",
+          "id": "vlexternal"
+        }
+      ]
+    },
+    "signature": null,
+    "status": "active",
+    "testing_tags": [
+      "latency"
+    ],
+    "updated_at": "2018-08-07T16:09:34.935+00:00",
+    "username": null,
+    "uuid": "4763bde6-f213-4fae-8d3f-04358e1e1489"
+  },
+  {
+    "created_at": "2018-08-07T16:08:28.588+00:00",
+    "md5": "af73bf03b2f1a7cd04ff8aa9d0cd17fa",
+    "nsd": {
+      "author": "Luis Hensl @: atos",
+      "connection_points": [
+        {
+          "id": "nscpmgmt",
+          "interface": "ipv4",
+          "type": "management"
+        },
+        {
+          "id": "nscpexternal",
+          "interface": "ipv4",
+          "type": "external"
+        }
+      ],
+      "description": "Descriptor haproxy to y1demo",
+      "descriptor_version": "1.0",
+      "name": "haproxy",
+      "network_functions": [
+        {
+          "vnf_id": "vnf_haproxy",
+          "vnf_name": "haproxy-vnf",
+          "vnf_vendor": "atos",
+          "vnf_version": "0.2"
+        }
+      ],
+      "vendor": "atos",
+      "version": "0.2",
+      "virtual_links": [
+        {
+          "connection_points_reference": [
+            "vnf_haproxy:cpmgmt",
+            "nscpmgmt"
+          ],
+          "connectivity_type": "E-LAN",
+          "id": "vlmgmt"
+        },
+        {
+          "connection_points_reference": [
+            "vnf_haproxy:cpexternal",
+            "nscpexternal"
+          ],
+          "connectivity_type": "E-Line",
+          "id": "vlexternal"
+        }
+      ]
+    },
+    "signature": null,
+    "status": "active",
+    "testing_tags": [
+      "latency"
+    ],
+    "updated_at": "2018-08-07T16:08:28.588+00:00",
+    "username": null,
+    "uuid": "a0c112ac-8c06-49e0-a34b-16693a50e147"
+  },
+  {
+    "created_at": "2018-08-07T14:46:50.564+00:00",
+    "md5": "782361be4f5eb476c6ec010e10bcf1c9",
+    "nsd": {
+      "author": "Luis Hensl @: atos",
+      "connection_points": [
+        {
+          "id": "nscpmgmt",
+          "interface": "ipv4",
+          "type": "management"
+        },
+        {
+          "id": "nscpexternal",
+          "interface": "ipv4",
+          "type": "external"
+        }
+      ],
+      "description": "Descriptor haproxy to y1demo",
+      "descriptor_version": "1.0",
+      "name": "haproxy",
+      "network_functions": [
+        {
+          "vnf_id": "vnf_haproxy",
+          "vnf_name": "haproxy-vnf",
+          "vnf_vendor": "atos",
+          "vnf_version": "0.1"
+        }
+      ],
+      "vendor": "atos",
+      "version": "0.1",
+      "virtual_links": [
+        {
+          "connection_points_reference": [
+            "vnf_haproxy:cpmgmt",
+            "nscpmgmt"
+          ],
+          "connectivity_type": "E-LAN",
+          "id": "vlmgmt"
+        },
+        {
+          "connection_points_reference": [
+            "vnf_haproxy:cpexternal",
+            "nscpexternal"
+          ],
+          "connectivity_type": "E-Line",
+          "id": "vlexternal"
+        }
+      ]
+    },
+    "signature": null,
+    "status": "active",
+    "updated_at": "2018-08-07T14:46:50.564+00:00",
+    "username": null,
+    "uuid": "f64a458c-e157-49ff-a8f9-3bbbbf8db625"
+  },
+  {
+    "created_at": "2018-09-11T07:22:28.591+00:00",
+    "md5": "29a9cba35e3b45e06fc1c5384eea790f",
+    "nsd": {
+      "author": "Luis Hens",
+      "connection_points": [
+        {
+          "id": "mgmt",
+          "interface": "ipv4",
+          "type": "management"
+        }
+      ],
+      "description": "NS Squidfor year 1 demo",
+      "descriptor_schema": "https://raw.githubusercontent.com/sonata-nfv/tng-schema/master/service-descriptor/nsd-schema.yml",
+      "name": "NS-squid",
+      "network_functions": [
+        {
+          "vnf_id": "vnf_squid",
+          "vnf_name": "squid-vnf",
+          "vnf_vendor": "eu.5gtango",
+          "vnf_version": "0.1"
+        }
+      ],
+      "vendor": "eu.5gtango",
+      "version": "0.1",
+      "virtual_links": [
+        {
+          "connection_points_reference": [
+            "vnf_squid:mgmt",
+            "mgmt"
+          ],
+          "connectivity_type": "E-LAN",
+          "id": "mgmt"
+        }
+      ]
+    },
+    "signature": null,
+    "status": "active",
+    "testing_tags": [
+      "proxy-advanced"
+    ],
+    "updated_at": "2018-09-11T07:22:28.591+00:00",
+    "username": null,
+    "uuid": "4dd4cb15-76b8-46fd-b3c0-1b165cc332f9"
+  },
+  {
+    "created_at": "2018-09-11T10:37:10.072+00:00",
+    "md5": "73d3fc42746f8fc210aa319eea692b95",
+    "nsd": {
+      "author": "Luis Hens",
+      "connection_points": [
+        {
+          "id": "mgmt",
+          "interface": "ipv4",
+          "type": "management"
+        },
+        {
+          "id": "external",
+          "interface": "ipv4",
+          "type": "external"
+        }
+      ],
+      "description": "Ns for year 1 demo",
+      "descriptor_schema": "https://raw.githubusercontent.com/sonata-nfv/tng-schema/master/service-descriptor/nsd-schema.yml",
+      "name": "ns-squid-haproxy",
+      "network_functions": [
+        {
+          "vnf_id": "vnf_squid",
+          "vnf_name": "squid-vnf",
+          "vnf_vendor": "eu.5gtango",
+          "vnf_version": "0.2"
+        },
+        {
+          "vnf_id": "vnf_haproxy",
+          "vnf_name": "haproxy-vnf",
+          "vnf_vendor": "eu.5gtango",
+          "vnf_version": "0.2"
+        }
+      ],
+      "service_specific_managers": [
+        {
+          "description": "task, config and monitoring SSM.",
+          "id": "sonssmhaproxy-squidtask-config-monitor1",
+          "image": "tsoenen/haproxy-squid",
+          "options": [
+            {
+              "key": "type",
+              "value": "task"
+            },
+            {
+              "key": "type",
+              "value": "configure"
+            },
+            {
+              "key": "type",
+              "value": "scale"
+            }
+          ]
+        }
+      ],
+      "vendor": "eu.5gtango",
+      "version": "0.2",
+      "virtual_links": [
+        {
+          "connection_points_reference": [
+            "vnf_squid:cpmgmt",
+            "vnf_haproxy:cpmgmt",
+            "mgmt"
+          ],
+          "connectivity_type": "E-LAN",
+          "id": "mgmt"
+        },
+        {
+          "connection_points_reference": [
+            "vnf_squid:cpinternal",
+            "vnf_haproxy:cpinternal"
+          ],
+          "connectivity_type": "E-Line",
+          "id": "internal"
+        },
+        {
+          "connection_points_reference": [
+            "vnf_haproxy:cpexternal",
+            "external"
+          ],
+          "connectivity_type": "E-Line",
+          "id": "external"
+        }
+      ]
+    },
+    "signature": null,
+    "status": "active",
+    "testing_tags": [
+      "proxy-advanced"
+    ],
+    "updated_at": "2018-09-11T10:37:10.072+00:00",
+    "username": null,
+    "uuid": "d442e5d6-a67c-4862-bdbc-91f961651bde"
+  },
+  {
+    "created_at": "2018-09-12T09:09:16.319+00:00",
+    "md5": "32ec0bb9c155816e99438e1209baeb81",
+    "nsd": {
+      "author": "Ignacio Dominguez @: atos",
+      "connection_points": [
+        {
+          "id": "nscpmgmt",
+          "interface": "ipv4",
+          "type": "management"
+        },
+        {
+          "id": "nscpexternal",
+          "interface": "ipv4",
+          "type": "external"
+        }
+      ],
+      "description": "Descriptor gobetween to y1demo",
+      "descriptor_version": "1.0",
+      "name": "gobetween",
+      "network_functions": [
+        {
+          "vnf_id": "vnf_gobetween",
+          "vnf_name": "gobetween-vnf",
+          "vnf_vendor": "atos",
+          "vnf_version": "0.1"
+        }
+      ],
+      "vendor": "atos",
+      "version": "0.1",
+      "virtual_links": [
+        {
+          "connection_points_reference": [
+            "vnf_gobetween:cpmgmt",
+            "nscpmgmt"
+          ],
+          "connectivity_type": "E-LAN",
+          "id": "vlmgmt"
+        },
+        {
+          "connection_points_reference": [
+            "vnf_gobetween:cpexternal",
+            "nscpexternal"
+          ],
+          "connectivity_type": "E-Line",
+          "id": "vlexternal"
+        }
+      ]
+    },
+    "signature": null,
+    "status": "active",
+    "testing_tags": [
+      "http-advanced"
+    ],
+    "updated_at": "2018-09-12T09:09:16.319+00:00",
+    "username": null,
+    "uuid": "d07742ed-9429-4a07-b7af-d0b24a6d5c4c"
+  },
+  {
+    "created_at": "2018-09-12T09:09:16.319+00:00",
+    "md5": "32ec0bb9c155816e99438e1209baeb81",
+    "nsd": {
+      "descriptor_schema": "https://raw.githubusercontent.com/sonata-nfv/tng-schema/master/service-descriptor/nsd-schema.yml",
+      "vendor": "eu.sonata-nfv",
+      "name": "mediapilot-service",
+      "version": "0.2",
+      "author": "Ignacio Dominguez @: atos",
+      "description": "This NS provides the video streaming service for the immersive media pilot.",
+      "network_functions": [
+        {
+          "vnf_id": "vnf-ma",
+          "vnf_vendor": "eu.5gtango",
+          "vnf_name": "ma-vnfd-k8s",
+          "vnf_version": "0.2"
+        },
+        {
+          "vnf_id": "vnf-mse",
+          "vnf_vendor": "eu.5gtango",
+          "vnf_name": "mse-vnfd-k8s",
+          "vnf_version": "0.2"
+        },
+        {
+          "vnf_id": "vnf-cms",
+          "vnf_vendor": "eu.5gtango",
+          "vnf_name": "cms-vnfd-k8s",
+          "vnf_version": "0.1"
+        }
+      ],
+      "connection_points": [
+        {
+          "id": "nscpexternal",
+          "interface": "ipv4",
+          "type": "external"
+        }
+      ],
+      "virtual_links": [
+        {
+          "id": "vlexternal",
+          "connectivity_type": "E-LAN",
+          "connection_points_reference": [
+            "vnf-ma:rtmp",
+            "vnf-mse:hls",
+            "vnf-cms:api",
+            "nscpexternal"
+          ]
+        },
+        {
+          "id": "cms-aggregator",
+          "connectivity_type": "E-Line",
+          "connection_points_reference": [
+            "vnf-cms:api",
+            "vnf-ma:api"
+          ]
+        },
+        {
+          "id": "aggregator-mse",
+          "connectivity_type": "E-Line",
+          "connection_points_reference": [
+            "vnf-ma:rtmp",
+            "vnf-mse:rtmp"
+          ]
+        }
+      ]
+    },
+    "signature": null,
+    "status": "active",
+    "testing_tags": [
+      "rtmp-media-service"
+    ],
+    "updated_at": "2019-03-28T09:09:16.319+00:00",
+    "username": null,
+    "uuid": "immedia0-9429-4a07-b7af-dd429d6d04o3"
+  }
+]
+ 
+packages=[
   {
     "created_at": "2018-08-24T17:15:34.957+00:00",
     "md5": "4dd25ffd440ffb9f0f3547a4561b83d1",
@@ -64,12 +569,9 @@
       ],
       "vendor": "eu.5gtango",
       "version": "0.1",
-      "warning": null
     },
-    "signature": null,
     "status": "active",
     "updated_at": "2018-08-24T17:15:34.957+00:00",
-    "username": null,
     "uuid": "2b410f39-8d3f-4540-bdfe-ff0e13e8ac97"
   },
   {
@@ -137,12 +639,9 @@
       ],
       "vendor": "eu.5gtango",
       "version": "0.1",
-      "warning": null
     },
-    "signature": null,
     "status": "active",
     "updated_at": "2018-08-24T17:15:34.957+00:00",
-    "username": null,
     "uuid": "0e410f39-803f-d5d2-b2fe-0f0e13ea2c12"
   },
   {
@@ -231,12 +730,9 @@
       ],
       "vendor": "eu.5gtango",
       "version": "0.1",
-      "warning": null
     },
-    "signature": null,
     "status": "active",
     "updated_at": "2018-08-24T17:00:19.814+00:00",
-    "username": null,
     "uuid": "551ad4c8-a249-43f7-b61b-bae6aab0f240"
   },
   {
@@ -304,12 +800,9 @@
       ],
       "vendor": "eu.5gtango",
       "version": "0.1",
-      "warning": null
     },
-    "signature": null,
     "status": "active",
     "updated_at": "2018-08-27T13:29:23.029+00:00",
-    "username": null,
     "uuid": "ba1eb156-792a-441c-bd88-a402b20317a6"
   },
   {
@@ -375,13 +868,10 @@
         "http-advanced"
       ],
       "vendor": "eu.5gtango",
-      "version": "0.1",
-      "warning": null
+      "version": "0.1"
     },
-    "signature": null,
     "status": "active",
     "updated_at": "2018-08-24T17:00:31.952+00:00",
-    "username": null,
     "uuid": "c097b966-354d-4395-9419-9b605f27017a"
   },
   {
@@ -469,12 +959,9 @@
       ],
       "vendor": "eu.5gtango",
       "version": "0.1",
-      "warning": null
     },
-    "signature": null,
     "status": "active",
     "updated_at": "2018-09-11T07:22:30.203+00:00",
-    "username": null,
     "uuid": "980d43cc-3cae-4c96-91e3-8a351e4d37a6"
   },
   {
@@ -540,13 +1027,10 @@
         "proxy-advanced"
       ],
       "vendor": "eu.5gtango",
-      "version": "0.1",
-      "warning": null
+      "version": "0.1"
     },
-    "signature": null,
     "status": "active",
     "updated_at": "2018-09-11T07:23:05.245+00:00",
-    "username": null,
     "uuid": "da0fd3c8-0f20-4cd9-8473-a92e08085f24"
   },
   {
@@ -612,13 +1096,10 @@
         "http-advanced"
       ],
       "vendor": "eu.5gtango",
-      "version": "0.1",
-      "warning": null
+      "version": "0.1"
     },
-    "signature": null,
     "status": "active",
     "updated_at": "2018-09-11T07:51:37.926+00:00",
-    "username": null,
     "uuid": "a3acb16d-c314-4122-9b3d-9c180547d580"
   },
   {
@@ -748,13 +1229,9 @@
         "proxy-advanced"
       ],
       "vendor": "eu.5gtango",
-      "version": "0.1",
-      "warning": null
-    },
-    "signature": null,
+      "version": "0.1"    },
     "status": "active",
     "updated_at": "2018-09-11T10:37:10.323+00:00",
-    "username": null,
     "uuid": "c1a54ec2-9d60-4c2f-9b9a-e600e2e64c11"
   },
   {
@@ -817,13 +1294,10 @@
         "http-advanced"
       ],
       "vendor": "eu.5gtango",
-      "version": "0.1",
-      "warning": null
+      "version": "0.1"
     },
-    "signature": null,
     "status": "active",
     "updated_at": "2018-09-12T09:09:16.448+00:00",
-    "username": null,
     "uuid": "b814a1cb-5d02-481b-a2c3-7746fd4bc6c9"
   }
 ]

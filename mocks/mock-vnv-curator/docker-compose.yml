@@ -30,21 +30,14 @@
 # acknowledge the contributions of their colleagues of the 5GTANGO
 # partner consortium (www.5gtango.eu).
 
+version: '3'
 
-app:
-  gk.base.url: http://localhost:${server.port}/mock/gk
-  vnvgk.base.url: http://localhost:${server.port}/mock/gk
-  curator.base.url: http://localhost:${server.port}/mock/curator
-
-spring.profiles.active: test
----
-spring:
-  profiles: test
-  jpa:
-      show-sql: false
-      hibernate.ddl-auto: create
-  h2.console.enabled: true
-
-logging.level:
-  org.apache.http.wire: DEBUG
-  sun.net.www.protocol.http: DEBUG
+services:
+  mock-vnv-curator:
+    build: app
+    image: allemaos/mock-vnv-curator
+    container_name: mock-vnv-curator
+    ports:
+      - '6200:6200'
+    volumes:
+      - ./app:/usr/src/app # mount point

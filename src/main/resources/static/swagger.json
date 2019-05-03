@@ -170,12 +170,6 @@
                     "example": "STARTING, COMPLETED, CANCELLING, CANCELLED, ERROR",
                     "type": "string"
                 },
-                "test_plan_repository": {
-                    "allowEmptyValue": false,
-                    "description": "Test Plan Repository URI",
-                    "example": "tng-cat, catalog, or xx.xx",
-                    "type": "string"
-                },
                 "test_plan_uuid": {
                     "allowEmptyValue": false,
                     "description": "Test Plan uuid",
@@ -188,12 +182,6 @@
                         "$ref": "#/definitions/TestResult"
                     },
                     "type": "array"
-                },
-                "test_results_repository": {
-                    "allowEmptyValue": false,
-                    "description": "Test Results Repository URI",
-                    "example": "tng-res, results, or xx.xx",
-                    "type": "string"
                 },
                 "url": {
                     "allowEmptyValue": false,
