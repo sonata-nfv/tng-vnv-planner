@@ -70,9 +70,9 @@ class CatalogueCallbackController {
     @PostMapping('/on-change')
     @ResponseBody
     List<TestPlan> onChange(@Valid @RequestBody PackageCallback body) {
-        log.info("#~#vnvlog onChange STR [PackageId: ${body?.packageId}]")
+        log.info("#~#vnvlog onChange STR [PackageId: {}]",body?.packageId)
         List<TestPlan> testPlans = scheduler.create(body.packageId)
-        log.info("#~#vnvlog onChange: END [PackageId: ${body?.packageId}]")
+        log.info("#~#vnvlog onChange: END [PackageId: {}]",body?.packageId)
         testPlans
     }
 

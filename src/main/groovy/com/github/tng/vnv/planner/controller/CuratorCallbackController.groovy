@@ -70,9 +70,9 @@ class CuratorCallbackController {
     @PostMapping('/on-change/completed')
     @ResponseBody
     void onChangeCompleted(@Valid @RequestBody TestPlanCallback callback) {
-        log.info("#~#vnvlog onChangeCompleted STR callback:[test_plan_uuid: ${callback?.testPlanUuid}, status: ${callback.status}]")
+        log.info("#~#vnvlog onChangeCompleted STR callback:[test_plan_uuid: {}, status: {}]",callback?.testPlanUuid,callback.status)
         testPlanService.update(callback.testPlanUuid, callback.status)
-        log.info("#~#vnvlog onChangeCompleted END callback:[test_plan_uuid: ${callback?.testPlanUuid}, status: ${callback.status}]")
+        log.info("#~#vnvlog onChangeCompleted END callback:[test_plan_uuid: {}, status: {}]",callback?.testPlanUuid,callback.status)
     }
 
     @TriggerNextTestPlan
@@ -83,9 +83,9 @@ class CuratorCallbackController {
     @PostMapping('/on-change/')
     @ResponseBody
     void onChange(@Valid @RequestBody TestPlanCallback callback) {
-        log.info("#~#vnvlog onChange STR callback:[test_plan_uuid: ${callback?.testPlanUuid}, status: ${callback.status}]")
+        log.info("#~#vnvlog onChange STR callback:[test_plan_uuid: {}, status: {}]",callback?.testPlanUuid,callback.status)
         testPlanService.update(callback.testPlanUuid, callback.status)
-        log.info("#~#vnvlog onChange END callback:[test_plan_uuid: ${callback?.testPlanUuid}, status: ${callback.status}]")
+        log.info("#~#vnvlog onChange END callback:[test_plan_uuid: {}, status: {}]",callback?.testPlanUuid,callback.status)
     }
 }
 

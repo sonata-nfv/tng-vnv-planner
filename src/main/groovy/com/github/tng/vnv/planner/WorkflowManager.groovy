@@ -71,7 +71,7 @@ class WorkflowManager {
             TestPlan nextTestPlan = testPlanService.findNextScheduledTestPlan()
             if (nextTestPlan != null) {
                 TestPlanResponse testPlanResponse = proceedWith(nextTestPlan)
-                log.info("#~#vnvlog searchForScheduledPlan.proceedWith - END responseFromCurator [status: ${testPlanResponse.status}, exception: ${!isEmpty(testPlanResponse.exception)?testPlanResponse.exception:""}  ]")
+                log.info("#~#vnvlog searchForScheduledPlan.proceedWith - END responseFromCurator [status: {}, exception: {}  ]",testPlanResponse.status,!isEmpty(testPlanResponse.exception)?testPlanResponse.exception:"")
                 if(testPlanResponse != null)
                         testPlanService.update(nextTestPlan.uuid,testPlanResponse.status)
             }
@@ -79,10 +79,10 @@ class WorkflowManager {
     }
 
     void deleteTestPlan(String uuid){
-        log.info("#~#vnvlog deleteTestPlan STR [test_plan_uuid: ${uuid}]")
+        log.info("#~#vnvlog deleteTestPlan STR [test_plan_uuid: {}]",uuid)
         curator.delete(uuid)
         testPlanService.delete(uuid)
-        log.info("#~#vnvlog deleteTestPlan END [test_plan_uuid: ${uuid}]")
+        log.info("#~#vnvlog deleteTestPlan END [test_plan_uuid: {}]",uuid)
     }
 
     TestPlanResponse proceedWith(TestPlan testPlan) {

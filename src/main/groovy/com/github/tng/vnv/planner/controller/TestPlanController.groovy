@@ -76,9 +76,9 @@ class TestPlanController {
     @DeleteMapping('{uuid}')
     @ResponseBody
     void deleteTestPlan(@PathVariable String uuid) {
-        log.info("#~#vnvlog deleteTestPlan STR [test_plan.uuid: ${uuid}]")
+        log.info("#~#vnvlog deleteTestPlan STR [test_plan.uuid: {}]",uuid)
         manager.deleteTestPlan(uuid)
-        log.info("#~#vnvlog deleteTestPlan END [test_plan.uuid: ${uuid}]")
+        log.info("#~#vnvlog deleteTestPlan END [test_plan.uuid: {}]",uuid)
     }
 
     @TriggerNextTestPlan

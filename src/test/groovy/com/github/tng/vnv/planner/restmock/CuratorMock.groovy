@@ -80,7 +80,7 @@ class CuratorMock {
 
     @DeleteMapping('/mock/curator/test-preparations/{testPlanUuid}')
     ResponseEntity<Void> deleteTestPlan(@PathVariable('testPlanUuid') String uuid) {
-        log.info("The testPlan with uuid: \"$uuid\" has been cancelled")
+        log.info("The testPlan with uuid: {} has been cancelled",uuid)
         ResponseEntity.status(HttpStatus.OK).build()
     }
 
