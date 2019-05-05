@@ -35,7 +35,6 @@
 package com.github.tng.vnv.planner
 
 
-import com.github.tng.vnv.planner.model.Package
 import com.github.tng.vnv.planner.model.TestPlan
 import com.github.tng.vnv.planner.restmock.CatalogueMock
 import com.github.tng.vnv.planner.config.TestRestSpec

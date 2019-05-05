@@ -35,7 +35,6 @@
 package com.github.tng.vnv.planner.client
 
 import com.github.tng.vnv.planner.aspect.AfterRestCall
-import com.github.tng.vnv.planner.model.Package
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.beans.factory.annotation.Value
@@ -65,21 +64,21 @@ class Gatekeeper {
     ResponseEntity getPackageByTag(def tag){
         def builder = UriComponentsBuilder.fromUriString(packageListEndpoint)
                 .queryParam("package_content.testing_tags", tag)
-        restTemplate.getForEntity(builder.toUriString(), Package[])
+        restTemplate.getForEntity(builder.toUriString(), Object[])
     }
 
     @AfterRestCall
     ResponseEntity getPackageByTest(def uuid){
         def builder = UriComponentsBuilder.fromUriString(packageListEndpoint)
                 .queryParam("package_content.uuid", uuid)
-        restTemplate.getForEntity(builder.toUriString(), Package)
+        restTemplate.getForEntity(builder.toUriString(), Object)
     }
 
     @AfterRestCall
     ResponseEntity getPackageByService(def uuid){
         def builder = UriComponentsBuilder.fromUriString(packageListEndpoint)
                 .queryParam("package_content.uuid", uuid)
-        restTemplate.getForEntity(builder.toUriString(), Package)
+        restTemplate.getForEntity(builder.toUriString(), Object)
     }
 
 

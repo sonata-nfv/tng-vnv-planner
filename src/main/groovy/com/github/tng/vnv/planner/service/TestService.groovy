@@ -36,7 +36,6 @@ package com.github.tng.vnv.planner.service
 
 import com.github.tng.vnv.planner.client.Catalogue
 import com.github.tng.vnv.planner.client.Gatekeeper
-import com.github.tng.vnv.planner.model.Package
 import com.github.tng.vnv.planner.model.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
@@ -60,7 +59,7 @@ class TestService {
             def testingTags = pack.pd.package_content.collect {it.testing_tags}
             testingTags?.each { tags ->
                 tags?.each { tag ->
-                    List<Package> packageList = gatekeeper.getPackageByTag(tag).body
+                    List packageList = gatekeeper.getPackageByTag(tag).body
                     packageList?.each {
                         it?.pd?.package_content.each { resource ->
                             if (resource.get('content-type') == 'application/vnd.5gtango.tstd') {
