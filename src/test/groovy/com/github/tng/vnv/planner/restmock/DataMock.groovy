@@ -77,4 +77,12 @@ class DataMock {
         getTests().findAll {it -> it.testing_tags?.contains(tag)}
 	}
 
+    static def getPackageByTag(String tag){
+        getPackages().findAll {it -> it.pd.package_content.testing_tags.join(", ").contains(tag)}
+    }
+
+    static def getPackageByUuid(uuid){
+        getPackages().find {it -> it.pd.package_content.uuid?.contains(uuid)}
+
+    }
 }

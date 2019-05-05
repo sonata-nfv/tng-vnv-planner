@@ -1,271 +1,72 @@
 {
-    "basePath": "/",
-    "definitions": {
-        "NetworkService": {
-            "properties": {
-                "nsd": {
-                    "type": "object"
-                },
-                "package_id": {
-                    "type": "string"
-                },
-                "service_platforms": {
-                    "items": {
-                        "type": "string"
-                    },
-                    "type": "array"
-                },
-                "status": {
-                    "type": "string"
-                },
-                "testing_tags": {
-                    "items": {
-                        "type": "string"
-                    },
-                    "type": "array"
-                },
-                "uuid": {
-                    "type": "string"
-                }
-            },
-            "title": "NetworkService",
-            "type": "object"
-        },
-        "PackageCallback": {
-            "properties": {
-                "confirm_required": {
-                    "allowEmptyValue": true,
-                    "description": "Additional validation step before every test plan progresses towards execution",
-                    "example": true,
-                    "type": "boolean"
-                },
-                "event_name": {
-                    "allowEmptyValue": true,
-                    "description": "Event Name",
-                    "example": "UPDATED",
-                    "type": "string"
-                },
-                "package_id": {
-                    "allowEmptyValue": false,
-                    "description": "The reference id of the uploaded package that will generate test plans as pair of network services and tests",
-                    "type": "string"
-                },
-                "package_location": {
-                    "type": "string"
-                }
-            },
-            "required": [
-                "event_name",
-                "package_id"
-            ],
-            "title": "PackageCallback",
-            "type": "object"
-        },
-        "Test": {
-            "properties": {
-                "confirm_required": {
-                    "type": "string"
-                },
-                "confirmed": {
-                    "type": "string"
-                },
-                "package_id": {
-                    "type": "string"
-                },
-                "service_platforms": {
-                    "items": {
-                        "type": "string"
-                    },
-                    "type": "array"
-                },
-                "testd": {
-                    "type": "object"
-                },
-                "testing_tags": {
-                    "items": {
-                        "type": "string"
-                    },
-                    "type": "array"
-                },
-                "uuid": {
-                    "type": "string"
-                }
-            },
-            "title": "Test",
-            "type": "object"
-        },
-        "TestPlan": {
-            "properties": {
-                "description": {
-                    "allowEmptyValue": true,
-                    "description": "Description",
-                    "type": "string"
-                },
-                "id": {
-                    "format": "int64",
-                    "type": "integer"
-                },
-                "index": {
-                    "allowEmptyValue": false,
-                    "description": "Execution index",
-                    "format": "int32",
-                    "type": "integer"
-                },
-                "nsd": {
-                    "allowEmptyValue": false,
-                    "description": "Network service descriptor",
-                    "type": "object"
-                },
-                "package_id": {
-                    "allowEmptyValue": false,
-                    "description": "Package id",
-                    "type": "string"
-                },
-                "service_uuid": {
-                    "allowEmptyValue": false,
-                    "description": "Network service uuid",
-                    "type": "string"
-                },
-                "status": {
-                    "allowEmptyValue": false,
-                    "description": "Status",
-                    "type": "string"
-                },
-                "test_uuid": {
-                    "allowEmptyValue": false,
-                    "description": "Test uuid",
-                    "type": "string"
-                },
-                "testd": {
-                    "allowEmptyValue": false,
-                    "description": "Test descriptor",
-                    "type": "object"
-                },
-                "uuid": {
-                    "allowEmptyValue": false,
-                    "description": "Test Plan uuid",
-                    "type": "string"
-                }
-            },
-            "title": "TestPlan",
-            "type": "object"
-        },
-        "TestPlanCallback": {
-            "properties": {
-                "event_actor": {
-                    "allowEmptyValue": false,
-                    "description": "Event Actor",
-                    "example": "Curator, Executor",
-                    "type": "string"
-                },
-                "exception": {
-                    "allowEmptyValue": false,
-                    "description": "Test Plan Exception message",
-                    "example": "run time exception",
-                    "type": "string"
-                },
-                "status": {
-                    "allowEmptyValue": false,
-                    "description": "Test Plan Status",
-                    "example": "STARTING, COMPLETED, CANCELLING, CANCELLED, ERROR",
-                    "type": "string"
-                },
-                "test_plan_uuid": {
-                    "allowEmptyValue": false,
-                    "description": "Test Plan uuid",
-                    "type": "string"
-                },
-                "test_results": {
-                    "allowEmptyValue": true,
-                    "description": "Test Plan Result List",
-                    "items": {
-                        "$ref": "#/definitions/TestResult"
-                    },
-                    "type": "array"
-                },
-                "url": {
-                    "allowEmptyValue": false,
-                    "description": "Callback URL",
-                    "example": "/test-plans/on-change",
-                    "type": "string"
-                }
-            },
-            "required": [
-                "event_actor",
-                "status",
-                "test_plan_uuid"
-            ],
-            "title": "TestPlanCallback",
-            "type": "object"
-        },
-        "TestResult": {
-            "properties": {
-                "test_result_uuid": {
-                    "allowEmptyValue": false,
-                    "description": "Test result uuid",
-                    "type": "string"
-                },
-                "test_status": {
-                    "allowEmptyValue": false,
-                    "description": "Test Plan Status",
-                    "example": "STARTING, COMPLETED, CANCELLING, CANCELLED, ERROR",
-                    "type": "string"
-                },
-                "test_uuid": {
-                    "allowEmptyValue": false,
-                    "description": "Test uuid",
-                    "type": "string"
-                }
-            },
-            "required": [
-                "test_result_uuid",
-                "test_status",
-                "test_uuid"
-            ],
-            "title": "TestResult",
-            "type": "object"
-        }
-    },
-    "host": "tng-vnv-planner:6100",
+    "swagger": "2.0",
     "info": {
         "description": "An H2020 5GTANGO project",
+        "version": "0.0.1",
+        "title": "tng-vnv-planner REST API",
+        "termsOfService": "https://5gtango.eu/",
         "license": {
             "name": "Apache License 2.0",
             "url": "https://github.com/sonata-nfv/tng-vnv-planner/blob/master/LICENSE"
-        },
-        "termsOfService": "https://5gtango.eu/",
-        "title": "tng-vnv-planner REST API",
-        "version": "0.0.1"
+        }
     },
+    "host": "tng-vnv-planner:6100",
+    "basePath": "/",
+    "tags": [
+        {
+            "name": "catalogue-callback-controller",
+            "description": "Catalogue Callback Controller"
+        },
+        {
+            "name": "curator-callback-controller",
+            "description": "Curator Callback Controller"
+        },
+        {
+            "name": "network-service-controller",
+            "description": "Network Service Controller"
+        },
+        {
+            "name": "test-controller",
+            "description": "Test Controller"
+        },
+        {
+            "name": "test-plan-controller",
+            "description": "Test Plan Controller"
+        }
+    ],
     "paths": {
         "/api/v1/packages/on-change": {
             "post": {
+                "tags": [
+                    "catalogue-callback-controller"
+                ],
+                "summary": "onChange",
+                "operationId": "onChangeUsingPOST",
                 "consumes": [
                     "application/json"
                 ],
-                "operationId": "onChangeUsingPOST",
+                "produces": [
+                    "*/*"
+                ],
                 "parameters": [
                     {
-                        "description": "body",
                         "in": "body",
                         "name": "body",
+                        "description": "body",
                         "required": true,
                         "schema": {
                             "$ref": "#/definitions/PackageCallback"
                         }
                     }
                 ],
-                "produces": [
-                    "*/*"
-                ],
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
+                            "type": "array",
                             "items": {
                                 "$ref": "#/definitions/TestPlan"
-                            },
-                            "type": "array"
+                            }
                         }
                     },
                     "201": {
@@ -283,15 +84,15 @@
                     "404": {
                         "description": "Could not find package with that package_id"
                     }
-                },
-                "summary": "onChange",
-                "tags": [
-                    "catalogue-callback-controller"
-                ]
+                }
             }
         },
         "/api/v1/test-plans": {
             "get": {
+                "tags": [
+                    "test-plan-controller"
+                ],
+                "summary": "listAllTestPlans",
                 "operationId": "listAllTestPlansUsingGET",
                 "produces": [
                     "*/*"
@@ -300,10 +101,10 @@
                     "200": {
                         "description": "OK",
                         "schema": {
+                            "type": "array",
                             "items": {
                                 "$ref": "#/definitions/TestPlan"
-                            },
-                            "type": "array"
+                            }
                         }
                     },
                     "401": {
@@ -315,30 +116,30 @@
                     "404": {
                         "description": "Not Found"
                     }
-                },
-                "summary": "listAllTestPlans",
-                "tags": [
-                    "test-plan-controller"
-                ]
+                }
             },
             "post": {
+                "tags": [
+                    "test-plan-controller"
+                ],
+                "summary": "save",
+                "operationId": "saveUsingPOST",
                 "consumes": [
                     "application/json"
                 ],
-                "operationId": "saveUsingPOST",
+                "produces": [
+                    "*/*"
+                ],
                 "parameters": [
                     {
-                        "description": "testPlan",
                         "in": "body",
                         "name": "testPlan",
+                        "description": "testPlan",
                         "required": true,
                         "schema": {
                             "$ref": "#/definitions/TestPlan"
                         }
                     }
-                ],
-                "produces": [
-                    "*/*"
                 ],
                 "responses": {
                     "200": {
@@ -362,32 +163,32 @@
                     "404": {
                         "description": "Not Found"
                     }
-                },
-                "summary": "save",
-                "tags": [
-                    "test-plan-controller"
-                ]
+                }
             }
         },
         "/api/v1/test-plans/on-change/": {
             "post": {
+                "tags": [
+                    "curator-callback-controller"
+                ],
+                "summary": "onChange",
+                "operationId": "onChangeUsingPOST_1",
                 "consumes": [
                     "application/json"
                 ],
-                "operationId": "onChangeUsingPOST_1",
+                "produces": [
+                    "*/*"
+                ],
                 "parameters": [
                     {
-                        "description": "callback",
                         "in": "body",
                         "name": "callback",
+                        "description": "callback",
                         "required": true,
                         "schema": {
                             "$ref": "#/definitions/TestPlanCallback"
                         }
                     }
-                ],
-                "produces": [
-                    "*/*"
                 ],
                 "responses": {
                     "200": {
@@ -408,32 +209,32 @@
                     "404": {
                         "description": "Could not find package with that package_id"
                     }
-                },
-                "summary": "onChange",
-                "tags": [
-                    "curator-callback-controller"
-                ]
+                }
             }
         },
         "/api/v1/test-plans/on-change/completed": {
             "post": {
+                "tags": [
+                    "curator-callback-controller"
+                ],
+                "summary": "onChangeCompleted",
+                "operationId": "onChangeCompletedUsingPOST",
                 "consumes": [
                     "application/json"
                 ],
-                "operationId": "onChangeCompletedUsingPOST",
+                "produces": [
+                    "*/*"
+                ],
                 "parameters": [
                     {
-                        "description": "callback",
                         "in": "body",
                         "name": "callback",
+                        "description": "callback",
                         "required": true,
                         "schema": {
                             "$ref": "#/definitions/TestPlanCallback"
                         }
                     }
-                ],
-                "produces": [
-                    "*/*"
                 ],
                 "responses": {
                     "200": {
@@ -454,41 +255,41 @@
                     "404": {
                         "description": "Could not find package with that package_id"
                     }
-                },
-                "summary": "onChangeCompleted",
-                "tags": [
-                    "curator-callback-controller"
-                ]
+                }
             }
         },
         "/api/v1/test-plans/services": {
             "post": {
+                "tags": [
+                    "test-plan-controller"
+                ],
+                "summary": "buildTestPlansByService",
+                "operationId": "buildTestPlansByServiceUsingPOST",
                 "consumes": [
                     "application/json"
                 ],
-                "operationId": "findTestPlansByServiceUsingPOST",
+                "produces": [
+                    "*/*"
+                ],
                 "parameters": [
                     {
-                        "description": "body",
                         "in": "body",
                         "name": "body",
+                        "description": "body",
                         "required": true,
                         "schema": {
                             "$ref": "#/definitions/NetworkService"
                         }
                     }
                 ],
-                "produces": [
-                    "*/*"
-                ],
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
+                            "type": "array",
                             "items": {
                                 "$ref": "#/definitions/TestPlan"
-                            },
-                            "type": "array"
+                            }
                         }
                     },
                     "201": {
@@ -506,36 +307,36 @@
                     "404": {
                         "description": "Not Found"
                     }
-                },
-                "summary": "findTestPlansByService",
-                "tags": [
-                    "test-plan-controller"
-                ]
+                }
             }
         },
         "/api/v1/test-plans/services/{serviceUuid}/tests": {
             "get": {
+                "tags": [
+                    "network-service-controller"
+                ],
+                "summary": "listTestsByService",
                 "operationId": "listTestsByServiceUsingGET",
+                "produces": [
+                    "*/*"
+                ],
                 "parameters": [
                     {
-                        "description": "serviceUuid",
-                        "in": "path",
                         "name": "serviceUuid",
+                        "in": "path",
+                        "description": "serviceUuid",
                         "required": true,
                         "type": "string"
                     }
-                ],
-                "produces": [
-                    "*/*"
                 ],
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
+                            "type": "array",
                             "items": {
                                 "$ref": "#/definitions/Test"
-                            },
-                            "type": "array"
+                            }
                         }
                     },
                     "401": {
@@ -547,41 +348,41 @@
                     "404": {
                         "description": "Not Found"
                     }
-                },
-                "summary": "listTestsByService",
-                "tags": [
-                    "network-service-controller"
-                ]
+                }
             }
         },
         "/api/v1/test-plans/tests": {
             "post": {
+                "tags": [
+                    "test-plan-controller"
+                ],
+                "summary": "buildTestPlansByTest",
+                "operationId": "buildTestPlansByTestUsingPOST",
                 "consumes": [
                     "application/json"
                 ],
-                "operationId": "findTestPlansByTestUsingPOST",
+                "produces": [
+                    "*/*"
+                ],
                 "parameters": [
                     {
-                        "description": "body",
                         "in": "body",
                         "name": "body",
+                        "description": "body",
                         "required": true,
                         "schema": {
                             "$ref": "#/definitions/Test"
                         }
                     }
                 ],
-                "produces": [
-                    "*/*"
-                ],
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
+                            "type": "array",
                             "items": {
                                 "$ref": "#/definitions/TestPlan"
-                            },
-                            "type": "array"
+                            }
                         }
                     },
                     "201": {
@@ -599,27 +400,151 @@
                     "404": {
                         "description": "Not Found"
                     }
-                },
-                "summary": "findTestPlansByTest",
-                "tags": [
-                    "test-plan-controller"
-                ]
+                }
             }
         },
-        "/api/v1/test-plans/{uuid}": {
-            "delete": {
-                "operationId": "deleteTestPlanUsingDELETE",
+        "/api/v1/test-plans/tests/{testUuid}/services": {
+            "get": {
+                "tags": [
+                    "test-controller"
+                ],
+                "summary": "listTestsByService",
+                "operationId": "listTestsByServiceUsingGET_1",
+                "produces": [
+                    "*/*"
+                ],
                 "parameters": [
                     {
-                        "description": "uuid",
+                        "name": "testUuid",
                         "in": "path",
-                        "name": "uuid",
+                        "description": "testUuid",
                         "required": true,
                         "type": "string"
                     }
                 ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Test"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                }
+            }
+        },
+        "/api/v1/test-plans/{uuid}": {
+            "get": {
+                "tags": [
+                    "test-plan-controller"
+                ],
+                "summary": "findTestPlan",
+                "operationId": "findTestPlanUsingGET",
                 "produces": [
                     "*/*"
+                ],
+                "parameters": [
+                    {
+                        "name": "uuid",
+                        "in": "path",
+                        "description": "uuid",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/TestPlan"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "test-plan-controller"
+                ],
+                "summary": "update",
+                "operationId": "updateUsingPUT",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "*/*"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "testPlan",
+                        "description": "testPlan",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/TestPlan"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/TestPlan"
+                        }
+                    },
+                    "201": {
+                        "description": "Created"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "test-plan-controller"
+                ],
+                "summary": "deleteTestPlan",
+                "operationId": "deleteTestPlanUsingDELETE",
+                "produces": [
+                    "*/*"
+                ],
+                "parameters": [
+                    {
+                        "name": "uuid",
+                        "in": "path",
+                        "description": "uuid",
+                        "required": true,
+                        "type": "string"
+                    }
                 ],
                 "responses": {
                     "200": {
@@ -634,114 +559,206 @@
                     "403": {
                         "description": "Forbidden"
                     }
-                },
-                "summary": "deleteTestPlan",
-                "tags": [
-                    "test-plan-controller"
-                ]
-            },
-            "get": {
-                "operationId": "findTestPlanUsingGET",
-                "parameters": [
-                    {
-                        "description": "uuid",
-                        "in": "path",
-                        "name": "uuid",
-                        "required": true,
-                        "type": "string"
-                    }
-                ],
-                "produces": [
-                    "*/*"
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/TestPlan"
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized"
-                    },
-                    "403": {
-                        "description": "Forbidden"
-                    },
-                    "404": {
-                        "description": "Not Found"
-                    }
-                },
-                "summary": "findTestPlan",
-                "tags": [
-                    "test-plan-controller"
-                ]
-            },
-            "put": {
-                "consumes": [
-                    "application/json"
-                ],
-                "operationId": "updateUsingPUT",
-                "parameters": [
-                    {
-                        "description": "testPlan",
-                        "in": "body",
-                        "name": "testPlan",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/TestPlan"
-                        }
-                    }
-                ],
-                "produces": [
-                    "*/*"
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/TestPlan"
-                        }
-                    },
-                    "201": {
-                        "description": "Created"
-                    },
-                    "400": {
-                        "description": "Bad Request"
-                    },
-                    "401": {
-                        "description": "Unauthorized"
-                    },
-                    "403": {
-                        "description": "Forbidden"
-                    },
-                    "404": {
-                        "description": "Not Found"
-                    }
-                },
-                "summary": "update",
-                "tags": [
-                    "test-plan-controller"
-                ]
+                }
             }
         }
     },
-    "swagger": "2.0",
-    "tags": [
-        {
-            "description": "Catalogue Callback Controller",
-            "name": "catalogue-callback-controller"
+    "definitions": {
+        "NetworkService": {
+            "type": "object",
+            "properties": {
+                "package_id": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "uuid": {
+                    "type": "string"
+                }
+            },
+            "title": "NetworkService"
         },
-        {
-            "description": "Curator Callback Controller",
-            "name": "curator-callback-controller"
+        "PackageCallback": {
+            "type": "object",
+            "required": [
+                "event_name",
+                "package_id"
+            ],
+            "properties": {
+                "confirm_required": {
+                    "type": "boolean",
+                    "example": true,
+                    "description": "Additional validation step before every test plan progresses towards execution",
+                    "allowEmptyValue": true
+                },
+                "event_name": {
+                    "type": "string",
+                    "example": "UPDATED",
+                    "description": "Event Name",
+                    "allowEmptyValue": true
+                },
+                "package_id": {
+                    "type": "string",
+                    "description": "The reference id of the uploaded package that will generate test plans as pair of network services and tests",
+                    "allowEmptyValue": false
+                },
+                "package_location": {
+                    "type": "string"
+                }
+            },
+            "title": "PackageCallback"
         },
-        {
-            "description": "Network Service Controller",
-            "name": "network-service-controller"
+        "Test": {
+            "type": "object",
+            "properties": {
+                "confirm_required": {
+                    "type": "string"
+                },
+                "package_id": {
+                    "type": "string"
+                },
+                "uuid": {
+                    "type": "string"
+                }
+            },
+            "title": "Test"
         },
-        {
-            "description": "Test Plan Controller",
-            "name": "test-plan-controller"
+        "TestPlan": {
+            "type": "object",
+            "properties": {
+                "confirm_required": {
+                    "type": "string",
+                    "description": "Confirmation is required",
+                    "allowEmptyValue": false
+                },
+                "confirmed": {
+                    "type": "string",
+                    "description": "Confirmed",
+                    "allowEmptyValue": false
+                },
+                "description": {
+                    "type": "string",
+                    "description": "Description",
+                    "allowEmptyValue": true
+                },
+                "id": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "index": {
+                    "type": "integer",
+                    "format": "int32",
+                    "description": "Execution index",
+                    "allowEmptyValue": false
+                },
+                "service_package_id": {
+                    "type": "string",
+                    "description": "Service Package id",
+                    "allowEmptyValue": false
+                },
+                "service_uuid": {
+                    "type": "string",
+                    "description": "Network service uuid",
+                    "allowEmptyValue": false
+                },
+                "status": {
+                    "type": "string",
+                    "description": "Status",
+                    "allowEmptyValue": false
+                },
+                "test_package_id": {
+                    "type": "string",
+                    "description": "Test Package id",
+                    "allowEmptyValue": false
+                },
+                "test_uuid": {
+                    "type": "string",
+                    "description": "Test uuid",
+                    "allowEmptyValue": false
+                },
+                "uuid": {
+                    "type": "string",
+                    "description": "Test Plan uuid",
+                    "allowEmptyValue": false
+                }
+            },
+            "title": "TestPlan"
+        },
+        "TestPlanCallback": {
+            "type": "object",
+            "required": [
+                "event_actor",
+                "status",
+                "test_plan_uuid"
+            ],
+            "properties": {
+                "event_actor": {
+                    "type": "string",
+                    "example": "Curator, Executor",
+                    "description": "Event Actor",
+                    "allowEmptyValue": false
+                },
+                "exception": {
+                    "type": "string",
+                    "example": "run time exception",
+                    "description": "Test Plan Exception message",
+                    "allowEmptyValue": false
+                },
+                "status": {
+                    "type": "string",
+                    "example": "STARTING, COMPLETED, CANCELLING, CANCELLED, ERROR",
+                    "description": "Test Plan Status",
+                    "allowEmptyValue": false
+                },
+                "test_plan_uuid": {
+                    "type": "string",
+                    "description": "Test Plan uuid",
+                    "allowEmptyValue": false
+                },
+                "test_results": {
+                    "type": "array",
+                    "description": "Test Plan Result List",
+                    "allowEmptyValue": true,
+                    "items": {
+                        "$ref": "#/definitions/TestResult"
+                    }
+                },
+                "url": {
+                    "type": "string",
+                    "example": "/test-plans/on-change",
+                    "description": "Callback URL",
+                    "allowEmptyValue": false
+                }
+            },
+            "title": "TestPlanCallback"
+        },
+        "TestResult": {
+            "type": "object",
+            "required": [
+                "test_result_uuid",
+                "test_status",
+                "test_uuid"
+            ],
+            "properties": {
+                "test_result_uuid": {
+                    "type": "string",
+                    "description": "Test result uuid",
+                    "allowEmptyValue": false
+                },
+                "test_status": {
+                    "type": "string",
+                    "example": "STARTING, COMPLETED, CANCELLING, CANCELLED, ERROR",
+                    "description": "Test Plan Status",
+                    "allowEmptyValue": false
+                },
+                "test_uuid": {
+                    "type": "string",
+                    "description": "Test uuid",
+                    "allowEmptyValue": false
+                }
+            },
+            "title": "TestResult"
         }
-    ]
+    }
 }

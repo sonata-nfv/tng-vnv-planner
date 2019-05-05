@@ -45,13 +45,6 @@ class NetworkService {
     String uuid
     String status
     String packageId
-    List<String> testingTags
-    List<String> servicePlatforms
-    def nsd
-
-    boolean tagMatchedWith(Test test) {
-        (test == null)?false:this?.testingTags?.flatten().any { st -> test?.testingTags?.flatten().any{ tt -> tt == st}}
-    }
 
     boolean equals(o) {
         if (this.is(o)) return true

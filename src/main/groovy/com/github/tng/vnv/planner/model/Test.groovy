@@ -37,11 +37,7 @@ package com.github.tng.vnv.planner.model
 class Test {
     String uuid
     String packageId
-    String confirmed
     String confirmRequired
-    List<String> servicePlatforms
-    List<String> testingTags;
-    def testd
 
     boolean equals(o) {
         if (this.is(o)) return true

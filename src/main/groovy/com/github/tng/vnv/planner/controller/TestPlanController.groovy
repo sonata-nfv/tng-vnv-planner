@@ -100,14 +100,14 @@ class TestPlanController {
     @ApiResponses(value = [@ApiResponse(code = 400, message = 'Bad Request')])
     @PostMapping('/services')
     @ResponseBody
-    List<TestPlan> findTestPlansByService(@Valid @RequestBody NetworkService body) {
-        new ArrayList(testPlanService.findByService(body))
+    List<TestPlan> buildTestPlansByService(@Valid @RequestBody NetworkService body) {
+        new ArrayList(testPlanService.buildTestPlansByService(body.uuid))
     }
 
     @ApiResponses(value = [@ApiResponse(code = 400, message = 'Bad Request')])
     @PostMapping('/tests')
     @ResponseBody
-    List<TestPlan> findTestPlansByTest(@Valid @RequestBody Test body) {
-        new ArrayList(testPlanService.findByTest(body))
+    List<TestPlan> buildTestPlansByTest(@Valid @RequestBody Test body) {
+        new ArrayList(testPlanService.buildTestPlansByTest(body.uuid))
     }
 }

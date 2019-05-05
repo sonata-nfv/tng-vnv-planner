@@ -45,26 +45,39 @@ import com.github.tng.vnv.planner.model.Test
 @RestController
 class CatalogueMock {
 
-    private static String TEST_UUID='input0ts-75f5-4ca1-90c8-12ec80a79836' //test_tags: latency (#4), http (#4)
-    private static String SERVICE_UUID='input0ns-f213-4fae-8d3f-04358e1e1451' //test_tags: latency (#3), aux_test
-    private static String MULTIPLE_TEST_PLANS_PACKAGE_ID ='multiple_scheduler:test:0.0.1'
+    static String TEST_UUID_HTTP_BENCHMARK_TEST_1 ='input0ts-75f5-4ca1-90c8-12ec80a79836' //test_tags: latency (#4), http (#4)
+    static String SERVICE_UUID_NS_SQUID ='4dd4cb15-76b8-46fd-b3c0-1b165cc332f9' //test_tags: latency (#3), aux_test
+    static String MOCKED_TEST_PLANS_MOCKED_PACKAGE_ID_FOR_HTTP_BENCHMARK_TEST_1_AND_NS_SQUID ='mocked_input0ts-75f5-4ca1-90c8-12ec80a79836_4dd4cb15-76b8-46fd-b3c0-1b165cc332f9'
 
     @GetMapping('/mock/gk/packages')
-    def findPackages() {
-        DataMock.packages
+    def findPackages(@RequestParam(name='package_content.testing_tags',required = false) String testingTags,
+                     @RequestParam(name='package_content.uuid', required = false) String uuid) {
+        if (testingTags != null)
+            DataMock.getPackageByTag(testingTags)
+        else if (uuid != null)
+            DataMock.getPackageByUuid(uuid)
+        else
+            DataMock.packages
     }
 
     @GetMapping('/mock/gk/packages/{packageId:.+}')
     Map loadPackageMetadata(@PathVariable('packageId') String packageId) {
-        if (packageId == MULTIPLE_TEST_PLANS_PACKAGE_ID) {
+        if (packageId == MOCKED_TEST_PLANS_MOCKED_PACKAGE_ID_FOR_HTTP_BENCHMARK_TEST_1_AND_NS_SQUID) {
             [pd:[package_content:[
                     [
-                            'uuid':TEST_UUID,
+                            'uuid':TEST_UUID_HTTP_BENCHMARK_TEST_1,
                             'content-type':'application/vnd.5gtango.tstd',
+                            "testing_tags": [
+                                    "http",
+                                    "latency"
+                            ]
                     ],
                     [
-                            'uuid':SERVICE_UUID,
+                            'uuid':SERVICE_UUID_NS_SQUID,
                             'content-type':'application/vnd.5gtango.nsd',
+                            "testing_tags": [
+                                    "proxy-advanced"
+                            ]
                     ],
             ], test_type: 'fgh'],
             ]

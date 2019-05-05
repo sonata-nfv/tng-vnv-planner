@@ -109,7 +109,6 @@ class WorkFlowManagerTest extends TestRestSpec {
         testPlanService.findByUuid(TEST_PLAN_WFM_UUID_2).status == TEST_PLAN_STATUS.COMPLETED
         def nextTestPlan = testPlanService.findByUuid(TEST_PLAN_WFM_UUID_3)
         nextTestPlan.status == TEST_PLAN_STATUS.STARTING
-        curatorMock.currentTestPlan.nsd.name == "mediapilot-service"
 
         cleanup:
         cleanTestPlanDB()

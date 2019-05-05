@@ -59,9 +59,13 @@ class TestPlan implements Serializable {
             allowEmptyValue = false)
     String uuid
     @ApiModelProperty(
-            value = 'Package id',
+            value = 'Service Package id',
             allowEmptyValue = false)
-    String packageId
+    String servicePackageId
+    @ApiModelProperty(
+            value = 'Test Package id',
+            allowEmptyValue = false)
+    String testPackageId
     @ApiModelProperty(
             value = 'Network service uuid',
             allowEmptyValue = false)
@@ -75,6 +79,14 @@ class TestPlan implements Serializable {
             allowEmptyValue = false)
     int index
     @ApiModelProperty(
+            value = 'Confirmed',
+            allowEmptyValue = false)
+    String confirmed
+    @ApiModelProperty(
+            value = 'Confirmation is required',
+            allowEmptyValue = false)
+    String confirmRequired
+    @ApiModelProperty(
             value = 'Status',
             allowEmptyValue = false)
     String status
@@ -82,16 +94,6 @@ class TestPlan implements Serializable {
             value = 'Description',
             allowEmptyValue = true)
     String description
-    @ApiModelProperty(
-            value = 'Network service descriptor',
-            allowEmptyValue = false)
-    @Transient
-    def nsd
-    @ApiModelProperty(
-            value = 'Test descriptor',
-            allowEmptyValue = false)
-    @Transient
-    def testd
 
     boolean equals(o) {
         (o.uuid).contains(uuid)? true:false
@@ -104,9 +106,20 @@ class TestPlan implements Serializable {
 
 @EqualsAndHashCode
 class TestPlanRequest {
-    def nsd
-    def testd
+    @ApiModelProperty(
+            value = 'Network service uuid',
+            allowEmptyValue = false)
+    String serviceUuid
+    @ApiModelProperty(
+            value = 'Test uuid',
+            allowEmptyValue = false)
+    String testUuid
+
+    @ApiModelProperty(
+            value = 'Test Plan uuid',
+            allowEmptyValue = false)
     String testPlanUuid
+    @ApiModelProperty(value = 'is Last Test Plan')
     Boolean lastTest = false
     List<TestPlanCallback> testPlanCallbacks = [
             new TestPlanCallback(eventActor: 'Curator', url: '/api/v1/test-plans/on-change/completed/', status:'COMPLETED'),

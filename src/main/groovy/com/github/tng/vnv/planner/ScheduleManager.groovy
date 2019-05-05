@@ -36,12 +36,10 @@ package com.github.tng.vnv.planner
 
 import com.github.tng.vnv.planner.service.NetworkServiceService
 import com.github.tng.vnv.planner.service.TestPlanService
-import com.github.tng.vnv.planner.model.Package
 import com.github.tng.vnv.planner.model.TestPlan
 import com.github.tng.vnv.planner.service.TestService
 import com.github.tng.vnv.planner.utils.TEST_PLAN_STATUS
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 
 import static org.springframework.util.StringUtils.isEmpty
@@ -58,36 +56,23 @@ class ScheduleManager {
     @Autowired
     WorkflowManager workflowManager
 
-    @Value('${app.NOT_AVAILABLE_DATA}')
-    String not_available_data
-    @Value('${app.NOT_MATCHING_TEST_TAGS}')
-    String not_matching_test_tags
-
-    List<TestPlan> create(Package packageMetadata) {
+    List<TestPlan> create(def packageId) {
         new ArrayList<>(
-                testPlanService.findByPackage(packageMetadata)
+                testPlanService.buildTestPlansByPackage(packageId)
         )?.each{create(it)}
     }
 
     TestPlan create(TestPlan tp) {
         tp.uuid=(!isEmpty(tp.uuid))?tp.uuid:UUID.randomUUID().toString()
-        boolean valid = false
         if (!isEmpty(tp.serviceUuid) && !isEmpty(tp.testUuid)) {
-            def service = networkServiceService.findByUuid(tp.serviceUuid)
-            def test = testService.findByUuid(tp.testUuid)
-            if (service != null && test != null) {
-                valid = true
-                if (!isEmpty(test.confirmRequired) && test.confirmRequired == '1'
-                        && (isEmpty(test.confirmed) || test.confirmed != '1')) {
+
+                if ((testService.isConfirmRequired(tp.testUuid)
+                        || !isEmpty(tp.confirmRequired) && tp.confirmRequired == '1')
+                        && (isEmpty(tp.confirmed) || tp.confirmed != '1')) {
                     tp.status = TEST_PLAN_STATUS.NOT_CONFIRMED
                 } else {
                     tp.status = TEST_PLAN_STATUS.SCHEDULED
                 }
-            }
-        }
-        if(!valid) {
-            tp.status = TEST_PLAN_STATUS.REJECTED
-            tp.description += " $not_available_data"
         }
         testPlanService.save(tp)
     }

@@ -35,35 +35,54 @@
 package com.github.tng.vnv.planner.service
 
 import com.github.tng.vnv.planner.client.Catalogue
+import com.github.tng.vnv.planner.client.Gatekeeper
 import com.github.tng.vnv.planner.model.NetworkService
+import com.github.tng.vnv.planner.model.Package
 import com.github.tng.vnv.planner.model.Test
+import com.github.tng.vnv.planner.model.TestPlan
+import com.github.tng.vnv.planner.utils.TEST_PLAN_STATUS
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+
+import static org.springframework.util.StringUtils.isEmpty
 
 @Service
 class TestService {
 
     @Autowired
     Catalogue catalogue
+    @Autowired
+    Gatekeeper gatekeeper
 
     Test findByUuid(String uuid) {
         catalogue.getTest(uuid).body
     }
 
-    List<Test> findTssByTestTag(String tag) {
-        catalogue.getTests(tag).body
-    }
-
-    List<Test> findByService(NetworkService service) {
-        def ts = [] as HashSet<Test>
-        service?.testingTags?.each { tt ->
-            findTssByTestTag(tt)?.each { test ->
-				println test.dump()
-                if(test?.testingTags.any{ it -> it.contains(tt) }){
-                    ts.add(test)
+    List findByService(def uuid){
+        def matchedTests = [] as HashSet<Test>
+        def pack = gatekeeper.getPackageByService(uuid).body
+        if(pack != null){
+            def testingTags = pack.pd.package_content.collect {it.testing_tags}
+            testingTags?.each { tags ->
+                tags?.each { tag ->
+                    List<Package> packageList = gatekeeper.getPackageByTag(tag).body
+                    packageList?.each {
+                        it?.pd?.package_content.each { resource ->
+                            if (resource.get('content-type') == 'application/vnd.5gtango.tstd') {
+                                matchedTests << findByUuid(resource.uuid)
+                            }
+                        }
+                    }
                 }
             }
         }
-        new ArrayList(ts)
+        new ArrayList(matchedTests)
     }
+
+    boolean isConfirmRequired(def uuid){
+        def pack = gatekeeper.getPackageByTest(uuid).body
+        (pack != null && pack.pd.package_content?.confirm_required != null
+                && pack.pd.package_content.confirm_required[pack.pd.package_content.uuid.indexOf(uuid)]=='1')
+    }
+
 }

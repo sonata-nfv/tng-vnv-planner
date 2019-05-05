@@ -32,68 +32,26 @@
  * partner consortium (www.5gtango.eu).
  */
 
-package com.github.tng.vnv.planner.service
+package com.github.tng.vnv.planner.controller
 
-
-import com.github.tng.vnv.planner.repository.TestPlanRepository
-import com.github.tng.vnv.planner.model.TestPlan
-import com.github.tng.vnv.planner.utils.TEST_PLAN_STATUS
-import groovy.util.logging.Log
+import com.github.tng.vnv.planner.model.Test
+import com.github.tng.vnv.planner.service.NetworkServiceService
+import com.github.tng.vnv.planner.service.TestService
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.stereotype.Service
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RestController
 
-@Log
-@Service
-class TestPlanService {
+@RestController
+@RequestMapping('/api/v1/test-plans')
+class TestController {
 
-    @Autowired
-    TestPlanRepository testPlanRepository
     @Autowired
     TestService testService
-    @Autowired
-    PackageService packageService
 
-    Set<TestPlan> buildTestPlansByTest(def uuid) {
-        packageService.buildTestPlansByTestPackage(uuid)
-    }
-    
-    Set<TestPlan> buildTestPlansByService(def uuid) {
-        packageService.buildTestPlansByServicePackage(uuid)
-    }
-
-    Set<TestPlan> buildTestPlansByPackage(def packageId){
-        packageService.buildTestPlansByPackage(packageId)
-    }
-
-    TestPlan save(TestPlan testPlan){
-        testPlanRepository.save(testPlan)
-    }
-
-    TestPlan update(String uuid, String status) {
-        TestPlan testPlan = findByUuid(uuid)
-        testPlan.status = status
-        testPlanRepository.save(testPlan)
-    }
-
-    void delete(String uuid) {
-        update(uuid, TEST_PLAN_STATUS.CANCELLING)
-    }
-
-    TestPlan findByUuid(String uuid){
-        testPlanRepository.findByUuid(uuid)
-    }
-
-    TestPlan findNextScheduledTestPlan() {
-        testPlanRepository.findFirstByStatus(TEST_PLAN_STATUS.SCHEDULED)
-    }
-
-    boolean existsByStartingStatus() {
-        (testPlanRepository.findFirstByStatus(TEST_PLAN_STATUS.STARTING) != null)
-    }
-
-    List<TestPlan> findAll(){
-        testPlanRepository.findAll()
+    @GetMapping('/tests/{testUuid}/services')
+    List<Test> listTestsByService(@PathVariable('testUuid') String uuid) {
+        testService.findByService(uuid)
     }
 }
-
-

@@ -1,242 +1,38 @@
 {
-    "basePath": "/",
-    "definitions": {
-        "Login": {
-            "properties": {
-                "password": {
-                    "type": "string"
-                },
-                "username": {
-                    "type": "string"
-                }
-            },
-            "title": "Login",
-            "type": "object"
-        },
-        "NetworkService": {
-            "properties": {
-                "nsd": {
-                    "type": "object"
-                },
-                "package_id": {
-                    "type": "string"
-                },
-                "service_platforms": {
-                    "items": {
-                        "type": "string"
-                    },
-                    "type": "array"
-                },
-                "status": {
-                    "type": "string"
-                },
-                "testing_tags": {
-                    "items": {
-                        "type": "string"
-                    },
-                    "type": "array"
-                },
-                "uuid": {
-                    "type": "string"
-                }
-            },
-            "title": "NetworkService",
-            "type": "object"
-        },
-        "Session": {
-            "properties": {
-                "session_began_at": {
-                    "format": "date-time",
-                    "type": "string"
-                },
-                "token": {
-                    "$ref": "#/definitions/Token"
-                },
-                "username": {
-                    "type": "string"
-                }
-            },
-            "title": "Session",
-            "type": "object"
-        },
-        "Test": {
-            "properties": {
-                "confirm_required": {
-                    "type": "string"
-                },
-                "confirmed": {
-                    "type": "string"
-                },
-                "package_id": {
-                    "type": "string"
-                },
-                "service_platforms": {
-                    "items": {
-                        "type": "string"
-                    },
-                    "type": "array"
-                },
-                "testd": {
-                    "type": "object"
-                },
-                "testing_tags": {
-                    "items": {
-                        "type": "string"
-                    },
-                    "type": "array"
-                },
-                "uuid": {
-                    "type": "string"
-                }
-            },
-            "title": "Test",
-            "type": "object"
-        },
-        "TestPlanCallback": {
-            "properties": {
-                "event_actor": {
-                    "allowEmptyValue": false,
-                    "description": "Event Actor",
-                    "example": "Curator, Executor",
-                    "type": "string"
-                },
-                "exception": {
-                    "allowEmptyValue": false,
-                    "description": "Test Plan Exception message",
-                    "example": "run time exception",
-                    "type": "string"
-                },
-                "status": {
-                    "allowEmptyValue": false,
-                    "description": "Test Plan Status",
-                    "example": "STARTING, COMPLETED, CANCELLING, CANCELLED, ERROR",
-                    "type": "string"
-                },
-                "test_plan_uuid": {
-                    "allowEmptyValue": false,
-                    "description": "Test Plan uuid",
-                    "type": "string"
-                },
-                "test_results": {
-                    "allowEmptyValue": true,
-                    "description": "Test Plan Result List",
-                    "items": {
-                        "$ref": "#/definitions/TestResult"
-                    },
-                    "type": "array"
-                },
-                "url": {
-                    "allowEmptyValue": false,
-                    "description": "Callback URL",
-                    "example": "/test-plans/on-change",
-                    "type": "string"
-                }
-            },
-            "required": [
-                "event_actor",
-                "status",
-                "test_plan_uuid"
-            ],
-            "title": "TestPlanCallback",
-            "type": "object"
-        },
-        "TestPlanRequest": {
-            "properties": {
-                "last_test": {
-                    "type": "boolean"
-                },
-                "nsd": {
-                    "type": "object"
-                },
-                "test_plan_callbacks": {
-                    "items": {
-                        "$ref": "#/definitions/TestPlanCallback"
-                    },
-                    "type": "array"
-                },
-                "test_plan_uuid": {
-                    "type": "string"
-                },
-                "testd": {
-                    "type": "object"
-                }
-            },
-            "title": "TestPlanRequest",
-            "type": "object"
-        },
-        "TestPlanResponse": {
-            "properties": {
-                "exception": {
-                    "allowEmptyValue": false,
-                    "description": "Test Plan Exception message",
-                    "example": "run time exception",
-                    "type": "string"
-                },
-                "status": {
-                    "allowEmptyValue": false,
-                    "description": "Test Plan Status",
-                    "example": "STARTING, COMPLETED, CANCELLING, CANCELLED, ERROR",
-                    "type": "string"
-                }
-            },
-            "title": "TestPlanResponse",
-            "type": "object"
-        },
-        "TestResult": {
-            "properties": {
-                "test_result_uuid": {
-                    "allowEmptyValue": false,
-                    "description": "Test result uuid",
-                    "type": "string"
-                },
-                "test_status": {
-                    "allowEmptyValue": false,
-                    "description": "Test Plan Status",
-                    "example": "STARTING, COMPLETED, CANCELLING, CANCELLED, ERROR",
-                    "type": "string"
-                },
-                "test_uuid": {
-                    "allowEmptyValue": false,
-                    "description": "Test uuid",
-                    "type": "string"
-                }
-            },
-            "required": [
-                "test_result_uuid",
-                "test_status",
-                "test_uuid"
-            ],
-            "title": "TestResult",
-            "type": "object"
-        },
-        "Token": {
-            "properties": {
-                "access_token": {
-                    "type": "string"
-                },
-                "expires_in": {
-                    "format": "int32",
-                    "type": "integer"
-                }
-            },
-            "title": "Token",
-            "type": "object"
-        }
-    },
-    "host": "tng-vnv-planner:6100",
+    "swagger": "2.0",
     "info": {
         "description": "An H2020 5GTANGO project",
+        "version": "0.0.1",
+        "title": "tng-vnv-planner Dependencies' API",
+        "termsOfService": "https://5gtango.eu/",
         "license": {
             "name": "Apache License 2.0",
             "url": "https://github.com/sonata-nfv/tng-vnv-planner/blob/master/LICENSE"
-        },
-        "termsOfService": "https://5gtango.eu/",
-        "title": "tng-vnv-planner Dependencies' API",
-        "version": "0.0.1"
+        }
     },
+    "host": "tng-vnv-planner:6100",
+    "basePath": "/",
+    "tags": [
+        {
+            "name": "catalogue-mock",
+            "description": "Catalogue Mock"
+        },
+        {
+            "name": "curator-mock",
+            "description": "Curator Mock"
+        },
+        {
+            "name": "session-mock",
+            "description": "Session Mock"
+        }
+    ],
     "paths": {
         "/mock/curator/ping": {
             "get": {
+                "tags": [
+                    "curator-mock"
+                ],
+                "summary": "pingMe",
                 "operationId": "pingMeUsingGET",
                 "produces": [
                     "*/*"
@@ -245,10 +41,10 @@
                     "200": {
                         "description": "OK",
                         "schema": {
+                            "type": "object",
                             "additionalProperties": {
                                 "type": "object"
-                            },
-                            "type": "object"
+                            }
                         }
                     },
                     "401": {
@@ -260,32 +56,32 @@
                     "404": {
                         "description": "Not Found"
                     }
-                },
-                "summary": "pingMe",
-                "tags": [
-                    "curator-mock"
-                ]
+                }
             }
         },
         "/mock/curator/test-preparations": {
             "post": {
+                "tags": [
+                    "curator-mock"
+                ],
+                "summary": "curateTestPlan",
+                "operationId": "curateTestPlanUsingPOST",
                 "consumes": [
                     "application/json"
                 ],
-                "operationId": "curateTestPlanUsingPOST",
+                "produces": [
+                    "*/*"
+                ],
                 "parameters": [
                     {
-                        "description": "testPlanRequest",
                         "in": "body",
                         "name": "testPlanRequest",
+                        "description": "testPlanRequest",
                         "required": true,
                         "schema": {
                             "$ref": "#/definitions/TestPlanRequest"
                         }
                     }
-                ],
-                "produces": [
-                    "*/*"
                 ],
                 "responses": {
                     "200": {
@@ -306,27 +102,27 @@
                     "404": {
                         "description": "Not Found"
                     }
-                },
-                "summary": "curateTestPlan",
-                "tags": [
-                    "curator-mock"
-                ]
+                }
             }
         },
         "/mock/curator/test-preparations/{testPlanUuid}": {
             "delete": {
+                "tags": [
+                    "curator-mock"
+                ],
+                "summary": "deleteTestPlan",
                 "operationId": "deleteTestPlanUsingDELETE_1",
+                "produces": [
+                    "*/*"
+                ],
                 "parameters": [
                     {
-                        "description": "testPlanUuid",
-                        "in": "path",
                         "name": "testPlanUuid",
+                        "in": "path",
+                        "description": "testPlanUuid",
                         "required": true,
                         "type": "string"
                     }
-                ],
-                "produces": [
-                    "*/*"
                 ],
                 "responses": {
                     "200": {
@@ -341,103 +137,40 @@
                     "403": {
                         "description": "Forbidden"
                     }
-                },
-                "summary": "deleteTestPlan",
-                "tags": [
-                    "curator-mock"
-                ]
+                }
             }
         },
         "/mock/gk/packages": {
             "get": {
+                "tags": [
+                    "catalogue-mock"
+                ],
+                "summary": "findPackages",
                 "operationId": "findPackagesUsingGET",
                 "produces": [
                     "*/*"
                 ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "type": "object"
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized"
-                    },
-                    "403": {
-                        "description": "Forbidden"
-                    },
-                    "404": {
-                        "description": "Not Found"
-                    }
-                },
-                "summary": "findPackages",
-                "tags": [
-                    "catalogue-mock"
-                ]
-            }
-        },
-        "/mock/gk/packages/{packageId}": {
-            "get": {
-                "operationId": "loadPackageMetadataUsingGET",
                 "parameters": [
                     {
-                        "description": "packageId",
-                        "in": "path",
-                        "name": "packageId",
-                        "required": true,
-                        "type": "string"
-                    }
-                ],
-                "produces": [
-                    "*/*"
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "type": "object"
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized"
-                    },
-                    "403": {
-                        "description": "Forbidden"
-                    },
-                    "404": {
-                        "description": "Not Found"
-                    }
-                },
-                "summary": "loadPackageMetadata",
-                "tags": [
-                    "catalogue-mock"
-                ]
-            }
-        },
-        "/mock/gk/services": {
-            "get": {
-                "operationId": "findServicesUsingGET",
-                "parameters": [
-                    {
-                        "description": "testing_tag",
+                        "name": "package_content.testing_tags",
                         "in": "query",
-                        "name": "testing_tag",
+                        "description": "package_content.testing_tags",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "package_content.uuid",
+                        "in": "query",
+                        "description": "package_content.uuid",
                         "required": false,
                         "type": "string"
                     }
                 ],
-                "produces": [
-                    "*/*"
-                ],
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "items": {
-                                "$ref": "#/definitions/NetworkService"
-                            },
-                            "type": "array"
+                            "type": "object"
                         }
                     },
                     "401": {
@@ -449,27 +182,27 @@
                     "404": {
                         "description": "Not Found"
                     }
-                },
-                "summary": "findServices",
-                "tags": [
-                    "catalogue-mock"
-                ]
+                }
             }
         },
-        "/mock/gk/services/{uuid}": {
+        "/mock/gk/packages/{packageId}": {
             "get": {
-                "operationId": "findServiceUsingGET",
+                "tags": [
+                    "catalogue-mock"
+                ],
+                "summary": "loadPackageMetadata",
+                "operationId": "loadPackageMetadataUsingGET",
+                "produces": [
+                    "*/*"
+                ],
                 "parameters": [
                     {
-                        "description": "uuid",
+                        "name": "packageId",
                         "in": "path",
-                        "name": "uuid",
+                        "description": "packageId",
                         "required": true,
                         "type": "string"
                     }
-                ],
-                "produces": [
-                    "*/*"
                 ],
                 "responses": {
                     "200": {
@@ -487,32 +220,111 @@
                     "404": {
                         "description": "Not Found"
                     }
-                },
-                "summary": "findService",
+                }
+            }
+        },
+        "/mock/gk/services": {
+            "get": {
                 "tags": [
                     "catalogue-mock"
-                ]
+                ],
+                "summary": "findServices",
+                "operationId": "findServicesUsingGET",
+                "produces": [
+                    "*/*"
+                ],
+                "parameters": [
+                    {
+                        "name": "testing_tag",
+                        "in": "query",
+                        "description": "testing_tag",
+                        "required": false,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/NetworkService"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                }
+            }
+        },
+        "/mock/gk/services/{uuid}": {
+            "get": {
+                "tags": [
+                    "catalogue-mock"
+                ],
+                "summary": "findService",
+                "operationId": "findServiceUsingGET",
+                "produces": [
+                    "*/*"
+                ],
+                "parameters": [
+                    {
+                        "name": "uuid",
+                        "in": "path",
+                        "description": "uuid",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                }
             }
         },
         "/mock/gk/sessions": {
             "post": {
+                "tags": [
+                    "session-mock"
+                ],
+                "summary": "createSession",
+                "operationId": "createSessionUsingPOST",
                 "consumes": [
                     "application/json"
                 ],
-                "operationId": "createSessionUsingPOST",
+                "produces": [
+                    "*/*"
+                ],
                 "parameters": [
                     {
-                        "description": "login",
                         "in": "body",
                         "name": "login",
+                        "description": "login",
                         "required": true,
                         "schema": {
                             "$ref": "#/definitions/Login"
                         }
                     }
-                ],
-                "produces": [
-                    "*/*"
                 ],
                 "responses": {
                     "200": {
@@ -533,36 +345,36 @@
                     "404": {
                         "description": "Not Found"
                     }
-                },
-                "summary": "createSession",
-                "tags": [
-                    "session-mock"
-                ]
+                }
             }
         },
         "/mock/gk/tests/descriptors": {
             "get": {
+                "tags": [
+                    "catalogue-mock"
+                ],
+                "summary": "findTests",
                 "operationId": "findTestsUsingGET",
+                "produces": [
+                    "*/*"
+                ],
                 "parameters": [
                     {
-                        "description": "test_tag",
-                        "in": "query",
                         "name": "test_tag",
+                        "in": "query",
+                        "description": "test_tag",
                         "required": false,
                         "type": "string"
                     }
-                ],
-                "produces": [
-                    "*/*"
                 ],
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
+                            "type": "array",
                             "items": {
                                 "$ref": "#/definitions/Test"
-                            },
-                            "type": "array"
+                            }
                         }
                     },
                     "401": {
@@ -574,27 +386,27 @@
                     "404": {
                         "description": "Not Found"
                     }
-                },
-                "summary": "findTests",
-                "tags": [
-                    "catalogue-mock"
-                ]
+                }
             }
         },
         "/mock/gk/tests/descriptors/{uuid}": {
             "get": {
+                "tags": [
+                    "catalogue-mock"
+                ],
+                "summary": "findTest",
                 "operationId": "findTestUsingGET",
+                "produces": [
+                    "*/*"
+                ],
                 "parameters": [
                     {
-                        "description": "uuid",
-                        "in": "path",
                         "name": "uuid",
+                        "in": "path",
+                        "description": "uuid",
                         "required": true,
                         "type": "string"
                     }
-                ],
-                "produces": [
-                    "*/*"
                 ],
                 "responses": {
                     "200": {
@@ -612,27 +424,207 @@
                     "404": {
                         "description": "Not Found"
                     }
-                },
-                "summary": "findTest",
-                "tags": [
-                    "catalogue-mock"
-                ]
+                }
             }
         }
     },
-    "swagger": "2.0",
-    "tags": [
-        {
-            "description": "Catalogue Mock",
-            "name": "catalogue-mock"
+    "definitions": {
+        "Login": {
+            "type": "object",
+            "properties": {
+                "password": {
+                    "type": "string"
+                },
+                "username": {
+                    "type": "string"
+                }
+            },
+            "title": "Login"
         },
-        {
-            "description": "Curator Mock",
-            "name": "curator-mock"
+        "NetworkService": {
+            "type": "object",
+            "properties": {
+                "package_id": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "uuid": {
+                    "type": "string"
+                }
+            },
+            "title": "NetworkService"
         },
-        {
-            "description": "Session Mock",
-            "name": "session-mock"
+        "Session": {
+            "type": "object",
+            "properties": {
+                "session_began_at": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "token": {
+                    "$ref": "#/definitions/Token"
+                },
+                "username": {
+                    "type": "string"
+                }
+            },
+            "title": "Session"
+        },
+        "Test": {
+            "type": "object",
+            "properties": {
+                "confirm_required": {
+                    "type": "string"
+                },
+                "package_id": {
+                    "type": "string"
+                },
+                "uuid": {
+                    "type": "string"
+                }
+            },
+            "title": "Test"
+        },
+        "TestPlanCallback": {
+            "type": "object",
+            "required": [
+                "event_actor",
+                "status",
+                "test_plan_uuid"
+            ],
+            "properties": {
+                "event_actor": {
+                    "type": "string",
+                    "example": "Curator, Executor",
+                    "description": "Event Actor",
+                    "allowEmptyValue": false
+                },
+                "exception": {
+                    "type": "string",
+                    "example": "run time exception",
+                    "description": "Test Plan Exception message",
+                    "allowEmptyValue": false
+                },
+                "status": {
+                    "type": "string",
+                    "example": "STARTING, COMPLETED, CANCELLING, CANCELLED, ERROR",
+                    "description": "Test Plan Status",
+                    "allowEmptyValue": false
+                },
+                "test_plan_uuid": {
+                    "type": "string",
+                    "description": "Test Plan uuid",
+                    "allowEmptyValue": false
+                },
+                "test_results": {
+                    "type": "array",
+                    "description": "Test Plan Result List",
+                    "allowEmptyValue": true,
+                    "items": {
+                        "$ref": "#/definitions/TestResult"
+                    }
+                },
+                "url": {
+                    "type": "string",
+                    "example": "/test-plans/on-change",
+                    "description": "Callback URL",
+                    "allowEmptyValue": false
+                }
+            },
+            "title": "TestPlanCallback"
+        },
+        "TestPlanRequest": {
+            "type": "object",
+            "properties": {
+                "last_test": {
+                    "type": "boolean",
+                    "example": false,
+                    "description": "is Last Test Plan",
+                    "allowEmptyValue": false
+                },
+                "service_uuid": {
+                    "type": "string",
+                    "description": "Network service uuid",
+                    "allowEmptyValue": false
+                },
+                "test_plan_callbacks": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/TestPlanCallback"
+                    }
+                },
+                "test_plan_uuid": {
+                    "type": "string",
+                    "description": "Test Plan uuid",
+                    "allowEmptyValue": false
+                },
+                "test_uuid": {
+                    "type": "string",
+                    "description": "Test uuid",
+                    "allowEmptyValue": false
+                }
+            },
+            "title": "TestPlanRequest"
+        },
+        "TestPlanResponse": {
+            "type": "object",
+            "properties": {
+                "exception": {
+                    "type": "string",
+                    "example": "run time exception",
+                    "description": "Test Plan Exception message",
+                    "allowEmptyValue": false
+                },
+                "status": {
+                    "type": "string",
+                    "example": "STARTING, COMPLETED, CANCELLING, CANCELLED, ERROR",
+                    "description": "Test Plan Status",
+                    "allowEmptyValue": false
+                }
+            },
+            "title": "TestPlanResponse"
+        },
+        "TestResult": {
+            "type": "object",
+            "required": [
+                "test_result_uuid",
+                "test_status",
+                "test_uuid"
+            ],
+            "properties": {
+                "test_result_uuid": {
+                    "type": "string",
+                    "description": "Test result uuid",
+                    "allowEmptyValue": false
+                },
+                "test_status": {
+                    "type": "string",
+                    "example": "STARTING, COMPLETED, CANCELLING, CANCELLED, ERROR",
+                    "description": "Test Plan Status",
+                    "allowEmptyValue": false
+                },
+                "test_uuid": {
+                    "type": "string",
+                    "description": "Test uuid",
+                    "allowEmptyValue": false
+                }
+            },
+            "title": "TestResult"
+        },
+        "Token": {
+            "type": "object",
+            "properties": {
+                "access_token": {
+                    "type": "string"
+                },
+                "expires_in": {
+                    "type": "integer",
+                    "format": "int32"
+                }
+            },
+            "title": "Token"
         }
-    ]
+    }
 }

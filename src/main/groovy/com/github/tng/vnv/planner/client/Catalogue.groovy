@@ -55,12 +55,6 @@ class Catalogue {
     @Value('${app.vnvgk.test.metadata.endpoint}')
     def testMetadataEndpoint
 
-    @Value('${app.vnvgk.test.list.by.tag.endpoint}')
-    def testListByTagEndpoint
-
-    @Value('${app.gk.service.list.by.tag.endpoint}')
-    def serviceListByTagEndpoint
-
     @Value('${app.gk.service.metadata.endpoint}')
     def serviceMetadataEndpoint
 
@@ -70,30 +64,7 @@ class Catalogue {
     }
 
     @AfterRestCall
-    ResponseEntity getTests(def tag){
-        UriComponentsBuilder builder = UriComponentsBuilder
-                .fromUriString(testListByTagEndpoint)
-                .queryParam("test_tag", tag)
-        //cleanCode-auraliano
-        println builder.toUriString()
-        restTemplateWithAuth.getForEntity(builder.toUriString(), Test[])
-    }
-
-    @AfterRestCall
     ResponseEntity getService(def uuid){
         restTemplateWithAuth.getForEntity(serviceMetadataEndpoint, NetworkService.class, uuid)
     }
-
-    @AfterRestCall
-    ResponseEntity getServices(def tag){
-        UriComponentsBuilder builder = UriComponentsBuilder
-                .fromUriString(serviceListByTagEndpoint)
-                .queryParam("testing_tags", tag);
-        //cleanCode-auraliano
-        println "*****************  "+builder.toUriString()+" ****************************"
-        restTemplateWithAuth.getForEntity(builder.toUriString(),  NetworkService[])
-    }
-
-
-
 }

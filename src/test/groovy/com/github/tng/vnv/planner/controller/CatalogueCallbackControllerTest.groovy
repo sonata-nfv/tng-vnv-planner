@@ -38,12 +38,14 @@ package com.github.tng.vnv.planner.controller
 import com.github.tng.vnv.planner.config.TestRestSpec
 import com.github.tng.vnv.planner.restmock.CuratorMock
 import com.github.tng.vnv.planner.service.TestPlanService
+import com.github.tng.vnv.planner.utils.TEST_PLAN_STATUS
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 
 class CatalogueCallbackControllerTest extends TestRestSpec {
 
-    public static final String MULTIPLE_TEST_PLANS_PACKAGE_ID ='multiple_scheduler:test:0.0.1'
+    static String MOCKED_TEST_PLANS_MOCKED_PACKAGE_ID_FOR_HTTP_BENCHMARK_TEST_1_AND_NS_SQUID ='mocked_input0ts-75f5-4ca1-90c8-12ec80a79836_4dd4cb15-76b8-46fd-b3c0-1b165cc332f9'
+    static final String MULTIPLE_TEST_PLANS_MOCKED_PACKAGE_ID_FOR_HTTP_BENCHMARK_TEST_1_AND_HAPROXY_1 ='multi_d07742ed-9429-4a07-b7af-d0b24a6d5c4c_input0ts-75f5-4ca1-90c8-12ec80a79836_a77f66d5-b1dc-4f19-9dc5-32d7d79cc897'
 
     @Autowired
     TestPlanService testPlanService
@@ -59,13 +61,31 @@ class CatalogueCallbackControllerTest extends TestRestSpec {
         def entity = postForEntity('/api/v1/packages/on-change',
                 [
                         event_name: UUID.randomUUID().toString(),
-                        package_id:  MULTIPLE_TEST_PLANS_PACKAGE_ID,
+                        package_id:  MOCKED_TEST_PLANS_MOCKED_PACKAGE_ID_FOR_HTTP_BENCHMARK_TEST_1_AND_NS_SQUID,
                 ]
                 , Void.class)
         then:
         entity.statusCode == HttpStatus.OK
         testPlanService.testPlanRepository.findAll()
-                .findAll{it.status == "SCHEDULED"}.size() == 11
+                .findAll{it.status == "SCHEDULED"}.size() >= 1
+        cleanup:
+        cleanTestPlanDB()
+    }
+    void 'schedule multiple single Test and single NetworkService should produce successfully 11 testPlans'() {
+        setup:
+        curatorMock.isBusy(true)
+        setup:
+        when:
+        def entity = postForEntity('/api/v1/packages/on-change',
+                [
+                        event_name: UUID.randomUUID().toString(),
+                        package_id:  MULTIPLE_TEST_PLANS_MOCKED_PACKAGE_ID_FOR_HTTP_BENCHMARK_TEST_1_AND_HAPROXY_1,
+                ]
+                , Void.class)
+        then:
+        entity.statusCode == HttpStatus.OK
+        testPlanService.testPlanRepository.findAll()
+                .findAll{it.status == TEST_PLAN_STATUS.SCHEDULED}.size() >= 1
         cleanup:
         cleanTestPlanDB()
     }

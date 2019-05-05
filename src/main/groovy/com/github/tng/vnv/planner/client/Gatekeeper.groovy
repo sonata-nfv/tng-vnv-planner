@@ -34,14 +34,15 @@
 
 package com.github.tng.vnv.planner.client
 
-import com.github.tng.vnv.planner.aspect.RestCall
 import com.github.tng.vnv.planner.aspect.AfterRestCall
+import com.github.tng.vnv.planner.model.Package
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Component
 import org.springframework.web.client.RestTemplate
+import org.springframework.web.util.UriComponentsBuilder
 
 @Component
 class Gatekeeper {
@@ -52,11 +53,34 @@ class Gatekeeper {
     @Value('${app.gk.package.metadata.endpoint}')
     def packageMetadataEndpoint
 
+    @Value('${app.gk.package.list.endpoint}')
+    def packageListEndpoint
+
     @AfterRestCall
     ResponseEntity getPackage(def packageId){
         restTemplate.getForEntity(packageMetadataEndpoint, Object.class, packageId)
     }
 
+    @AfterRestCall
+    ResponseEntity getPackageByTag(def tag){
+        def builder = UriComponentsBuilder.fromUriString(packageListEndpoint)
+                .queryParam("package_content.testing_tags", tag)
+        restTemplate.getForEntity(builder.toUriString(), Package[])
+    }
+
+    @AfterRestCall
+    ResponseEntity getPackageByTest(def uuid){
+        def builder = UriComponentsBuilder.fromUriString(packageListEndpoint)
+                .queryParam("package_content.uuid", uuid)
+        restTemplate.getForEntity(builder.toUriString(), Package)
+    }
+
+    @AfterRestCall
+    ResponseEntity getPackageByService(def uuid){
+        def builder = UriComponentsBuilder.fromUriString(packageListEndpoint)
+                .queryParam("package_content.uuid", uuid)
+        restTemplate.getForEntity(builder.toUriString(), Package)
+    }
 
 
 }

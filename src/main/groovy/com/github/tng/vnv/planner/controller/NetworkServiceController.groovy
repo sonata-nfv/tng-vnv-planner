@@ -41,23 +41,17 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
-import com.github.tng.vnv.planner.service.TestService
 
 @RestController
 @RequestMapping('/api/v1/test-plans')
 class NetworkServiceController {
 
     @Autowired
-    TestService testService
-
-    @Autowired
     NetworkServiceService networkServiceService
 	
     @GetMapping('/services/{serviceUuid}/tests')
     List<Test> listTestsByService(@PathVariable('serviceUuid') String uuid) {
-        testService.findByService(
-                networkServiceService.findByUuid(uuid)
-        )
+        networkServiceService.findByTest(uuid)
     }
 	
 }
