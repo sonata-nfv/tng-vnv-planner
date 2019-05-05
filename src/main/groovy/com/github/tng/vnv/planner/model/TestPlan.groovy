@@ -41,9 +41,7 @@ import javax.persistence.Entity
 import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
 import javax.persistence.Id
-import javax.persistence.SequenceGenerator
 import javax.persistence.Table
-import javax.persistence.Transient
 import javax.validation.constraints.NotNull
 
 @Entity
@@ -60,11 +58,11 @@ class TestPlan implements Serializable {
     String uuid
     @ApiModelProperty(
             value = 'Service Package id',
-            allowEmptyValue = false)
+            allowEmptyValue = true)
     String servicePackageId
     @ApiModelProperty(
             value = 'Test Package id',
-            allowEmptyValue = false)
+            allowEmptyValue = true)
     String testPackageId
     @ApiModelProperty(
             value = 'Network service uuid',
@@ -121,6 +119,9 @@ class TestPlanRequest {
     String testPlanUuid
     @ApiModelProperty(value = 'is Last Test Plan')
     Boolean lastTest = false
+    @ApiModelProperty(
+            value = 'Test plan callbacks',
+            allowEmptyValue = false)
     List<TestPlanCallback> testPlanCallbacks = [
             new TestPlanCallback(eventActor: 'Curator', url: '/api/v1/test-plans/on-change/completed/', status:'COMPLETED'),
             new TestPlanCallback(eventActor: 'Curator', url: '/api/v1/test-plans/on-change/'),
@@ -130,7 +131,7 @@ class TestPlanRequest {
 @EqualsAndHashCode
 class TestPlanResponse {
     @ApiModelProperty(
-            value = 'Test Plan Status',
+            value = 'Test Plan status',
             allowEmptyValue = false,
             example = 'STARTING, COMPLETED, CANCELLING, CANCELLED, ERROR')
     String status

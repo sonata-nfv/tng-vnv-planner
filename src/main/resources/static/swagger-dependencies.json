@@ -551,6 +551,8 @@
                 },
                 "test_plan_callbacks": {
                     "type": "array",
+                    "description": "Test plan callbacks",
+                    "allowEmptyValue": false,
                     "items": {
                         "$ref": "#/definitions/TestPlanCallback"
                     }
@@ -580,7 +582,7 @@
                 "status": {
                     "type": "string",
                     "example": "STARTING, COMPLETED, CANCELLING, CANCELLED, ERROR",
-                    "description": "Test Plan Status",
+                    "description": "Test Plan status",
                     "allowEmptyValue": false
                 }
             },

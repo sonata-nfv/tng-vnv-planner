@@ -41,11 +41,10 @@ import com.github.tng.vnv.planner.model.TestPlanResponse
 import com.github.tng.vnv.planner.service.NetworkServiceService
 import com.github.tng.vnv.planner.service.TestPlanService
 import com.github.tng.vnv.planner.service.TestService
-import com.github.tng.vnv.planner.utils.TEST_PLAN_STATUS
-import groovy.util.logging.Log
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
+import groovy.util.logging.Log
 
 import static org.springframework.util.StringUtils.isEmpty
 

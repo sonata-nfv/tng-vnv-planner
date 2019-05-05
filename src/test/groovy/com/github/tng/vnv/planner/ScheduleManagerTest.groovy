@@ -44,7 +44,7 @@ import org.springframework.beans.factory.annotation.Autowired
 
 class ScheduleManagerTest extends TestRestSpec {
 
-    public static final String MULTIPLE_TEST_PLANS_MOCKED_PACKAGE_ID_FOR_HTTP_BENCHMARK_TEST_1_AND_HAPROXY_1 ='multi_d07742ed-9429-4a07-b7af-d0b24a6d5c4c_input0ts-75f5-4ca1-90c8-12ec80a79836_a77f66d5-b1dc-4f19-9dc5-32d7d79cc897'
+    static final String MULTIPLE_TEST_PLANS_MOCKED_PACKAGE_ID_FOR_HTTP_BENCHMARK_TEST_1_AND_HAPROXY_1 ='multi_d07742ed-9429-4a07-b7af-d0b24a6d5c4c_input0ts-75f5-4ca1-90c8-12ec80a79836_a77f66d5-b1dc-4f19-9dc5-32d7d79cc897'
 
     @Autowired
     ScheduleManager scheduler

@@ -34,13 +34,6 @@
 
 package com.github.tng.vnv.planner.model
 
-import com.fasterxml.jackson.annotation.JsonProperty
-import groovy.transform.EqualsAndHashCode
-import groovy.transform.ToString
-import io.swagger.annotations.ApiModelProperty
-
-import javax.validation.constraints.NotNull
-
 class NetworkService {
     String uuid
     String status

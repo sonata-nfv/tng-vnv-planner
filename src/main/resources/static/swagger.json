@@ -655,7 +655,7 @@
                 "service_package_id": {
                     "type": "string",
                     "description": "Service Package id",
-                    "allowEmptyValue": false
+                    "allowEmptyValue": true
                 },
                 "service_uuid": {
                     "type": "string",
@@ -670,7 +670,7 @@
                 "test_package_id": {
                     "type": "string",
                     "description": "Test Package id",
-                    "allowEmptyValue": false
+                    "allowEmptyValue": true
                 },
                 "test_uuid": {
                     "type": "string",

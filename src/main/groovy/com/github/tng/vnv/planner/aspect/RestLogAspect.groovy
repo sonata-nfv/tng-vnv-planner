@@ -37,11 +37,11 @@ package com.github.tng.vnv.planner.aspect
 import groovy.util.logging.Slf4j
 import org.aspectj.lang.JoinPoint
 import org.aspectj.lang.ProceedingJoinPoint
-import org.aspectj.lang.annotation.AfterReturning;
-import org.aspectj.lang.annotation.Around;
+import org.aspectj.lang.annotation.AfterReturning
+import org.aspectj.lang.annotation.Around
 import org.aspectj.lang.annotation.Aspect
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Component
 
 @Aspect
 @Component
@@ -50,7 +50,7 @@ class RestLogAspect {
 
     @Around("@annotation(RestCall) && execution(public * * (..))")
     ResponseEntity restCall(final ProceedingJoinPoint proceedingJoinPoint) throws Throwable{
-        ResponseEntity responseEntity;
+        ResponseEntity responseEntity
         try {
             responseEntity = proceedingJoinPoint.proceed();
         } catch (Throwable throwable) {

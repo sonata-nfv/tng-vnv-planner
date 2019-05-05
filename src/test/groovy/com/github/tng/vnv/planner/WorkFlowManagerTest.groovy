@@ -49,16 +49,16 @@ class WorkFlowManagerTest extends TestRestSpec {
     @Autowired
     CuratorMock curatorMock
 
-    public static final String TEST_RESULT_UUID = UUID.randomUUID().toString()
-    public static final String TEST_PLAN_WFM_UUID_1 = '109873681'
-    public static final String TEST_PLAN_WFM_UUID_2 = '109873682'
-    public static final String TEST_PLAN_WFM_UUID_3 = '109873683'
-    public static final String TEST_PLAN_WFM_UUID_4 = '109873684'
-    public static final String TEST_PLAN_WFM_UUID_5 = '109873685'
-    public static final String TEST_PLAN_WFM_UUID_6 = '109873686'
-    public static final String TEST_PLAN_WFM_UUID_7 = '109873687'
-    public static final String IMEDIA_TEST_PLAN_SERVICE_UUID = 'immedia0-9429-4a07-b7af-dd429d6d04o3'
-    public static final String IMEDIA_TEST_PLAN_TEST_UUID = 'immedia0-8cc7-47a9-9112-6wff9e88wu2k'
+    static final String TEST_RESULT_UUID = UUID.randomUUID().toString()
+    static final String TEST_PLAN_WFM_UUID_1 = '109873681'
+    static final String TEST_PLAN_WFM_UUID_2 = '109873682'
+    static final String TEST_PLAN_WFM_UUID_3 = '109873683'
+    static final String TEST_PLAN_WFM_UUID_4 = '109873684'
+    static final String TEST_PLAN_WFM_UUID_5 = '109873685'
+    static final String TEST_PLAN_WFM_UUID_6 = '109873686'
+    static final String TEST_PLAN_WFM_UUID_7 = '109873687'
+    static final String IMEDIA_TEST_PLAN_SERVICE_UUID = 'immedia0-9429-4a07-b7af-dd429d6d04o3'
+    static final String IMEDIA_TEST_PLAN_TEST_UUID = 'immedia0-8cc7-47a9-9112-6wff9e88wu2k'
 
 
     void 'When curator sends a COMPLETED testPlan should Planner complete the testPlan lifycycle'() {
