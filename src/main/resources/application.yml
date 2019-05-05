@@ -99,7 +99,7 @@ spring:
     validationQuery: SELECT 1
     platform: postgres
   jpa:
-    hibernate.ddl-auto: create-drop
+    hibernate.ddl-auto: none
     show-sql: false
     database: postgresql
     database-platform: org.hibernate.dialect.PostgreSQLDialect

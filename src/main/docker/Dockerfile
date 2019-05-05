@@ -38,6 +38,6 @@ ENV DATABASE_NAME planner
 ENV DATABASE_USER sonatatest
 ENV DATABASE_PASSWORD sonata
 ENV DATABASE_PORT 5432
-ENTRYPOINT ["java", "-jar", "-Dspring.profiles.active=docker", "/app.jar"]
+ENTRYPOINT ["java", "-jar", "-Dspring.profiles.active=test", "/app.jar"]
 EXPOSE 6100
 ADD /libs/${name}-${version}.jar /app.jar
