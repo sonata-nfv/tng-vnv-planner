@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true" scanPeriod="10 seconds">
+
+    <!-- pull properties from application.properties -->
+    <include resource="classpath:/application.properties"/>
+    <springProperty scope="context" name="APP_NAME" source="api.name" defultValue="unknown"/>
+    <springProperty scope="context" name="APP_VERSION" source="api.version" defaultValue="unknown" />
+
+    <appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <!--  simple pattern -->
+            <!-- <pattern>%d{yy-MMMM-dd HH:mm:ss:SSS} %5p %t %c{4}:%L %m%n</pattern> -->
+
+            <!-- pattern that support multiline exceptions -->
+            <pattern>{"type": "%replace(%replace(%replace(%replace(%replace(%replace(%p){'INFO','I'}){'DEBUG','D'}){'WARNING','W'}){'BB','B'}){'ERROR','E'}){'UNKNOWN','U'}","timestamp": "%date{"yyyy-MM-dd'T'HH:mm:ss", UTC}","component":"${APP_NAME}","operation": "%c{0}:%L","message": "%message %replace(%xException){'\n','\u2028'}"} %nopex%n</pattern>
+        </encoder>
+    </appender>
+
+    <logger name="org.springframework.data" level="warn" />
+    <logger name="org.springframework.web" level="warn" />
+    <logger name="com.github.tng.vnv.planner" level="debug" />
+
+    <root level="warn">
+        <appender-ref ref="stdout"/>
+    </root>
+</configuration>

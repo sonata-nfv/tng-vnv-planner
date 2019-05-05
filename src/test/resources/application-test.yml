@@ -45,6 +45,8 @@ spring:
       hibernate.ddl-auto: create
   h2.console.enabled: true
 
-logging.level:
+level:
   org.apache.http.wire: DEBUG
   sun.net.www.protocol.http: DEBUG
+logging:
+  level: debug
