@@ -38,7 +38,7 @@ import com.github.tng.vnv.planner.WorkflowManager
 import com.github.tng.vnv.planner.aspect.TriggerNextTestPlan
 import com.github.tng.vnv.planner.model.TestPlanCallback
 import com.github.tng.vnv.planner.service.TestPlanService
-import groovy.util.logging.Log
+import groovy.util.logging.Slf4j
 import io.swagger.annotations.ApiResponse
 import io.swagger.annotations.ApiResponses
 import org.springframework.beans.factory.annotation.Autowired
@@ -51,7 +51,7 @@ import org.springframework.web.bind.annotation.RestController
 
 import javax.validation.Valid
 
-@Log
+@Slf4j
 @RestController
 @RequestMapping('/api/v1/test-plans')
 class CuratorCallbackController {

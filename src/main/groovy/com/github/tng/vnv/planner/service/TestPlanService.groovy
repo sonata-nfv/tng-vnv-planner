@@ -38,11 +38,11 @@ package com.github.tng.vnv.planner.service
 import com.github.tng.vnv.planner.repository.TestPlanRepository
 import com.github.tng.vnv.planner.model.TestPlan
 import com.github.tng.vnv.planner.utils.TEST_PLAN_STATUS
-import groovy.util.logging.Log
+import groovy.util.logging.Slf4j
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
-@Log
+@Slf4j
 @Service
 class TestPlanService {
 

@@ -41,7 +41,7 @@ import com.github.tng.vnv.planner.model.NetworkService
 import com.github.tng.vnv.planner.model.Test
 import com.github.tng.vnv.planner.model.TestPlan
 import com.github.tng.vnv.planner.service.TestPlanService
-import groovy.util.logging.Log
+import groovy.util.logging.Slf4j
 import io.swagger.annotations.ApiResponse
 import io.swagger.annotations.ApiResponses
 import org.springframework.beans.factory.annotation.Autowired
@@ -49,7 +49,7 @@ import org.springframework.web.bind.annotation.*
 
 import javax.validation.Valid
 
-@Log
+@Slf4j
 @RestController
 @RequestMapping('/api/v1/test-plans')
 class TestPlanController {
