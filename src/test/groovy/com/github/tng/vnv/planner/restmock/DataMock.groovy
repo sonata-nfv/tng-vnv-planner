@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015 SONATA-NFV, 2017 5GTANGO [, ANY ADDITIONAL AFFILIATION]
+ * Copyright (c) 2015 SONATA-NFV, 2019 5GTANGO [, ANY ADDITIONAL AFFILIATION]
  * ALL RIGHTS RESERVED.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -70,11 +70,19 @@ class DataMock {
     }
 
 	static def getServiceByTag(String tag) {
-        getServices().findAll { it -> it.nsd.testing_tags?.contains(tag)}
+        getServices().findAll { it -> it.testing_tags?.contains(tag)}
 	}
 
 	static def getTestByTag(String tag) {
-        getTests().findAll {it -> it.testd.test_tags?.contains(tag)}
+        getTests().findAll {it -> it.testing_tags?.contains(tag)}
 	}
 
+    static def getPackageByTag(String tag){
+        getPackages().findAll {it -> it.pd.package_content.testing_tags.join(", ").contains(tag)}
+    }
+
+    static def getPackageByUuid(uuid){
+        getPackages().find {it -> it.pd.package_content.uuid?.contains(uuid)}
+
+    }
 }

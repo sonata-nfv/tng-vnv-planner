@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015 SONATA-NFV, 2017 5GTANGO [, ANY ADDITIONAL AFFILIATION]
+ * Copyright (c) 2015 SONATA-NFV, 2019 5GTANGO [, ANY ADDITIONAL AFFILIATION]
  * ALL RIGHTS RESERVED.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -34,22 +34,19 @@
 
 package com.github.tng.vnv.planner.controller
 
+import com.github.tng.vnv.planner.aspect.TriggerNextTestPlan
 import com.github.tng.vnv.planner.model.TestPlan
 import org.springframework.web.bind.annotation.ResponseBody
 
 import javax.validation.Valid
 
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import com.github.tng.vnv.planner.ScheduleManager
-import com.github.tng.vnv.planner.model.Package
 import com.github.tng.vnv.planner.model.PackageCallback
-import com.github.tng.vnv.planner.repository.NetworkServiceRepository
-import com.github.tng.vnv.planner.repository.TestRepository
 import groovy.util.logging.Log
 import io.swagger.annotations.ApiResponse
 import io.swagger.annotations.ApiResponses
@@ -64,14 +61,8 @@ class CatalogueCallbackController {
 
     @Autowired
     ScheduleManager scheduler
-	
-	@Autowired
-	TestRepository testRepository
-	
-	@Autowired
-	NetworkServiceRepository nsRepository
 
-
+    @TriggerNextTestPlan
     @ApiResponses(value = [
             @ApiResponse(code = 400, message = 'Bad Request'),
             @ApiResponse(code = 404, message = 'Could not find package with that package_id'),
@@ -80,7 +71,7 @@ class CatalogueCallbackController {
     @ResponseBody
     List<TestPlan> onChange(@Valid @RequestBody PackageCallback body) {
         log.info("#~#vnvlog onChange STR [PackageId: ${body?.packageId}]")
-        List<TestPlan> testPlans = scheduler.create(new Package(packageId: body.packageId))
+        List<TestPlan> testPlans = scheduler.create(body.packageId)
         log.info("#~#vnvlog onChange: END [PackageId: ${body?.packageId}]")
         testPlans
     }

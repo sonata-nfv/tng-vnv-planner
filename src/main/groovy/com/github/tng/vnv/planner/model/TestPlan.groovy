@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015 SONATA-NFV, 2017 5GTANGO [, ANY ADDITIONAL AFFILIATION]
+ * Copyright (c) 2015 SONATA-NFV, 2019 5GTANGO [, ANY ADDITIONAL AFFILIATION]
  * ALL RIGHTS RESERVED.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -34,21 +34,14 @@
 
 package com.github.tng.vnv.planner.model
 
-import com.fasterxml.jackson.annotation.JsonIgnore
-import com.fasterxml.jackson.databind.ObjectMapper
 import groovy.transform.EqualsAndHashCode
 import groovy.transform.Sortable
 import io.swagger.annotations.ApiModelProperty
-
-import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.GeneratedValue
+import javax.persistence.GenerationType
 import javax.persistence.Id
-import javax.persistence.JoinColumn
-import javax.persistence.Lob
-import javax.persistence.ManyToOne
 import javax.persistence.Table
-import javax.persistence.Transient
 import javax.validation.constraints.NotNull
 
 @Entity
@@ -56,7 +49,7 @@ import javax.validation.constraints.NotNull
 @Sortable(includes = ['index'])
 class TestPlan implements Serializable {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id
 
     @ApiModelProperty(
@@ -64,9 +57,13 @@ class TestPlan implements Serializable {
             allowEmptyValue = false)
     String uuid
     @ApiModelProperty(
-            value = 'Package id',
-            allowEmptyValue = false)
-    String packageId
+            value = 'Service Package id',
+            allowEmptyValue = true)
+    String servicePackageId
+    @ApiModelProperty(
+            value = 'Test Package id',
+            allowEmptyValue = true)
+    String testPackageId
     @ApiModelProperty(
             value = 'Network service uuid',
             allowEmptyValue = false)
@@ -80,6 +77,14 @@ class TestPlan implements Serializable {
             allowEmptyValue = false)
     int index
     @ApiModelProperty(
+            value = 'Confirmed',
+            allowEmptyValue = false)
+    String confirmed
+    @ApiModelProperty(
+            value = 'Confirmation is required',
+            allowEmptyValue = false)
+    String confirmRequired
+    @ApiModelProperty(
             value = 'Status',
             allowEmptyValue = false)
     String status
@@ -87,16 +92,6 @@ class TestPlan implements Serializable {
             value = 'Description',
             allowEmptyValue = true)
     String description
-    @ApiModelProperty(
-            value = 'Network service descriptor',
-            allowEmptyValue = false)
-    @Transient
-    def nsd
-    @ApiModelProperty(
-            value = 'Test descriptor',
-            allowEmptyValue = false)
-    @Transient
-    def testd
 
     boolean equals(o) {
         (o.uuid).contains(uuid)? true:false
@@ -109,10 +104,24 @@ class TestPlan implements Serializable {
 
 @EqualsAndHashCode
 class TestPlanRequest {
-    def nsd
-    def testd
+    @ApiModelProperty(
+            value = 'Network service uuid',
+            allowEmptyValue = false)
+    String serviceUuid
+    @ApiModelProperty(
+            value = 'Test uuid',
+            allowEmptyValue = false)
+    String testUuid
+
+    @ApiModelProperty(
+            value = 'Test Plan uuid',
+            allowEmptyValue = false)
     String testPlanUuid
+    @ApiModelProperty(value = 'is Last Test Plan')
     Boolean lastTest = false
+    @ApiModelProperty(
+            value = 'Test plan callbacks',
+            allowEmptyValue = false)
     List<TestPlanCallback> testPlanCallbacks = [
             new TestPlanCallback(eventActor: 'Curator', url: '/api/v1/test-plans/on-change/completed/', status:'COMPLETED'),
             new TestPlanCallback(eventActor: 'Curator', url: '/api/v1/test-plans/on-change/'),
@@ -122,7 +131,7 @@ class TestPlanRequest {
 @EqualsAndHashCode
 class TestPlanResponse {
     @ApiModelProperty(
-            value = 'Test Plan Status',
+            value = 'Test Plan status',
             allowEmptyValue = false,
             example = 'STARTING, COMPLETED, CANCELLING, CANCELLED, ERROR')
     String status
@@ -132,7 +141,6 @@ class TestPlanResponse {
             allowEmptyValue = false,
             example = 'run time exception')
     String exception
-
 }
 
 class TestPlanCallback {
@@ -154,6 +162,12 @@ class TestPlanCallback {
     String status
 
     @ApiModelProperty(
+            value = 'Test Plan Exception message',
+            allowEmptyValue = false,
+            example = 'run time exception')
+    String exception
+
+    @ApiModelProperty(
             value = 'Callback URL',
             allowEmptyValue = false,
             example = '/test-plans/on-change')
@@ -170,16 +184,4 @@ class TestPlanCallback {
             required = true)
     @NotNull
     String testPlanUuid
-
-    @ApiModelProperty(
-            value = 'Test Plan Repository URI',
-            allowEmptyValue = false,
-            example = 'tng-cat, catalog, or xx.xx')
-    String testPlanRepository
-
-    @ApiModelProperty(
-            value = 'Test Results Repository URI',
-            allowEmptyValue = false,
-            example = 'tng-res, results, or xx.xx')
-    String testResultsRepository
 }

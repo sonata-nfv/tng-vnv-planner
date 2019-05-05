@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015 SONATA-NFV, 2017 5GTANGO [, ANY ADDITIONAL AFFILIATION]
+ * Copyright (c) 2015 SONATA-NFV, 2019 5GTANGO [, ANY ADDITIONAL AFFILIATION]
  * ALL RIGHTS RESERVED.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -34,26 +34,16 @@
 
 package com.github.tng.vnv.planner.client
 
-import com.github.tng.vnv.planner.aspect.Timed
-import com.github.tng.vnv.planner.model.TestPlanRequest
+import com.github.tng.vnv.planner.aspect.AfterRestCall
 import com.github.tng.vnv.planner.model.TestPlanResponse
-import com.github.tng.vnv.planner.model.TestPlan
-import groovy.util.logging.Log
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.beans.factory.annotation.Value
-import org.springframework.http.HttpEntity
-import org.springframework.http.HttpHeaders
-import org.springframework.http.HttpMethod
-import org.springframework.http.MediaType
+import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Component
 import org.springframework.web.client.RestTemplate
 
-import static com.github.tng.vnv.planner.utils.DebugHelper.callExternalEndpoint
-import static org.springframework.util.StringUtils.isEmpty
-
 @Component
-@Log
 class Curator {
 
     @Autowired
@@ -64,35 +54,14 @@ class Curator {
     def testPlanPrepareEndpoint
     @Value('${app.curator.test.plan.cancel.endpoint}')
     def testPlanCancellationEndpoint
-    @Value('${app.curator.ping.endpoint}')
-    def testPlanPingEndpoint
 
-
-
-    @Timed
-    boolean inRunning() {
-        !isEmpty(callExternalEndpoint(restTemplate.getForEntity(testPlanPingEndpoint, Object.class),
-                'Curator.isRunning()',testPlanPingEndpoint).body.alive_since)
+    @AfterRestCall
+    ResponseEntity post(def testPlanRequest){
+        restTemplate.postForEntity(testPlanPrepareEndpoint, testPlanRequest, TestPlanResponse)
+    }
+    @AfterRestCall
+    ResponseEntity delete(def uuid) {
+        restTemplate.delete(testPlanCancellationEndpoint, uuid)
     }
 
-    @Timed
-    TestPlanResponse proceedWith(TestPlan testPlan) {
-        def testPlanRequest = new TestPlanRequest(testPlanUuid: testPlan.uuid, nsd: testPlan.nsd, testd: testPlan.testd)
-        callExternalEndpoint(restTemplate.postForEntity(testPlanPrepareEndpoint, testPlanRequest, TestPlanResponse),
-                'Curator.proceedWith(TestPlan)',testPlanPrepareEndpoint).body
-    }
-
-    @Timed
-    void deleteTestPlan(uuid) {
-        callExternalEndpoint(restTemplate.delete(testPlanCancellationEndpoint, uuid),
-                'Curator.deleteTestPlan(TestPlan)',testPlanCancellationEndpoint)
-    }
-
-    @Timed
-    TestPlan update(def testPlan) {
-        def headers = new HttpHeaders()
-        headers.setContentType(MediaType.APPLICATION_JSON)
-        def entity = new HttpEntity<TestPlan>(testPlan ,headers)
-        callExternalEndpoint(restTemplate.exchange(testPlanUpdateEndpoint, HttpMethod.PUT, entity, TestPlan.class ,testPlan.id),'TestResultRepository.updatePlan',testPlanUpdateEndpoint).body
-    }
 }

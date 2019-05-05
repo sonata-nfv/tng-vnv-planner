@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015 SONATA-NFV, 2017 5GTANGO [, ANY ADDITIONAL AFFILIATION]
+ * Copyright (c) 2015 SONATA-NFV, 2019 5GTANGO [, ANY ADDITIONAL AFFILIATION]
  * ALL RIGHTS RESERVED.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -34,34 +34,49 @@
 
 package com.github.tng.vnv.planner.service
 
-import com.github.tng.vnv.planner.model.NetworkService
+import com.github.tng.vnv.planner.client.Catalogue
+import com.github.tng.vnv.planner.client.Gatekeeper
 import com.github.tng.vnv.planner.model.Test
-import com.github.tng.vnv.planner.repository.TestRepository
-import groovy.util.logging.Log
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
-@Log
 @Service
 class TestService {
 
     @Autowired
-    TestRepository testRepository
+    Catalogue catalogue
+    @Autowired
+    Gatekeeper gatekeeper
 
     Test findByUuid(String uuid) {
-        testRepository.findByUuid(uuid)
+        catalogue.getTest(uuid).body
     }
 
-    Set<Test> findByService(NetworkService service) {
-        def ts = [] as HashSet<Test>
-        service?.descriptor?.testingTags?.each { tt ->
-            testRepository.findTssByTestTag(tt)?.each { test ->
-				println test.dump()
-                if(test?.descriptor?.testTags.any{ it -> it.contains(tt) }){
-                    ts.add(test)
+    List findByService(def uuid){
+        def matchedTests = [] as HashSet<Test>
+        def pack = gatekeeper.getPackageByService(uuid).body
+        if(pack != null){
+            def testingTags = pack.pd.package_content.collect {it.testing_tags}
+            testingTags?.each { tags ->
+                tags?.each { tag ->
+                    List packageList = gatekeeper.getPackageByTag(tag).body
+                    packageList?.each {
+                        it?.pd?.package_content.each { resource ->
+                            if (resource.get('content-type') == 'application/vnd.5gtango.tstd') {
+                                matchedTests << findByUuid(resource.uuid)
+                            }
+                        }
+                    }
                 }
             }
         }
-        new ArrayList(ts)
+        new ArrayList(matchedTests)
     }
+
+    boolean isConfirmRequired(def uuid){
+        def pack = gatekeeper.getPackageByTest(uuid).body
+        (pack != null && pack.pd.package_content?.confirm_required != null
+                && pack.pd.package_content.confirm_required[pack.pd.package_content.uuid.indexOf(uuid)]=='1')
+    }
+
 }

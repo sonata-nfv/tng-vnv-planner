@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015 SONATA-NFV, 2017 5GTANGO [, ANY ADDITIONAL AFFILIATION]
+ * Copyright (c) 2015 SONATA-NFV, 2019 5GTANGO [, ANY ADDITIONAL AFFILIATION]
  * ALL RIGHTS RESERVED.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -34,31 +34,44 @@
 
 package com.github.tng.vnv.planner.service
 
+import com.github.tng.vnv.planner.client.Catalogue
+import com.github.tng.vnv.planner.client.Gatekeeper
 import com.github.tng.vnv.planner.model.NetworkService
-import com.github.tng.vnv.planner.model.Test
-import com.github.tng.vnv.planner.repository.NetworkServiceRepository
-import groovy.util.logging.Log
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
-@Log
+
 @Service
 class NetworkServiceService {
 
     @Autowired
-    NetworkServiceRepository networkServiceRepository
+    Catalogue catalogue
+    @Autowired
+    Gatekeeper gatekeeper
 
     NetworkService findByUuid(String uuid) {
-        networkServiceRepository.findByUuid(uuid)
+        catalogue.getService(uuid).body
     }
 
-    Set<NetworkService> findByTest(Test test) {
-        def nss = [] as HashSet<NetworkService>
-        test?.descriptor?.testTags?.each { tt ->
-            networkServiceRepository.findNssByTestTag(tt)?.each { service ->
-                nss.add(service)
+    List findByTest(def uuid){
+        def matchedServices = [] as HashSet<NetworkService>
+        def pack = gatekeeper.getPackageByTest(uuid).body
+        if(pack != null){
+            def testingTags = pack.pd.package_content.collect {it.testing_tags}
+            testingTags?.each { tags ->
+                tags?.each { tag ->
+                    List packageList = gatekeeper.getPackageByTag(tag).body
+                    packageList?.each {
+                        it?.pd?.package_content.each { resource ->
+                            if (resource.get('content-type')=='application/vnd.5gtango.nsd') {
+                                matchedServices << findByUuid(resource.uuid)
+                            }
+                        }
+                    }
+                }
             }
         }
-        nss
+        new ArrayList(matchedServices)
     }
+
 }

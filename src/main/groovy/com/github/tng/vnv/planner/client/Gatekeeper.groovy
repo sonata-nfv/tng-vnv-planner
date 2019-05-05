@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015 SONATA-NFV, 2017 5GTANGO [, ANY ADDITIONAL AFFILIATION]
+ * Copyright (c) 2015 SONATA-NFV, 2019 5GTANGO [, ANY ADDITIONAL AFFILIATION]
  * ALL RIGHTS RESERVED.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -32,53 +32,54 @@
  * partner consortium (www.5gtango.eu).
  */
 
-package com.github.tng.vnv.planner.repository
+package com.github.tng.vnv.planner.client
 
-import com.github.tng.vnv.planner.aspect.Timed
-import com.github.tng.vnv.planner.utils.DebugHelper
-import com.github.tng.vnv.planner.model.NetworkService
-import com.github.tng.vnv.planner.model.NetworkServiceDescriptor
-import groovy.util.logging.Log
+import com.github.tng.vnv.planner.aspect.AfterRestCall
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.beans.factory.annotation.Value
-import org.springframework.stereotype.Repository
+import org.springframework.http.ResponseEntity
+import org.springframework.stereotype.Component
 import org.springframework.web.client.RestTemplate
 import org.springframework.web.util.UriComponentsBuilder
 
-import static com.github.tng.vnv.planner.utils.DebugHelper.callExternalEndpoint
-
-@Log
-@Repository
-class NetworkServiceRepository {
-
+@Component
+class Gatekeeper {
     @Autowired
-    @Qualifier('restTemplateWithAuth')
-    RestTemplate restTemplateWithAuth
+    @Qualifier('restTemplateWithoutAuth')
+    RestTemplate restTemplate
 
-    @Value('${app.gk.service.list.by.tag.endpoint}')
-    def serviceListByTagEndpoint
+    @Value('${app.gk.package.metadata.endpoint}')
+    def packageMetadataEndpoint
 
-    @Value('${app.gk.service.metadata.endpoint}')
-    def serviceMetadataEndpoint
+    @Value('${app.gk.package.list.endpoint}')
+    def packageListEndpoint
 
-
-    @Timed
-    NetworkService findByUuid(String uuid) {
-        callExternalEndpoint(restTemplateWithAuth.getForEntity(serviceMetadataEndpoint,
-                NetworkService.class, uuid),'NetworkServiceRepository.findByUuid',
-                serviceMetadataEndpoint).body
-                ?.loadDescriptor()
+    @AfterRestCall
+    ResponseEntity getPackage(def packageId){
+        restTemplate.getForEntity(packageMetadataEndpoint, Object.class, packageId)
     }
 
-    @Timed
-    List<NetworkService> findNssByTestTag(String tag) {
-		UriComponentsBuilder builder = UriComponentsBuilder
-		.fromUriString(serviceListByTagEndpoint)
-		.queryParam("testing_tags", tag);
-		println "*****************  "+builder.toUriString()+" ****************************"
-		DebugHelper.callExternalEndpoint(restTemplateWithAuth.getForEntity(builder.toUriString(),  NetworkService[]),
-				'NetworkServiceRepository.findNssByTestTag',serviceListByTagEndpoint).body
-                .collect { it?.loadDescriptor() }
-	}
+    @AfterRestCall
+    ResponseEntity getPackageByTag(def tag){
+        def builder = UriComponentsBuilder.fromUriString(packageListEndpoint)
+                .queryParam("package_content.testing_tags", tag)
+        restTemplate.getForEntity(builder.toUriString(), Object[])
+    }
+
+    @AfterRestCall
+    ResponseEntity getPackageByTest(def uuid){
+        def builder = UriComponentsBuilder.fromUriString(packageListEndpoint)
+                .queryParam("package_content.uuid", uuid)
+        restTemplate.getForEntity(builder.toUriString(), Object)
+    }
+
+    @AfterRestCall
+    ResponseEntity getPackageByService(def uuid){
+        def builder = UriComponentsBuilder.fromUriString(packageListEndpoint)
+                .queryParam("package_content.uuid", uuid)
+        restTemplate.getForEntity(builder.toUriString(), Object)
+    }
+
+
 }

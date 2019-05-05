@@ -26,6 +26,10 @@
             "description": "Network Service Controller"
         },
         {
+            "name": "test-controller",
+            "description": "Test Controller"
+        },
+        {
             "name": "test-plan-controller",
             "description": "Test Plan Controller"
         }
@@ -259,8 +263,8 @@
                 "tags": [
                     "test-plan-controller"
                 ],
-                "summary": "createTestPlansByService",
-                "operationId": "createTestPlansByServiceUsingPOST",
+                "summary": "buildTestPlansByService",
+                "operationId": "buildTestPlansByServiceUsingPOST",
                 "consumes": [
                     "application/json"
                 ],
@@ -331,7 +335,7 @@
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/TestDescriptor"
+                                "$ref": "#/definitions/Test"
                             }
                         }
                     },
@@ -352,8 +356,8 @@
                 "tags": [
                     "test-plan-controller"
                 ],
-                "summary": "createTestPlansByTest",
-                "operationId": "createTestPlansByTestUsingPOST",
+                "summary": "buildTestPlansByTest",
+                "operationId": "buildTestPlansByTestUsingPOST",
                 "consumes": [
                     "application/json"
                 ],
@@ -386,6 +390,47 @@
                     },
                     "400": {
                         "description": "Bad Request"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                }
+            }
+        },
+        "/api/v1/test-plans/tests/{testUuid}/services": {
+            "get": {
+                "tags": [
+                    "test-controller"
+                ],
+                "summary": "listTestsByService",
+                "operationId": "listTestsByServiceUsingGET_1",
+                "produces": [
+                    "*/*"
+                ],
+                "parameters": [
+                    {
+                        "name": "testUuid",
+                        "in": "path",
+                        "description": "testUuid",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Test"
+                            }
+                        }
                     },
                     "401": {
                         "description": "Unauthorized"
@@ -522,12 +567,6 @@
         "NetworkService": {
             "type": "object",
             "properties": {
-                "descriptor": {
-                    "$ref": "#/definitions/NetworkServiceDescriptor"
-                },
-                "nsd": {
-                    "type": "object"
-                },
                 "package_id": {
                     "type": "string"
                 },
@@ -539,36 +578,6 @@
                 }
             },
             "title": "NetworkService"
-        },
-        "NetworkServiceDescriptor": {
-            "type": "object",
-            "properties": {
-                "name": {
-                    "type": "string"
-                },
-                "service_platforms": {
-                    "type": "array",
-                    "items": {
-                        "type": "string"
-                    }
-                },
-                "testing_tags": {
-                    "type": "array",
-                    "items": {
-                        "type": "string"
-                    }
-                },
-                "uuid": {
-                    "type": "string"
-                },
-                "vendor": {
-                    "type": "string"
-                },
-                "version": {
-                    "type": "string"
-                }
-            },
-            "title": "NetworkServiceDescriptor"
         },
         "PackageCallback": {
             "type": "object",
@@ -603,14 +612,11 @@
         "Test": {
             "type": "object",
             "properties": {
-                "descriptor": {
-                    "$ref": "#/definitions/TestDescriptor"
+                "confirm_required": {
+                    "type": "string"
                 },
                 "package_id": {
                     "type": "string"
-                },
-                "testd": {
-                    "type": "object"
                 },
                 "uuid": {
                     "type": "string"
@@ -618,45 +624,19 @@
             },
             "title": "Test"
         },
-        "TestDescriptor": {
-            "type": "object",
-            "properties": {
-                "confirm_required": {
-                    "type": "string"
-                },
-                "description": {
-                    "type": "string"
-                },
-                "name": {
-                    "type": "string"
-                },
-                "service_platforms": {
-                    "type": "array",
-                    "items": {
-                        "type": "string"
-                    }
-                },
-                "test_tags": {
-                    "type": "array",
-                    "items": {
-                        "type": "string"
-                    }
-                },
-                "uuid": {
-                    "type": "string"
-                },
-                "vendor": {
-                    "type": "string"
-                },
-                "version": {
-                    "type": "string"
-                }
-            },
-            "title": "TestDescriptor"
-        },
         "TestPlan": {
             "type": "object",
             "properties": {
+                "confirm_required": {
+                    "type": "string",
+                    "description": "Confirmation is required",
+                    "allowEmptyValue": false
+                },
+                "confirmed": {
+                    "type": "string",
+                    "description": "Confirmed",
+                    "allowEmptyValue": false
+                },
                 "description": {
                     "type": "string",
                     "description": "Description",
@@ -672,15 +652,10 @@
                     "description": "Execution index",
                     "allowEmptyValue": false
                 },
-                "nsd": {
-                    "type": "object",
-                    "description": "Network service descriptor",
-                    "allowEmptyValue": false
-                },
-                "package_id": {
+                "service_package_id": {
                     "type": "string",
-                    "description": "Package id",
-                    "allowEmptyValue": false
+                    "description": "Service Package id",
+                    "allowEmptyValue": true
                 },
                 "service_uuid": {
                     "type": "string",
@@ -692,14 +667,14 @@
                     "description": "Status",
                     "allowEmptyValue": false
                 },
+                "test_package_id": {
+                    "type": "string",
+                    "description": "Test Package id",
+                    "allowEmptyValue": true
+                },
                 "test_uuid": {
                     "type": "string",
                     "description": "Test uuid",
-                    "allowEmptyValue": false
-                },
-                "testd": {
-                    "type": "object",
-                    "description": "Test descriptor",
                     "allowEmptyValue": false
                 },
                 "uuid": {
@@ -724,16 +699,16 @@
                     "description": "Event Actor",
                     "allowEmptyValue": false
                 },
+                "exception": {
+                    "type": "string",
+                    "example": "run time exception",
+                    "description": "Test Plan Exception message",
+                    "allowEmptyValue": false
+                },
                 "status": {
                     "type": "string",
                     "example": "STARTING, COMPLETED, CANCELLING, CANCELLED, ERROR",
                     "description": "Test Plan Status",
-                    "allowEmptyValue": false
-                },
-                "test_plan_repository": {
-                    "type": "string",
-                    "example": "tng-cat, catalog, or xx.xx",
-                    "description": "Test Plan Repository URI",
                     "allowEmptyValue": false
                 },
                 "test_plan_uuid": {
@@ -748,12 +723,6 @@
                     "items": {
                         "$ref": "#/definitions/TestResult"
                     }
-                },
-                "test_results_repository": {
-                    "type": "string",
-                    "example": "tng-res, results, or xx.xx",
-                    "description": "Test Results Repository URI",
-                    "allowEmptyValue": false
                 },
                 "url": {
                     "type": "string",

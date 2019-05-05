@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015 SONATA-NFV, 2017 5GTANGO [, ANY ADDITIONAL AFFILIATION]
+ * Copyright (c) 2015 SONATA-NFV, 2019 5GTANGO [, ANY ADDITIONAL AFFILIATION]
  * ALL RIGHTS RESERVED.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -44,10 +44,10 @@ import org.springframework.http.HttpStatus
 
 class CuratorCallbackControllerTest extends TestRestSpec {
 
-    public static final String TEST_RESULT_UUID = UUID.randomUUID().toString()
-    public static final String TEST_RESULT2_UUID = UUID.randomUUID().toString()
-    public static final String TEST_PLAN_UUID = '109873678'
-    public static final String TEST_PLAN2_UUID = '561ba353-234c-44ba-9f17-f3e48caca4a5'
+    static final String TEST_RESULT_UUID = UUID.randomUUID().toString()
+    static final String TEST_RESULT2_UUID = UUID.randomUUID().toString()
+    static final String TEST_PLAN_UUID = '109873678'
+    static final String TEST_PLAN2_UUID = '561ba353-234c-44ba-9f17-f3e48caca4a5'
 
     @Autowired
     TestPlanService testPlanService

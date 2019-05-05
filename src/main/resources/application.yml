@@ -1,4 +1,4 @@
-# Copyright (c) 2015 SONATA-NFV, 2017 5GTANGO [, ANY ADDITIONAL AFFILIATION]
+# Copyright (c) 2015 SONATA-NFV, 2019 5GTANGO [, ANY ADDITIONAL AFFILIATION]
 # ALL RIGHTS RESERVED.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -50,7 +50,6 @@ app:
       username: sonata
       password: 1234
     service.list.endpoint: ${app.gk.base.url}/services
-    service.list.by.tag.endpoint: ${app.gk.base.url}/services
     package.list.endpoint: ${app.gk.base.url}/packages
     service.metadata.endpoint: ${app.gk.base.url}/services/{uuid}
     package.metadata.endpoint: ${app.gk.base.url}/packages/{packageId}
@@ -58,16 +57,11 @@ app:
     host: tng-api-gtw
     base.url: http://${app.vnvgk.host}:5000/api/v3
     test.list.endpoint: ${app.vnvgk.base.url}/tests/descriptors
-    test.list.by.tag.endpoint: ${app.vnvgk.base.url}/tests/descriptors
     test.metadata.endpoint: ${app.vnvgk.base.url}/tests/descriptors/{uuid}
-  cat:
-    host: tng-cat
-    base.url: http://${app.cat.host}:4011/api/catalogues/v2
 
   curator:
     host: tng-vnv-curator
     base.url: http://${app.curator.host}:6200/api/v1
-    ping.endpoint: http://${app.curator.host}:6200/ping
     test.plan.prepare.endpoint: ${app.curator.base.url}/test-preparations
     test.plan.cancel.endpoint: ${app.curator.base.url}/test-preparations/{uuid}
 
@@ -122,10 +116,15 @@ spring:
     validationQuery: SELECT 1
     platform: postgres
   jpa:
-    hibernate.ddl-auto: none
+    hibernate.ddl-auto: create-drop
 #    hibernate.ddl-auto: validate
-    show-sql: false
+    show-sql: true
     database: postgresql
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     open-in-view: false
     generate-ddl: false
+
+app:
+  gk.base.url: http://mock-gtk:32002/api/v3
+  vnvgk.base.url: http://mock-vnv-gtk:5000/api/v3
+  curator.base.url: http://mock-vnv-curator:6200/api/v1

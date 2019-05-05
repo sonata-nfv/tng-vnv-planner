@@ -150,6 +150,22 @@
                 "produces": [
                     "*/*"
                 ],
+                "parameters": [
+                    {
+                        "name": "package_content.testing_tags",
+                        "in": "query",
+                        "description": "package_content.testing_tags",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "package_content.uuid",
+                        "in": "query",
+                        "description": "package_content.uuid",
+                        "required": false,
+                        "type": "string"
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -428,12 +444,6 @@
         "NetworkService": {
             "type": "object",
             "properties": {
-                "descriptor": {
-                    "$ref": "#/definitions/NetworkServiceDescriptor"
-                },
-                "nsd": {
-                    "type": "object"
-                },
                 "package_id": {
                     "type": "string"
                 },
@@ -445,36 +455,6 @@
                 }
             },
             "title": "NetworkService"
-        },
-        "NetworkServiceDescriptor": {
-            "type": "object",
-            "properties": {
-                "name": {
-                    "type": "string"
-                },
-                "service_platforms": {
-                    "type": "array",
-                    "items": {
-                        "type": "string"
-                    }
-                },
-                "testing_tags": {
-                    "type": "array",
-                    "items": {
-                        "type": "string"
-                    }
-                },
-                "uuid": {
-                    "type": "string"
-                },
-                "vendor": {
-                    "type": "string"
-                },
-                "version": {
-                    "type": "string"
-                }
-            },
-            "title": "NetworkServiceDescriptor"
         },
         "Session": {
             "type": "object",
@@ -495,56 +475,17 @@
         "Test": {
             "type": "object",
             "properties": {
-                "descriptor": {
-                    "$ref": "#/definitions/TestDescriptor"
+                "confirm_required": {
+                    "type": "string"
                 },
                 "package_id": {
                     "type": "string"
-                },
-                "testd": {
-                    "type": "object"
                 },
                 "uuid": {
                     "type": "string"
                 }
             },
             "title": "Test"
-        },
-        "TestDescriptor": {
-            "type": "object",
-            "properties": {
-                "confirm_required": {
-                    "type": "string"
-                },
-                "description": {
-                    "type": "string"
-                },
-                "name": {
-                    "type": "string"
-                },
-                "service_platforms": {
-                    "type": "array",
-                    "items": {
-                        "type": "string"
-                    }
-                },
-                "test_tags": {
-                    "type": "array",
-                    "items": {
-                        "type": "string"
-                    }
-                },
-                "uuid": {
-                    "type": "string"
-                },
-                "vendor": {
-                    "type": "string"
-                },
-                "version": {
-                    "type": "string"
-                }
-            },
-            "title": "TestDescriptor"
         },
         "TestPlanCallback": {
             "type": "object",
@@ -560,16 +501,16 @@
                     "description": "Event Actor",
                     "allowEmptyValue": false
                 },
+                "exception": {
+                    "type": "string",
+                    "example": "run time exception",
+                    "description": "Test Plan Exception message",
+                    "allowEmptyValue": false
+                },
                 "status": {
                     "type": "string",
                     "example": "STARTING, COMPLETED, CANCELLING, CANCELLED, ERROR",
                     "description": "Test Plan Status",
-                    "allowEmptyValue": false
-                },
-                "test_plan_repository": {
-                    "type": "string",
-                    "example": "tng-cat, catalog, or xx.xx",
-                    "description": "Test Plan Repository URI",
                     "allowEmptyValue": false
                 },
                 "test_plan_uuid": {
@@ -585,12 +526,6 @@
                         "$ref": "#/definitions/TestResult"
                     }
                 },
-                "test_results_repository": {
-                    "type": "string",
-                    "example": "tng-res, results, or xx.xx",
-                    "description": "Test Results Repository URI",
-                    "allowEmptyValue": false
-                },
                 "url": {
                     "type": "string",
                     "example": "/test-plans/on-change",
@@ -604,22 +539,33 @@
             "type": "object",
             "properties": {
                 "last_test": {
-                    "type": "boolean"
+                    "type": "boolean",
+                    "example": false,
+                    "description": "is Last Test Plan",
+                    "allowEmptyValue": false
                 },
-                "nsd": {
-                    "type": "object"
+                "service_uuid": {
+                    "type": "string",
+                    "description": "Network service uuid",
+                    "allowEmptyValue": false
                 },
                 "test_plan_callbacks": {
                     "type": "array",
+                    "description": "Test plan callbacks",
+                    "allowEmptyValue": false,
                     "items": {
                         "$ref": "#/definitions/TestPlanCallback"
                     }
                 },
                 "test_plan_uuid": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "Test Plan uuid",
+                    "allowEmptyValue": false
                 },
-                "testd": {
-                    "type": "object"
+                "test_uuid": {
+                    "type": "string",
+                    "description": "Test uuid",
+                    "allowEmptyValue": false
                 }
             },
             "title": "TestPlanRequest"
@@ -636,7 +582,7 @@
                 "status": {
                     "type": "string",
                     "example": "STARTING, COMPLETED, CANCELLING, CANCELLED, ERROR",
-                    "description": "Test Plan Status",
+                    "description": "Test Plan status",
                     "allowEmptyValue": false
                 }
             },

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015 SONATA-NFV, 2017 5GTANGO [, ANY ADDITIONAL AFFILIATION]
+ * Copyright (c) 2015 SONATA-NFV, 2019 5GTANGO [, ANY ADDITIONAL AFFILIATION]
  * ALL RIGHTS RESERVED.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -34,25 +34,10 @@
 
 package com.github.tng.vnv.planner.model
 
-import com.fasterxml.jackson.annotation.JsonProperty
-import groovy.transform.EqualsAndHashCode
-import groovy.transform.ToString
-import io.swagger.annotations.ApiModelProperty
-
-import javax.validation.constraints.NotNull
-
 class NetworkService {
     String uuid
     String status
     String packageId
-    def nsd
-    NetworkServiceDescriptor descriptor
-
-    NetworkService loadDescriptor() {
-        descriptor = new NetworkServiceDescriptor()
-        descriptor.load(this)
-        this
-    }
 
     boolean equals(o) {
         if (this.is(o)) return true
@@ -64,26 +49,5 @@ class NetworkService {
 
     int hashCode() {
         return uuid.hashCode()
-    }
-}
-
-@ToString(excludes = ['name','vendor'])
-class NetworkServiceDescriptor implements Serializable {
-    String uuid
-    String name
-    String vendor
-    String version
-    List<String> testingTags
-    List<String> servicePlatforms
-
-    void load(NetworkService service){
-        uuid = service.nsd?.uuid?: service.nsd.uuid
-        name = service.nsd?.name
-        vendor = service.nsd?.vendor
-        testingTags = service.nsd?.testing_tags
-        servicePlatforms = service.nsd?.service_platforms
-    }
-    boolean tagMatchedWith(TestDescriptor testDescriptor) {
-        (testDescriptor == null)?false:this?.testingTags?.flatten().any { st -> testDescriptor?.testTags?.flatten().any{ tt -> tt == st}}
     }
 }

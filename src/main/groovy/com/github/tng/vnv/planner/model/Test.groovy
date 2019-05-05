@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015 SONATA-NFV, 2017 5GTANGO [, ANY ADDITIONAL AFFILIATION]
+ * Copyright (c) 2015 SONATA-NFV, 2019 5GTANGO [, ANY ADDITIONAL AFFILIATION]
  * ALL RIGHTS RESERVED.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -34,24 +34,10 @@
 
 package com.github.tng.vnv.planner.model
 
-import com.fasterxml.jackson.annotation.JsonProperty
-import groovy.transform.EqualsAndHashCode
-import groovy.transform.ToString
-import io.swagger.annotations.ApiModelProperty
-
-import javax.validation.constraints.NotNull
-
 class Test {
     String uuid
     String packageId
-    def testd
-    TestDescriptor descriptor
-
-    Test loadDescriptor() {
-        descriptor = new TestDescriptor()
-        descriptor.load(this)
-        this
-    }
+    String confirmRequired
 
     boolean equals(o) {
         if (this.is(o)) return true
@@ -63,28 +49,5 @@ class Test {
 
     int hashCode() {
         return uuid.hashCode()
-    }
-}
-
-@ToString(excludes = ['name','vendor','description'])
-class TestDescriptor implements Serializable {
-    String uuid
-    String vendor
-    String name
-    String version
-    String description
-    String confirmRequired
-    List<String> testTags;
-    List<String> servicePlatforms
-
-    void load(Test test){
-        uuid = test.testd?.uuid
-        vendor = test.testd?.vendor
-        name = test.testd?.name
-        version = test.testd?.version
-        description = test.testd?.description
-        confirmRequired = test.testd?.confirm_required
-        testTags = test.testd?.test_tags
-        servicePlatforms = test.testd?.service_platforms
     }
 }

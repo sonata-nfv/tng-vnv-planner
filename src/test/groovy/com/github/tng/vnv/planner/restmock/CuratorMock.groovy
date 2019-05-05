@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015 SONATA-NFV, 2017 5GTANGO [, ANY ADDITIONAL AFFILIATION]
+ * Copyright (c) 2015 SONATA-NFV, 2019 5GTANGO [, ANY ADDITIONAL AFFILIATION]
  * ALL RIGHTS RESERVED.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -50,9 +50,12 @@ import org.springframework.web.bind.annotation.*
 class CuratorMock {
 
     def busy = true
+    TestPlan currentTestPlan
     def status = HttpStatus.OK
     @PostMapping('/mock/curator/test-preparations')
     ResponseEntity<TestPlanResponse> curateTestPlan(@RequestBody TestPlanRequest testPlanRequest) {
+                currentTestPlan = new TestPlan(uuid: testPlanRequest.testPlanUuid,
+                        serviceUuid: testPlanRequest.serviceUuid, testUuid: testPlanRequest.testPlanUuid)
                 TestPlanResponse tpr = new TestPlanResponse(status:
                         (busy)? TEST_PLAN_STATUS.REJECTED:TEST_PLAN_STATUS.STARTING)
 

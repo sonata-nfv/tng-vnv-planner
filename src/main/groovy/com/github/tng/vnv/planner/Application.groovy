@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015 SONATA-NFV, 2017 5GTANGO [, ANY ADDITIONAL AFFILIATION]
+ * Copyright (c) 2015 SONATA-NFV, 2019 5GTANGO [, ANY ADDITIONAL AFFILIATION]
  * ALL RIGHTS RESERVED.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -35,22 +35,13 @@
 package com.github.tng.vnv.planner
 
 import com.github.mrduguo.spring.app.App
-import com.github.tng.vnv.planner.repository.TestPlanRepository
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.SpringBootApplication
-import org.springframework.scheduling.annotation.EnableScheduling
 
 @SpringBootApplication
-@EnableScheduling
 class Application extends App {
-
-    @Autowired
-    TestPlanRepository testPlanJpaRepository
-
     static void main(String[] args) {
         App.main(args)
     }
-
 }
 
 

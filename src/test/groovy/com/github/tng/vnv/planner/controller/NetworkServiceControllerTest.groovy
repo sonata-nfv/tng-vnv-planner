@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015 SONATA-NFV, 2017 5GTANGO [, ANY ADDITIONAL AFFILIATION]
+ * Copyright (c) 2015 SONATA-NFV, 2019 5GTANGO [, ANY ADDITIONAL AFFILIATION]
  * ALL RIGHTS RESERVED.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -42,16 +42,16 @@ import org.springframework.http.HttpStatus
 
 class NetworkServiceControllerTest extends TestRestSpec {
 
-    final def NETWORK_SERVICE_ID = 'input0ns-f213-4fae-8d3f-04358e1e1451'
+    final def NETWORK_SERVICE_UUID_HAPROXY_1 = 'input0ns-f213-4fae-8d3f-04358e1e1451'
 
     @Autowired
     CatalogueMock catalogueMock
 
     void "retrieval of a single test plans's related tests should successfully all the tag related tests"() {
         when:
-        def entity = getForEntity('/api/v1/test-plans/services/{serviceUuid}/tests', List, NETWORK_SERVICE_ID)
+        def entity = getForEntity('/api/v1/test-plans/services/{serviceUuid}/tests', List, NETWORK_SERVICE_UUID_HAPROXY_1)
         then:
         entity.statusCode == HttpStatus.OK
-        entity.body.size() == 4
+        entity.body.size() == 2
     }
 }

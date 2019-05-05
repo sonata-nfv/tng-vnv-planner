@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015 SONATA-NFV, 2017 5GTANGO [, ANY ADDITIONAL AFFILIATION]
+ * Copyright (c) 2015 SONATA-NFV, 2019 5GTANGO [, ANY ADDITIONAL AFFILIATION]
  * ALL RIGHTS RESERVED.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -32,47 +32,14 @@
  * partner consortium (www.5gtango.eu).
  */
 
-package com.github.tng.vnv.planner.model
+package com.github.tng.vnv.planner.aspect
 
-import io.swagger.annotations.ApiModelProperty
+import java.lang.annotation.ElementType
+import java.lang.annotation.Retention
+import java.lang.annotation.RetentionPolicy
+import java.lang.annotation.Target
 
-import javax.validation.constraints.NotNull
-
-class Package {
-    def networkServices= [] as HashSet
-    def tests=[] as HashSet
-
-    String packageId
-    String uuid
-}
-
-class PackageCallback {
-
-    @ApiModelProperty(
-            value = 'The reference id of the uploaded package that will generate test plans as pair of network services and tests',
-            allowEmptyValue = false,
-            required = true
-    )
-    @NotNull
-    String packageId
-
-    @ApiModelProperty(
-                value = 'Additional validation step before every test plan progresses towards execution',
-            allowEmptyValue = true,
-            example = 'true'
-    )
-    boolean confirmRequired
-
-    @ApiModelProperty(
-            value = 'Event Name',
-            allowEmptyValue = true,
-            example = 'UPDATED',
-            required = true
-    )
-    @NotNull
-    String eventName
-
-    String packageLocation
-
-
+@Target(ElementType.METHOD)
+@Retention(RetentionPolicy.RUNTIME)
+@interface RestCall {
 }

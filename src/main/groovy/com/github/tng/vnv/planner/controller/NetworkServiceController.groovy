@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015 SONATA-NFV, 2017 5GTANGO [, ANY ADDITIONAL AFFILIATION]
+ * Copyright (c) 2015 SONATA-NFV, 2019 5GTANGO [, ANY ADDITIONAL AFFILIATION]
  * ALL RIGHTS RESERVED.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -34,31 +34,24 @@
 
 package com.github.tng.vnv.planner.controller
 
-import com.github.tng.vnv.planner.model.NetworkService
+import com.github.tng.vnv.planner.model.Test
 import com.github.tng.vnv.planner.service.NetworkServiceService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
-import com.github.tng.vnv.planner.service.TestService
-import com.github.tng.vnv.planner.model.TestDescriptor
 
 @RestController
 @RequestMapping('/api/v1/test-plans')
 class NetworkServiceController {
 
     @Autowired
-    TestService testService
-
-    @Autowired
     NetworkServiceService networkServiceService
 	
     @GetMapping('/services/{serviceUuid}/tests')
-    Set<TestDescriptor> listTestsByService(@PathVariable('serviceUuid') String uuid) {
-        testService.findByService(
-                networkServiceService.findByUuid(uuid)
-        )
+    List<Test> listTestsByService(@PathVariable('serviceUuid') String uuid) {
+        networkServiceService.findByTest(uuid)
     }
 	
 }
