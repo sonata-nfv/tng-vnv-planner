@@ -47,11 +47,11 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import com.github.tng.vnv.planner.ScheduleManager
 import com.github.tng.vnv.planner.model.PackageCallback
-import groovy.util.logging.Log
+import groovy.util.logging.Slf4j
 import io.swagger.annotations.ApiResponse
 import io.swagger.annotations.ApiResponses
 
-@Log
+@Slf4j
 @RestController
 @RequestMapping('/api/v1/packages')
 class CatalogueCallbackController {
@@ -70,9 +70,9 @@ class CatalogueCallbackController {
     @PostMapping('/on-change')
     @ResponseBody
     List<TestPlan> onChange(@Valid @RequestBody PackageCallback body) {
-        log.info("#~#vnvlog onChange STR [PackageId: ${body?.packageId}]")
+        log.info("#~#vnvlog onChange STR [PackageId: {}]",body?.packageId)
         List<TestPlan> testPlans = scheduler.create(body.packageId)
-        log.info("#~#vnvlog onChange: END [PackageId: ${body?.packageId}]")
+        log.info("#~#vnvlog onChange: END [PackageId: {}]",body?.packageId)
         testPlans
     }
 

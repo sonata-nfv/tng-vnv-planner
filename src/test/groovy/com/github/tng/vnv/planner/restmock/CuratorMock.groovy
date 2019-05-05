@@ -40,12 +40,12 @@ import com.github.tng.vnv.planner.model.TestPlanRequest
 import com.github.tng.vnv.planner.model.TestPlanResponse
 import com.github.tng.vnv.planner.utils.HttpMessage
 import com.github.tng.vnv.planner.utils.TEST_PLAN_STATUS
-import groovy.util.logging.Log
+import groovy.util.logging.Slf4j
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
-@Log
+@Slf4j
 @RestController
 class CuratorMock {
 
@@ -80,7 +80,7 @@ class CuratorMock {
 
     @DeleteMapping('/mock/curator/test-preparations/{testPlanUuid}')
     ResponseEntity<Void> deleteTestPlan(@PathVariable('testPlanUuid') String uuid) {
-        log.info("The testPlan with uuid: \"$uuid\" has been cancelled")
+        log.info("The testPlan with uuid: {} has been cancelled",uuid)
         ResponseEntity.status(HttpStatus.OK).build()
     }
 

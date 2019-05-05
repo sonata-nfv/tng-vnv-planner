@@ -78,11 +78,15 @@ app:
   NOT_MATCHING_TEST_TAGS: '[NOT MATCHING TEST TAGS]'
   NOT_AVAILABLE_DATA: '[NOT AVAILABLE DATA]'
 
+logging:
+  config: 'classpath:logback-spring.xml'
+
 spring:
   jackson.property-naming-strategy: SNAKE_CASE
   main.banner-mode: "off"
   profiles:
     active: dev
+
 ---
 spring:
   profiles: docker
@@ -101,6 +105,7 @@ spring:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     open-in-view: false
     generate-ddl: false
+
 
 
 
