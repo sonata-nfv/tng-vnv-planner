@@ -57,8 +57,8 @@ class WorkFlowManagerTest extends TestRestSpec {
     static final String TEST_PLAN_WFM_UUID_5 = '109873685'
     static final String TEST_PLAN_WFM_UUID_6 = '109873686'
     static final String TEST_PLAN_WFM_UUID_7 = '109873687'
-    static final String IMEDIA_TEST_PLAN_SERVICE_UUID = 'immedia0-9429-4a07-b7af-dd429d6d04o3'
-    static final String IMEDIA_TEST_PLAN_TEST_UUID = 'immedia0-8cc7-47a9-9112-6wff9e88wu2k'
+    static final String IMEDIA_TEST_PLAN_NSD_UUID = 'immedia0-9429-4a07-b7af-dd429d6d04o3'
+    static final String IMEDIA_TEST_PLAN_TESTD_UUID = 'immedia0-8cc7-47a9-9112-6wff9e88wu2k'
 
 
     void 'When curator sends a COMPLETED testPlan should Planner complete the testPlan lifycycle'() {
@@ -74,7 +74,7 @@ class WorkFlowManagerTest extends TestRestSpec {
                         test_plan_uuid: TEST_PLAN_WFM_UUID_1,
                         test_results: [
                                 [
-                                        test_uuid: TEST_RESULT_UUID,
+                                        testd_uuid: TEST_RESULT_UUID,
                                         test_result_uuid: '45678',
                                         status: TEST_PLAN_STATUS.COMPLETED,
                                 ],
@@ -163,6 +163,6 @@ class WorkFlowManagerTest extends TestRestSpec {
     }
 
     TestPlan scheduleTestPlan(String uuid, String status, String description){
-        testPlanService.save(new TestPlan(uuid: uuid, status: status, description: description, serviceUuid: IMEDIA_TEST_PLAN_SERVICE_UUID, testUuid: IMEDIA_TEST_PLAN_TEST_UUID))
+        testPlanService.save(new TestPlan(uuid: uuid, status: status, description: description, nsdUuid: IMEDIA_TEST_PLAN_NSD_UUID, testdUuid: IMEDIA_TEST_PLAN_TESTD_UUID))
     }
 }

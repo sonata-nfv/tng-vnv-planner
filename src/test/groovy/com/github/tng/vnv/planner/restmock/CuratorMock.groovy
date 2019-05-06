@@ -55,7 +55,7 @@ class CuratorMock {
     @PostMapping('/mock/curator/test-preparations')
     ResponseEntity<TestPlanResponse> curateTestPlan(@RequestBody TestPlanRequest testPlanRequest) {
                 currentTestPlan = new TestPlan(uuid: testPlanRequest.testPlanUuid,
-                        serviceUuid: testPlanRequest.serviceUuid, testUuid: testPlanRequest.testPlanUuid)
+                        nsdUuid: testPlanRequest.nsdUuid, testdUuid: testPlanRequest.testPlanUuid)
                 TestPlanResponse tpr = new TestPlanResponse(status:
                         (busy)? TEST_PLAN_STATUS.REJECTED:TEST_PLAN_STATUS.STARTING)
 

@@ -87,7 +87,7 @@ class WorkflowManager {
 
     TestPlanResponse proceedWith(TestPlan testPlan) {
         curator.post(new TestPlanRequest(testPlanUuid: testPlan.uuid,
-                serviceUuid: testPlan.serviceUuid,
-                testUuid: testPlan.testUuid)).body
+                nsdUuid: testPlan.nsdUuid,
+                testUuid: testPlan.testdUuid)).body
     }
 }

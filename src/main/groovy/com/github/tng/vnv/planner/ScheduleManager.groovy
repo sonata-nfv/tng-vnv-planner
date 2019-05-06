@@ -64,8 +64,8 @@ class ScheduleManager {
 
     TestPlan create(TestPlan tp) {
         tp.uuid=(!isEmpty(tp.uuid))?tp.uuid:UUID.randomUUID().toString()
-        if (!isEmpty(tp.serviceUuid) && !isEmpty(tp.testUuid)) {
-                if ((testService.isConfirmRequired(tp.testUuid)
+        if (!isEmpty(tp.nsdUuid) && !isEmpty(tp.testdUuid)) {
+                if ((testService.isConfirmRequired(tp.testdUuid)
                         || !isEmpty(tp.confirmRequired) && tp.confirmRequired == '1')
                         && (isEmpty(tp.confirmed) || tp.confirmed != '1')) {
                     tp.status = TEST_PLAN_STATUS.NOT_CONFIRMED

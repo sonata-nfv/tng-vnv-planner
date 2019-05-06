@@ -51,16 +51,16 @@ class TestPlanControllerTest extends TestRestSpec {
     @Autowired
     CuratorMock curatorMock
 
-    static final String IMEDIA_TEST_PLAN_SERVICE_UUID_MEDIAPILOT_SERVICE = 'immedia0-9429-4a07-b7af-dd429d6d04o3'
-    static final String IMEDIA_TEST_PLAN_TEST_UUID_TEST_IMMERSIVE_MEDIA = 'immedia0-8cc7-47a9-9112-6wff9e88wu2k'
-    static final String LATENCY_TEST_PLAN_SERVICE_UUID_HAPROXY_1 = 'input0ns-f213-4fae-8d3f-04358e1e1451'
-    static final String LATENCY_TEST_PLAN_TEST_UUID_HTTP_BENCHMARK_TEST_1 = 'input0ts-75f5-4ca1-90c8-12ec80a79836'
-    static final String TAG_UNRELATED_TEST_PLAN_SERVICE_UUID_HAPROXY_1 = 'input0ns-f213-4fae-8d3f-04358e1e1451'
-    static final String TAG_UNRELATED_TEST_PLAN_TEST_UUID_HTTP_BENCHMARK_TEST_1 = 'input0ts-75f5-4ca1-90c8-12ec80a79836'
-    static final String DIY_DESCRIPTOR_TEST_PLAN_SERVICE_UUID_NS_SQUID = '4dd4cb15-76b8-46fd-b3c0-1b165cc332f9'
-    static final String DIY_DESCRIPTOR_TEST_PLAN_TEST_UUID_TEST_HTTP_BENCHMARK_ADVANCED_PROXY_1 = 'b68dbe19-5c02-4865-8c4b-5e43ada1b67d'
-    static final String DIY_DESCRIPTOR_TEST_PLAN_VALIDATION_REQUIRED_TEST_UUID_TEST_HTTP_BENCHMARK_ADVANCED_PROXY_2 = 'b68dbe19-5c02-4865-8c4b-5e43ada1b67c'
-    static final String DIY_DESCRIPTOR_TEST_PLAN_CONFIRMED_TEST_UUID_TEST_HTTP_BENCHMARK_ADVANCED_PROXY_3 = 'b68dbe19-5c02-4865-8c4b-5e43ada1b67b'
+    static final String IMEDIA_TEST_PLAN_NSD_UUID_MEDIAPILOT_SERVICE = 'immedia0-9429-4a07-b7af-dd429d6d04o3'
+    static final String IMEDIA_TEST_PLAN_TESTD_UUID_TEST_IMMERSIVE_MEDIA = 'immedia0-8cc7-47a9-9112-6wff9e88wu2k'
+    static final String LATENCY_TEST_PLAN_NSD_UUID_HAPROXY_1 = 'input0ns-f213-4fae-8d3f-04358e1e1451'
+    static final String LATENCY_TEST_PLAN_TESTD_UUID_HTTP_BENCHMARK_TEST_1 = 'input0ts-75f5-4ca1-90c8-12ec80a79836'
+    static final String TAG_UNRELATED_TEST_PLAN_NSD_UUID_HAPROXY_1 = 'input0ns-f213-4fae-8d3f-04358e1e1451'
+    static final String TAG_UNRELATED_TEST_PLAN_TESTD_UUID_HTTP_BENCHMARK_TEST_1 = 'input0ts-75f5-4ca1-90c8-12ec80a79836'
+    static final String DIY_DESCRIPTOR_TEST_PLAN_NSD_UUID_NS_SQUID = '4dd4cb15-76b8-46fd-b3c0-1b165cc332f9'
+    static final String DIY_DESCRIPTOR_TEST_PLAN_TESTD_UUID_TEST_HTTP_BENCHMARK_ADVANCED_PROXY_1 = 'b68dbe19-5c02-4865-8c4b-5e43ada1b67d'
+    static final String DIY_DESCRIPTOR_TEST_PLAN_VALIDATION_REQUIRED_TESTD_UUID_TEST_HTTP_BENCHMARK_ADVANCED_PROXY_2 = 'b68dbe19-5c02-4865-8c4b-5e43ada1b67c'
+    static final String DIY_DESCRIPTOR_TEST_PLAN_CONFIRMED_TESTD_UUID_TEST_HTTP_BENCHMARK_ADVANCED_PROXY_3 = 'b68dbe19-5c02-4865-8c4b-5e43ada1b67b'
     static final String UNKNOWN_UUID = '00000000-5c02-4865-8c4b-5e43ada1b67b'
      static final String TEST_DESCRIPTOR_UUID_HTTP_BENCHMARK_TEST_1 = 'input0ts-75f5-4ca1-90c8-12ec80a79836'
 
@@ -76,32 +76,32 @@ class TestPlanControllerTest extends TestRestSpec {
         when:
         def entity = postForEntity('/api/v1/test-plans',
                 [
-                        'service_uuid': IMEDIA_TEST_PLAN_SERVICE_UUID_MEDIAPILOT_SERVICE,
-                        'test_uuid'   : IMEDIA_TEST_PLAN_TEST_UUID_TEST_IMMERSIVE_MEDIA,
+                        'nsd_uuid': IMEDIA_TEST_PLAN_NSD_UUID_MEDIAPILOT_SERVICE,
+                        'testd_uuid'   : IMEDIA_TEST_PLAN_TESTD_UUID_TEST_IMMERSIVE_MEDIA,
                         'description' : 'dummyTestPlan1-index1',
                         'index'       : '1',
                 ]
                 , Void.class)
         entity = postForEntity('/api/v1/test-plans',
                 [
-                        'service_uuid': LATENCY_TEST_PLAN_SERVICE_UUID_HAPROXY_1,
-                        'test_uuid'   : LATENCY_TEST_PLAN_TEST_UUID_HTTP_BENCHMARK_TEST_1,
+                        'nsd_uuid': LATENCY_TEST_PLAN_NSD_UUID_HAPROXY_1,
+                        'testd_uuid'   : LATENCY_TEST_PLAN_TESTD_UUID_HTTP_BENCHMARK_TEST_1,
                         'description' : 'dummyTestPlan2-index3',
                         'index'       : '3',
                 ]
                 , Void.class)
         entity = postForEntity('/api/v1/test-plans',
                 [
-                        'service_uuid': TAG_UNRELATED_TEST_PLAN_SERVICE_UUID_HAPROXY_1,
-                        'test_uuid'   : TAG_UNRELATED_TEST_PLAN_TEST_UUID_HTTP_BENCHMARK_TEST_1,
+                        'nsd_uuid': TAG_UNRELATED_TEST_PLAN_NSD_UUID_HAPROXY_1,
+                        'testd_uuid'   : TAG_UNRELATED_TEST_PLAN_TESTD_UUID_HTTP_BENCHMARK_TEST_1,
                         'description' : 'dummyTestPlan3-index2',
                         'index'       : '2',
                 ]
                 , Void.class)
         entity = postForEntity('/api/v1/test-plans',
                 [
-                    'service_uuid': DIY_DESCRIPTOR_TEST_PLAN_SERVICE_UUID_NS_SQUID,
-                    'test_uuid'   : DIY_DESCRIPTOR_TEST_PLAN_TEST_UUID_TEST_HTTP_BENCHMARK_ADVANCED_PROXY_1,
+                    'nsd_uuid': DIY_DESCRIPTOR_TEST_PLAN_NSD_UUID_NS_SQUID,
+                    'testd_uuid'   : DIY_DESCRIPTOR_TEST_PLAN_TESTD_UUID_TEST_HTTP_BENCHMARK_ADVANCED_PROXY_1,
                     'description': 'dummyTestPlan4-index4',
                     'index'      : '4',
                 ]
@@ -122,22 +122,22 @@ class TestPlanControllerTest extends TestRestSpec {
         when:
         def entity = postForEntity('/api/v1/test-plans',
                 [
-                        'service_uuid': LATENCY_TEST_PLAN_SERVICE_UUID_HAPROXY_1,
-                        'test_uuid'   : LATENCY_TEST_PLAN_TEST_UUID_HTTP_BENCHMARK_TEST_1,
+                        'nsd_uuid': LATENCY_TEST_PLAN_NSD_UUID_HAPROXY_1,
+                        'testd_uuid'   : LATENCY_TEST_PLAN_TESTD_UUID_HTTP_BENCHMARK_TEST_1,
                         'description' : 'dummyTestPlan1-non-validation_required',
                         'index'       : '1',
                 ], Void.class)
         entity = postForEntity('/api/v1/test-plans',
                 [
-                        'service_uuid': DIY_DESCRIPTOR_TEST_PLAN_SERVICE_UUID_NS_SQUID,
-                        'test_uuid'   : DIY_DESCRIPTOR_TEST_PLAN_VALIDATION_REQUIRED_TEST_UUID_TEST_HTTP_BENCHMARK_ADVANCED_PROXY_2,
+                        'nsd_uuid': DIY_DESCRIPTOR_TEST_PLAN_NSD_UUID_NS_SQUID,
+                        'testd_uuid'   : DIY_DESCRIPTOR_TEST_PLAN_VALIDATION_REQUIRED_TESTD_UUID_TEST_HTTP_BENCHMARK_ADVANCED_PROXY_2,
                         'description': 'dummyTestPlan-validation_required',
                         'index'      : '2',
                 ], Void.class)
         entity = postForEntity('/api/v1/test-plans',
                 [
-                        'service_uuid': DIY_DESCRIPTOR_TEST_PLAN_SERVICE_UUID_NS_SQUID,
-                        'test_uuid'   : DIY_DESCRIPTOR_TEST_PLAN_CONFIRMED_TEST_UUID_TEST_HTTP_BENCHMARK_ADVANCED_PROXY_3,
+                        'nsd_uuid': DIY_DESCRIPTOR_TEST_PLAN_NSD_UUID_NS_SQUID,
+                        'testd_uuid'   : DIY_DESCRIPTOR_TEST_PLAN_CONFIRMED_TESTD_UUID_TEST_HTTP_BENCHMARK_ADVANCED_PROXY_3,
                         'description': 'dummyTestPlan-validation_confirmed',
                         'index'      : '3',
                 ], Void.class)
@@ -162,8 +162,8 @@ class TestPlanControllerTest extends TestRestSpec {
         when:
         def entity = postForEntity('/api/v1/test-plans',
             [
-                    "service_uuid": DIY_DESCRIPTOR_TEST_PLAN_SERVICE_UUID_NS_SQUID,
-                    "test_uuid": DIY_DESCRIPTOR_TEST_PLAN_VALIDATION_REQUIRED_TEST_UUID_TEST_HTTP_BENCHMARK_ADVANCED_PROXY_2,
+                    "nsd_uuid": DIY_DESCRIPTOR_TEST_PLAN_NSD_UUID_NS_SQUID,
+                    "testd_uuid": DIY_DESCRIPTOR_TEST_PLAN_VALIDATION_REQUIRED_TESTD_UUID_TEST_HTTP_BENCHMARK_ADVANCED_PROXY_2,
                     'description': 'dummyTestPlan1-validation_required',
                     'index': '1',
             ], Void.class)
@@ -182,22 +182,22 @@ class TestPlanControllerTest extends TestRestSpec {
         when:
         def entity = postForEntity('/api/v1/test-plans',
                 [
-                        "service_uuid": "",
+                        "nsd_uuid": "",
                 ],  Void.class)
         entity = postForEntity('/api/v1/test-plans',
                 [
-                        "service_uuid": LATENCY_TEST_PLAN_SERVICE_UUID_HAPROXY_1,
-                        "test_uuid": "",
+                        "nsd_uuid": LATENCY_TEST_PLAN_NSD_UUID_HAPROXY_1,
+                        "testd_uuid": "",
                 ],  Void.class)
         entity = postForEntity('/api/v1/test-plans',
                 [
-                        "service_uuid": "",
-                        "test_uuid": LATENCY_TEST_PLAN_TEST_UUID_HTTP_BENCHMARK_TEST_1,
+                        "nsd_uuid": "",
+                        "testd_uuid": LATENCY_TEST_PLAN_TESTD_UUID_HTTP_BENCHMARK_TEST_1,
                 ],  Void.class)
         entity = postForEntity('/api/v1/test-plans',
                 [
-                        "service_uuid": "",
-                        "test_uuid": "",
+                        "nsd_uuid": "",
+                        "testd_uuid": "",
                 ],  Void.class)
         then:
         entity.statusCode == HttpStatus.OK
@@ -247,7 +247,7 @@ class TestPlanControllerTest extends TestRestSpec {
 
     void "create test plan from NetworkService"() {
         when:
-        def testPlans = postForEntity('/api/v1/test-plans/services', ['uuid' : LATENCY_TEST_PLAN_SERVICE_UUID_HAPROXY_1], List ).body
+        def testPlans = postForEntity('/api/v1/test-plans/services', ['uuid' : LATENCY_TEST_PLAN_NSD_UUID_HAPROXY_1], List ).body
         then:
         testPlans.size()>=1
         cleanup:

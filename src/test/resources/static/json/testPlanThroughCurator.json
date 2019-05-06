@@ -73,7 +73,7 @@
       "test_plan_uuid":null,
       "test_results":[
         {
-          "test_uuid": null,
+          "testd_uuid": null,
           "test_result_uuid": null,
           "test_status": null
         }
@@ -86,7 +86,7 @@
       "test_plan_uuid":null,
       "test_results":[
         {
-          "test_uuid": null,
+          "testd_uuid": null,
           "test_result_uuid": null,
           "test_status": null
         }

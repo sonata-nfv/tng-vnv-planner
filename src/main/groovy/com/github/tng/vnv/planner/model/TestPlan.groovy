@@ -57,6 +57,14 @@ class TestPlan implements Serializable {
             allowEmptyValue = false)
     String uuid
     @ApiModelProperty(
+            value = 'Network Service Descriptor uuid',
+            allowEmptyValue = false)
+    String nsdUuid
+    @ApiModelProperty(
+            value = 'Test Descriptor uuid',
+            allowEmptyValue = false)
+    String testdUuid
+    @ApiModelProperty(
             value = 'Service Package id',
             allowEmptyValue = true)
     String servicePackageId
@@ -65,24 +73,16 @@ class TestPlan implements Serializable {
             allowEmptyValue = true)
     String testPackageId
     @ApiModelProperty(
-            value = 'Network service uuid',
-            allowEmptyValue = false)
-    String serviceUuid
-    @ApiModelProperty(
-            value = 'Test uuid',
-            allowEmptyValue = false)
-    String testUuid
-    @ApiModelProperty(
             value = 'Execution index',
-            allowEmptyValue = false)
+            allowEmptyValue = true)
     int index
     @ApiModelProperty(
             value = 'Confirmed',
-            allowEmptyValue = false)
+            allowEmptyValue = true)
     String confirmed
     @ApiModelProperty(
             value = 'Confirmation is required',
-            allowEmptyValue = false)
+            allowEmptyValue = true)
     String confirmRequired
     @ApiModelProperty(
             value = 'Status',
@@ -107,7 +107,7 @@ class TestPlanRequest {
     @ApiModelProperty(
             value = 'Network service uuid',
             allowEmptyValue = false)
-    String serviceUuid
+    String nsdUuid
     @ApiModelProperty(
             value = 'Test uuid',
             allowEmptyValue = false)

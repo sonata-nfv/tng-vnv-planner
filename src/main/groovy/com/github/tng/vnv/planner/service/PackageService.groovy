@@ -84,9 +84,9 @@ class PackageService {
             matchedServices.each { service ->
                 matchedTests.each { test ->
                     testPlans.add(new TestPlan(uuid: service.uuid+test.uuid,
-                            serviceUuid: service.uuid,
+                            nsdUuid: service.uuid,
                             servicePackageId: service.packageId,
-                            testUuid: test.uuid,
+                            testdUuid: test.uuid,
                             testPackageId: test.packageId,
                             confirmRequired: test.confirmRequired,
                             status: TEST_PLAN_STATUS.CREATED))
