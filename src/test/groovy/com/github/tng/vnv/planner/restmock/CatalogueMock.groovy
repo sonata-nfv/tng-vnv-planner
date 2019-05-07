@@ -45,8 +45,8 @@ import com.github.tng.vnv.planner.model.Test
 @RestController
 class CatalogueMock {
 
-    static String TEST_UUID_HTTP_BENCHMARK_TEST_1 ='input0ts-75f5-4ca1-90c8-12ec80a79836' //test_tags: latency (#4), http (#4)
-    static String SERVICE_UUID_NS_SQUID ='4dd4cb15-76b8-46fd-b3c0-1b165cc332f9' //test_tags: latency (#3), aux_test
+    static String TESTD_UUID_HTTP_BENCHMARK_TEST_1 ='input0ts-75f5-4ca1-90c8-12ec80a79836' //test_tags: latency (#4), http (#4)
+    static String NSD_UUID_NS_SQUID ='4dd4cb15-76b8-46fd-b3c0-1b165cc332f9' //test_tags: latency (#3), aux_test
     static String MOCKED_TEST_PLANS_MOCKED_PACKAGE_ID_FOR_HTTP_BENCHMARK_TEST_1_AND_NS_SQUID ='mocked_input0ts-75f5-4ca1-90c8-12ec80a79836_4dd4cb15-76b8-46fd-b3c0-1b165cc332f9'
 
     @GetMapping('/mock/gk/packages')
@@ -65,7 +65,7 @@ class CatalogueMock {
         if (packageId == MOCKED_TEST_PLANS_MOCKED_PACKAGE_ID_FOR_HTTP_BENCHMARK_TEST_1_AND_NS_SQUID) {
             [pd:[package_content:[
                     [
-                            'uuid':TEST_UUID_HTTP_BENCHMARK_TEST_1,
+                            'uuid':TESTD_UUID_HTTP_BENCHMARK_TEST_1,
                             'content-type':'application/vnd.5gtango.tstd',
                             "testing_tags": [
                                     "http",
@@ -73,7 +73,7 @@ class CatalogueMock {
                             ]
                     ],
                     [
-                            'uuid':SERVICE_UUID_NS_SQUID,
+                            'uuid':NSD_UUID_NS_SQUID,
                             'content-type':'application/vnd.5gtango.nsd',
                             "testing_tags": [
                                     "proxy-advanced"

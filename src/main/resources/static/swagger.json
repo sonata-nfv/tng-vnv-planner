@@ -630,12 +630,12 @@
                 "confirm_required": {
                     "type": "string",
                     "description": "Confirmation is required",
-                    "allowEmptyValue": false
+                    "allowEmptyValue": true
                 },
                 "confirmed": {
                     "type": "string",
                     "description": "Confirmed",
-                    "allowEmptyValue": false
+                    "allowEmptyValue": true
                 },
                 "description": {
                     "type": "string",
@@ -650,17 +650,17 @@
                     "type": "integer",
                     "format": "int32",
                     "description": "Execution index",
+                    "allowEmptyValue": true
+                },
+                "nsd_uuid": {
+                    "type": "string",
+                    "description": "Network Service Descriptor uuid",
                     "allowEmptyValue": false
                 },
                 "service_package_id": {
                     "type": "string",
                     "description": "Service Package id",
                     "allowEmptyValue": true
-                },
-                "service_uuid": {
-                    "type": "string",
-                    "description": "Network service uuid",
-                    "allowEmptyValue": false
                 },
                 "status": {
                     "type": "string",
@@ -672,9 +672,9 @@
                     "description": "Test Package id",
                     "allowEmptyValue": true
                 },
-                "test_uuid": {
+                "testd_uuid": {
                     "type": "string",
-                    "description": "Test uuid",
+                    "description": "Test Descriptor uuid",
                     "allowEmptyValue": false
                 },
                 "uuid": {

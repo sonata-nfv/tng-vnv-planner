@@ -39,11 +39,13 @@ import com.github.tng.vnv.planner.service.TestPlanService
 import com.github.tng.vnv.planner.model.TestPlan
 import com.github.tng.vnv.planner.service.TestService
 import com.github.tng.vnv.planner.utils.TEST_PLAN_STATUS
+import groovy.util.logging.Slf4j
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 
 import static org.springframework.util.StringUtils.isEmpty
 
+@Slf4j
 @Component
 class ScheduleManager {
 
@@ -56,24 +58,22 @@ class ScheduleManager {
     @Autowired
     WorkflowManager workflowManager
 
-    List<TestPlan> create(def packageId) {
-        new ArrayList<>(
-                testPlanService.buildTestPlansByPackage(packageId)
-        )?.each{create(it)}
+    List<TestPlan> createByPackage(def uuid) {
+                testPlanService.buildTestPlansByPackage(uuid)?.each{create(it)}
     }
 
     TestPlan create(TestPlan tp) {
         tp.uuid=(!isEmpty(tp.uuid))?tp.uuid:UUID.randomUUID().toString()
-        if (!isEmpty(tp.serviceUuid) && !isEmpty(tp.testUuid)) {
-                if ((testService.isConfirmRequired(tp.testUuid)
+        if (!isEmpty(tp.nsdUuid) && !isEmpty(tp.testdUuid)) {
+                if ((testService.isConfirmRequired(tp.testdUuid)
                         || !isEmpty(tp.confirmRequired) && tp.confirmRequired == '1')
                         && (isEmpty(tp.confirmed) || tp.confirmed != '1')) {
                     tp.status = TEST_PLAN_STATUS.NOT_CONFIRMED
                 } else {
                     tp.status = TEST_PLAN_STATUS.SCHEDULED
                 }
+            testPlanService.save(tp)
         }
-        testPlanService.save(tp)
     }
 
     TestPlan update(TestPlan tp) {

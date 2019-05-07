@@ -63,12 +63,12 @@ class CuratorCallbackControllerTest extends TestRestSpec {
                         test_plan_uuid: TEST_PLAN_UUID,
                         test_results: [
                                     [
-                                        test_uuid: '45678',
+                                        testd_uuid: '45678',
                                         test_result_uuid: TEST_RESULT_UUID,
                                         status: 'COMPLETED'
                                     ],
                                     [
-                                            test_uuid: '45678',
+                                            testd_uuid: '45678',
                                             test_result_uuid: TEST_RESULT2_UUID,
                                             status: 'COMPLETED'
                                     ],
@@ -95,12 +95,12 @@ class CuratorCallbackControllerTest extends TestRestSpec {
                         test_plan_uuid:TEST_PLAN_UUID,
                         test_results: [
                                 [
-                                        test_uuid: '45678',
+                                        testd_uuid: '45678',
                                         test_result_uuid: TEST_RESULT_UUID,
                                         status: 'ERROR'
                                 ],
                                 [
-                                        test_uuid: '45678',
+                                        testd_uuid: '45678',
                                         test_result_uuid: TEST_RESULT2_UUID,
                                         status: 'COMPLETED'
                                 ],
@@ -148,7 +148,7 @@ class CuratorCallbackControllerTest extends TestRestSpec {
                         test_plan_uuid: TEST_PLAN2_UUID,
                         test_results: [
                                 [
-                                    test_uuid: '639ce960-5a76-4722-9d5c-ee7c476ece10',
+                                    testd_uuid: '639ce960-5a76-4722-9d5c-ee7c476ece10',
                                     test_results_uuid: '1af9de2d-15c0-4dee-a8b1-6801e4e38bec',
                                     test_status: 'COMPLETED'
                                 ]

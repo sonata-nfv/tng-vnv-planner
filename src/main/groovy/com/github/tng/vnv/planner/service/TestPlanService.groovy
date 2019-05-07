@@ -34,7 +34,7 @@
 
 package com.github.tng.vnv.planner.service
 
-
+import com.github.tng.vnv.planner.aspect.ServiceCall
 import com.github.tng.vnv.planner.repository.TestPlanRepository
 import com.github.tng.vnv.planner.model.TestPlan
 import com.github.tng.vnv.planner.utils.TEST_PLAN_STATUS
@@ -53,44 +53,56 @@ class TestPlanService {
     @Autowired
     PackageService packageService
 
-    Set<TestPlan> buildTestPlansByTest(def uuid) {
-        packageService.buildTestPlansByTestPackage(uuid)
-    }
-    
-    Set<TestPlan> buildTestPlansByService(def uuid) {
-        packageService.buildTestPlansByServicePackage(uuid)
+    @ServiceCall
+    List<TestPlan> buildTestPlansByTest(def uuid) {
+        new ArrayList(packageService.buildTestPlansByTestPackage(uuid))
     }
 
-    Set<TestPlan> buildTestPlansByPackage(def packageId){
-        packageService.buildTestPlansByPackage(packageId)
+    @ServiceCall
+    List<TestPlan> buildTestPlansByService(def uuid) {
+        new ArrayList(packageService.buildTestPlansByServicePackage(uuid))
     }
 
+    @ServiceCall
+    List<TestPlan> buildTestPlansByPackage(def uuid){
+        new ArrayList(packageService.buildTestPlansByPackage(uuid))
+    }
+
+    @ServiceCall
     TestPlan save(TestPlan testPlan){
         testPlanRepository.save(testPlan)
+
     }
 
+    @ServiceCall
     TestPlan update(String uuid, String status) {
         TestPlan testPlan = findByUuid(uuid)
         testPlan.status = status
-        testPlanRepository.save(testPlan)
+        save(testPlan)
+
     }
 
+    @ServiceCall
     void delete(String uuid) {
         update(uuid, TEST_PLAN_STATUS.CANCELLING)
     }
 
+    @ServiceCall
     TestPlan findByUuid(String uuid){
         testPlanRepository.findByUuid(uuid)
     }
 
+    @ServiceCall
     TestPlan findNextScheduledTestPlan() {
         testPlanRepository.findFirstByStatus(TEST_PLAN_STATUS.SCHEDULED)
     }
 
+    @ServiceCall
     boolean existsByStartingStatus() {
         (testPlanRepository.findFirstByStatus(TEST_PLAN_STATUS.STARTING) != null)
     }
 
+    @ServiceCall
     List<TestPlan> findAll(){
         testPlanRepository.findAll()
     }

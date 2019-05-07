@@ -56,7 +56,7 @@ class ScheduleManagerTest extends TestRestSpec {
 
     void 'schedule multiple test plans should produce success result'() {
         when:
-        List<TestPlan> testPlans = scheduler.create(MULTIPLE_TEST_PLANS_MOCKED_PACKAGE_ID_FOR_HTTP_BENCHMARK_TEST_1_AND_HAPROXY_1)
+        List<TestPlan> testPlans = scheduler.createByPackage(MULTIPLE_TEST_PLANS_MOCKED_PACKAGE_ID_FOR_HTTP_BENCHMARK_TEST_1_AND_HAPROXY_1)
         then:
         testPlans.size() == 10
         cleanup:

@@ -34,10 +34,12 @@
 
 package com.github.tng.vnv.planner.model
 
+import groovy.transform.ToString
 import io.swagger.annotations.ApiModelProperty
 
 import javax.validation.constraints.NotNull
 
+@ToString(includes = ['packageId'],includeNames = true)
 class PackageCallback {
 
     @ApiModelProperty(

@@ -34,6 +34,7 @@
 
 package com.github.tng.vnv.planner.service
 
+import com.github.tng.vnv.planner.aspect.ServiceCall
 import com.github.tng.vnv.planner.client.Catalogue
 import com.github.tng.vnv.planner.client.Gatekeeper
 import com.github.tng.vnv.planner.model.NetworkService
@@ -49,10 +50,12 @@ class NetworkServiceService {
     @Autowired
     Gatekeeper gatekeeper
 
+    @ServiceCall
     NetworkService findByUuid(String uuid) {
         catalogue.getService(uuid).body
     }
 
+    @ServiceCall
     List findByTest(def uuid){
         def matchedServices = [] as HashSet<NetworkService>
         def pack = gatekeeper.getPackageByTest(uuid).body

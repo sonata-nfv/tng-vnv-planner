@@ -34,28 +34,37 @@
 
 package com.github.tng.vnv.planner.aspect
 
-import com.github.tng.vnv.planner.WorkflowManager
+import com.github.tng.vnv.planner.model.TestPlan
 import groovy.util.logging.Slf4j
-import org.aspectj.lang.JoinPoint
-import org.aspectj.lang.annotation.AfterReturning
+import org.aspectj.lang.ProceedingJoinPoint
+import org.aspectj.lang.annotation.Around
 import org.aspectj.lang.annotation.Aspect
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 
 @Aspect
 @Component
 @Slf4j
-class TriggerNextTestPlanAspect {
+class EndpointCallAspect {
 
-    @Autowired
-    WorkflowManager workflowManager
-    @AfterReturning(pointcut='@annotation(TriggerNextTestPlan) && execution(public * * (..))',returning='retVal')
-    Object afterRestCall(JoinPoint jp, Object retVal) {
-        log.info("#~#vnvlog TRIGGERING_NEXT_PLAN {}.{}({})",
-                jp.signature.declaringType.simpleName,
-                jp.signature.name,
-                jp.args[0].toString())
-                workflowManager.searchForScheduledPlan()
-        retVal
+    @Around("@annotation(EndpointCall) && execution(public * * (..))")
+    def restCall(final ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
+        def out
+        log.debug("#~#vnvlog ENDPOINT_CALL_STR {}.{} [{}]",
+                proceedingJoinPoint.signature.declaringType.simpleName,
+                proceedingJoinPoint.signature.name,
+                (proceedingJoinPoint.args.size()!=0)?proceedingJoinPoint.args[0]:'')
+
+        try {
+            out = proceedingJoinPoint.proceed()
+        } catch (Throwable throwable) {
+            throw throwable;
+        } finally {
+            log.debug("#~#vnvlog ENDPOINT_CALL_END {}.{} END [{}]",
+                    proceedingJoinPoint.signature.declaringType.simpleName,
+                    proceedingJoinPoint.signature.name,
+                    (proceedingJoinPoint.args.size()!=0)?proceedingJoinPoint.args[0]:'')
+        }
+        out
     }
+
 }

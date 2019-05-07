@@ -544,7 +544,7 @@
                     "description": "is Last Test Plan",
                     "allowEmptyValue": false
                 },
-                "service_uuid": {
+                "nsd_uuid": {
                     "type": "string",
                     "description": "Network service uuid",
                     "allowEmptyValue": false
@@ -562,7 +562,7 @@
                     "description": "Test Plan uuid",
                     "allowEmptyValue": false
                 },
-                "test_uuid": {
+                "testd_uuid": {
                     "type": "string",
                     "description": "Test uuid",
                     "allowEmptyValue": false

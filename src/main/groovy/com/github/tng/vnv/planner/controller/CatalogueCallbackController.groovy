@@ -34,6 +34,7 @@
 
 package com.github.tng.vnv.planner.controller
 
+import com.github.tng.vnv.planner.aspect.EndpointCall
 import com.github.tng.vnv.planner.aspect.TriggerNextTestPlan
 import com.github.tng.vnv.planner.model.TestPlan
 import org.springframework.web.bind.annotation.ResponseBody
@@ -62,6 +63,7 @@ class CatalogueCallbackController {
     @Autowired
     ScheduleManager scheduler
 
+    @EndpointCall
     @TriggerNextTestPlan
     @ApiResponses(value = [
             @ApiResponse(code = 400, message = 'Bad Request'),
@@ -70,10 +72,7 @@ class CatalogueCallbackController {
     @PostMapping('/on-change')
     @ResponseBody
     List<TestPlan> onChange(@Valid @RequestBody PackageCallback body) {
-        log.info("#~#vnvlog onChange STR [PackageId: {}]",body?.packageId)
-        List<TestPlan> testPlans = scheduler.create(body.packageId)
-        log.info("#~#vnvlog onChange: END [PackageId: {}]",body?.packageId)
-        testPlans
+        scheduler.createByPackage(body.packageId)
     }
 
 }

@@ -34,6 +34,7 @@
 
 package com.github.tng.vnv.planner.service
 
+import com.github.tng.vnv.planner.aspect.ServiceCall
 import com.github.tng.vnv.planner.client.Gatekeeper
 import com.github.tng.vnv.planner.model.NetworkService
 import com.github.tng.vnv.planner.model.Test
@@ -53,12 +54,13 @@ class PackageService {
     @Autowired
     Gatekeeper gatekeeper
 
-    Set<TestPlan> buildTestPlansByPackage(def packageId){
+    @ServiceCall
+    Set buildTestPlansByPackage(def uuid){
         def testPlans = [] as HashSet
-        if(packageId!=null){
+        if(uuid!=null){
             def matchedTests = [] as HashSet<Test>
             def matchedServices = [] as HashSet<NetworkService>
-            def pack = gatekeeper.getPackage(packageId).body
+            def pack = gatekeeper.getPackage(uuid).body
             def testingTags = pack.pd.package_content.collect {it.testing_tags}
             testingTags?.each { tags ->
                 tags?.each { tag ->
@@ -84,9 +86,9 @@ class PackageService {
             matchedServices.each { service ->
                 matchedTests.each { test ->
                     testPlans.add(new TestPlan(uuid: service.uuid+test.uuid,
-                            serviceUuid: service.uuid,
+                            nsdUuid: service.uuid,
                             servicePackageId: service.packageId,
-                            testUuid: test.uuid,
+                            testdUuid: test.uuid,
                             testPackageId: test.packageId,
                             confirmRequired: test.confirmRequired,
                             status: TEST_PLAN_STATUS.CREATED))
@@ -96,13 +98,15 @@ class PackageService {
         testPlans
     }
 
-    List buildTestPlansByTestPackage(def uuid){
+    @ServiceCall
+    Set buildTestPlansByTestPackage(def uuid){
         def pack = gatekeeper.getPackageByTest(uuid).body
-        new ArrayList(buildTestPlansByPackage(pack.uuid))
+        buildTestPlansByPackage(pack.uuid)
     }
 
-    List buildTestPlansByServicePackage(def uuid){
+    @ServiceCall
+    Set buildTestPlansByServicePackage(def uuid){
         def pack = gatekeeper.getPackageByService(uuid).body
-        new ArrayList(buildTestPlansByPackage(pack.uuid))
+        buildTestPlansByPackage(pack.uuid)
     }
 }
