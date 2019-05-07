@@ -34,6 +34,7 @@
 
 package com.github.tng.vnv.planner.controller
 
+import com.github.tng.vnv.planner.aspect.EndpointCall
 import com.github.tng.vnv.planner.model.Test
 import com.github.tng.vnv.planner.service.TestService
 import org.springframework.beans.factory.annotation.Autowired
@@ -49,6 +50,7 @@ class TestController {
     @Autowired
     TestService testService
 
+    @EndpointCall
     @GetMapping('/tests/{testUuid}/services')
     List<Test> listTestsByService(@PathVariable('testUuid') String uuid) {
         testService.findByService(uuid)

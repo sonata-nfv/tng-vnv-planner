@@ -59,11 +59,11 @@ class Catalogue {
 
     @AfterRestCall
     ResponseEntity getTest(def uuid){
-        restTemplateWithAuth.getForEntity(testMetadataEndpoint, Test.class, uuid)
+        restTemplateWithAuth.getForEntity(testMetadataEndpoint, Test, uuid)
     }
 
     @AfterRestCall
     ResponseEntity getService(def uuid){
-        restTemplateWithAuth.getForEntity(serviceMetadataEndpoint, NetworkService.class, uuid)
+        restTemplateWithAuth.getForEntity(serviceMetadataEndpoint, NetworkService, uuid)
     }
 }

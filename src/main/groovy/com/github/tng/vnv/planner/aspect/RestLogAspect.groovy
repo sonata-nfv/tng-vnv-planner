@@ -40,7 +40,7 @@ import org.aspectj.lang.ProceedingJoinPoint
 import org.aspectj.lang.annotation.AfterReturning
 import org.aspectj.lang.annotation.Around
 import org.aspectj.lang.annotation.Aspect
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Component
 
 @Aspect
@@ -52,16 +52,16 @@ class RestLogAspect {
     ResponseEntity restCall(final ProceedingJoinPoint proceedingJoinPoint) throws Throwable{
         ResponseEntity responseEntity
         try {
-            responseEntity = proceedingJoinPoint.proceed();
+            responseEntity = proceedingJoinPoint.proceed()
         } catch (Throwable throwable) {
-            throw throwable;
+            throw throwable
         } finally {
             if(responseEntity?.statusCodeValue in [200, 201, 202, 203, 204, 205, 206, 207, 208, 226]) {
                 log.info("#~#vnvlog REST_CALL: {}.{}({}), response.status: {}",
                         proceedingJoinPoint.getSignature().getDeclaringType().getSimpleName(),
                         proceedingJoinPoint.getSignature().getName(),
                         responseEntity.statusCode,
-                        (proceedingJoinPoint.args.size()!=0)?proceedingJoinPoint.args[0]:' '
+                        (proceedingJoinPoint.args.size()!=0)?proceedingJoinPoint.args[0]:''
                 )
             } else {
                 log.error("#~#vnvlog REST_CALL: {}.{}, response.status: {}",
@@ -76,15 +76,17 @@ class RestLogAspect {
     @AfterReturning(pointcut='@annotation(AfterRestCall) && execution(public * * (..))',returning='retVal')
     ResponseEntity afterRestCall(JoinPoint jp, Object retVal) {
         if(retVal?.statusCodeValue in [200, 201, 202, 203, 204, 205, 206, 207, 208, 226]) {
-            log.info("#~#vnvlog REST_CALL2: {}.{}, response.status: {}",
+            log.info("#~#vnvlog REST_CALL2: {}.{}({}), response.status: {}",
                     jp.signature.declaringType.simpleName,
                     jp.signature.name,
+                    (jp.args.size()>0)?jp.args[0]:"",
                     retVal.statusCode,
             )
         } else {
-            log.error("#~#vnvlog REST_CALL2: {}.{}, response.status: {}",
+            log.error("#~#vnvlog REST_CALL2: {}.{}({}), response.status: {}",
                     jp.signature.declaringType.simpleName,
                     jp.signature.name,
+                    (jp.args.size()>0)?jp.args[0]:"",
                     (retVal!=null)? retVal.statusCode :'NO_RESPONSE')
         }
     }

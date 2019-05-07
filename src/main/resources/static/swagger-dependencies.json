@@ -562,7 +562,7 @@
                     "description": "Test Plan uuid",
                     "allowEmptyValue": false
                 },
-                "test_uuid": {
+                "testd_uuid": {
                     "type": "string",
                     "description": "Test uuid",
                     "allowEmptyValue": false

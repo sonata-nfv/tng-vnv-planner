@@ -39,11 +39,13 @@ import com.github.tng.vnv.planner.service.TestPlanService
 import com.github.tng.vnv.planner.model.TestPlan
 import com.github.tng.vnv.planner.service.TestService
 import com.github.tng.vnv.planner.utils.TEST_PLAN_STATUS
+import groovy.util.logging.Slf4j
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 
 import static org.springframework.util.StringUtils.isEmpty
 
+@Slf4j
 @Component
 class ScheduleManager {
 
@@ -56,10 +58,8 @@ class ScheduleManager {
     @Autowired
     WorkflowManager workflowManager
 
-    List<TestPlan> create(def packageId) {
-        new ArrayList<>(
-                testPlanService.buildTestPlansByPackage(packageId)
-        )?.each{create(it)}
+    List<TestPlan> createByPackage(def uuid) {
+                testPlanService.buildTestPlansByPackage(uuid)?.each{create(it)}
     }
 
     TestPlan create(TestPlan tp) {

@@ -52,7 +52,7 @@ app:
     service.list.endpoint: ${app.gk.base.url}/services
     package.list.endpoint: ${app.gk.base.url}/packages
     service.metadata.endpoint: ${app.gk.base.url}/services/{uuid}
-    package.metadata.endpoint: ${app.gk.base.url}/packages/{packageId}
+    package.metadata.endpoint: ${app.gk.base.url}/packages/{uuid}
   vnvgk:
     host: tng-api-gtw
     base.url: http://${app.vnvgk.host}:5000/api/v3

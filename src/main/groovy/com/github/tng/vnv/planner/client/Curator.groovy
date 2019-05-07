@@ -56,11 +56,11 @@ class Curator {
     def testPlanCancellationEndpoint
 
     @AfterRestCall
-    ResponseEntity post(def testPlanRequest){
-        restTemplate.postForEntity(testPlanPrepareEndpoint, testPlanRequest, TestPlanResponse)
+    ResponseEntity postTestPlan(def request){
+        restTemplate.postForEntity(testPlanPrepareEndpoint, request, TestPlanResponse)
     }
     @AfterRestCall
-    ResponseEntity delete(def uuid) {
+    ResponseEntity deleteTestPlan(def uuid) {
         restTemplate.delete(testPlanCancellationEndpoint, uuid)
     }
 

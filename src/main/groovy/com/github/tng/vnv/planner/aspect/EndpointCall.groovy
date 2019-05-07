@@ -34,28 +34,12 @@
 
 package com.github.tng.vnv.planner.aspect
 
-import com.github.tng.vnv.planner.WorkflowManager
-import groovy.util.logging.Slf4j
-import org.aspectj.lang.JoinPoint
-import org.aspectj.lang.annotation.AfterReturning
-import org.aspectj.lang.annotation.Aspect
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.stereotype.Component
+import java.lang.annotation.ElementType
+import java.lang.annotation.Retention
+import java.lang.annotation.RetentionPolicy
+import java.lang.annotation.Target
 
-@Aspect
-@Component
-@Slf4j
-class TriggerNextTestPlanAspect {
-
-    @Autowired
-    WorkflowManager workflowManager
-    @AfterReturning(pointcut='@annotation(TriggerNextTestPlan) && execution(public * * (..))',returning='retVal')
-    Object afterRestCall(JoinPoint jp, Object retVal) {
-        log.info("#~#vnvlog TRIGGERING_NEXT_PLAN {}.{}({})",
-                jp.signature.declaringType.simpleName,
-                jp.signature.name,
-                jp.args[0].toString())
-                workflowManager.searchForScheduledPlan()
-        retVal
-    }
+@Target(ElementType.METHOD)
+@Retention(RetentionPolicy.RUNTIME)
+@interface EndpointCall {
 }

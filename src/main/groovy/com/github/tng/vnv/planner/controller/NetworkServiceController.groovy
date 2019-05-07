@@ -34,6 +34,7 @@
 
 package com.github.tng.vnv.planner.controller
 
+import com.github.tng.vnv.planner.aspect.EndpointCall
 import com.github.tng.vnv.planner.model.Test
 import com.github.tng.vnv.planner.service.NetworkServiceService
 import org.springframework.beans.factory.annotation.Autowired
@@ -48,7 +49,8 @@ class NetworkServiceController {
 
     @Autowired
     NetworkServiceService networkServiceService
-	
+
+    @EndpointCall
     @GetMapping('/services/{serviceUuid}/tests')
     List<Test> listTestsByService(@PathVariable('serviceUuid') String uuid) {
         networkServiceService.findByTest(uuid)

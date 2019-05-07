@@ -36,6 +36,7 @@ package com.github.tng.vnv.planner.model
 
 import groovy.transform.EqualsAndHashCode
 import groovy.transform.Sortable
+import groovy.transform.ToString
 import io.swagger.annotations.ApiModelProperty
 import javax.persistence.Entity
 import javax.persistence.GeneratedValue
@@ -47,6 +48,7 @@ import javax.validation.constraints.NotNull
 @Entity
 @Table(name="Test_Plan")
 @Sortable(includes = ['index'])
+@ToString(includes = ["uuid","nsdUuid","testdUuid"],includeNames = true)
 class TestPlan implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -101,7 +103,7 @@ class TestPlan implements Serializable {
         uuid.hashCode()
     }
 }
-
+@ToString(excludes = ["lastTest","testPlanCallbacks"],includeNames = true)
 @EqualsAndHashCode
 class TestPlanRequest {
     @ApiModelProperty(
@@ -111,7 +113,7 @@ class TestPlanRequest {
     @ApiModelProperty(
             value = 'Test uuid',
             allowEmptyValue = false)
-    String testUuid
+    String testdUuid
 
     @ApiModelProperty(
             value = 'Test Plan uuid',
@@ -143,6 +145,7 @@ class TestPlanResponse {
     String exception
 }
 
+@ToString(includes = ["eventActor","status","exception","testPlanUuid"], includeNames = true, ignoreNulls = true)
 class TestPlanCallback {
 
     @ApiModelProperty(

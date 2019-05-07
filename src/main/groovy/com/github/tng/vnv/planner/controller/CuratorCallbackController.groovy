@@ -35,6 +35,7 @@
 package com.github.tng.vnv.planner.controller
 
 import com.github.tng.vnv.planner.WorkflowManager
+import com.github.tng.vnv.planner.aspect.EndpointCall
 import com.github.tng.vnv.planner.aspect.TriggerNextTestPlan
 import com.github.tng.vnv.planner.model.TestPlanCallback
 import com.github.tng.vnv.planner.service.TestPlanService
@@ -42,7 +43,6 @@ import groovy.util.logging.Slf4j
 import io.swagger.annotations.ApiResponse
 import io.swagger.annotations.ApiResponses
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
@@ -62,6 +62,7 @@ class CuratorCallbackController {
     @Autowired
     WorkflowManager workflowManager
 
+    @EndpointCall
     @TriggerNextTestPlan
     @ApiResponses(value = [
             @ApiResponse(code = 400, message = 'Bad Request'),
@@ -70,11 +71,10 @@ class CuratorCallbackController {
     @PostMapping('/on-change/completed')
     @ResponseBody
     void onChangeCompleted(@Valid @RequestBody TestPlanCallback callback) {
-        log.info("#~#vnvlog onChangeCompleted STR callback:[test_plan_uuid: {}, status: {}]",callback?.testPlanUuid,callback.status)
         testPlanService.update(callback.testPlanUuid, callback.status)
-        log.info("#~#vnvlog onChangeCompleted END callback:[test_plan_uuid: {}, status: {}]",callback?.testPlanUuid,callback.status)
     }
 
+    @EndpointCall
     @TriggerNextTestPlan
     @ApiResponses(value = [
             @ApiResponse(code = 400, message = 'Bad Request'),
@@ -83,9 +83,7 @@ class CuratorCallbackController {
     @PostMapping('/on-change/')
     @ResponseBody
     void onChange(@Valid @RequestBody TestPlanCallback callback) {
-        log.info("#~#vnvlog onChange STR callback:[test_plan_uuid: {}, status: {}]",callback?.testPlanUuid,callback.status)
         testPlanService.update(callback.testPlanUuid, callback.status)
-        log.info("#~#vnvlog onChange END callback:[test_plan_uuid: {}, status: {}]",callback?.testPlanUuid,callback.status)
     }
 }
 

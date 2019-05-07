@@ -80,14 +80,14 @@ class WorkflowManager {
 
     void deleteTestPlan(String uuid){
         log.info("#~#vnvlog deleteTestPlan STR [test_plan_uuid: {}]",uuid)
-        curator.delete(uuid)
+        curator.deleteTestPlan(uuid)
         testPlanService.delete(uuid)
         log.info("#~#vnvlog deleteTestPlan END [test_plan_uuid: {}]",uuid)
     }
 
     TestPlanResponse proceedWith(TestPlan testPlan) {
-        curator.post(new TestPlanRequest(testPlanUuid: testPlan.uuid,
+        curator.postTestPlan(new TestPlanRequest(testPlanUuid: testPlan.uuid,
                 nsdUuid: testPlan.nsdUuid,
-                testUuid: testPlan.testdUuid)).body
+                testdUuid: testPlan.testdUuid)).body
     }
 }

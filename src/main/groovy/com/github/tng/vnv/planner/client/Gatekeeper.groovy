@@ -56,8 +56,8 @@ class Gatekeeper {
     def packageListEndpoint
 
     @AfterRestCall
-    ResponseEntity getPackage(def packageId){
-        restTemplate.getForEntity(packageMetadataEndpoint, Object.class, packageId)
+    ResponseEntity getPackage(def uuid){
+        restTemplate.getForEntity(packageMetadataEndpoint, Object.class, uuid)
     }
 
     @AfterRestCall

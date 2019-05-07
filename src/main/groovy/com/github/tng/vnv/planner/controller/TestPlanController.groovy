@@ -36,6 +36,7 @@ package com.github.tng.vnv.planner.controller
 
 import com.github.tng.vnv.planner.ScheduleManager
 import com.github.tng.vnv.planner.WorkflowManager
+import com.github.tng.vnv.planner.aspect.EndpointCall
 import com.github.tng.vnv.planner.aspect.TriggerNextTestPlan
 import com.github.tng.vnv.planner.model.NetworkService
 import com.github.tng.vnv.planner.model.Test
@@ -61,18 +62,21 @@ class TestPlanController {
     @Autowired
     TestPlanService testPlanService
 
+    @EndpointCall
     @GetMapping
     @ResponseBody
     List<TestPlan> listAllTestPlans() {
         testPlanService.findAll()
     }
 
+    @EndpointCall
     @GetMapping('/{uuid}')
     @ResponseBody
     TestPlan findTestPlan(@PathVariable String uuid) {
         testPlanService.findByUuid(uuid)
     }
 
+    @EndpointCall
     @DeleteMapping('{uuid}')
     @ResponseBody
     void deleteTestPlan(@PathVariable String uuid) {
@@ -81,6 +85,7 @@ class TestPlanController {
         log.info("#~#vnvlog deleteTestPlan END [test_plan.uuid: {}]",uuid)
     }
 
+    @EndpointCall
     @TriggerNextTestPlan
     @ApiResponses(value = [@ApiResponse(code = 400, message = 'Bad Request')])
     @PostMapping('')
@@ -89,6 +94,7 @@ class TestPlanController {
         scheduler.create(testPlan)
     }
 
+    @EndpointCall
     @TriggerNextTestPlan
     @ApiResponses(value = [@ApiResponse(code = 400, message = 'Bad Request')])
     @PutMapping('{uuid}')
@@ -97,6 +103,7 @@ class TestPlanController {
         scheduler.update(testPlan)
     }
 
+    @EndpointCall
     @ApiResponses(value = [@ApiResponse(code = 400, message = 'Bad Request')])
     @PostMapping('/services')
     @ResponseBody
@@ -104,6 +111,7 @@ class TestPlanController {
         new ArrayList(testPlanService.buildTestPlansByService(body.uuid))
     }
 
+    @EndpointCall
     @ApiResponses(value = [@ApiResponse(code = 400, message = 'Bad Request')])
     @PostMapping('/tests')
     @ResponseBody
