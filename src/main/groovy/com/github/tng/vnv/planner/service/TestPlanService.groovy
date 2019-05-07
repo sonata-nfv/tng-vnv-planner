@@ -78,7 +78,7 @@ class TestPlanService {
     TestPlan update(String uuid, String status) {
         TestPlan testPlan = findByUuid(uuid)
         testPlan.status = status
-        testPlanRepository.save(testPlan)
+        save(testPlan)
 
     }
 
