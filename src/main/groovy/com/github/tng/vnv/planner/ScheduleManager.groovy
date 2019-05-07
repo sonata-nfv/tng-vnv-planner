@@ -72,8 +72,8 @@ class ScheduleManager {
                 } else {
                     tp.status = TEST_PLAN_STATUS.SCHEDULED
                 }
+            testPlanService.save(tp)
         }
-        testPlanService.save(tp)
     }
 
     TestPlan update(TestPlan tp) {
