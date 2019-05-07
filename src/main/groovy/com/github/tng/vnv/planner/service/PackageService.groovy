@@ -43,8 +43,8 @@ import com.github.tng.vnv.planner.utils.TEST_PLAN_STATUS
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import static org.springframework.util.StringUtils.isEmpty
-
-
+import groovy.util.logging.Slf4j
+@Slf4j
 @Service
 class PackageService {
 
@@ -60,11 +60,15 @@ class PackageService {
         if(uuid!=null){
             def matchedTests = [] as HashSet<Test>
             def matchedServices = [] as HashSet<NetworkService>
+            log.info("#~#START vnvlog gatekeeper.getPackage({})",uuid)
             def pack = gatekeeper.getPackage(uuid).body
+            log.info("#~#END vnvlog gatekeeper.getPackage({})",pack)
             def testingTags = pack.pd.package_content.collect {it.testing_tags}
             testingTags?.each { tags ->
                 tags?.each { tag ->
+                    log.info("#~#START vnvlog gatekeeper.getPackageByTag({})",tag)    
                     List packageList = gatekeeper.getPackageByTag(tag).body
+                    log.info("#~#END vnvlog gatekeeper.getPackageByTag( size = {})",packageList.size())
                     packageList?.each {
                         it?.pd?.package_content.each { resource ->
                             switch (resource.get('content-type')) {
@@ -82,7 +86,9 @@ class PackageService {
                     }
                 }
             }
-
+            log.info("#~# vnvlog matchedServices(size = {})",matchedServices.size())
+            log.info("#~# vnvlog matchedTests(size = {})",matchedTests.size())
+            
             matchedServices.each { service ->
                 matchedTests.each { test ->
                     testPlans.add(new TestPlan(uuid: service.uuid+test.uuid,
@@ -95,6 +101,7 @@ class PackageService {
                 }
             }
         }
+        log.info("#~# vnvlog testPlans(size = {})",testPlans.size())
         testPlans
     }
 
