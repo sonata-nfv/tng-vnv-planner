@@ -74,7 +74,9 @@ class WorkflowManager {
             }
 
             testService.updateSet(nextTestSet.uuid, TestPlanStatus.STARTING)
-            proceedWith(nextTestSet.testPlans[0])
+            def nextTextPlan = nextTestSet.testPlans[0]
+            log.info("Next testplan: ${nextTextPlan.uuid}. nsd: ${nextTextPlan.serviceUuid}, td: ${nextTextPlan.testUuid}")
+            proceedWith(nextTextPlan)
 
         }
     }
