@@ -1,0 +1,166 @@
+# Copyright (c) 2015 SONATA-NFV, 2017 5GTANGO [, ANY ADDITIONAL AFFILIATION]
+# ALL RIGHTS RESERVED.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+# Neither the name of the SONATA-NFV, 5GTANGO [, ANY ADDITIONAL AFFILIATION]
+# nor the names of its contributors may be used to endorse or promote
+# products derived from this software without specific prior written
+# permission.
+#
+# This work has been performed in the framework of the SONATA project,
+# funded by the European Commission under Grant number 671517 through
+# the Horizon 2020 and 5G-PPP programmes. The authors would like to
+# acknowledge the contributions of their colleagues of the SONATA
+# partner consortium (www.sonata-nfv.eu).
+#
+# This work has been performed in the framework of the 5GTANGO project,
+# funded by the European Commission under Grant number 761493 through
+# the Horizon 2020 and 5G-PPP programmes. The authors would like to
+# acknowledge the contributions of their colleagues of the 5GTANGO
+# partner consortium (www.5gtango.eu).
+
+# Directories #
+/build/
+bin/
+repos/
+/repos/
+doc/
+/doc/
+.gradle/
+.idea/
+/bin/
+target/
+ 
+# OS Files #
+.DS_Store
+
+# JetBrain's Idea specific stuff #
+
+.idea*
+*.iml
+
+
+# User-specific stuff:
+.idea/workspace.xml
+.idea/tasks.xml
+.idea/dictionaries
+.idea/vcs.xml
+.idea/jsLibraryMappings.xml
+
+# Sensitive or high-churn files:
+.idea/dataSources.ids
+.idea/dataSources.xml
+.idea/dataSources.local.xml
+.idea/sqlDataSources.xml
+.idea/dynamic.xml
+.idea/uiDesigner.xml
+
+# Gradle:
+.idea/gradle.xml
+.idea/libraries
+
+# Mongo Explorer plugin:
+.idea/mongoSettings.xml
+
+## File-based project format:
+*.iws
+
+## Plugin-specific files:
+
+# IntelliJ
+/out/
+
+# mpeltonen/sbt-idea plugin
+.idea_modules/
+
+# JIRA plugin
+atlassian-ide-plugin.xml
+
+# Crashlytics plugin (for Android Studio and IntelliJ)
+com_crashlytics_export_strings.xml
+crashlytics.properties
+crashlytics-build.properties
+fabric.properties
+
+
+*.class
+browscap.csv
+gradle/wrapper
+gradlew.bat
+gradlew
+
+# Package Files #
+*.jar
+*.war
+*.ear
+*.db
+ 
+######################
+# Windows
+######################
+ 
+# Windows image file caches
+Thumbs.db 
+ 
+# Folder config file
+Desktop.ini
+ 
+######################
+# OSX
+######################
+ 
+.DS_Store
+.svn
+ 
+# Thumbnails
+._*
+ 
+# Files that might appear on external disk
+.Spotlight-V100
+.Trashes
+ 
+ 
+######################
+# Eclipse
+######################
+ 
+*.pydevproject
+.project
+.metadata
+bin/**
+tmp/**
+tmp/**/*
+*.tmp
+*.bak
+*.swp
+*~.nib
+local.properties
+.classpath
+.settings/
+.loadpath
+/src/main/resources/rebel.xml
+# External tool builders
+.externalToolBuilders/
+ 
+# Locally stored "Eclipse launch configurations"
+*.launch
+ 
+# CDT-specific
+.cproject
+ 
+# PDT-specific
+.buildpath
+
+# Custom
+src/main/resources/application-local.properties

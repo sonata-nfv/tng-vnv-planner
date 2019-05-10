@@ -1,0 +1,39 @@
+package tng.vnv.planner.model
+
+import groovy.transform.EqualsAndHashCode
+import groovy.transform.ToString
+import io.swagger.annotations.ApiModelProperty
+
+@ToString(includeNames = true)
+@EqualsAndHashCode
+class TestRequest {
+
+    @ApiModelProperty(
+            value = 'Network service uuid',
+            allowEmptyValue = false)
+    String serviceUuid
+
+    @ApiModelProperty(
+            value = 'Test uuid',
+            allowEmptyValue = false)
+    String testUuid
+
+    @ApiModelProperty(
+            value = 'Test Plan uuid',
+            allowEmptyValue = false)
+    String testPlanUuid
+
+//    @ApiModelProperty(value = 'is Last Test Plan')
+//    Boolean lastTest = false
+
+//    @ApiModelProperty(
+//            value = 'Test plan callbacks',
+//            allowEmptyValue = false)
+//
+//    List<Map<String, String>> testPlanCallbacks = [
+//            ["eventActor": "Curator", "url": "/api/v1/test-plans/on-change/completed/", "testStatus":"COMPLETED"],
+//            ["eventActor": "Curator", "url": "/api/v1/test-plans/on-change/"]
+//    ]
+
+}
+

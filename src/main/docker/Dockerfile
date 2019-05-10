@@ -1,0 +1,55 @@
+## Copyright (c) 2015 SONATA-NFV, 2017 5GTANGO [, ANY ADDITIONAL AFFILIATION]
+## ALL RIGHTS RESERVED.
+##
+## Licensed under the Apache License, Version 2.0 (the "License");
+## you may not use this file except in compliance with the License.
+## You may obtain a copy of the License at
+##
+##     http://www.apache.org/licenses/LICENSE-2.0
+##
+## Unless required by applicable law or agreed to in writing, software
+## distributed under the License is distributed on an "AS IS" BASIS,
+## WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+## See the License for the specific language governing permissions and
+## limitations under the License.
+##
+## Neither the name of the SONATA-NFV, 5GTANGO [, ANY ADDITIONAL AFFILIATION]
+## nor the names of its contributors may be used to endorse or promote
+## products derived from this software without specific prior written
+## permission.
+##
+## This work has been performed in the framework of the SONATA project,
+## funded by the European Commission under Grant number 671517 through
+## the Horizon 2020 and 5G-PPP programmes. The authors would like to
+## acknowledge the contributions of their colleagues of the SONATA
+## partner consortium (www.sonata-nfv.eu).
+##
+## This work has been performed in the framework of the 5GTANGO project,
+## funded by the European Commission under Grant number 761493 through
+## the Horizon 2020 and 5G-PPP programmes. The authors would like to
+## acknowledge the contributions of their colleagues of the 5GTANGO
+## partner consortium (www.5gtango.eu).
+# encoding: utf-8
+
+FROM openjdk:11-jdk-slim
+
+# Set pgSQL Environment Variables
+ENV DATABASE_HOST son-postgres
+ENV DATABASE_NAME planner
+ENV DATABASE_USER sonatatest
+ENV DATABASE_PASSWORD sonata
+ENV DATABASE_PORT 5432
+
+# GTK_VNV
+ENV CAT_VNV_HOST tng-cat
+ENV CAT_VNV_PORT 4011
+
+# VNV_CURATOR
+ENV CURATOR_HOST tng-vnv-curator
+ENV CURATOR_PORT 6200
+
+EXPOSE 6100
+
+ADD tng-vnv-planner.jar app.jar
+
+ENTRYPOINT ["java", "-jar", "-Dspring.profiles.active=test", "/app.jar"]
