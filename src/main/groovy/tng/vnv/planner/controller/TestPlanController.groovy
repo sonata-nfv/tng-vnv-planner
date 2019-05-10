@@ -153,16 +153,16 @@ class TestPlanController {
 
     // Network Services
     @ApiOperation(value="Find all tests related with a service uuid")
-    @GetMapping('/services/{serviceUuid}/tests')
-    List<TestSet> listTestsByService(@PathVariable('serviceUuid') UUID uuid) {
+    @GetMapping('/services/{nsdUuid}/tests')
+    List<TestSet> listTestsByService(@PathVariable('nsdUuid') UUID uuid) {
         networkServiceService.findByTest(uuid)
     }
 
     // Tests
 
     @ApiOperation(value="Find all services related with a test")
-    @GetMapping('/tests/{testUuid}/services')
-    List<String> listServicesByTest(@PathVariable('testUuid') UUID uuid) {
+    @GetMapping('/tests/{testdUuid}/services')
+    List<String> listServicesByTest(@PathVariable('testdUuid') UUID uuid) {
         testService.findByService(uuid)
     }
 }

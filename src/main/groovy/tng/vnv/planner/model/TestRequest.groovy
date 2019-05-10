@@ -11,29 +11,29 @@ class TestRequest {
     @ApiModelProperty(
             value = 'Network service uuid',
             allowEmptyValue = false)
-    String serviceUuid
+    String nsdUuid
 
     @ApiModelProperty(
             value = 'Test uuid',
             allowEmptyValue = false)
-    String testUuid
+    String testdUuid
 
     @ApiModelProperty(
             value = 'Test Plan uuid',
             allowEmptyValue = false)
     String testPlanUuid
 
-//    @ApiModelProperty(value = 'is Last Test Plan')
-//    Boolean lastTest = false
+    @ApiModelProperty(value = 'is Last Test Plan')
+    Boolean lastTest = false
 
-//    @ApiModelProperty(
-//            value = 'Test plan callbacks',
-//            allowEmptyValue = false)
-//
-//    List<Map<String, String>> testPlanCallbacks = [
-//            ["eventActor": "Curator", "url": "/api/v1/test-plans/on-change/completed/", "testStatus":"COMPLETED"],
-//            ["eventActor": "Curator", "url": "/api/v1/test-plans/on-change/"]
-//    ]
+    @ApiModelProperty(
+            value = 'Test plan callbacks',
+            allowEmptyValue = false)
+
+    List<Map<String, String>> testPlanCallbacks = [
+            ["eventActor": "Curator", "url": "/api/v1/test-plans/on-change/completed/", "testStatus":"COMPLETED"],
+            ["eventActor": "Curator", "url": "/api/v1/test-plans/on-change/"]
+    ]
 
 }
 
