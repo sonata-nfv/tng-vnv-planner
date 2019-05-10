@@ -31,7 +31,7 @@ class TestRequest {
             allowEmptyValue = false)
 
     List<Map<String, String>> testPlanCallbacks = [
-            ["eventActor": "Curator", "url": "/api/v1/test-plans/on-change/completed/", "testStatus":"COMPLETED"],
+            ["eventActor": "Curator", "url": "/api/v1/test-plans/on-change/completed/", "status":"COMPLETED"],
             ["eventActor": "Curator", "url": "/api/v1/test-plans/on-change/"]
     ]
 
