@@ -41,7 +41,7 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Component
 import org.springframework.web.client.RestTemplate
-import tng.vnv.planner.model.TestResult
+import tng.vnv.planner.model.TestResponse
 
 @Component
 class Curator {
@@ -56,7 +56,7 @@ class Curator {
     def testPlanCancellationEndpoint
 
     ResponseEntity post(def testPlanRequest){
-        restTemplate.postForEntity(testPlanPrepareEndpoint as String, testPlanRequest, TestResult.class)
+        restTemplate.postForEntity(testPlanPrepareEndpoint as String, testPlanRequest, TestResponse.class)
     }
     ResponseEntity delete(def uuid) {
         restTemplate.delete(testPlanCancellationEndpoint as String, uuid as UUID)

@@ -71,5 +71,5 @@ class CuratorCallback {
             allowEmptyValue = false,
             required = true)
     @NotNull
-    UUID testPlanUuid
+    UUID test_plan_uuid
 }
