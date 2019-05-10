@@ -38,7 +38,7 @@ import groovy.transform.Synchronized
 import tng.vnv.planner.client.Curator
 import tng.vnv.planner.model.TestPlan
 import tng.vnv.planner.model.TestRequest
-import tng.vnv.planner.model.TestResult
+import tng.vnv.planner.model.TestResponse
 import tng.vnv.planner.model.TestSet
 import tng.vnv.planner.service.TestService
 import org.springframework.beans.factory.annotation.Autowired
@@ -147,12 +147,12 @@ class WorkflowManager {
         log.info("Starting TestPlan with UUID {}", testPlan.testUuid)
         testService.updatePlan(testPlan.uuid, TestPlanStatus.STARTING)
 
-        def testResult = curator.post(new TestRequest(testPlanUuid: testPlan.uuid,
+        def testResponse = curator.post(new TestRequest(testPlanUuid: testPlan.uuid,
                 nsdUuid: testPlan.serviceUuid,
-                testdUuid: testPlan.testUuid)).body as TestResult
+                testdUuid: testPlan.testUuid)).body as TestResponse
 
-        testService.updatePlan(testPlan.uuid, testResult.testStatus)
-        log.info("TestPlan with UUID {}, received by the Curator, new testStatus: {}", testPlan.uuid, testResult.testStatus)
+        testService.updatePlan(testPlan.uuid, testResponse.status)
+        log.info("TestPlan with UUID {}, received by the Curator, new testStatus: {}", testPlan.uuid, testResponse.status)
     }
 
     void cancelTestSet(UUID uuid){

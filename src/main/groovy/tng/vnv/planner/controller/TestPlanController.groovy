@@ -133,9 +133,9 @@ class TestPlanController {
     @PostMapping('/on-change/completed')
     @ResponseBody
     void onChangeCompleted(@Valid @RequestBody CuratorCallback callback) {
-        log.info("Received finished test plan notification from Curator: test plan uuid = ${callback.testPlanUuid}")
-        testService.updatePlan(callback.testPlanUuid as UUID, callback.status)
-        manager.testPlanFinished(callback.testPlanUuid as UUID)
+        log.info("Received finished test plan notification from Curator: test plan uuid = ${callback.test_plan_uuid}")
+        testService.updatePlan(callback.test_plan_uuid as UUID, callback.status)
+        manager.testPlanFinished(callback.test_plan_uuid as UUID)
     }
 
     @ApiOperation(value="Callback from curator")
@@ -146,9 +146,9 @@ class TestPlanController {
     @PostMapping('/on-change/')
     @ResponseBody
     void onChange(@Valid @RequestBody CuratorCallback callback) {
-        log.info("Received test plan notification from Curator: test plan uuid = ${callback.testPlanUuid} with status = ${callback.status}")
-        testService.updatePlan(callback.testPlanUuid as UUID, callback.status)
-        manager.testPlanFinished(callback.testPlanUuid as UUID)
+        log.info("Received test plan notification from Curator: test plan uuid = ${callback.test_plan_uuid} with status = ${callback.status}")
+        testService.updatePlan(callback.test_plan_uuid as UUID, callback.status)
+        manager.testPlanFinished(callback.test_plan_uuid as UUID)
     }
 
     // Network Services
