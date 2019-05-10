@@ -1,93 +1,94 @@
-[![Build Status](http://jenkins.sonata-nfv.eu/buildStatus/icon?job=tng-vnv-executor/master)](https://jenkins.sonata-nfv.eu/job/tng-vnv-executor)
+# Planner 5GTANGO Verification and Validation
+This is a [5GTANGO](http://www.5gtango.eu) component to coordinate the verification and validation activities of 5G Network Services.
 
 
-# Planner for 5GTANGO Verification and Validation
-This is a [5GTANGO](http://www.5gtango.eu) component to execute the Verification and Validation Tests
+<p align="center"><img src="https://github.com/sonata-nfv/tng-api-gtw/wiki/images/sonata-5gtango-logo-500px.png" /></p>
 
 ## What it is
 
-The Executor module is responsible for executing the Verification and Validation tests requested by the [Curator](https://github.com/sonata-nfv/tng-vnv-curator) component.
+The Planner acts as the main manager for all V&V test requests. It is responsible for test plans management, sequencing, and triggering requests of the corresponding test results. Although the Planner is responsible for overall test activity, execution of individual test plans is given over to the curator and executor.
+An outline of the architecture is shown below.
 
-It receives a test request with the associated descriptor file (Test Descriptor), a file that contains the test configurations, dependencies, validation and verification conditions, etc. With this information, Executor generates a docker-compose.yaml file and executes the tests sequence with docker-compose tools.
-
-Once tests are finished, Executor check validation and verification conditions, stores the results in the V&V repository and generates a "Completion Test Response" to Curator component.
-
-Please, visit the associated [wiki](https://github.com/sonata-nfv/tng-vnv-executor/wiki) to obtain more information (architecture, workflow, examples, REST Api, etc)
+<p align="center"><img src="https://user-images.githubusercontent.com/173755/53358658-d5cd7e00-3928-11e9-8acb-bc535fd7df18.png" /></p>
 
 ## Build from source code
 
-This will generate a docker image with the latest version of the code. Before building, a test suite is executed.
-
 ```bash
-./gradlew clean test build docker
+./gradlew
 ```
+
+The project depends on java and docker to build. Once you have those two tools, you simply run `./gradlew` command without parameter to do a full build:
+* clean : clean the project build directory
+* compile code
+* process resources
+* package jar
+* compile test
+* process test resources
+* execute test
+* execute docker build
+* execute docker push: optional, default to
+  * `true` on jenkins build
+  * `false` on local build
+
+For advanced build arguments, please checkout the [gradle-buildscript](https://github.com/mrduguo/gradle-buildscript) project.
+
 
 ## Run the docker image
 
 ```bash
- docker run -d -it --name tng-vnv-executor \
- -e CALLBACKS='enabled' \
- -e DELETE_FINISHED_TEST='disabled' \
- -e RESULTS_REPO_URL=<RESULTS_REPO_URL> \
- -v /var/run/docker.sock:/var/run/docker.sock \
- -v /usr/bin/docker:/usr/bin/docker \
- -v /executor:/executor \
- -p 6300:8080 \
- --network tango \
- registry.sonata-nfv.eu:5000/tng-vnv-executor:latest
+./gradlew
+docker run -d --name tng-vnv-planner -p 6100:6100 registry.sonata-nfv.eu:5000/tng-vnv-planner
 ```
-
-where:
-- CALLBACKS: optional environment variable to enable/disable the callbacks from executor to curator
-  - values: enabled/disabled
-  - default: enabled
-- DELETE_FINISHED_TESTS: by default, the generated probes' output files are deleted from VnV Executor host once tests are completed and the results are stored in the repo. For developing purposes. This optional environment variable can maintain these files in the output folders without deletion when is disabled.
-  - values: enabled/disabled
-  - default: enabled
-- RESULTS_REPO_URL: mandatory environment variable that contains the tests results repository http://host:port URL where the results will be stored
-- port: internally, the VnV executor uses the 8080 port. This port can be mapped to another desired port. In 5GTango environments the selected port is 6300 
-- network: network where all VnV components (planner, curator, platform adaptor and executor) are configured
 
 ### Health checking
 
-Once started, you can check the health endpoint at
+Once the component finish start, you can access (change IP depends on your docker setup) the component health endpoint at:
 
-http://<server>:<port>/actuator/health
+http://locahost:6100/health
 
 ### Swagger UI
 
-Swagger UI can be accessed at
+* static
+    * http://petstore.swagger.io/?url=https://raw.githubusercontent.com/sonata-nfv/master/src/main/resources/static/swagger.json
+    * http://petstore.swagger.io/?url=https://raw.githubusercontent.com/sonata-nfv/master/src/main/resources/static/swagger-dependencies.json
+* pre integration 
+    * http://pre-int-vnv-ave.5gtango.eu:6100/swagger-ui.html
+* local 
+    * http://localhost:6100/swagger-ui.html
+    * http://localhost:6100/swagger-ui.html?urls.primaryName=dependencies
 
-http://server:port/swagger-ui.html
+
 
 ## Dependencies
 
-- `Java JDK (10+)`
-- `gradle`
-- `docker`
-- `Spring Boot (2.1.3)`
-- `Groovy (2.5.6)`
-- `Swagger (2.9.2)`
+No specific libraries are required for building this project. The following tools are used to build the component
+
+- `Java JDK (8+)`
+- `gradle (4.9)`
+- `docker (18.x)`
+
 
 ## Contributing
-Contributing to the V&V Executor is really easy. You must:
+Contributing to the Planner is really easy. You must:
 
-1. Clone [this repository](http://github.com/sonata-nfv/tng-vnv-executor);
-1. Work on your proposed changes, preferably through submiting [issues](https://github.com/sonata-nfv/tng-vnv-executor/issues);
+1. Clone [this repository](http://github.com/sonata-nfv/tng-vnv-planner);
+1. Work on your proposed changes, preferably through submiting [issues](https://github.com/sonata-nfv/tng-vnv-planner/issues);
 1. Submit a Pull Request;
-1. Follow/answer related [issues](https://github.com/sonata-nfv/tng-vnv-executor/issues) (see Feedback, below).
+1. Follow/answer related [issues](https://github.com/sonata-nfv/tng-vnv-planner/issues) (see Feedback, below).
+
 
 ## License
+
 This 5GTANGO component is published under Apache 2.0 license. Please see the [LICENSE](LICENSE) file for more details.
 
 ## Lead Developers
 
 The following lead developers are responsible for this repository and have admin rights. They can, for example, merge pull requests.
 
-* Santiago Rodríguez ([srodriguezOPT](https://github.com/srodriguezOPT))
-* Laura Álvarez ([LauraAnt](https://github.com/LauraAnt))
+* George Andreou ([allemaos](https://github.com/allemaos))
 * Felipe Vicens ([felipevicens](https://github.com/felipevicens))
-* José Bonnet ([jbonnet](https://github.com/jbonnet))
 
 ## Feedback
-Please use the [GitHub issues](https://github.com/sonata-nfv/tng-vnv-executor/issues) and the 5GTANGO Verification and Validation group mailing list `5gtango-dev@list.atosresearch.eu` for feedback.
+
+Please use the [GitHub issues](https://github.com/sonata-nfv/tng-vnv-planner/issues) and the 5GTANGO Verification and Validation group mailing list `5gtango-dev@list.atosresearch.eu` for feedback.
+
