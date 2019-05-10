@@ -146,8 +146,8 @@ class WorkflowManager {
         testService.updatePlan(testPlan.uuid, TestPlanStatus.STARTING)
 
         def testResult = curator.post(new TestRequest(testPlanUuid: testPlan.uuid,
-                serviceUuid: testPlan.serviceUuid,
-                testUuid: testPlan.testUuid)).body as TestResult
+                nsdUuid: testPlan.serviceUuid,
+                testdUuid: testPlan.testUuid)).body as TestResult
 
         testService.updatePlan(testPlan.uuid, testResult.testStatus)
         log.info("TestPlan with UUID {}, received by the Curator, new testStatus: {}", testPlan.uuid, testResult.testStatus)
