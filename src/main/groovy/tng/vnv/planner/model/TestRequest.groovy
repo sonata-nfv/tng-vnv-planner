@@ -23,8 +23,8 @@ class TestRequest {
             allowEmptyValue = false)
     String testPlanUuid
 
-    @ApiModelProperty(value = 'is Last Test Plan')
-    Boolean lastTest = false
+    //@ApiModelProperty(value = 'is Last Test Plan')
+    //Boolean lastTest = false
 
     @ApiModelProperty(
             value = 'Test plan callbacks',
