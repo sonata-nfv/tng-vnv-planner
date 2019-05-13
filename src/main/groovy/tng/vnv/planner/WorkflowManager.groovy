@@ -158,13 +158,7 @@ class WorkflowManager {
     void cancelTestSet(UUID uuid){
         //curator.delete(uuid)
         //TODO:  cancell all associated testplans
-        // testService.cancelAllTestPlansByTestSetUuid(uuid)
+        testService.cancelAllTestPlansByTestSetUuid(uuid)
         testService.cancelTestSet(uuid)
     }
-
-    /*void cancelAllTestPlans(){
-        //curator.delete(uuid)
-        testService.canceAllT
-        testService.deletePlan(uuid)
-    }*/
 }

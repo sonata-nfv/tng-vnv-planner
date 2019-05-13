@@ -103,14 +103,34 @@ class PackageService {
         throw new IllegalArgumentException("PackageUUID cannot be null")
     }
 
+    TestSet buidTestSetByTestAndService(testUuid, serviceUuid, confirmRequired, type){
+
+        def testSet = new TestSet(uuid: UUID.randomUUID(),
+                requestType: TestSetType.TEST_AND_SERVICE,
+                confirmRequired: confirmRequired,
+                status: confirmRequired ? TestPlanStatus.WAITING_FOR_CONFIRMATION : TestPlanStatus.SCHEDULED)
+
+        testSet.testPlans << new TestPlan(uuid: UUID.randomUUID(),
+                testSetUuid: testSet.uuid,
+                serviceUuid: serviceUuid,
+                testUuid: testUuid,
+                confirmRequired: confirmRequired,
+                testStatus: confirmRequired ? TestPlanStatus.WAITING_FOR_CONFIRMATION : TestPlanStatus.SCHEDULED)
+
+        return  testSet
+    }
 
     TestSet buildTestPlansByTestPackage(def uuid) {
-        def pack = gatekeeper.getPackageByTest(uuid)
+        def pack = gatekeeper.getPackageByUuid(uuid)
         buildTestSetByPackage(pack.uuid, false, TestSetType.SERVICE)
     }
 
     TestSet buildTestPlansByServicePackage(def uuid) {
-        def pack = gatekeeper.getPackageByService(uuid)
+        def pack = gatekeeper.getPackageByUuid(uuid)
         buildTestSetByPackage(pack.uuid, false, TestSetType.TEST)
+    }
+
+    TestSet buildTestPlansByServiceAndTest(def testUuid, def serviceUuid){
+        buidTestSetByTestAndService(testUuid, serviceUuid, confirmRequired: false, TestSetType.TEST_AND_SERVICE)
     }
 }

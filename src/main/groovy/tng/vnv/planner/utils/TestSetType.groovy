@@ -38,4 +38,5 @@ class TestSetType {
     static def PACKAGE = 'PACKAGE'
     static def SERVICE = 'SERVICE'
     static def TEST = 'TEST'
+    static def TEST_AND_SERVICE = 'TEST_AND_SERVICE'
 }

@@ -75,11 +75,4 @@ class TestSetController {
     void cancelTestSet(@PathVariable UUID uuid) {
         manager.cancelTestSet(uuid)
     }
-
-    /*@DeleteMapping
-    @ApiOperation(value="Cancel all test sets")
-    @ResponseBody
-    void cancelAllTestSet() {
-        manager.cancelAllTestSet()
-    }*/
 }

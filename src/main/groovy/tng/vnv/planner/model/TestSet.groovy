@@ -54,7 +54,7 @@ class TestSet extends AuditModel {
 
     @ApiModelProperty(
             value = 'Request uuid',
-            allowEmptyValue = false)
+            allowEmptyValue = true)
     UUID requestUuid
 
     @ApiModelProperty(
