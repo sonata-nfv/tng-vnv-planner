@@ -71,6 +71,7 @@ class TestPlanController {
     @ApiOperation(value="Find all test plan", notes="Finding all test plans")
     @ResponseBody
     List<TestPlan> listAllTestPlans() {
+        log.info("/api/v1/test-plans (find all test plans request received)")
         testService.findAll()
     }
 
@@ -78,13 +79,15 @@ class TestPlanController {
     @ApiOperation(value="Find a test plan", notes="Finding test plan by uuid")
     @ResponseBody
     TestPlan findTestPlan(@PathVariable UUID uuid) {
+        log.info("/api/v1/test-plans/{uuid} (find test plan by uuid request received. UUID=${uuid})")
         testService.findPlanByUuid(uuid)
     }
 
     @DeleteMapping('{uuid}')
-    @ApiOperation(value="Delete a test plan", notes="deleting test plan by uuid")
+    @ApiOperation(value="Cancel a test plan", notes="canceling test plan by uuid")
     @ResponseBody
     void deleteTestPlan(@PathVariable UUID uuid) {
+        log.info("/api/v1/test-plans/{uuid} (Cancel test plan by uuid request received. UUID=${uuid})")
         manager.deleteTestPlan(uuid)
     }
 
@@ -101,6 +104,7 @@ class TestPlanController {
     @PutMapping('{uuid}')
     @ResponseBody
     TestPlan update(@Valid @PathVariable UUID uuid, @Valid @RequestBody TestPlan testPlan) {
+        log.info("/api/v1/test-plans/{uuid} (update test plan status by uuid request received. UUID=${uuid})")
         scheduler.update(uuid, testPlan.status)
     }
 
@@ -109,7 +113,8 @@ class TestPlanController {
     @PostMapping('/services')
     @ResponseBody
     List<TestPlan> buildTestPlansByService(@Valid @RequestParam UUID serviceUuid) {
-       testService.buildTestPlansByService(serviceUuid).testPlans
+        log.info("/api/v1/test-plans/services (create a test plan by service uuid request received. Service UUID: ${serviceUuid})")
+        testService.buildTestPlansByService(serviceUuid).testPlans
     }
 
     @ApiOperation(value="Create a test plan by test uuid")
@@ -117,14 +122,16 @@ class TestPlanController {
     @PostMapping('/tests')
     @ResponseBody
     List<TestPlan> buildTestPlansByTest(@Valid @RequestParam UUID testUuid) {
+        log.info("/api/v1/test-plans/tests (create a test plan by test uuid request received. Test UUID: ${testUuid})")
         testService.buildTestPlansByTest(testUuid).testPlans
     }
 
     @ApiOperation(value="Create a test plan by test uuid and service uuid")
     @ApiResponses(value = [@ApiResponse(code = 400, message = 'Bad Request')])
-    @PostMapping('/serviceAndTestPairs')
+    @PostMapping('/testAndServices')
     @ResponseBody
     List<TestPlan> buildTestPlansByNsTdPair(@Valid @RequestParam UUID testUuid, @RequestParam UUID serviceUuid) {
+        log.info("/api/v1/test-plans/testAndServices (create a test plan by service uuid and test uuid request received. Service UUID: ${serviceUuid}), test UUID=${testUuid}")
         testService.buildTestPlansByServiceAndTest(testUuid, serviceUuid).testPlans
     }
 
@@ -138,7 +145,7 @@ class TestPlanController {
     @PostMapping('/on-change/completed')
     @ResponseBody
     void onChangeCompleted(@Valid @RequestBody CuratorCallback callback) {
-        log.info("Received finished test plan notification from Curator: test plan uuid = ${callback.test_plan_uuid}")
+        log.info("/api/v1/test-plans/on-change/completed (test update notification received from curator. uuid=${callback.test_plan_uuid} with status=${callback.status})")
         testService.updatePlan(callback.test_plan_uuid as UUID, callback.status)
         manager.testPlanFinished(callback.test_plan_uuid as UUID)
     }
@@ -151,7 +158,7 @@ class TestPlanController {
     @PostMapping('/on-change/')
     @ResponseBody
     void onChange(@Valid @RequestBody CuratorCallback callback) {
-        log.info("Received test plan notification from Curator: test plan uuid = ${callback.test_plan_uuid} with status = ${callback.status}")
+        log.info("/api/v1/test-plans/on-change (test update notification received from curator. uuid=${callback.test_plan_uuid} with status=${callback.status})")
         testService.updatePlan(callback.test_plan_uuid as UUID, callback.status)
         manager.testPlanFinished(callback.test_plan_uuid as UUID)
     }
@@ -160,6 +167,7 @@ class TestPlanController {
     @ApiOperation(value="Find all tests related with a service uuid")
     @GetMapping('/services/{nsdUuid}/tests')
     List<TestSet> listTestsByService(@PathVariable('nsdUuid') UUID uuid) {
+        log.info("/api/v1/test-plans/services/{nsdUuid}/tests (list tests by service uuid request received. UUID=${uuid}")
         networkServiceService.findByTest(uuid)
     }
 
@@ -168,6 +176,7 @@ class TestPlanController {
     @ApiOperation(value="Find all services related with a test")
     @GetMapping('/tests/{testdUuid}/services')
     List<String> listServicesByTest(@PathVariable('testdUuid') UUID uuid) {
+        log.info("/api/v1/test-plans/testes/{testdUuid}/services (list services by test uuid request received. UUID=${uuid}")
         testService.findServicesByTest(uuid)
     }
 }
