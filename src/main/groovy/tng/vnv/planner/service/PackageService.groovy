@@ -79,6 +79,14 @@ class PackageService {
                                     matchedServices << (resource as Map)
                                     break
 
+                                case 'application/vnd.etsi.osm.tstd':
+                                    matchedTests << (resource as Map)
+                                    break
+
+                                case 'application/vnd.etsi.osm.nsd':
+                                    matchedServices << (resource as Map)
+                                    break
+
                                 default: break
                             }
                         }
