@@ -37,19 +37,12 @@ package tng.vnv.planner
 import org.springframework.web.client.RestClientException
 import tng.vnv.planner.model.TestSet
 import tng.vnv.planner.model.TestPlan
-import tng.vnv.planner.service.NetworkService
 import tng.vnv.planner.service.TestService
-import tng.vnv.planner.service.TDService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 
 @Component
 class ScheduleManager {
-
-    @Autowired
-    TDService tdService
-    @Autowired
-    NetworkService networkServiceService
 
     @Autowired
     TestService testService

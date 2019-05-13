@@ -49,7 +49,6 @@ import io.swagger.annotations.ApiResponse
 import io.swagger.annotations.ApiResponses
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
-import tng.vnv.planner.service.TDService
 
 import javax.validation.Valid
 
@@ -67,8 +66,6 @@ class TestPlanController {
     TestService testService
     @Autowired
     NetworkService networkServiceService
-    @Autowired
-    TDService tdService
 
     @GetMapping
     @ApiOperation(value="Find all test plan", notes="Finding all test plans")
@@ -99,7 +96,7 @@ class TestPlanController {
         scheduler.scheduleNewTestSet(testPlan)
     }
 
-    @ApiOperation(value="Update a test plan", notes="Updating a test plan by uuid")
+    @ApiOperation(value="Update a test plan status", notes="Updating a test plan status by uuid")
     @ApiResponses(value = [@ApiResponse(code = 400, message = 'Bad Request')])
     @PutMapping('{uuid}')
     @ResponseBody
@@ -121,6 +118,14 @@ class TestPlanController {
     @ResponseBody
     List<TestPlan> buildTestPlansByTest(@Valid @RequestParam UUID testUuid) {
         testService.buildTestPlansByTest(testUuid).testPlans
+    }
+
+    @ApiOperation(value="Create a test plan by test uuid and service uuid")
+    @ApiResponses(value = [@ApiResponse(code = 400, message = 'Bad Request')])
+    @PostMapping('/serviceAndTestPairs')
+    @ResponseBody
+    List<TestPlan> buildTestPlansByNsTdPair(@Valid @RequestParam UUID testUuid, @RequestParam UUID serviceUuid) {
+        testService.buildTestPlansByServiceAndTest(testUuid, serviceUuid).testPlans
     }
 
     // Curator
@@ -163,6 +168,6 @@ class TestPlanController {
     @ApiOperation(value="Find all services related with a test")
     @GetMapping('/tests/{testdUuid}/services')
     List<String> listServicesByTest(@PathVariable('testdUuid') UUID uuid) {
-        testService.findByService(uuid)
+        testService.findServicesByTest(uuid)
     }
 }

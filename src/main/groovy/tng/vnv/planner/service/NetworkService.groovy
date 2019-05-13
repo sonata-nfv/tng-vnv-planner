@@ -53,7 +53,7 @@ class NetworkService {
 
     List findByTest(def uuid){
         def matchedServices = [] as HashSet<NetworkService>
-        def pack = gatekeeper.getPackageByTest(uuid).body
+        def pack = gatekeeper.getPackageByUuid(uuid).body
         if(pack != null){
             def testingTags = pack.pd.package_content.collect {it.testing_tags}
             testingTags?.each { tags ->

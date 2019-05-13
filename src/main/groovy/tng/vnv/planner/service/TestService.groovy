@@ -35,6 +35,7 @@
 package tng.vnv.planner.service
 
 import org.springframework.web.client.RestClientException
+import tng.vnv.planner.client.Gatekeeper
 import tng.vnv.planner.model.TestSet
 import tng.vnv.planner.repository.TestPlanRepository
 import tng.vnv.planner.model.TestPlan
@@ -57,12 +58,19 @@ class TestService {
     @Autowired
     PackageService packageService
 
+    @Autowired
+    Gatekeeper gatekeeper
+
     TestSet buildTestPlansByTest(def uuid) {
         packageService.buildTestPlansByTestPackage(uuid)
     }
 
     TestSet buildTestPlansByService(def uuid) {
         packageService.buildTestPlansByServicePackage(uuid)
+    }
+
+    TestSet buildTestPlansByServiceAndTest(def testUuid, def serviceUuid){
+        packageService.buildTestPlansByServiceAndTest(testUuid, serviceUuid)
     }
 
     TestSet buildTestPlansByPackage(def packageId, def confirmRequired) throws RestClientException{
@@ -128,6 +136,38 @@ class TestService {
 
     TestPlan findByTestPlanStatus(TestPlanStatus status){
         testPlanRepository.findByTestStatus(status)
+    }
+
+    void cancelAllTestPlansByTestSetUuid(UUID testSetUuid){
+        TestSet testSet = testSetRepository.findByUuid(testSetUuid)
+        for (TestPlan testPlan in testSet.getTestPlans()){
+            updatePlan(testPlan.uuid, TestPlanStatus.CANCELLED)
+        }
+    }
+
+    TestSet findByUuid(String uuid) {
+        gatekeeper.getTest(uuid).body
+    }
+
+    List findServicesByTest(def uuid){
+        def matchedTests = [] as HashSet<TestSet>
+        def pack = gatekeeper.getPackageByUuid(uuid).body
+        if(pack != null){
+            def testingTags = pack.pd.package_content.collect {it.testing_tags}
+            testingTags?.each { tags ->
+                tags?.each { tag ->
+                    List packageList = gatekeeper.getPackageByTag(tag).body
+                    packageList?.each {
+                        it?.pd?.package_content.each { resource ->
+                            if (resource.get('content-type') == 'application/vnd.5gtango.tstd') {
+                                matchedTests << findByUuid(resource.uuid)
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        new ArrayList(matchedTests)
     }
 }
 
