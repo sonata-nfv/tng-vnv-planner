@@ -67,7 +67,9 @@ class PackageService {
             def testingTags = pack.pd.package_content.collect {it.testing_tags}
             testingTags?.each { tags ->
                 tags?.each { tag ->
+
                     List packageList = gatekeeper.getPackageByTag(tag)
+                    log.info("getting packages with tag: ${tag}. Obtained ${packageList.size()} packages")
                     packageList?.each {
                         it?.pd?.package_content?.each { resource ->
                             switch (resource.get('content-type')) {
