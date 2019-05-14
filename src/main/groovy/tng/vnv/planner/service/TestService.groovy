@@ -149,25 +149,33 @@ class TestService {
         gatekeeper.getTest(uuid).body
     }
 
+
     List findServicesByTest(def uuid){
-        def matchedTests = [] as HashSet<TestSet>
+        def matchedServices = [] as HashSet<Object>
         def pack = gatekeeper.getPackageByUuid(uuid).body
         if(pack != null){
-            def testingTags = pack.pd.package_content.collect {it.testing_tags}
-            testingTags?.each { tags ->
-                tags?.each { tag ->
-                    List packageList = gatekeeper.getPackageByTag(tag).body
-                    packageList?.each {
-                        it?.pd?.package_content.each { resource ->
-                            if (resource.get('content-type') == 'application/vnd.5gtango.tstd') {
-                                matchedTests << findByUuid(resource.uuid)
-                            }
-                        }
-                    }
+            pack.pd.package_content.each { resource ->
+                if (resource.get('content-type') == 'application/vnd.5gtango.nsd'
+                        || resource.get('content-type') == 'application/vnd.etsi.osm.nsd') {
+                    matchedServices << testSetRepository.findByUuid(resource.uuid)
                 }
             }
         }
-        new ArrayList(matchedTests)
+        new ArrayList(matchedServices)
+    }
+
+    List findServicesByTag(def tag){
+        def matchedServices = [] as HashSet<Object>
+        def pack = gatekeeper.getPackageByTag(tag).body
+        if(pack != null){
+            pack.pd.package_content.each { resource ->
+                if (resource.get('content-type') == 'application/vnd.5gtango.nsd'
+                        || resource.get('content-type') == 'application/vnd.etsi.osm.nsd') {
+                    matchedServices << gatekeeper.getService(resource.uuid)
+                }
+            }
+        }
+        new ArrayList(matchedServices)
     }
 }
 

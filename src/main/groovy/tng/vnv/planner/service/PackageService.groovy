@@ -94,8 +94,11 @@ class PackageService {
                 }
             }
 
+            log.info("matched pairs:")
+
             matchedServices.each { service ->
                 matchedTests.each { test ->
+                    log.info("test: ${test.uuid} - service: ${service.uuid}")
                     testSet.testPlans << new TestPlan(uuid: UUID.randomUUID(),
                                                 testSetUuid: testSet.uuid,
                                                 serviceUuid: UUID.fromString(service.uuid as String),

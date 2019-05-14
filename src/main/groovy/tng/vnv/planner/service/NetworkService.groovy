@@ -39,6 +39,8 @@ import tng.vnv.planner.client.Gatekeeper
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+import tng.vnv.planner.model.TestSet
+import tng.vnv.planner.repository.TestSetRepository
 
 
 @Service
@@ -47,29 +49,34 @@ class NetworkService {
     @Autowired
     Gatekeeper gatekeeper
 
-    NetworkService findByUuid(String uuid) {
-        gatekeeper.getService(uuid).body
-    }
+    @Autowired
+    TestSetRepository testSetRepository
 
-    List findByTest(def uuid){
-        def matchedServices = [] as HashSet<NetworkService>
-        def pack = gatekeeper.getPackageByUuid(uuid).body
+    List findTestsByService(def serviceUuid){
+        def matchedTests = [] as HashSet<TestSet>
+        def pack = gatekeeper.getPackageByUuid(serviceUuid).body
         if(pack != null){
-            def testingTags = pack.pd.package_content.collect {it.testing_tags}
-            testingTags?.each { tags ->
-                tags?.each { tag ->
-                    List packageList = gatekeeper.getPackageByTag(tag).body
-                    packageList?.each {
-                        it?.pd?.package_content.each { resource ->
-                            if (resource.get('content-type')=='application/vnd.5gtango.nsd') {
-                                matchedServices << findByUuid(resource.uuid)
-                            }
-                        }
-                    }
+            pack.pd.package_content.each { resource ->
+                if (resource.get('content-type') == 'application/vnd.5gtango.tstd'
+                        || resource.get('content-type') == 'application/vnd.etsi.osm.tstd') {
+                    matchedTests << testSetRepository.findByUuid(resource.uuid)
                 }
             }
         }
-        new ArrayList(matchedServices)
+        new ArrayList(matchedTests)
     }
 
+    List findTestsByTag(def tag){
+        def matchedTests = [] as HashSet<TestSet>
+        def pack = gatekeeper.getPackageByTag(tag).body
+        if(pack != null){
+            pack.pd.package_content.each { resource ->
+                if (resource.get('content-type') == 'application/vnd.5gtango.tstd'
+                        || resource.get('content-type') == 'application/vnd.etsi.osm.tstd') {
+                    matchedTests << testSetRepository.findByUuid(resource.uuid)
+                }
+            }
+        }
+        new ArrayList(matchedTests)
+    }
 }
