@@ -53,7 +53,7 @@ class ScheduleManager {
 
         def testSet = testService.buildTestPlansByPackage(packageId, confirmRequired)
         if(testSet == null || testSet.testPlans == null || testSet.testPlans.isEmpty()) {
-            throw new IllegalArgumentException("There is no TestPlan built with this PackageUUID")
+            throw new IllegalArgumentException("There is no TestPlan built with this PackageUUID: ${packageId}")
         }
 
         testService.save(testSet)

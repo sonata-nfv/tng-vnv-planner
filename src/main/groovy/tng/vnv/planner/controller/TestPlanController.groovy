@@ -168,7 +168,14 @@ class TestPlanController {
     @GetMapping('/services/{nsdUuid}/tests')
     List<TestSet> listTestsByService(@PathVariable('nsdUuid') UUID uuid) {
         log.info("/api/v1/test-plans/services/{nsdUuid}/tests (list tests by service uuid request received. UUID=${uuid}")
-        networkServiceService.findByTest(uuid)
+        networkServiceService.findTestsByService(uuid)
+    }
+
+    @ApiOperation(value="Find all tests related with a testing_tag")
+    @GetMapping('/testing-tags/{testing-tag}/tests')
+    List<TestSet> listTestsByTag(@PathVariable('tag') String tag) {
+        log.info("/api/v1/test-plans/testing-tags/{testing-tag}/tests (list tests by tag request received. Testing-tag=${tag}")
+        networkServiceService.findTestsByTag(tag)
     }
 
     // Tests
@@ -176,7 +183,14 @@ class TestPlanController {
     @ApiOperation(value="Find all services related with a test")
     @GetMapping('/tests/{testdUuid}/services')
     List<String> listServicesByTest(@PathVariable('testdUuid') UUID uuid) {
-        log.info("/api/v1/test-plans/testes/{testdUuid}/services (list services by test uuid request received. UUID=${uuid}")
+        log.info("/api/v1/test-plans/tests/{testdUuid}/services (list services by test uuid request received. UUID=${uuid}")
         testService.findServicesByTest(uuid)
+    }
+
+    @ApiOperation(value="Find all services related with a tag")
+    @GetMapping('/testing-tags/{testing-tag}/services')
+    List<String> listServicesByTag(@PathVariable('tag') String tag) {
+        log.info("/api/v1/test-plans/tests/{testing-tag}/services (list services by tag request received. Testing-tag=${tag}")
+        testService.findServicesByTag(tag)
     }
 }
