@@ -172,9 +172,9 @@ class TestPlanController {
     }
 
     @ApiOperation(value="Find all tests related with a testing_tag")
-    @GetMapping('/testing-tags/{testing-tag}/tests')
+    @GetMapping('/testing-tags/{tag}/tests')
     List<TestSet> listTestsByTag(@PathVariable('tag') String tag) {
-        log.info("/api/v1/test-plans/testing-tags/{testing-tag}/tests (list tests by tag request received. Testing-tag=${tag}")
+        log.info("/api/v1/test-plans/testing-tags/{tag}/tests (list tests by tag request received. Testing-tag=${tag}")
         networkServiceService.findTestsByTag(tag)
     }
 
@@ -188,9 +188,9 @@ class TestPlanController {
     }
 
     @ApiOperation(value="Find all services related with a tag")
-    @GetMapping('/testing-tags/{testing-tag}/services')
+    @GetMapping('/testing-tags/{tag}/services')
     List<String> listServicesByTag(@PathVariable('tag') String tag) {
-        log.info("/api/v1/test-plans/tests/{testing-tag}/services (list services by tag request received. Testing-tag=${tag}")
+        log.info("/api/v1/test-plans/tests/{tag}/services (list services by tag request received. Testing-tag=${tag}")
         testService.findServicesByTag(tag)
     }
 }
