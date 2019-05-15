@@ -54,15 +54,17 @@ class NetworkService {
 
     List findTestsByService(def serviceUuid){
         def matchedTests = [] as HashSet<TestSet>
-        def pack = gatekeeper.getPackageByUuid(serviceUuid).body
-        if(pack != null){
-            pack.pd.package_content.each { resource ->
-                if (resource.get('content-type') == 'application/vnd.5gtango.nsd'
-                        || resource.get('content-type') == 'application/vnd.etsi.osm.nsd') {
-                    def testing_tag = resource.get('testing_tags')
-                    testing_tag.each { tt ->
-                        log.info("including tests with tag: ${tt}")
-                        matchedTests << findTestsByTag(tt)
+        def packs = gatekeeper.getPackageByUuid(serviceUuid).body
+        if(packs != null){
+            packs.each { pack ->
+                pack.pd.package_content.each { resource ->
+                    if (resource.get('content-type') == 'application/vnd.5gtango.nsd'
+                            || resource.get('content-type') == 'application/vnd.etsi.osm.nsd') {
+                        def testing_tag = resource.get('testing_tags')
+                        testing_tag.each { tt ->
+                            log.info("including tests with tag: ${tt}")
+                            matchedTests << findTestsByTag(tt)
+                        }
                     }
                 }
             }
@@ -72,13 +74,15 @@ class NetworkService {
 
     List findTestsByTag(def tag){
         def matchedTests = [] as HashSet<TestSet>
-        def pack = gatekeeper.getPackageByTag(tag).body
-        if(pack != null){
-            pack.pd.package_content.each { resource ->
-                if (resource.get('content-type') == 'application/vnd.5gtango.tstd'
-                        || resource.get('content-type') == 'application/vnd.etsi.osm.tstd') {
-                    log.info("including tests that match with test uuid: ${resource.uuid}")
-                    matchedTests << gatekeeper.getTest(resource.uuid)
+        def packs = gatekeeper.getPackageByTag(tag).body
+        if(packs != null){
+            packs.each { pack ->
+                pack.pd.package_content.each { resource ->
+                    if (resource.get('content-type') == 'application/vnd.5gtango.tstd'
+                            || resource.get('content-type') == 'application/vnd.etsi.osm.tstd') {
+                        log.info("including tests that match with test uuid: ${resource.uuid}")
+                        matchedTests << gatekeeper.getTest(resource.uuid)
+                    }
                 }
             }
         }
