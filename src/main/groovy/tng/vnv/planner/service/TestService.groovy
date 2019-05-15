@@ -159,6 +159,7 @@ class TestService {
                         || resource.get('content-type') == 'application/vnd.etsi.osm.tstd') {
                     def testing_tag = resource.get('testing_tags')
                     testing_tag.each { tt ->
+                        log.info("including services with tag: ${tt}")
                         matchedServices << findServicesByTag(tt)
                     }
                 }
@@ -174,6 +175,7 @@ class TestService {
             pack.pd.package_content.each { resource ->
                 if (resource.get('content-type') == 'application/vnd.5gtango.nsd'
                         || resource.get('content-type') == 'application/vnd.etsi.osm.nsd') {
+                    log.info("including services with uuid: ${resource.uuid}")
                     matchedServices << gatekeeper.getService(resource.uuid)
                 }
             }

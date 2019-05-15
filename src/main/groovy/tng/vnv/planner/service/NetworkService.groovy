@@ -34,7 +34,7 @@
 
 package tng.vnv.planner.service
 
-
+import groovy.util.logging.Slf4j
 import tng.vnv.planner.client.Gatekeeper
 
 import org.springframework.beans.factory.annotation.Autowired
@@ -42,7 +42,7 @@ import org.springframework.stereotype.Service
 import tng.vnv.planner.model.TestSet
 import tng.vnv.planner.repository.TestSetRepository
 
-
+@Slf4j
 @Service
 class NetworkService {
 
@@ -61,6 +61,7 @@ class NetworkService {
                         || resource.get('content-type') == 'application/vnd.etsi.osm.nsd') {
                     def testing_tag = resource.get('testing_tags')
                     testing_tag.each { tt ->
+                        log.info("including tests with tag: ${tt}")
                         matchedTests << findTestsByTag(tt)
                     }
                 }
@@ -76,7 +77,8 @@ class NetworkService {
             pack.pd.package_content.each { resource ->
                 if (resource.get('content-type') == 'application/vnd.5gtango.tstd'
                         || resource.get('content-type') == 'application/vnd.etsi.osm.tstd') {
-                    matchedTests << testSetRepository.findByUuid(resource.uuid)
+                    log.info("including tests that match with test uuid: ${resource.uuid}")
+                    matchedTests << gatekeeper.getTest(resource.uuid)
                 }
             }
         }
