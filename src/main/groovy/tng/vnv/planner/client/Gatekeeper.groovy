@@ -79,7 +79,7 @@ class Gatekeeper {
         def headers = new HttpHeaders()
         headers.add("Content-Type", "application/json")
         def builder = UriComponentsBuilder.fromUriString(packageListEndpoint)
-                .queryParam("package_content.testing_tags", tag)
+                .queryParam("pd.package_content.testing_tags", tag)
         restTemplate.exchange(builder.toUriString(), HttpMethod.GET, new HttpEntity<Object>(headers), Object[]).body
     }
 
@@ -87,7 +87,7 @@ class Gatekeeper {
         def headers = new HttpHeaders()
         headers.add("Content-Type", "application/json")
         def builder = UriComponentsBuilder.fromUriString(packageListEndpoint)
-                .queryParam("package_content.uuid", uuid)
+                .queryParam("pd.package_content.uuid", uuid)
         restTemplate.exchange(builder.toUriString(), HttpMethod.GET, new HttpEntity<Object>(headers), Object).body
     }
 
