@@ -57,9 +57,12 @@ class NetworkService {
         def pack = gatekeeper.getPackageByUuid(serviceUuid).body
         if(pack != null){
             pack.pd.package_content.each { resource ->
-                if (resource.get('content-type') == 'application/vnd.5gtango.tstd'
-                        || resource.get('content-type') == 'application/vnd.etsi.osm.tstd') {
-                    matchedTests << testSetRepository.findByUuid(resource.uuid)
+                if (resource.get('content-type') == 'application/vnd.5gtango.nsd'
+                        || resource.get('content-type') == 'application/vnd.etsi.osm.nsd') {
+                    def testing_tag = resource.get('testing_tags')
+                    testing_tag.each { tt ->
+                        matchedTests << findTestsByTag(tt)
+                    }
                 }
             }
         }
