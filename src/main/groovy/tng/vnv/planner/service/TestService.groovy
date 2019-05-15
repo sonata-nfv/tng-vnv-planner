@@ -173,7 +173,9 @@ class TestService {
     List findServicesByTag(def tag){
         def matchedServices = [] as HashSet<Object>
         def packs = gatekeeper.getPackageByTag(tag).body
+        log.info("packs: ${packs.toString()}")
         if(packs != null){
+            log.info("packages size: ${packs.size()}")
             packs.each { pack ->
                 pack.pd.package_content.each { resource ->
                     if (resource.get('content-type') == 'application/vnd.5gtango.nsd'
