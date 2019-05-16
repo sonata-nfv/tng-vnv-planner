@@ -112,27 +112,27 @@ class TestPlanController {
     @ApiResponses(value = [@ApiResponse(code = 400, message = 'Bad Request')])
     @PostMapping('/services')
     @ResponseBody
-    List<TestPlan> buildTestPlansByService(@Valid @RequestParam UUID serviceUuid) {
+    List<TestPlan> buildTestPlansByService(@Valid @RequestParam UUID serviceUuid, @RequestParam(required = false) Boolean confirmRequired) {
         log.info("/api/v1/test-plans/services (create a test plan by service uuid request received. Service UUID: ${serviceUuid})")
-        testService.buildTestPlansByService(serviceUuid).testPlans
+        testService.buildTestPlansByService(serviceUuid, confirmRequired).testPlans
     }
 
     @ApiOperation(value="Create a test plan by test uuid")
     @ApiResponses(value = [@ApiResponse(code = 400, message = 'Bad Request')])
     @PostMapping('/tests')
     @ResponseBody
-    List<TestPlan> buildTestPlansByTest(@Valid @RequestParam UUID testUuid) {
+    List<TestPlan> buildTestPlansByTest(@Valid @RequestParam UUID testUuid, @RequestParam(required = false) Boolean confirmRequired) {
         log.info("/api/v1/test-plans/tests (create a test plan by test uuid request received. Test UUID: ${testUuid})")
-        testService.buildTestPlansByTest(testUuid).testPlans
+        testService.buildTestPlansByTest(testUuid, confirmRequired).testPlans
     }
 
     @ApiOperation(value="Create a test plan by test uuid and service uuid")
     @ApiResponses(value = [@ApiResponse(code = 400, message = 'Bad Request')])
     @PostMapping('/testAndServices')
     @ResponseBody
-    List<TestPlan> buildTestPlansByNsTdPair(@Valid @RequestParam UUID testUuid, @RequestParam UUID serviceUuid) {
+    List<TestPlan> buildTestPlansByNsTdPair(@Valid @RequestParam UUID testUuid, @RequestParam UUID serviceUuid, @RequestParam(required = false) Boolean confirmRequired) {
         log.info("/api/v1/test-plans/testAndServices (create a test plan by service uuid and test uuid request received. Service UUID: ${serviceUuid}), test UUID=${testUuid}")
-        testService.buildTestPlansByServiceAndTest(testUuid, serviceUuid).testPlans
+        testService.buildTestPlansByServiceAndTest(testUuid, serviceUuid, confirmRequired).testPlans
     }
 
     // Curator
@@ -182,14 +182,14 @@ class TestPlanController {
 
     @ApiOperation(value="Find all services related with a test")
     @GetMapping('/tests/{testdUuid}/services')
-    List<String> listServicesByTest(@PathVariable('testdUuid') UUID uuid) {
+    List<Object> listServicesByTest(@PathVariable('testdUuid') UUID uuid) {
         log.info("/api/v1/test-plans/tests/{testdUuid}/services (list services by test uuid request received. UUID=${uuid}")
         testService.findServicesByTest(uuid)
     }
 
     @ApiOperation(value="Find all services related with a tag")
     @GetMapping('/testing-tags/{tag}/services')
-    List<String> listServicesByTag(@PathVariable('tag') String tag) {
+    List<Object> listServicesByTag(@PathVariable('tag') String tag) {
         log.info("/api/v1/test-plans/tests/{tag}/services (list services by tag request received. Testing-tag=${tag}")
         testService.findServicesByTag(tag)
     }

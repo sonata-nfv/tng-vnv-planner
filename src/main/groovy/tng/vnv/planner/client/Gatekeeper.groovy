@@ -75,7 +75,7 @@ class Gatekeeper {
         restTemplate.exchange(packageMetadataEndpoint as String, HttpMethod.GET,  new HttpEntity<Object>(headers), Object.class, packageId).body
     }
 
-    Object[] getPackageByTag(def tag){
+    Object getPackageByTag(def tag){
         def headers = new HttpHeaders()
         headers.add("Content-Type", "application/json")
         def builder = UriComponentsBuilder.fromUriString(packageListEndpoint)

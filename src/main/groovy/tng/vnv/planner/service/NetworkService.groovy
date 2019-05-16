@@ -53,10 +53,12 @@ class NetworkService {
     TestSetRepository testSetRepository
 
     List findTestsByService(def serviceUuid){
-        def matchedTests = [] as HashSet<TestSet>
-        def packs = gatekeeper.getPackageByUuid(serviceUuid).body
+        log.info("Looking for Tests related with service_uuid: ${serviceUuid}")
+        def matchedTests = [] as HashSet<Object>
+        def packs = gatekeeper.getPackageByUuid(serviceUuid)
         if(packs != null){
             packs.each { pack ->
+                if (pack == null) {log.info("pack null!!")}
                 pack.pd.package_content.each { resource ->
                     if (resource.get('content-type') == 'application/vnd.5gtango.nsd'
                             || resource.get('content-type') == 'application/vnd.etsi.osm.nsd') {
@@ -73,10 +75,13 @@ class NetworkService {
     }
 
     List findTestsByTag(def tag){
-        def matchedTests = [] as HashSet<TestSet>
-        def packs = gatekeeper.getPackageByTag(tag).body
+        log.info("Looking for Tests with tag: ${tag}")
+        def matchedTests = [] as HashSet<Object>
+        def packs = gatekeeper.getPackageByTag(tag)
         if(packs != null){
+            log.info("packs size: ${packs.size()}")
             packs.each { pack ->
+                if (pack == null) {log.info("pack null!!")}
                 pack.pd.package_content.each { resource ->
                     if (resource.get('content-type') == 'application/vnd.5gtango.tstd'
                             || resource.get('content-type') == 'application/vnd.etsi.osm.tstd') {

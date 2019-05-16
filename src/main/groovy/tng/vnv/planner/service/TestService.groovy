@@ -61,16 +61,16 @@ class TestService {
     @Autowired
     Gatekeeper gatekeeper
 
-    TestSet buildTestPlansByTest(def uuid) {
-        packageService.buildTestPlansByTestPackage(uuid)
+    TestSet buildTestPlansByTest(def uuid, def confirmRequired) {
+        packageService.buildTestPlansByTestPackage(uuid, confirmRequired)
     }
 
-    TestSet buildTestPlansByService(def uuid) {
-        packageService.buildTestPlansByServicePackage(uuid)
+    TestSet buildTestPlansByService(def uuid, def confirmRequired) {
+        packageService.buildTestPlansByServicePackage(uuid, confirmRequired)
     }
 
-    TestSet buildTestPlansByServiceAndTest(def testUuid, def serviceUuid){
-        packageService.buildTestPlansByServiceAndTest(testUuid, serviceUuid)
+    TestSet buildTestPlansByServiceAndTest(def testUuid, def serviceUuid, def confirmRequired){
+        packageService.buildTestPlansByServiceAndTest(testUuid, serviceUuid, confirmRequired)
     }
 
     TestSet buildTestPlansByPackage(def packageId, def confirmRequired) throws RestClientException{
@@ -151,8 +151,9 @@ class TestService {
 
 
     List findServicesByTest(def uuid){
+        log.info("Looking for Services related with test_uuid: ${uuid}")
         def matchedServices = [] as HashSet<Object>
-        def packs = gatekeeper.getPackageByUuid(uuid).body
+        def packs = gatekeeper.getPackageByUuid(uuid)
         if(packs != null){
             packs.each { pack->
                 pack.pd.package_content.each { resource ->
@@ -171,11 +172,10 @@ class TestService {
     }
 
     List findServicesByTag(def tag){
+        log.info("Looking for Services with testing_tag: ${tag}")
         def matchedServices = [] as HashSet<Object>
-        def packs = gatekeeper.getPackageByTag(tag).body
-        log.info("packs: ${packs.toString()}")
+        def packs = gatekeeper.getPackageByTag(tag)
         if(packs != null){
-            log.info("packages size: ${packs.size()}")
             packs.each { pack ->
                 pack.pd.package_content.each { resource ->
                     if (resource.get('content-type') == 'application/vnd.5gtango.nsd'
