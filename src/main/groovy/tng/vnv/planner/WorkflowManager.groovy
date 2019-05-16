@@ -82,27 +82,49 @@ class WorkflowManager {
     }
 
     @Synchronized
-    void testPlanFinished(def justCompletedTestPlanUUID) {
+    void testPlanUpdated(def justUpdatedTestPlanUUID) {
 
-        def justCompletedTestPlan = testService.findPlanByUuid(justCompletedTestPlanUUID as UUID)
-        def justExecutedTestSet = testService.findSetByUuid(justCompletedTestPlan.testSetUuid)
+        def justUpdatedTestPlan = testService.findPlanByUuid(justUpdatedTestPlanUUID as UUID)
+        def justExecutedTestSet = testService.findSetByUuid(justUpdatedTestPlan.testSetUuid)
 
         // If it has an error, it is stopped
-        if(justCompletedTestPlan.testStatus == TestPlanStatus.ERROR) {
-            completeTestSet(justCompletedTestPlan.testSetUuid, TestPlanStatus.ERROR)
+        if(justUpdatedTestPlan.testStatus == TestPlanStatus.ERROR) {
+            completeTestSet(justUpdatedTestPlan.testSetUuid, TestPlanStatus.ERROR)
             return
         }
 
-        def indexOfCompletedTestPlan = justExecutedTestSet.testPlans.indexOf(justCompletedTestPlan)
-
-        // TestSet completed
-        if(justExecutedTestSet.testPlans.size()  == (indexOfCompletedTestPlan + 1)) {
-            completeTestSet(justCompletedTestPlan.testSetUuid)
+        // If all test-plan with same status
+        def testplansStatus = []
+        justExecutedTestSet.testPlans.each { tp ->
+            testplansStatus << tp.testStatus
+        }
+        testplansStatus.unique()
+        if (testplansStatus.size() == 1){
+            log.info("all testplans with ${testplansStatus[0]} status")
+            if (testplansStatus[0] == TestPlanStatus.COMPLETED || testplansStatus[0] == TestPlanStatus.CANCELLED){
+                completeTestSet(justUpdatedTestPlan.testSetUuid, testplansStatus[0])
+            } else {
+                testService.updateSet(justUpdatedTestPlan.testSetUuid as UUID, testplansStatus[0] as String)
+            }
             return
         }
+
+        //def indexOfCompletedTestPlan = justExecutedTestSet.testPlans.indexOf(justUpdatedTestPlan)
 
         def nextTestPlan = null
-        def indexOfNextTestPlan = indexOfCompletedTestPlan + 1
+        def indexOfNextTestPlan = 0
+        while(indexOfNextTestPlan < justExecutedTestSet.testPlans.size()){
+            def currentTestPlan = justExecutedTestSet.testPlans[indexOfNextTestPlan]
+
+            if(currentTestPlan.testStatus == TestPlanStatus.SCHEDULED) {
+                nextTestPlan = currentTestPlan
+                break
+            }
+
+            indexOfNextTestPlan = indexOfNextTestPlan +1
+        }
+
+        /*def indexOfNextTestPlan = indexOfCompletedTestPlan + 1
         while(indexOfNextTestPlan < justExecutedTestSet.testPlans.size()) {
             def currentTestPlan = justExecutedTestSet.testPlans[indexOfNextTestPlan]
 
@@ -117,14 +139,14 @@ class WorkflowManager {
             }
 
             throw new IllegalStateException(String.format("TestPlan with UUID %s cannot be at state %s at this moment", currentTestPlan.uuid, currentTestPlan.testStatus))
-        }
+        }*/
 
         if(nextTestPlan != null) {
             proceedWith(nextTestPlan)
             return
         }
 
-        completeTestSet(justCompletedTestPlan.testSetUuid)
+        //completeTestSet(justUpdatedTestPlan.testSetUuid)
     }
 
     void deleteTestPlan(UUID uuid){
@@ -132,7 +154,7 @@ class WorkflowManager {
         testService.deletePlan(uuid)
     }
 
-    private void completeTestSet(def completedTestSetUUID, def status = TestPlanStatus.COMPLETED) {
+    private void completeTestSet(def completedTestSetUUID, def status) {
         testService.updateSet(completedTestSetUUID as UUID, status as String)
         new Thread(new Runnable() {
             @Override
@@ -156,9 +178,7 @@ class WorkflowManager {
     }
 
     void cancelTestSet(UUID uuid){
-        //curator.delete(uuid)
-        //TODO:  cancell all associated testplans
-        testService.cancelAllTestPlansByTestSetUuid(uuid)
         testService.cancelTestSet(uuid)
+        testService.cancelAllTestPlansByTestSetUuid(uuid)
     }
 }

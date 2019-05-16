@@ -64,7 +64,7 @@ class PackageService {
             def pack = gatekeeper.getPackage(packageId)
 
             def testSet = new TestSet(uuid: UUID.randomUUID(),
-                                        requestUuid: UUID.fromString(packageId),
+                                        requestUuid: packageId,
                                         requestType: type,
                                         confirmRequired: confirmRequired,
                                         status: confirmRequired ? TestPlanStatus.WAITING_FOR_CONFIRMATION : TestPlanStatus.SCHEDULED)
