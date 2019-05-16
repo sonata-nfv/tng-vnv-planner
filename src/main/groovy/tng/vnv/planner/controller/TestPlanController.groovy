@@ -89,6 +89,7 @@ class TestPlanController {
     void deleteTestPlan(@PathVariable UUID uuid) {
         log.info("/api/v1/test-plans/{uuid} (Cancel test plan by uuid request received. UUID=${uuid})")
         manager.deleteTestPlan(uuid)
+        manager.testPlanUpdated(uuid as UUID)
     }
 
     @ApiOperation(value="Create a test plan", notes="Creating a test plan")
@@ -103,9 +104,10 @@ class TestPlanController {
     @ApiResponses(value = [@ApiResponse(code = 400, message = 'Bad Request')])
     @PutMapping('{uuid}')
     @ResponseBody
-    TestPlan update(@Valid @PathVariable UUID uuid, @Valid @RequestBody TestPlan testPlan) {
+    TestPlan update(@Valid @PathVariable UUID uuid, @RequestParam String status) {
         log.info("/api/v1/test-plans/{uuid} (update test plan status by uuid request received. UUID=${uuid})")
-        scheduler.update(uuid, testPlan.status)
+        scheduler.update(uuid, status)
+        manager.testPlanUpdated(uuid as UUID)
     }
 
     @ApiOperation(value="Create a test plan by service uuid")
@@ -147,7 +149,7 @@ class TestPlanController {
     void onChangeCompleted(@Valid @RequestBody CuratorCallback callback) {
         log.info("/api/v1/test-plans/on-change/completed (test update notification received from curator. uuid=${callback.test_plan_uuid} with status=${callback.status})")
         testService.updatePlan(callback.test_plan_uuid as UUID, callback.status)
-        manager.testPlanFinished(callback.test_plan_uuid as UUID)
+        manager.testPlanUpdated(callback.test_plan_uuid as UUID)
     }
 
     @ApiOperation(value="Callback from curator")
@@ -160,7 +162,7 @@ class TestPlanController {
     void onChange(@Valid @RequestBody CuratorCallback callback) {
         log.info("/api/v1/test-plans/on-change (test update notification received from curator. uuid=${callback.test_plan_uuid} with status=${callback.status})")
         testService.updatePlan(callback.test_plan_uuid as UUID, callback.status)
-        manager.testPlanFinished(callback.test_plan_uuid as UUID)
+        manager.testPlanUpdated(callback.test_plan_uuid as UUID)
     }
 
     // Network Services

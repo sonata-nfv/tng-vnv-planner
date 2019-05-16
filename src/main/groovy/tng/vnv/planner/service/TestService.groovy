@@ -35,6 +35,7 @@
 package tng.vnv.planner.service
 
 import org.springframework.web.client.RestClientException
+import tng.vnv.planner.client.Curator
 import tng.vnv.planner.client.Gatekeeper
 import tng.vnv.planner.model.TestSet
 import tng.vnv.planner.repository.TestPlanRepository
@@ -60,6 +61,9 @@ class TestService {
 
     @Autowired
     Gatekeeper gatekeeper
+
+    @Autowired
+    Curator curator
 
     TestSet buildTestPlansByTest(def uuid, def confirmRequired) {
         packageService.buildTestPlansByTestPackage(uuid, confirmRequired)
@@ -98,7 +102,7 @@ class TestService {
     }
 
     void cancelTestSet(UUID uuid) {
-        updateSet(uuid, TestPlanStatus.CANCELLED)
+        updateSet(uuid, TestPlanStatus.CANCELLING)
     }
 
     void deletePlan(UUID uuid) {
@@ -141,6 +145,7 @@ class TestService {
     void cancelAllTestPlansByTestSetUuid(UUID testSetUuid){
         TestSet testSet = testSetRepository.findByUuid(testSetUuid)
         for (TestPlan testPlan in testSet.getTestPlans()){
+            curator.delete(testPlan.uuid)
             updatePlan(testPlan.uuid, TestPlanStatus.CANCELLED)
         }
     }

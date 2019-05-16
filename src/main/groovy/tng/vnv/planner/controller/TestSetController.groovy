@@ -41,6 +41,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
 import tng.vnv.planner.WorkflowManager
 import tng.vnv.planner.model.TestPlan
+import tng.vnv.planner.model.TestSet
 import tng.vnv.planner.service.TestService
 
 @Slf4j
@@ -66,7 +67,7 @@ class TestSetController {
     @GetMapping('/{uuid}')
     @ApiOperation(value="Find a test set", notes="Finding test set by uuid")
     @ResponseBody
-    TestPlan findTestSet(@PathVariable UUID uuid) {
+    TestSet findTestSet(@PathVariable UUID uuid) {
         log.info("/api/v1/test-sets/{uuid} (find test set by uuid request received. UUID=${uuid})")
         testService.findSetByUuid(uuid)
     }
