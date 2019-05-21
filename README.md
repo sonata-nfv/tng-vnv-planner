@@ -6,10 +6,10 @@ This is a [5GTANGO](http://www.5gtango.eu) component to coordinate the verificat
 
 ## What it is
 
-The Planner acts as the main manager for all V&V test requests. It is responsible for test plans management, sequencing, and triggering requests of the corresponding test results. Although the Planner is responsible for overall test activity, execution of individual test plans is given over to the curator and executor.
+The Planner acts as the main manager for the V&V test requests. It is responsible for test plans management, sequencing, and triggering requests of the corresponding test requests. Although the Planner is responsible for overall test activity, execution of individual test plans is given over to the curator and executor.
 An outline of the architecture is shown below.
 
-<p align="center"><img src="https://user-images.githubusercontent.com/173755/53358658-d5cd7e00-3928-11e9-8acb-bc535fd7df18.png" /></p>
+![Architecture](./src/main/resources/images/planner_architecture.png?raw=true "Architecture")
 
 ## Build from source code
 
@@ -40,23 +40,10 @@ For advanced build arguments, please checkout the [gradle-buildscript](https://g
 docker run -d --name tng-vnv-planner -p 6100:6100 registry.sonata-nfv.eu:5000/tng-vnv-planner
 ```
 
-### Health checking
-
-Once the component finish start, you can access (change IP depends on your docker setup) the component health endpoint at:
-
-http://locahost:6100/health
-
 ### Swagger UI
 
-* static
-    * http://petstore.swagger.io/?url=https://raw.githubusercontent.com/sonata-nfv/master/src/main/resources/static/swagger.json
-    * http://petstore.swagger.io/?url=https://raw.githubusercontent.com/sonata-nfv/master/src/main/resources/static/swagger-dependencies.json
-* pre integration 
-    * http://pre-int-vnv-ave.5gtango.eu:6100/swagger-ui.html
 * local 
     * http://localhost:6100/swagger-ui.html
-    * http://localhost:6100/swagger-ui.html?urls.primaryName=dependencies
-
 
 
 ## Dependencies
@@ -85,8 +72,8 @@ This 5GTANGO component is published under Apache 2.0 license. Please see the [LI
 
 The following lead developers are responsible for this repository and have admin rights. They can, for example, merge pull requests.
 
+* Santiago Rodríguez ([srodriguez](https://github.com/srodriguezOPT))
 * George Andreou ([allemaos](https://github.com/allemaos))
-* Felipe Vicens ([felipevicens](https://github.com/felipevicens))
 
 ## Feedback
 
