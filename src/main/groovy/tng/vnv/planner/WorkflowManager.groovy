@@ -35,16 +35,15 @@
 package tng.vnv.planner
 
 import groovy.transform.Synchronized
+import groovy.util.logging.Slf4j
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.stereotype.Component
 import tng.vnv.planner.client.Curator
 import tng.vnv.planner.model.TestPlan
 import tng.vnv.planner.model.TestRequest
 import tng.vnv.planner.model.TestResponse
 import tng.vnv.planner.model.TestSet
 import tng.vnv.planner.service.TestService
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.stereotype.Component
-import groovy.util.logging.Slf4j
-
 import tng.vnv.planner.utils.TestPlanStatus
 
 @Slf4j

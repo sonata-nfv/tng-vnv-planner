@@ -41,8 +41,6 @@ import org.springframework.stereotype.Component
 import org.springframework.web.client.RestTemplate
 import tng.vnv.planner.model.CuratorCallback
 import tng.vnv.planner.model.PackageCallback
-import tng.vnv.planner.model.TestSet
-import tng.vnv.planner.utils.TestPlanStatus
 
 @Component
 class PlannerClient {

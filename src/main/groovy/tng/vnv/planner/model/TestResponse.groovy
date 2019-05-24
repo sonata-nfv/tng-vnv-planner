@@ -2,8 +2,6 @@ package tng.vnv.planner.model
 
 import io.swagger.annotations.ApiModelProperty
 
-import javax.validation.constraints.NotNull
-
 class TestResponse {
 
     @ApiModelProperty(

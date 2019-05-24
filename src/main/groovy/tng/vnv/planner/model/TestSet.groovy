@@ -36,7 +36,6 @@ package tng.vnv.planner.model
 
 import groovy.transform.EqualsAndHashCode
 import io.swagger.annotations.ApiModelProperty
-import org.hibernate.annotations.Type
 
 import javax.persistence.*
 

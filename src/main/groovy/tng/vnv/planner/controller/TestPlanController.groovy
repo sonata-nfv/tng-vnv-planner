@@ -34,21 +34,19 @@
 
 package tng.vnv.planner.controller
 
+import groovy.util.logging.Slf4j
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
-import tng.vnv.planner.ScheduleManager
-import tng.vnv.planner.WorkflowManager
-import tng.vnv.planner.model.CuratorCallback
-import tng.vnv.planner.model.TestPlan
-
-import tng.vnv.planner.model.TestSet
-import tng.vnv.planner.service.NetworkService
-import tng.vnv.planner.service.TestService
-import groovy.util.logging.Slf4j
 import io.swagger.annotations.ApiResponse
 import io.swagger.annotations.ApiResponses
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
+import tng.vnv.planner.ScheduleManager
+import tng.vnv.planner.WorkflowManager
+import tng.vnv.planner.model.CuratorCallback
+import tng.vnv.planner.model.TestPlan
+import tng.vnv.planner.service.NetworkService
+import tng.vnv.planner.service.TestService
 
 import javax.validation.Valid
 
