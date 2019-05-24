@@ -155,6 +155,23 @@ class TestPlanControllerSpec extends Specification {
     }
 
     @Test
+    def "Create a test plan by test tag"() {
+        when:
+        testPlanController.buildTestPlansByTestingTag('eu.5gtango.testingtag.example', false)
+        def testSetList = testSetRepository.findAll()
+        def testPlanList = testPlanRepository.findAll()
+        then:
+        testSetList.size() == 1
+        testPlanList.size() == 1
+        testSetList[0].requestType == TestSetType.TEST_AND_SERVICE
+        testPlanList[0].testUuid == '88f6c1c4-c614-4f4d-87e6-72ef0192956f'
+        testPlanList[0].serviceUuid == '57cebe79-96aa-4f41-af80-93050bfddd9f'
+        testPlanList[0].testStatus == TestPlanStatus.SCHEDULED
+        testSetList[0].status == TestPlanStatus.SCHEDULED
+    }
+
+
+    @Test
     def "Test plan completed by curator"() {
         when:
         def createdPlan = testPlanController.buildTestPlansByNsTdPair('88f6c1c4-c614-4f4d-87e6-72ef0192956f', '57cebe79-96aa-4f41-af80-93050bfddd9f', false)

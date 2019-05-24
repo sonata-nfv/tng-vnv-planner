@@ -73,6 +73,10 @@ class TestService {
         packageService.buildTestPlansByServicePackage(uuid, confirmRequired)
     }
 
+    TestSet buildTestPlansByTestingTag(def tag, def confirmRequired){
+        packageService.buildTestPlansByTestingTag(tag,confirmRequired)
+    }
+
     TestSet buildTestPlansByServiceAndTest(def testUuid, def serviceUuid, def confirmRequired){
         packageService.buildTestPlansByServiceAndTest(testUuid, serviceUuid, confirmRequired)
     }
