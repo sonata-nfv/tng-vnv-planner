@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015 SONATA-NFV, 2019 5GTANGO [, ANY ADDITIONAL AFFILIATION]
+ * Copyright (c) 2015 SONATA-NFV, 2017 5GTANGO [, ANY ADDITIONAL AFFILIATION]
  * ALL RIGHTS RESERVED.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -32,47 +32,39 @@
  * partner consortium (www.5gtango.eu).
  */
 
-package tng.vnv.planner
+package tng.vnv.planner.restMocks
 
-import org.springframework.web.client.RestClientException
-import tng.vnv.planner.model.TestSet
-import tng.vnv.planner.model.TestPlan
-import tng.vnv.planner.service.TestService
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Qualifier
+import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Component
+import org.springframework.web.client.RestTemplate
+import tng.vnv.planner.model.CuratorCallback
+import tng.vnv.planner.model.PackageCallback
+import tng.vnv.planner.model.TestSet
+import tng.vnv.planner.utils.TestPlanStatus
 
 @Component
-class ScheduleManager {
+class PlannerClient {
 
     @Autowired
-    TestService testService
-    @Autowired
-    WorkflowManager workflowManager
+    @Qualifier('restTemplateWithoutAuth')
+    RestTemplate restTemplate
 
-    TestSet scheduleNewTestSet(def packageId, def confirmRequired) throws IllegalArgumentException, RestClientException {
-
-        def testSet = testService.buildTestPlansByPackage(packageId, confirmRequired)
-        if(testSet == null || testSet.testPlans == null || testSet.testPlans.isEmpty()) {
-            throw new IllegalArgumentException("There is no TestPlan built with this PackageUUID: ${packageId}")
-        }
-
-        testService.save(testSet)
-
-        new Thread(new Runnable() {
-            @Override
-            void run() {
-                workflowManager.searchForScheduledSet()
-            }
-        }).start()
-
-        testSet
+    ResponseEntity postPackageChanged(def packageId, def confirmRequired){
+        def packageCallback = new PackageCallback(packageId: packageId, confirmRequired: confirmRequired)
+        restTemplate.postForEntity('http://localhost:6100/api/v1/packages', PackageCallback, ResponseEntity.class)
     }
 
-    TestPlan scheduleNewTestSet(TestPlan tp) {
-        testService.save(tp)
+    ResponseEntity curatorCallback(def eventActor, def testPlanUuid, def status){
+        def curatorCallback = new CuratorCallback(eventActor: eventActor, status: status, test_plan_uuid: testPlanUuid)
+
+        restTemplate.postForEntity('http://localhost:6100/api/v1/test-plans/on-change', CuratorCallback, ResponseEntity.class)
     }
 
-    TestPlan update(String uuid, String status) {
-        testService.updatePlan(uuid, status)
+    ResponseEntity curatorCompletedCallback(def eventActor, def testPlanUuid, def status, def testResults){
+        def curatorCallback = new CuratorCallback(eventActor: eventActor, status: status, test_results: testResults, test_plan_uuid: testPlanUuid)
+
+        restTemplate.postForEntity('http://localhost:6100/api/v1/test-plans/on-change/completed', CuratorCallback, ResponseEntity.class)
     }
 }

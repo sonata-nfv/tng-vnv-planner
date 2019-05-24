@@ -59,7 +59,7 @@ class TestSetController {
     @GetMapping
     @ApiOperation(value="Find all test sets", notes="Finding all test sets")
     @ResponseBody
-    List<TestPlan> listAllTestSets() {
+    List<TestSet> listAllTestSets() {
         log.info("/api/v1/test-sets (find all test sets request received)")
         testService.findAllTestSets()
     }
@@ -67,7 +67,7 @@ class TestSetController {
     @GetMapping('/{uuid}')
     @ApiOperation(value="Find a test set", notes="Finding test set by uuid")
     @ResponseBody
-    TestSet findTestSet(@PathVariable UUID uuid) {
+    TestSet findTestSet(@PathVariable String uuid) {
         log.info("/api/v1/test-sets/{uuid} (find test set by uuid request received. UUID=${uuid})")
         testService.findSetByUuid(uuid)
     }
@@ -75,7 +75,7 @@ class TestSetController {
     @DeleteMapping('{uuid}')
     @ApiOperation(value="Cancell a test set", notes="Cancelling test set by uuid")
     @ResponseBody
-    void cancelTestSet(@PathVariable UUID uuid) {
+    void cancelTestSet(@PathVariable String uuid) {
         log.info("/api/v1/test-sets/{uuid} (cancel test set by uuid request received. UUID=${uuid})")
         manager.cancelTestSet(uuid)
     }

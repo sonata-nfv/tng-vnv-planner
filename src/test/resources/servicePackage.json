@@ -1,0 +1,58 @@
+{
+  "created_at": "2019-05-15T17:56:05.038+00:00",
+  "md5": "c3bcc1406ef42ebb28dc7808281d0522",
+  "pd": {
+    "description": "This is a integration test artifact.",
+    "descriptor_schema": "https://raw.githubusercontent.com/sonata-nfv/tng-schema/master/package-specification/napd-schema.yml",
+    "maintainer": "5GTANGO Test Team",
+    "name": "test-ns-nsid1v",
+    "package_content": [
+      {
+        "algorithm": "SHA-256",
+        "content-type": "application/vnd.5gtango.nsd",
+        "hash": "e1f39eea8b47ef70b7c9a27b6821e1806b60b01bc56cd8e396c6081797acf1e4",
+        "id": {
+          "name": "test-nsid1v",
+          "vendor": "eu.5gtango",
+          "version": "0.2"
+        },
+        "source": "Definitions/nsd.yaml",
+        "tags": [
+          "eu.5gtango"
+        ],
+        "testing_tags": [
+          "eu.5gtango.testingtag.example"
+        ],
+        "uuid": "57cebe79-96aa-4f41-af80-93050bfddd9f"
+      },
+      {
+        "algorithm": "SHA-256",
+        "content-type": "application/vnd.5gtango.vnfd",
+        "hash": "e11b65719cf7e0134441de37a76a00690c6a09f77a96957537ec68b22b23157e",
+        "id": {
+          "name": "cirros_vnf",
+          "vendor": "eu.5gtango",
+          "version": "0.2"
+        },
+        "source": "Definitions/vnfd1.yaml",
+        "tags": [
+          "eu.5gtango"
+        ],
+        "testing_tags": [],
+        "uuid": "0b3caec6-5d15-4020-9f6c-e9132e2b4f6a"
+      }
+    ],
+    "package_file_name": "eu.5gtango.test-ns-nsid1v.0.2.tgo",
+    "package_file_uuid": "b3ce3593-2b89-40e4-ac4d-42501be8730f",
+    "package_type": "application/vnd.5gtango.package.nsp",
+    "release_date_time": "2019-05-15T19:25:16Z",
+    "vendor": "eu.5gtango",
+    "version": "0.2",
+    "warning": null
+  },
+  "signature": null,
+  "status": "active",
+  "updated_at": "2019-05-15T17:56:05.038+00:00",
+  "username": "",
+  "uuid": "0e802097-29de-4628-ac5b-2f55e9d781e8"
+}

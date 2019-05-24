@@ -63,7 +63,7 @@ class PackageService {
 
             def pack = gatekeeper.getPackage(packageId)
 
-            def testSet = new TestSet(uuid: UUID.randomUUID(),
+            def testSet = new TestSet(uuid: UUID.randomUUID().toString(),
                                         requestUuid: packageId,
                                         requestType: type,
                                         confirmRequired: confirmRequired,
@@ -106,10 +106,10 @@ class PackageService {
             matchedServices.each { service ->
                 matchedTests.each { test ->
                     log.info("test: ${test.uuid} - service: ${service.uuid}")
-                    testSet.testPlans << new TestPlan(uuid: UUID.randomUUID(),
+                    testSet.testPlans << new TestPlan(uuid: UUID.randomUUID().toString(),
                                                 testSetUuid: testSet.uuid,
-                                                serviceUuid: UUID.fromString(service.uuid as String),
-                                                testUuid: UUID.fromString(test.uuid as String),
+                                                serviceUuid: service.uuid,
+                                                testUuid: test.uuid,
                                                 confirmRequired: confirmRequired,
                                                 testStatus: confirmRequired ? TestPlanStatus.WAITING_FOR_CONFIRMATION : TestPlanStatus.SCHEDULED)
                 }
@@ -127,8 +127,8 @@ class PackageService {
 
             def pack = gatekeeper.getPackage(packageId)
 
-            def testSet = new TestSet(uuid: UUID.randomUUID(),
-                    requestUuid: UUID.fromString(packageId),
+            def testSet = new TestSet(uuid: UUID.randomUUID().toString(),
+                    requestUuid: packageId,
                     requestType: type,
                     confirmRequired: confirmRequired,
                     status: confirmRequired ? TestPlanStatus.WAITING_FOR_CONFIRMATION : TestPlanStatus.SCHEDULED)
@@ -161,10 +161,10 @@ class PackageService {
 
             matchedTests.each { test ->
                 log.info("test: ${test.uuid} - service: ${serviceUuid}")
-                testSet.testPlans << new TestPlan(uuid: UUID.randomUUID(),
+                testSet.testPlans << new TestPlan(uuid: UUID.randomUUID().toString(),
                         testSetUuid: testSet.uuid,
-                        serviceUuid: UUID.fromString(serviceUuid as String),
-                        testUuid: UUID.fromString(test.uuid as String),
+                        serviceUuid: serviceUuid,
+                        testUuid: test.uuid,
                         confirmRequired: confirmRequired,
                         testStatus: confirmRequired ? TestPlanStatus.WAITING_FOR_CONFIRMATION : TestPlanStatus.SCHEDULED)
                 }
@@ -181,8 +181,8 @@ class PackageService {
 
             def pack = gatekeeper.getPackage(packageId)
 
-            def testSet = new TestSet(uuid: UUID.randomUUID(),
-                    requestUuid: UUID.fromString(packageId),
+            def testSet = new TestSet(uuid: UUID.randomUUID().toString(),
+                    requestUuid: packageId,
                     requestType: type,
                     confirmRequired: confirmRequired,
                     status: confirmRequired ? TestPlanStatus.WAITING_FOR_CONFIRMATION : TestPlanStatus.SCHEDULED)
@@ -212,10 +212,10 @@ class PackageService {
 
             matchedServices.each { service ->
                 log.info("test: ${testUuid} - service: ${service.uuid}")
-                testSet.testPlans << new TestPlan(uuid: UUID.randomUUID(),
+                testSet.testPlans << new TestPlan(uuid: UUID.randomUUID().toString(),
                         testSetUuid: testSet.uuid,
-                        serviceUuid: UUID.fromString(service.uuid as String),
-                        testUuid: UUID.fromString(testUuid as String),
+                        serviceUuid: service.uuid,
+                        testUuid: testUuid,
                         confirmRequired: confirmRequired,
                         testStatus: confirmRequired ? TestPlanStatus.WAITING_FOR_CONFIRMATION : TestPlanStatus.SCHEDULED)
             }
@@ -228,12 +228,12 @@ class PackageService {
 
     TestSet buidTestSetByTestAndService(testUuid, serviceUuid, confirmRequired, type){
 
-        def testSet = new TestSet(uuid: UUID.randomUUID(),
+        def testSet = new TestSet(uuid: UUID.randomUUID().toString(),
                 requestType: type,
                 confirmRequired: confirmRequired,
                 status: confirmRequired ? TestPlanStatus.WAITING_FOR_CONFIRMATION : TestPlanStatus.SCHEDULED)
 
-        testSet.testPlans << new TestPlan(uuid: UUID.randomUUID(),
+        testSet.testPlans << new TestPlan(uuid: UUID.randomUUID().toString(),
                 testSetUuid: testSet.uuid,
                 serviceUuid: serviceUuid,
                 testUuid: testUuid,

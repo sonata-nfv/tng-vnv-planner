@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015 SONATA-NFV, 2019 5GTANGO [, ANY ADDITIONAL AFFILIATION]
+ * Copyright (c) 2015 SONATA-NFV, 2017 5GTANGO [, ANY ADDITIONAL AFFILIATION]
  * ALL RIGHTS RESERVED.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -32,47 +32,37 @@
  * partner consortium (www.5gtango.eu).
  */
 
-package tng.vnv.planner
+package tng.vnv.planner.restMocks
 
-import org.springframework.web.client.RestClientException
-import tng.vnv.planner.model.TestSet
-import tng.vnv.planner.model.TestPlan
-import tng.vnv.planner.service.TestService
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.stereotype.Component
+import groovy.util.logging.Slf4j
+import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.DeleteMapping
+import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RestController
+import tng.vnv.planner.model.TestRequest
+import tng.vnv.planner.model.TestResponse
+import tng.vnv.planner.utils.TestPlanStatus
 
-@Component
-class ScheduleManager {
+@Slf4j
+@RestController
+@RequestMapping('/api/v1')
+class CuratorMock {
 
-    @Autowired
-    TestService testService
-    @Autowired
-    WorkflowManager workflowManager
-
-    TestSet scheduleNewTestSet(def packageId, def confirmRequired) throws IllegalArgumentException, RestClientException {
-
-        def testSet = testService.buildTestPlansByPackage(packageId, confirmRequired)
-        if(testSet == null || testSet.testPlans == null || testSet.testPlans.isEmpty()) {
-            throw new IllegalArgumentException("There is no TestPlan built with this PackageUUID: ${packageId}")
-        }
-
-        testService.save(testSet)
-
-        new Thread(new Runnable() {
-            @Override
-            void run() {
-                workflowManager.searchForScheduledSet()
-            }
-        }).start()
-
-        testSet
+    @PostMapping('/test-preparations')
+    ResponseEntity<TestResponse> testRequest(@RequestBody TestRequest testRequest){
+        log.info("Curator: received test execution request")
+        def testResponse = new TestResponse(status: TestPlanStatus.STARTING)
+        ResponseEntity.status(HttpStatus.OK).body(testResponse)
     }
 
-    TestPlan scheduleNewTestSet(TestPlan tp) {
-        testService.save(tp)
-    }
-
-    TestPlan update(String uuid, String status) {
-        testService.updatePlan(uuid, status)
+    @DeleteMapping('/test-preparations/{uuid}')
+    ResponseEntity cancelTestRequest(@PathVariable('uuid') String uuid){
+        log.info("Curator: received test cancellation request")
+        def testResponse = new TestResponse(status: TestPlanStatus.CANCELLING)
+        ResponseEntity.status(HttpStatus.OK).body(testResponse)
     }
 }

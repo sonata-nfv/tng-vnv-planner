@@ -39,7 +39,7 @@ import org.springframework.data.jpa.repository.JpaRepository
 import tng.vnv.planner.model.TestSet
 
 interface TestSetRepository extends JpaRepository<TestSet, Long> {
-    TestSet findByUuid(UUID uuid)
+    TestSet findByUuid(String uuid)
     List<TestSet> findAll()
     TestSet findFirstByStatus(String status)
     List<TestSet> findByStatus(String status)

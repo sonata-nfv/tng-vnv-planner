@@ -34,6 +34,8 @@ dependencies {
 
     // Database
     compile 'org.postgresql:postgresql:9.3-1100-jdbc41'
+    // Database test
+    compile 'com.h2database:h2:1.4.199'
 
     // Tests
     testCompile 'org.spockframework:spock-core:1.2-groovy-2.4'

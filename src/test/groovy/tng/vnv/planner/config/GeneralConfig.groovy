@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015 SONATA-NFV, 2019 5GTANGO [, ANY ADDITIONAL AFFILIATION]
+ * Copyright (c) 2015 SONATA-NFV, 2017 5GTANGO [, ANY ADDITIONAL AFFILIATION]
  * ALL RIGHTS RESERVED.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -32,47 +32,27 @@
  * partner consortium (www.5gtango.eu).
  */
 
-package tng.vnv.planner
+package tng.vnv.planner.config
 
-import org.springframework.web.client.RestClientException
-import tng.vnv.planner.model.TestSet
-import tng.vnv.planner.model.TestPlan
-import tng.vnv.planner.service.TestService
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.stereotype.Component
 
-@Component
-class ScheduleManager {
+import com.fasterxml.jackson.annotation.JsonInclude
+import com.fasterxml.jackson.databind.DeserializationFeature
+import com.fasterxml.jackson.databind.ObjectMapper
+import org.springframework.context.annotation.Bean
+import org.springframework.context.annotation.Configuration
+import org.springframework.context.annotation.Primary
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 
-    @Autowired
-    TestService testService
-    @Autowired
-    WorkflowManager workflowManager
+@Configuration
+class GeneralConfig extends WebMvcConfigurerAdapter {
 
-    TestSet scheduleNewTestSet(def packageId, def confirmRequired) throws IllegalArgumentException, RestClientException {
+    @Bean
+    @Primary
+    ObjectMapper objectMapper() {
+        ObjectMapper mapper = new ObjectMapper()
+        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+        mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL)
 
-        def testSet = testService.buildTestPlansByPackage(packageId, confirmRequired)
-        if(testSet == null || testSet.testPlans == null || testSet.testPlans.isEmpty()) {
-            throw new IllegalArgumentException("There is no TestPlan built with this PackageUUID: ${packageId}")
-        }
-
-        testService.save(testSet)
-
-        new Thread(new Runnable() {
-            @Override
-            void run() {
-                workflowManager.searchForScheduledSet()
-            }
-        }).start()
-
-        testSet
-    }
-
-    TestPlan scheduleNewTestSet(TestPlan tp) {
-        testService.save(tp)
-    }
-
-    TestPlan update(String uuid, String status) {
-        testService.updatePlan(uuid, status)
+        return mapper
     }
 }

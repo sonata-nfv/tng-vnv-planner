@@ -1,0 +1,61 @@
+{
+  "created_at": "2019-05-15T17:01:51.698+00:00",
+  "md5": "b3c37f6cac8fcec4d901ef1956aec4e8",
+  "pd": {
+    "description": "This is a 5GTANGO test package for test probes",
+    "descriptor_schema": "https://raw.githubusercontent.com/sonata-nfv/tng-schema/master/package-specification/napd-schema.yml",
+    "maintainer": "Santiago RodrÃÂ­guez, OPTARE",
+    "name": "generic-probes-test-pingonly",
+    "package_content": [
+      {
+        "algorithm": "SHA-256",
+        "content-type": "image/png",
+        "hash": "07684fa368a29247683a78936cf004e7c01e5ce806f4fbdcdc96827d7568dee5",
+        "id": "Icons/optare_solutions.png",
+        "source": "Icons/optare_solutions.png",
+        "tags": [],
+        "testing_tags": [],
+        "uuid": "5be8cc59-1979-4b7e-9f1a-d29673b11188"
+      },
+      {
+        "algorithm": "SHA-256",
+        "content-type": "text/plain",
+        "hash": "3cd74acbebc0a41414f342d27edbda0284ef4640ee6c077fdf00cd5a69ce181b",
+        "id": "Licenses/LICENSE",
+        "source": "Licenses/LICENSE",
+        "tags": [],
+        "testing_tags": [],
+        "uuid": "5e81a5a3-7997-4263-b533-0b643ff4281c"
+      },
+      {
+        "algorithm": "SHA-256",
+        "content-type": "application/vnd.5gtango.tstd",
+        "hash": "397803ca6c4e0e4f44449a221a3924a82244bda9df1b935b15cb6966358194de",
+        "id": {
+          "name": "test-generic-probes",
+          "vendor": "eu.5gtango.optare",
+          "version": "0.1"
+        },
+        "source": "Definitions/Definitions/test-descriptor.yml",
+        "tags": [],
+        "testing_tags": [
+          "etsi.osm.testingtag.example",
+          "eu.5gtango.testingtag.example"
+        ],
+        "uuid": "88f6c1c4-c614-4f4d-87e6-72ef0192956f"
+      }
+    ],
+    "package_file_name": "eu.5gtango.generic-probes-test-pingonly.0.1.tgo",
+    "package_file_uuid": "38d3669e-f0e3-440f-b1df-9f08168060bb",
+    "package_type": "application/vnd.5gtango.package.tdp",
+    "release_date_time": "2019-05-15T17:11:13Z",
+    "vendor": "eu.5gtango",
+    "version": "0.1",
+    "warning": null
+  },
+  "signature": null,
+  "status": "active",
+  "updated_at": "2019-05-15T17:01:51.698+00:00",
+  "username": "",
+  "uuid": "0d274a40-191a-4f6f-b6ef-2a6960c24bc2"
+}
