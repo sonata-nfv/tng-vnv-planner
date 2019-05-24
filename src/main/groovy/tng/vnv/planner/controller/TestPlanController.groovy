@@ -126,6 +126,15 @@ class TestPlanController {
         testService.buildTestPlansByTest(testUuid, confirmRequired).testPlans
     }
 
+    @ApiOperation(value="Create a test plan by testing tag")
+    @ApiResponses(value = [@ApiResponse(code = 400, message = 'Bad Request')])
+    @PostMapping('/testing-tags')
+    @ResponseBody
+    List<TestPlan> buildTestPlansByTestingTag(@Valid @RequestParam String testingTag, @RequestParam(required = false) Boolean confirmRequired) {
+        log.info("/api/v1/test-plans/testing-tags (create a test plan by testing tag request received. Testing tag: ${testingTag})")
+        testService.buildTestPlansByTestingTag(testingTag, confirmRequired).testPlans
+    }
+
     @ApiOperation(value="Create a test plan by test uuid and service uuid")
     @ApiResponses(value = [@ApiResponse(code = 400, message = 'Bad Request')])
     @PostMapping('/testAndServices')
