@@ -34,17 +34,17 @@
 
 package tng.vnv.planner.service
 
-import org.springframework.web.client.RestClientException
-import tng.vnv.planner.client.Curator
-import tng.vnv.planner.client.Gatekeeper
-import tng.vnv.planner.model.TestSet
-import tng.vnv.planner.repository.TestPlanRepository
-import tng.vnv.planner.model.TestPlan
-import tng.vnv.planner.repository.TestSetRepository
-import tng.vnv.planner.utils.TestPlanStatus
 import groovy.util.logging.Slf4j
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+import org.springframework.web.client.RestClientException
+import tng.vnv.planner.client.Curator
+import tng.vnv.planner.client.Gatekeeper
+import tng.vnv.planner.model.TestPlan
+import tng.vnv.planner.model.TestSet
+import tng.vnv.planner.repository.TestPlanRepository
+import tng.vnv.planner.repository.TestSetRepository
+import tng.vnv.planner.utils.TestPlanStatus
 
 @Slf4j
 @Service

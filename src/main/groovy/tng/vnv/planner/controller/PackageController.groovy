@@ -34,28 +34,21 @@
 
 package tng.vnv.planner.controller
 
-
+import groovy.util.logging.Slf4j
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
-import org.springframework.http.HttpStatus
-import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.client.HttpStatusCodeException
-import tng.vnv.planner.model.PackageCallback
-import tng.vnv.planner.model.TestPlan
-import org.springframework.web.bind.annotation.ResponseBody
-
-import javax.validation.Valid
-
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
-import tng.vnv.planner.ScheduleManager
-
-import groovy.util.logging.Slf4j
 import io.swagger.annotations.ApiResponse
 import io.swagger.annotations.ApiResponses
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.*
+import org.springframework.web.client.HttpStatusCodeException
+import tng.vnv.planner.ScheduleManager
+import tng.vnv.planner.model.PackageCallback
+import tng.vnv.planner.model.TestPlan
+
+import javax.validation.Valid
 
 @Slf4j
 @Api

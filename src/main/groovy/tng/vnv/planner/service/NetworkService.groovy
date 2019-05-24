@@ -35,11 +35,9 @@
 package tng.vnv.planner.service
 
 import groovy.util.logging.Slf4j
-import tng.vnv.planner.client.Gatekeeper
-
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
-import tng.vnv.planner.model.TestSet
+import tng.vnv.planner.client.Gatekeeper
 import tng.vnv.planner.repository.TestSetRepository
 
 @Slf4j

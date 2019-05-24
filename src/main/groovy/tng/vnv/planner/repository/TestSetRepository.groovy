@@ -35,7 +35,6 @@
 package tng.vnv.planner.repository
 
 import org.springframework.data.jpa.repository.JpaRepository
-
 import tng.vnv.planner.model.TestSet
 
 interface TestSetRepository extends JpaRepository<TestSet, Long> {

@@ -34,12 +34,12 @@
 
 package tng.vnv.planner
 
-import org.springframework.web.client.RestClientException
-import tng.vnv.planner.model.TestSet
-import tng.vnv.planner.model.TestPlan
-import tng.vnv.planner.service.TestService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
+import org.springframework.web.client.RestClientException
+import tng.vnv.planner.model.TestPlan
+import tng.vnv.planner.model.TestSet
+import tng.vnv.planner.service.TestService
 
 @Component
 class ScheduleManager {

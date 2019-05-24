@@ -36,9 +36,7 @@ package tng.vnv.planner.model
 
 import groovy.transform.ToString
 import io.swagger.annotations.ApiModelProperty
-import org.hibernate.annotations.Type
 
-import javax.persistence.Id
 import javax.validation.constraints.NotNull
 
 @ToString(includes = ['packageId'],includeNames = true)

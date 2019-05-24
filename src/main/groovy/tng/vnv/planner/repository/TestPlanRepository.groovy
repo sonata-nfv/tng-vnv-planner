@@ -34,8 +34,8 @@
 
 package tng.vnv.planner.repository
 
-import tng.vnv.planner.model.TestPlan
 import org.springframework.data.jpa.repository.JpaRepository
+import tng.vnv.planner.model.TestPlan
 
 interface TestPlanRepository extends JpaRepository<TestPlan, Long> {
     TestPlan findByUuid(String uuid)

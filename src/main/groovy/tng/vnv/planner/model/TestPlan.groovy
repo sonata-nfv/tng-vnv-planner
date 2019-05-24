@@ -34,13 +34,10 @@
 
 package tng.vnv.planner.model
 
-import com.fasterxml.jackson.annotation.JsonProperty
+
 import groovy.transform.EqualsAndHashCode
 import io.swagger.annotations.ApiModelProperty
-import jdk.internal.instrumentation.TypeMapping
-import org.hibernate.annotations.Type
 
-import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.Id
 import javax.persistence.Table
