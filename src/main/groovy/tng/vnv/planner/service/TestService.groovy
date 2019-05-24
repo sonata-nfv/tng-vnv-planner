@@ -89,28 +89,28 @@ class TestService {
         testPlanRepository.save(testPlan)
     }
 
-    TestSet updateSet(UUID uuid, String status) {
-        TestSet testSet = findSetByUuid(uuid)
+    TestSet updateSet(String uuid, String status) {
+        def testSet = findSetByUuid(uuid)
         testSet.status = status
         testSetRepository.save(testSet)
     }
 
-    TestPlan updatePlan(UUID uuid, String status) {
-        TestPlan testPlan = findPlanByUuid(uuid)
+    TestPlan updatePlan(String uuid, String status) {
+        def testPlan = findPlanByUuid(uuid)
         testPlan.testStatus = status
         testPlanRepository.save(testPlan)
     }
 
-    void cancelTestSet(UUID uuid) {
+    void cancelTestSet(String uuid) {
         updateSet(uuid, TestPlanStatus.CANCELLING)
     }
 
-    void deletePlan(UUID uuid) {
+    void deletePlan(String uuid) {
         updatePlan(uuid, TestPlanStatus.CANCELLING)
     }
 
 
-    TestPlan findPlanByUuid(UUID uuid){
+    TestPlan findPlanByUuid(String uuid){
         testPlanRepository.findByUuid(uuid)
     }
 
@@ -130,7 +130,7 @@ class TestService {
         testPlanRepository.findAll()
     }
 
-    TestSet findSetByUuid(UUID uuid){
+    TestSet findSetByUuid(String uuid){
         testSetRepository.findByUuid(uuid)
     }
 
@@ -142,11 +142,13 @@ class TestService {
         testPlanRepository.findByTestStatus(status)
     }
 
-    void cancelAllTestPlansByTestSetUuid(UUID testSetUuid){
-        TestSet testSet = testSetRepository.findByUuid(testSetUuid)
-        for (TestPlan testPlan in testSet.getTestPlans()){
+    void cancelAllTestPlansByTestSetUuid(String testSetUuid){
+        def testPlans = testPlanRepository.findByTestSetUuid(testSetUuid)
+
+        testPlans.each { testPlan ->
             curator.delete(testPlan.uuid)
-            updatePlan(testPlan.uuid, TestPlanStatus.CANCELLED)
+            updatePlan(testPlan.uuid, TestPlanStatus.CANCELLING)
+
         }
     }
 

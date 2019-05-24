@@ -41,18 +41,10 @@ api:
   license:
     name: Apache License 2.0
     url: https://github.com/sonata-nfv/tng-vnv-planner/blob/master/LICENSE
-CAT_VNV_HOST: ${CAT_VNV_HOST}
-CAT_VNV_PORT: ${CAT_VNV_PORT}
-CURATOR_HOST: ${CURATOR_HOST}
-CURATOR_PORT: ${CURATOR_PORT}
-DATABASE_HOST: ${DATABASE_HOST}
-DATABASE_NAME: ${DATABASE_NAME}
-DATABASE_USER: ${DATABASE_USER}
-DATABASE_PASSWORD: ${DATABASE_PASSWORD}
-DATABASE_PORT: ${DATABASE_PORT}
+
 app:
   gatekeeper:
-    base.url: http://${CAT_VNV_HOST}:${CAT_VNV_PORT}/catalogues
+    base.url: http://${CAT_VNV_HOST:localhost}:${CAT_VNV_PORT:6100}/catalogues
     service.list.endpoint: ${app.gatekeeper.base.url}/network-services
     service.metadata.endpoint: ${app.gatekeeper.base.url}/network-services/{uuid}
     package.list.endpoint: ${app.gatekeeper.base.url}/packages
@@ -61,11 +53,11 @@ app:
     test.metadata.endpoint: ${app.gatekeeper.base.url}/tests/{uuid}
   curator:
     host: tng-vnv-curator
-    base.url: http://${CURATOR_HOST}:${CURATOR_PORT}/api/v1
+    base.url: http://${CURATOR_HOST:localhost}:${CURATOR_PORT:6100}/api/v1
     test.plan.prepare.endpoint: ${app.curator.base.url}/test-preparations
     test.plan.cancel.endpoint: ${app.curator.base.url}/test-preparations/{uuid}
   postgres:
-    host: ${DATABASE_HOST}
+    host: ${DATABASE_HOST:localhost}
 
   queue.capacity: 500
   pool:
@@ -79,6 +71,7 @@ app:
 
 ---
 spring:
+  profiles: docker
   datasource:
     driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://${DATABASE_HOST}:${DATABASE_PORT}/${DATABASE_NAME}?createDatabaseIfNotExist=true
@@ -100,5 +93,20 @@ spring:
       hibernate:
         temp:
           use_jdbc_metadata_defaults: false
+  jackson:
+    property-naming-strategy: SNAKE_CASE
+
+---
+spring:
+  profiles: test
+  datasource:
+    url: jdbc:h2:mem:planner
+    username: sonatatest
+    password: sonata
+    driver-class-name: org.h2.Driver
+  jpa:
+    show-sql: false
+    hibernate.ddl-auto: create
+  h2.console.enabled: true
   jackson:
     property-naming-strategy: SNAKE_CASE

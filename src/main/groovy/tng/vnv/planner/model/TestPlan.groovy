@@ -37,6 +37,7 @@ package tng.vnv.planner.model
 import com.fasterxml.jackson.annotation.JsonProperty
 import groovy.transform.EqualsAndHashCode
 import io.swagger.annotations.ApiModelProperty
+import jdk.internal.instrumentation.TypeMapping
 import org.hibernate.annotations.Type
 
 import javax.persistence.Column
@@ -50,26 +51,25 @@ import javax.persistence.Table
 class TestPlan extends AuditModel implements Serializable {
 
     @Id
-    @Type(type="pg-uuid")
     @ApiModelProperty(
             value = 'Test Plan uuid',
             allowEmptyValue = false)
-    UUID uuid
+    String uuid
 
     @ApiModelProperty(
             value = 'Test Set uuid to which it belongs',
             allowEmptyValue = false)
-    UUID testSetUuid
+    String testSetUuid
 
     @ApiModelProperty(
             value = 'Network service uuid',
             allowEmptyValue = false)
-    UUID serviceUuid
+    String serviceUuid
 
     @ApiModelProperty(
             value = 'Test descriptor uuid',
             allowEmptyValue = false)
-    UUID testUuid
+    String testUuid
 
     @ApiModelProperty(
             value = 'Test Status',

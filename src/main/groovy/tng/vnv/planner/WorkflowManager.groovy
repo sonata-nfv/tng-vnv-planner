@@ -84,7 +84,7 @@ class WorkflowManager {
     @Synchronized
     void testPlanUpdated(def justUpdatedTestPlanUUID) {
 
-        def justUpdatedTestPlan = testService.findPlanByUuid(justUpdatedTestPlanUUID as UUID)
+        def justUpdatedTestPlan = testService.findPlanByUuid(justUpdatedTestPlanUUID as String)
         def justExecutedTestSet = testService.findSetByUuid(justUpdatedTestPlan.testSetUuid)
 
         // If it has an error, it is stopped
@@ -104,7 +104,7 @@ class WorkflowManager {
             if (testplansStatus[0] == TestPlanStatus.COMPLETED || testplansStatus[0] == TestPlanStatus.CANCELLED){
                 completeTestSet(justUpdatedTestPlan.testSetUuid, testplansStatus[0])
             } else {
-                testService.updateSet(justUpdatedTestPlan.testSetUuid as UUID, testplansStatus[0] as String)
+                testService.updateSet(justUpdatedTestPlan.testSetUuid as String, testplansStatus[0] as String)
             }
             return
         }
@@ -149,13 +149,13 @@ class WorkflowManager {
         //completeTestSet(justUpdatedTestPlan.testSetUuid)
     }
 
-    void deleteTestPlan(UUID uuid){
+    void deleteTestPlan(String uuid){
         curator.delete(uuid)
         testService.deletePlan(uuid)
     }
 
     private void completeTestSet(def completedTestSetUUID, def status) {
-        testService.updateSet(completedTestSetUUID as UUID, status as String)
+        testService.updateSet(completedTestSetUUID as String, status as String)
         new Thread(new Runnable() {
             @Override
             void run() {
@@ -177,8 +177,8 @@ class WorkflowManager {
         log.info("TestPlan with UUID {}, received by the Curator, new testStatus: {}", testPlan.uuid, testResponse.status)
     }
 
-    void cancelTestSet(UUID uuid){
-        testService.cancelTestSet(uuid)
+    void cancelTestSet(String uuid){
         testService.cancelAllTestPlansByTestSetUuid(uuid)
+        testService.cancelTestSet(uuid)
     }
 }

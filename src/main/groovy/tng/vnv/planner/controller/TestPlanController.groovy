@@ -78,7 +78,7 @@ class TestPlanController {
     @GetMapping('/{uuid}')
     @ApiOperation(value="Find a test plan", notes="Finding test plan by uuid")
     @ResponseBody
-    TestPlan findTestPlan(@PathVariable UUID uuid) {
+    TestPlan findTestPlan(@PathVariable String uuid) {
         log.info("/api/v1/test-plans/{uuid} (find test plan by uuid request received. UUID=${uuid})")
         testService.findPlanByUuid(uuid)
     }
@@ -86,10 +86,10 @@ class TestPlanController {
     @DeleteMapping('{uuid}')
     @ApiOperation(value="Cancel a test plan", notes="canceling test plan by uuid")
     @ResponseBody
-    void deleteTestPlan(@PathVariable UUID uuid) {
+    void deleteTestPlan(@PathVariable String uuid) {
         log.info("/api/v1/test-plans/{uuid} (Cancel test plan by uuid request received. UUID=${uuid})")
         manager.deleteTestPlan(uuid)
-        manager.testPlanUpdated(uuid as UUID)
+        manager.testPlanUpdated(uuid)
     }
 
     @ApiOperation(value="Create a test plan", notes="Creating a test plan")
@@ -104,17 +104,17 @@ class TestPlanController {
     @ApiResponses(value = [@ApiResponse(code = 400, message = 'Bad Request')])
     @PutMapping('{uuid}')
     @ResponseBody
-    TestPlan update(@Valid @PathVariable UUID uuid, @RequestParam String status) {
+    TestPlan update(@Valid @PathVariable String uuid, @RequestParam String status) {
         log.info("/api/v1/test-plans/{uuid} (update test plan status by uuid request received. UUID=${uuid})")
         scheduler.update(uuid, status)
-        manager.testPlanUpdated(uuid as UUID)
+        manager.testPlanUpdated(uuid)
     }
 
     @ApiOperation(value="Create a test plan by service uuid")
     @ApiResponses(value = [@ApiResponse(code = 400, message = 'Bad Request')])
     @PostMapping('/services')
     @ResponseBody
-    List<TestPlan> buildTestPlansByService(@Valid @RequestParam UUID serviceUuid, @RequestParam(required = false) Boolean confirmRequired) {
+    List<TestPlan> buildTestPlansByService(@Valid @RequestParam String serviceUuid, @RequestParam(required = false) Boolean confirmRequired) {
         log.info("/api/v1/test-plans/services (create a test plan by service uuid request received. Service UUID: ${serviceUuid})")
         testService.buildTestPlansByService(serviceUuid, confirmRequired).testPlans
     }
@@ -123,7 +123,7 @@ class TestPlanController {
     @ApiResponses(value = [@ApiResponse(code = 400, message = 'Bad Request')])
     @PostMapping('/tests')
     @ResponseBody
-    List<TestPlan> buildTestPlansByTest(@Valid @RequestParam UUID testUuid, @RequestParam(required = false) Boolean confirmRequired) {
+    List<TestPlan> buildTestPlansByTest(@Valid @RequestParam String testUuid, @RequestParam(required = false) Boolean confirmRequired) {
         log.info("/api/v1/test-plans/tests (create a test plan by test uuid request received. Test UUID: ${testUuid})")
         testService.buildTestPlansByTest(testUuid, confirmRequired).testPlans
     }
@@ -132,7 +132,7 @@ class TestPlanController {
     @ApiResponses(value = [@ApiResponse(code = 400, message = 'Bad Request')])
     @PostMapping('/testAndServices')
     @ResponseBody
-    List<TestPlan> buildTestPlansByNsTdPair(@Valid @RequestParam UUID testUuid, @RequestParam UUID serviceUuid, @RequestParam(required = false) Boolean confirmRequired) {
+    List<TestPlan> buildTestPlansByNsTdPair(@Valid @RequestParam String testUuid, @RequestParam String serviceUuid, @RequestParam(required = false) Boolean confirmRequired) {
         log.info("/api/v1/test-plans/testAndServices (create a test plan by service uuid and test uuid request received. Service UUID: ${serviceUuid}), test UUID=${testUuid}")
         testService.buildTestPlansByServiceAndTest(testUuid, serviceUuid, confirmRequired).testPlans
     }
@@ -148,8 +148,8 @@ class TestPlanController {
     @ResponseBody
     void onChangeCompleted(@Valid @RequestBody CuratorCallback callback) {
         log.info("/api/v1/test-plans/on-change/completed (test update notification received from curator. uuid=${callback.test_plan_uuid} with status=${callback.status})")
-        testService.updatePlan(callback.test_plan_uuid as UUID, callback.status)
-        manager.testPlanUpdated(callback.test_plan_uuid as UUID)
+        testService.updatePlan(callback.test_plan_uuid, callback.status)
+        manager.testPlanUpdated(callback.test_plan_uuid)
     }
 
     @ApiOperation(value="Callback from curator")
@@ -161,21 +161,21 @@ class TestPlanController {
     @ResponseBody
     void onChange(@Valid @RequestBody CuratorCallback callback) {
         log.info("/api/v1/test-plans/on-change (test update notification received from curator. uuid=${callback.test_plan_uuid} with status=${callback.status})")
-        testService.updatePlan(callback.test_plan_uuid as UUID, callback.status)
-        manager.testPlanUpdated(callback.test_plan_uuid as UUID)
+        testService.updatePlan(callback.test_plan_uuid, callback.status)
+        manager.testPlanUpdated(callback.test_plan_uuid)
     }
 
     // Network Services
     @ApiOperation(value="Find all tests related with a service uuid")
     @GetMapping('/services/{nsdUuid}/tests')
-    List<TestSet> listTestsByService(@PathVariable('nsdUuid') UUID uuid) {
+    List<Object> listTestsByService(@PathVariable('nsdUuid') String uuid) {
         log.info("/api/v1/test-plans/services/{nsdUuid}/tests (list tests by service uuid request received. UUID=${uuid}")
         networkServiceService.findTestsByService(uuid)
     }
 
     @ApiOperation(value="Find all tests related with a testing_tag")
     @GetMapping('/testing-tags/{tag}/tests')
-    List<TestSet> listTestsByTag(@PathVariable('tag') String tag) {
+    List<Object> listTestsByTag(@PathVariable('tag') String tag) {
         log.info("/api/v1/test-plans/testing-tags/{tag}/tests (list tests by tag request received. Testing-tag=${tag}")
         networkServiceService.findTestsByTag(tag)
     }
@@ -184,7 +184,7 @@ class TestPlanController {
 
     @ApiOperation(value="Find all services related with a test")
     @GetMapping('/tests/{testdUuid}/services')
-    List<Object> listServicesByTest(@PathVariable('testdUuid') UUID uuid) {
+    List<Object> listServicesByTest(@PathVariable('testdUuid') String uuid) {
         log.info("/api/v1/test-plans/tests/{testdUuid}/services (list services by test uuid request received. UUID=${uuid}")
         testService.findServicesByTest(uuid)
     }

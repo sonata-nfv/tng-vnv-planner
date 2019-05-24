@@ -46,16 +46,15 @@ import javax.persistence.*
 class TestSet extends AuditModel {
 
     @Id
-    @Type(type="pg-uuid")
     @ApiModelProperty(
             value = 'Test Set uuid',
             allowEmptyValue = false)
-    UUID uuid
+    String uuid
 
     @ApiModelProperty(
             value = 'Request uuid',
             allowEmptyValue = true)
-    UUID requestUuid
+    String requestUuid
 
     @ApiModelProperty(
             value = 'Request type',

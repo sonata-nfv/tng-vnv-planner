@@ -36,7 +36,9 @@ package tng.vnv.planner.model
 
 import groovy.transform.ToString
 import io.swagger.annotations.ApiModelProperty
+import org.hibernate.annotations.Type
 
+import javax.persistence.Id
 import javax.validation.constraints.NotNull
 
 @ToString(includes = ['packageId'],includeNames = true)
@@ -48,7 +50,7 @@ class PackageCallback {
             required = true
     )
     @NotNull
-    UUID packageId
+    String packageId
 
     @ApiModelProperty(
                 value = 'Additional validation step before every test plan progresses towards execution',

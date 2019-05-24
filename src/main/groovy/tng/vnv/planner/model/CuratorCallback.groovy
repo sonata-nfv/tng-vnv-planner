@@ -35,7 +35,9 @@
 package tng.vnv.planner.model
 
 import io.swagger.annotations.ApiModelProperty
+import org.hibernate.annotations.Type
 
+import javax.persistence.Id
 import javax.validation.constraints.NotNull
 
 class CuratorCallback {
@@ -71,5 +73,5 @@ class CuratorCallback {
             allowEmptyValue = false,
             required = true)
     @NotNull
-    UUID test_plan_uuid
+    String test_plan_uuid
 }
