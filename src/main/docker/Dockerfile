@@ -52,4 +52,4 @@ EXPOSE 6100
 
 ADD tng-vnv-planner.jar app.jar
 
-ENTRYPOINT ["java", "-jar", "-Dspring.profiles.active=test", "/app.jar"]
+ENTRYPOINT ["java", "-jar", "-Dspring.profiles.active=docker", "/app.jar"]

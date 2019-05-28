@@ -155,7 +155,8 @@ class TestPlanController {
     @ResponseBody
     void onChangeCompleted(@Valid @RequestBody CuratorCallback callback) {
         log.info("/api/v1/test-plans/on-change/completed (test update notification received from curator. uuid=${callback.test_plan_uuid} with status=${callback.status})")
-        testService.updatePlan(callback.test_plan_uuid, callback.status)
+        testService.updatePlanStatus(callback.test_plan_uuid, callback.status)
+        testService.updatePlanResultId(callback.test_plan_uuid, callback.test_result.testResultUuid)
         manager.testPlanUpdated(callback.test_plan_uuid)
     }
 
@@ -168,7 +169,7 @@ class TestPlanController {
     @ResponseBody
     void onChange(@Valid @RequestBody CuratorCallback callback) {
         log.info("/api/v1/test-plans/on-change (test update notification received from curator. uuid=${callback.test_plan_uuid} with status=${callback.status})")
-        testService.updatePlan(callback.test_plan_uuid, callback.status)
+        testService.updatePlanStatus(callback.test_plan_uuid, callback.status)
         manager.testPlanUpdated(callback.test_plan_uuid)
     }
 

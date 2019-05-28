@@ -73,6 +73,6 @@ class ScheduleManager {
     }
 
     TestPlan update(String uuid, String status) {
-        testService.updatePlan(uuid, status)
+        testService.updatePlanStatus(uuid, status)
     }
 }

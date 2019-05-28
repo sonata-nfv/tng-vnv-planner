@@ -99,9 +99,15 @@ class TestService {
         testSetRepository.save(testSet)
     }
 
-    TestPlan updatePlan(String uuid, String status) {
+    TestPlan updatePlanStatus(String uuid, String status) {
         def testPlan = findPlanByUuid(uuid)
         testPlan.testStatus = status
+        testPlanRepository.save(testPlan)
+    }
+
+    TestPlan updatePlanResultId(String uuid, String resultUuid) {
+        def testPlan = findPlanByUuid(uuid)
+        testPlan.testResultUuid = resultUuid
         testPlanRepository.save(testPlan)
     }
 
@@ -110,7 +116,7 @@ class TestService {
     }
 
     void deletePlan(String uuid) {
-        updatePlan(uuid, TestPlanStatus.CANCELLING)
+        updatePlanStatus(uuid, TestPlanStatus.CANCELLING)
     }
 
 
@@ -151,7 +157,7 @@ class TestService {
 
         testPlans.each { testPlan ->
             curator.delete(testPlan.uuid)
-            updatePlan(testPlan.uuid, TestPlanStatus.CANCELLING)
+            updatePlanStatus(testPlan.uuid, TestPlanStatus.CANCELLING)
 
         }
     }

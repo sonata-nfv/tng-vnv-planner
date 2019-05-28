@@ -69,6 +69,11 @@ class TestPlan extends AuditModel implements Serializable {
     String testUuid
 
     @ApiModelProperty(
+            value = 'Test result uuid',
+            allowEmptyValue = true)
+    String testResultUuid
+
+    @ApiModelProperty(
             value = 'Test Status',
             allowEmptyValue = false)
     String testStatus

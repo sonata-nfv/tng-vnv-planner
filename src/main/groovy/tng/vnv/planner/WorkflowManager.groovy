@@ -166,13 +166,13 @@ class WorkflowManager {
     void proceedWith(TestPlan testPlan) {
 
         log.info("Starting TestPlan with UUID {}", testPlan.testUuid)
-        testService.updatePlan(testPlan.uuid, TestPlanStatus.STARTING)
+        testService.updatePlanStatus(testPlan.uuid, TestPlanStatus.STARTING)
 
         def testResponse = curator.post(new TestRequest(testPlanUuid: testPlan.uuid,
                 nsdUuid: testPlan.serviceUuid,
                 testdUuid: testPlan.testUuid)).body as TestResponse
 
-        testService.updatePlan(testPlan.uuid, testResponse.status)
+        testService.updatePlanStatus(testPlan.uuid, testResponse.status)
         log.info("TestPlan with UUID {}, received by the Curator, new testStatus: {}", testPlan.uuid, testResponse.status)
     }
 
