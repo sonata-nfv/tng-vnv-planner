@@ -64,7 +64,7 @@ class CuratorCallback {
     @ApiModelProperty(
             value = 'Test Plan Result List',
             allowEmptyValue = true)
-    List<TestResult> test_results
+    TestResult test_result
 
     @ApiModelProperty(
             value = 'Test Plan uuid',
