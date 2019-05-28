@@ -47,6 +47,7 @@ import tng.vnv.planner.model.CuratorCallback
 import tng.vnv.planner.model.TestPlan
 import tng.vnv.planner.service.NetworkService
 import tng.vnv.planner.service.TestService
+import tng.vnv.planner.utils.TestPlanStatus
 
 import javax.validation.Valid
 
@@ -156,7 +157,9 @@ class TestPlanController {
     void onChangeCompleted(@Valid @RequestBody CuratorCallback callback) {
         log.info("/api/v1/test-plans/on-change/completed (test update notification received from curator. uuid=${callback.test_plan_uuid} with status=${callback.status})")
         testService.updatePlanStatus(callback.test_plan_uuid, callback.status)
-        testService.updatePlanResultId(callback.test_plan_uuid, callback.test_result.testResultUuid)
+        if (callback.status == TestPlanStatus.COMPLETED) {
+            testService.updatePlanResultId(callback.test_plan_uuid, callback.test_result.testResultUuid)
+        }
         manager.testPlanUpdated(callback.test_plan_uuid)
     }
 
