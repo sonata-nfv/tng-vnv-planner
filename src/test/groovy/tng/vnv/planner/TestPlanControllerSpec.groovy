@@ -177,7 +177,7 @@ class TestPlanControllerSpec extends Specification {
         when:
         def createdPlan = testPlanController.buildTestPlansByNsTdPair('88f6c1c4-c614-4f4d-87e6-72ef0192956f', '57cebe79-96aa-4f41-af80-93050bfddd9f', false)
         def result = new TestResult(testUuid: "123", testResultUuid: "5678", testStatus: TestPlanStatus.COMPLETED)
-        def curatorCallback = new CuratorCallback(eventActor: 'Curator', status: TestPlanStatus.COMPLETED, test_plan_uuid: createdPlan[0].uuid, test_result: result)
+        def curatorCallback = new CuratorCallback(eventActor: 'Curator', status: TestPlanStatus.COMPLETED, test_plan_uuid: createdPlan[0].uuid, test_result: [result])
         testPlanController.onChangeCompleted(curatorCallback)
         def testSetList = testSetRepository.findAll()
         def testPlanList = testPlanRepository.findAll()
@@ -191,7 +191,7 @@ class TestPlanControllerSpec extends Specification {
         when:
         def createdPlan = testPlanController.buildTestPlansByNsTdPair('88f6c1c4-c614-4f4d-87e6-72ef0192956f', '57cebe79-96aa-4f41-af80-93050bfddd9f', false)
         def result = new TestResult(testUuid: "123", testResultUuid: "5678", testStatus: TestPlanStatus.STARTING)
-        def curatorCallback = new CuratorCallback(eventActor: 'Curator', status: TestPlanStatus.STARTING, test_plan_uuid: createdPlan[0].uuid, test_result: result)
+        def curatorCallback = new CuratorCallback(eventActor: 'Curator', status: TestPlanStatus.STARTING, test_plan_uuid: createdPlan[0].uuid, test_result: [result])
         testPlanController.onChange(curatorCallback)
         def testSetList = testSetRepository.findAll()
         def testPlanList = testPlanRepository.findAll()
