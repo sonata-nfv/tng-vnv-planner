@@ -64,12 +64,12 @@ class CuratorCallback {
     @ApiModelProperty(
             value = 'Test Plan Result List',
             allowEmptyValue = true)
-    List<TestResult> test_result
+    List<TestResult> testResults
 
     @ApiModelProperty(
             value = 'Test Plan uuid',
             allowEmptyValue = false,
             required = true)
     @NotNull
-    String test_plan_uuid
+    String testPlanUuid
 }

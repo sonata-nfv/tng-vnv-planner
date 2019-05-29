@@ -55,13 +55,13 @@ class PlannerClient {
     }
 
     ResponseEntity curatorCallback(def eventActor, def testPlanUuid, def status){
-        def curatorCallback = new CuratorCallback(eventActor: eventActor, status: status, test_plan_uuid: testPlanUuid)
+        def curatorCallback = new CuratorCallback(eventActor: eventActor, status: status, testPlanUuid: testPlanUuid)
 
         restTemplate.postForEntity('http://localhost:6100/api/v1/test-plans/on-change', CuratorCallback, ResponseEntity.class)
     }
 
     ResponseEntity curatorCompletedCallback(def eventActor, def testPlanUuid, def status, def testResult){
-        def curatorCallback = new CuratorCallback(eventActor: eventActor, status: status, test_result: testResult, test_plan_uuid: testPlanUuid)
+        def curatorCallback = new CuratorCallback(eventActor: eventActor, status: status, testResults: testResult, testPlanUuid: testPlanUuid)
 
         restTemplate.postForEntity('http://localhost:6100/api/v1/test-plans/on-change/completed', CuratorCallback, ResponseEntity.class)
     }

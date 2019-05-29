@@ -34,6 +34,7 @@
 
 package tng.vnv.planner
 
+import groovy.json.JsonSlurper
 import org.junit.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
@@ -176,8 +177,9 @@ class TestPlanControllerSpec extends Specification {
     def "Test plan completed by curator"() {
         when:
         def createdPlan = testPlanController.buildTestPlansByNsTdPair('88f6c1c4-c614-4f4d-87e6-72ef0192956f', '57cebe79-96aa-4f41-af80-93050bfddd9f', false)
-        def result = new TestResult(testUuid: "123", testResultUuid: "5678", testStatus: TestPlanStatus.COMPLETED)
-        def curatorCallback = new CuratorCallback(eventActor: 'Curator', status: TestPlanStatus.COMPLETED, test_plan_uuid: createdPlan[0].uuid, test_result: [result])
+        def json="{\"event_actor\": \"Curator\", \"testPlanUuid\": \"${testPlanUuid: createdPlan[0].uuid}\", \"exception\": \"\", \"status\": \"COMPLETED\", \"test_results\": [{\"test_uuid\": \"cf8e1dd9-777f-4f96-9458-5a5fe0a86f7d\",\"test_result_uuid\": \"ff0a1530-c72e-49c3-815c-fa86fe3d952c\",\"test_status\": \"COMPLETED\"}]}"
+        def jsonSlurper = new JsonSlurper()
+        CuratorCallback curatorCallback = jsonSlurper.parseText(toCamelCase(json))
         testPlanController.onChangeCompleted(curatorCallback)
         def testSetList = testSetRepository.findAll()
         def testPlanList = testPlanRepository.findAll()
@@ -191,7 +193,7 @@ class TestPlanControllerSpec extends Specification {
         when:
         def createdPlan = testPlanController.buildTestPlansByNsTdPair('88f6c1c4-c614-4f4d-87e6-72ef0192956f', '57cebe79-96aa-4f41-af80-93050bfddd9f', false)
         def result = new TestResult(testUuid: "123", testResultUuid: "5678", testStatus: TestPlanStatus.STARTING)
-        def curatorCallback = new CuratorCallback(eventActor: 'Curator', status: TestPlanStatus.STARTING, test_plan_uuid: createdPlan[0].uuid, test_result: [result])
+        def curatorCallback = new CuratorCallback(eventActor: 'Curator', status: TestPlanStatus.STARTING, testPlanUuid: createdPlan[0].uuid, testResults: [result])
         testPlanController.onChange(curatorCallback)
         def testSetList = testSetRepository.findAll()
         def testPlanList = testPlanRepository.findAll()
@@ -230,5 +232,10 @@ class TestPlanControllerSpec extends Specification {
         def testsByService = testPlanController.listTestsByService('57cebe79-96aa-4f41-af80-93050bfddd9f')
         then:
         testsByService[0].pd.name[0] == "generic-probes-test-pingonly"
+    }
+
+    static String toCamelCase( String text, boolean capitalized = false ) {
+        text = text.replaceAll( "(_)([A-Za-z0-9])", { Object[] it -> it[2].toUpperCase() } )
+        return capitalized ? capitalize(text) : text
     }
 }
