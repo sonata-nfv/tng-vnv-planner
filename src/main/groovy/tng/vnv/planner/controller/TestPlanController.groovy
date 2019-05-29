@@ -158,7 +158,7 @@ class TestPlanController {
         log.info("/api/v1/test-plans/on-change/completed (test update notification received from curator. uuid=${callback.test_plan_uuid} with status=${callback.status})")
         testService.updatePlanStatus(callback.test_plan_uuid, callback.status)
         if (callback.status == TestPlanStatus.COMPLETED) {
-            testService.updatePlanResultId(callback.test_plan_uuid, callback.test_result.testResultUuid)
+            testService.updatePlanResultId(callback.test_plan_uuid, callback.test_result[0].testResultUuid)
         }
         manager.testPlanUpdated(callback.test_plan_uuid)
     }
