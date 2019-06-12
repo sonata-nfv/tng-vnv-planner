@@ -33,7 +33,8 @@ dependencies {
     compile 'io.springfox:springfox-swagger-ui:2.9.2'
 
     // Database
-    compile 'org.postgresql:postgresql:9.3-1100-jdbc41'
+    //compile 'org.postgresql:postgresql:9.3-1100-jdbc41'
+    compile group: 'org.postgresql', name: 'postgresql', version: '42.2.5'
     // Database test
     compile 'com.h2database:h2:1.4.199'
 
