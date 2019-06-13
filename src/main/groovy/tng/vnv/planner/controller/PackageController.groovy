@@ -34,7 +34,7 @@
 
 package tng.vnv.planner.controller
 
-import groovy.util.logging.Slf4j
+import tng.vnv.planner.utils.TangoLogger
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
 import io.swagger.annotations.ApiResponse
@@ -50,7 +50,6 @@ import tng.vnv.planner.model.TestPlan
 
 import javax.validation.Valid
 
-@Slf4j
 @Api
 @RestController
 @RequestMapping('/api/v1/packages')
@@ -58,6 +57,13 @@ class PackageController {
 
     @Autowired
     ScheduleManager scheduler
+
+    //Tango logger
+    def tangoLogger = new TangoLogger()
+    String tangoLoggerType = null;
+    String tangoLoggerOperation = null;
+    String tangoLoggerMessage = null;
+    String tangoLoggerStatus = null;
 
     @ApiOperation(value="Start a test via package", notes="Package uploaded notification received")
     @ApiResponses(value = [
@@ -68,7 +74,11 @@ class PackageController {
     @ResponseBody
     ResponseEntity<List<TestPlan>> onChange(@Valid @RequestBody PackageCallback body) {
 
-        log.info("onChange (packageId:${body.packageId}, confirmRequired: ${body.confirmRequired})")
+        tangoLoggerType = "I";
+        tangoLoggerOperation = "PackageController.onChange";
+        tangoLoggerMessage = ("onChange (packageId:${body.packageId}, confirmRequired: ${body.confirmRequired})");
+        tangoLoggerStatus = "200";
+        tangoLogger.log(tangoLoggerType, tangoLoggerOperation, tangoLoggerMessage, tangoLoggerStatus)
 
         def isConfirmRequired = false
         if(body.confirmRequired != null
@@ -82,10 +92,20 @@ class PackageController {
             def testPlans = scheduler.scheduleNewTestSet(body.getPackageId(), isConfirmRequired)?.testPlans
             ResponseEntity.status(HttpStatus.OK).body(testPlans) as ResponseEntity<List<TestPlan>>
         } catch (IllegalArgumentException e) {
-            log.info(e.getMessage())
+            tangoLoggerType = "I";
+            tangoLoggerOperation = "PackageController.onChange";
+            tangoLoggerMessage = e.getMessage();
+            tangoLoggerStatus = "200";
+            tangoLogger.log(tangoLoggerType, tangoLoggerOperation, tangoLoggerMessage, tangoLoggerStatus)
+
             ResponseEntity.status(HttpStatus.OK).body([]) as ResponseEntity<List<TestPlan>>
         } catch (HttpStatusCodeException e) {
-            log.error("HTTPStatusCodeException, testStatus: {}, message: {}", e.statusCode, e.message)
+            tangoLoggerType = "E";
+            tangoLoggerOperation = "PackageController.onChange";
+            tangoLoggerMessage = ("HTTPStatusCodeException, testStatus: ${e.statusCode}, message: ${e.message}");
+            tangoLoggerStatus = "500";
+            tangoLogger.log(tangoLoggerType, tangoLoggerOperation, tangoLoggerMessage, tangoLoggerStatus)
+
             ResponseEntity.status(e.statusCode).body(e.message) as ResponseEntity<List<TestPlan>>
         }
     }

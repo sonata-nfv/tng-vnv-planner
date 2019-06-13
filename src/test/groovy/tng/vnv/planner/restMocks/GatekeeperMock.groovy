@@ -34,18 +34,24 @@
 
 package tng.vnv.planner.restMocks
 
-import groovy.util.logging.Slf4j
+import tng.vnv.planner.utils.TangoLogger
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import tng.vnv.planner.config.GeneralConfig
 
-@Slf4j
 @RestController
 @RequestMapping('/catalogues')
 class GatekeeperMock {
 
     static def mapper
+
+    //Tango logger
+    def tangoLogger = new TangoLogger()
+    String tangoLoggerType = null;
+    String tangoLoggerOperation = null;
+    String tangoLoggerMessage = null;
+    String tangoLoggerStatus = null;
 
     @GetMapping('/packages')
     ResponseEntity getPackageByFilter(@RequestParam(value = "package_content.uuid", required = false) String uuid, @RequestParam(value = "package_content.testing_tags", required = false) String tag){
@@ -55,7 +61,11 @@ class GatekeeperMock {
         mapper = new GeneralConfig().objectMapper()
 
         if (uuid != null){
-            log.info("GatekeeperMock: received get package by Id=${uuid.toString()} request")
+            tangoLoggerType = "I";
+            tangoLoggerOperation = "GatekeeperMock.getPackageByFilter";
+            tangoLoggerMessage = ("GatekeeperMock: received get package by Id=${uuid.toString()} request");
+            tangoLoggerStatus = "200";
+            tangoLogger.log(tangoLoggerType, tangoLoggerOperation, tangoLoggerMessage, tangoLoggerStatus)
 
             if (uuid == '57cebe79-96aa-4f41-af80-93050bfddd9f'){
                 body = getClass().getResource('/servicePackage.json').text
@@ -64,7 +74,11 @@ class GatekeeperMock {
             }
             body = "[${body}]"
         } else if(tag != null) {
-            log.info("GatekeeperMock: received get package by Tag=${tag} request")
+            tangoLoggerType = "I";
+            tangoLoggerOperation = "GatekeeperMock.getPackageByFilter";
+            tangoLoggerMessage = ("GatekeeperMock: received get package by Tag=${tag} request");
+            tangoLoggerStatus = "200";
+            tangoLogger.log(tangoLoggerType, tangoLoggerOperation, tangoLoggerMessage, tangoLoggerStatus)
 
             def pks = getClass().getResource('/servicePackage.json').text
             def pkt = getClass().getResource('/testPackage.json').text
@@ -83,7 +97,11 @@ class GatekeeperMock {
 
         mapper = new GeneralConfig().objectMapper()
 
-        log.info("GatekeeperMock: received get package by Id=${packageId.toString()} request")
+        tangoLoggerType = "I";
+        tangoLoggerOperation = "GatekeeperMock.getPackageById";
+        tangoLoggerMessage = ("GatekeeperMock: received get package by Id=${packageId.toString()} request");
+        tangoLoggerStatus = "200";
+        tangoLogger.log(tangoLoggerType, tangoLoggerOperation, tangoLoggerMessage, tangoLoggerStatus)
 
         if (packageId == '0e802097-29de-4628-ac5b-2f55e9d781e8'){
             body = getClass().getResource('/servicePackage.json').text
@@ -102,7 +120,11 @@ class GatekeeperMock {
 
         mapper = new GeneralConfig().objectMapper()
 
-        log.info("GatekeeperMock: received get service by Id=${uuid}")
+        tangoLoggerType = "I";
+        tangoLoggerOperation = "GatekeeperMock.getServiceByUuid";
+        tangoLoggerMessage = ("GatekeeperMock: received get service by Id=${uuid}");
+        tangoLoggerStatus = "200";
+        tangoLogger.log(tangoLoggerType, tangoLoggerOperation, tangoLoggerMessage, tangoLoggerStatus)
 
         body = mapper.readValue(getClass().getResource('/servicePackage.json').text, Object.class)
         ResponseEntity.status(HttpStatus.OK).body(body)
@@ -114,7 +136,11 @@ class GatekeeperMock {
 
         mapper = new GeneralConfig().objectMapper()
 
-        log.info("GatekeeperMock: received get test by Id=${uuid}")
+        tangoLoggerType = "I";
+        tangoLoggerOperation = "GatekeeperMock.getTestByUuid";
+        tangoLoggerMessage = ("GatekeeperMock: received get test by Id=${uuid}");
+        tangoLoggerStatus = "200";
+        tangoLogger.log(tangoLoggerType, tangoLoggerOperation, tangoLoggerMessage, tangoLoggerStatus)
 
         body = mapper.readValue(getClass().getResource('/testPackage.json').text, Object.class)
         ResponseEntity.status(HttpStatus.OK).body(body)

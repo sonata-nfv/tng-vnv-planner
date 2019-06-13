@@ -34,7 +34,7 @@
 
 package tng.vnv.planner.service
 
-import groovy.util.logging.Slf4j
+import tng.vnv.planner.utils.TangoLogger
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import org.springframework.web.client.RestClientException
@@ -45,7 +45,6 @@ import tng.vnv.planner.model.TestSet
 import tng.vnv.planner.utils.TestPlanStatus
 import tng.vnv.planner.utils.TestSetType
 
-@Slf4j
 @Service
 class PackageService {
 
@@ -55,6 +54,13 @@ class PackageService {
     TestService testService
     @Autowired
     WorkflowManager workflowManager
+
+    //Tango logger
+    def tangoLogger = new TangoLogger()
+    String tangoLoggerType = null;
+    String tangoLoggerOperation = null;
+    String tangoLoggerMessage = null;
+    String tangoLoggerStatus = null;
 
     TestSet buildTestSetByPackage(packageId, confirmRequired, type = TestSetType.PACKAGE) throws RestClientException {
         if (packageId != null) {
@@ -74,7 +80,13 @@ class PackageService {
                 tags?.each { tag ->
 
                     List packageList = gatekeeper.getPackageByTag(tag)
-                    log.info("getting packages with tag: ${tag}. Obtained ${packageList.size()} packages")
+
+                    tangoLoggerType = "I";
+                    tangoLoggerOperation = "PackageService.buildTestSetByPackage";
+                    tangoLoggerMessage = ("getting packages with tag: ${tag}. Obtained ${packageList.size()} packages");
+                    tangoLoggerStatus = "200";
+                    tangoLogger.log(tangoLoggerType, tangoLoggerOperation, tangoLoggerMessage, tangoLoggerStatus)
+
                     packageList?.each {
                         it?.pd?.package_content?.each { resource ->
                             switch (resource.get('content-type')) {
@@ -101,11 +113,21 @@ class PackageService {
                 }
             }
 
-            log.info("matched pairs:")
+            tangoLoggerType = "I";
+            tangoLoggerOperation = "PackageService.buildTestSetByPackage";
+            tangoLoggerMessage = ("matched pairs:");
+            tangoLoggerStatus = "200";
+            tangoLogger.log(tangoLoggerType, tangoLoggerOperation, tangoLoggerMessage, tangoLoggerStatus)
 
             matchedServices.each { service ->
                 matchedTests.each { test ->
-                    log.info("test: ${test.uuid} - service: ${service.uuid}")
+
+                    tangoLoggerType = "I";
+                    tangoLoggerOperation = "PackageService.buildTestSetByPackage";
+                    tangoLoggerMessage = ("test: ${test.uuid} - service: ${service.uuid}");
+                    tangoLoggerStatus = "200";
+                    tangoLogger.log(tangoLoggerType, tangoLoggerOperation, tangoLoggerMessage, tangoLoggerStatus)
+
                     testSet.testPlans << new TestPlan(uuid: UUID.randomUUID().toString(),
                             testSetUuid: testSet.uuid,
                             serviceUuid: service.uuid,
@@ -137,7 +159,13 @@ class PackageService {
             testingTags?.each { tags ->
                 tags?.each { tag ->
                     List packageList = gatekeeper.getPackageByTag(tag)
-                    log.info("getting packages with tag: ${tag}. Obtained ${packageList.size()} packages")
+
+                    tangoLoggerType = "I";
+                    tangoLoggerOperation = "PackageService.buildTestSetByServicePackage";
+                    tangoLoggerMessage = ("getting packages with tag: ${tag}. Obtained ${packageList.size()} packages");
+                    tangoLoggerStatus = "200";
+                    tangoLogger.log(tangoLoggerType, tangoLoggerOperation, tangoLoggerMessage, tangoLoggerStatus)
+
                     packageList?.each {
                         it?.pd?.package_content?.each { resource ->
                             switch (resource.get('content-type')) {
@@ -156,11 +184,21 @@ class PackageService {
                 }
             }
 
-            log.info("matched pairs:")
+            tangoLoggerType = "I";
+            tangoLoggerOperation = "PackageService.buildTestSetByServicePackage";
+            tangoLoggerMessage = ("matched pairs:");
+            tangoLoggerStatus = "200";
+            tangoLogger.log(tangoLoggerType, tangoLoggerOperation, tangoLoggerMessage, tangoLoggerStatus)
 
 
             matchedTests.each { test ->
-                log.info("test: ${test.uuid} - service: ${serviceUuid}")
+
+                tangoLoggerType = "I";
+                tangoLoggerOperation = "PackageService.buildTestSetByServicePackage";
+                tangoLoggerMessage = ("test: ${test.uuid} - service: ${serviceUuid}");
+                tangoLoggerStatus = "200";
+                tangoLogger.log(tangoLoggerType, tangoLoggerOperation, tangoLoggerMessage, tangoLoggerStatus)
+
                 testSet.testPlans << new TestPlan(uuid: UUID.randomUUID().toString(),
                         testSetUuid: testSet.uuid,
                         serviceUuid: serviceUuid,
@@ -191,7 +229,13 @@ class PackageService {
             testingTags?.each { tags ->
                 tags?.each { tag ->
                     List packageList = gatekeeper.getPackageByTag(tag)
-                    log.info("getting packages with tag: ${tag}. Obtained ${packageList.size()} packages")
+
+                    tangoLoggerType = "I";
+                    tangoLoggerOperation = "PackageService.buildTestSetByTestPackage";
+                    tangoLoggerMessage = ("getting packages with tag: ${tag}. Obtained ${packageList.size()} packages");
+                    tangoLoggerStatus = "200";
+                    tangoLogger.log(tangoLoggerType, tangoLoggerOperation, tangoLoggerMessage, tangoLoggerStatus)
+
                     packageList?.each {
                         it?.pd?.package_content?.each { resource ->
                             switch (resource.get('content-type')) {
@@ -208,10 +252,20 @@ class PackageService {
                 }
             }
 
-            log.info("matched pairs:")
+            tangoLoggerType = "I";
+            tangoLoggerOperation = "PackageService.buildTestSetByTestPackage";
+            tangoLoggerMessage = ("matched pairs:");
+            tangoLoggerStatus = "200";
+            tangoLogger.log(tangoLoggerType, tangoLoggerOperation, tangoLoggerMessage, tangoLoggerStatus)
 
             matchedServices.each { service ->
-                log.info("test: ${testUuid} - service: ${service.uuid}")
+
+                tangoLoggerType = "I";
+                tangoLoggerOperation = "PackageService.buildTestSetByTestPackage";
+                tangoLoggerMessage = ("test: ${testUuid} - service: ${service.uuid}");
+                tangoLoggerStatus = "200";
+                tangoLogger.log(tangoLoggerType, tangoLoggerOperation, tangoLoggerMessage, tangoLoggerStatus)
+
                 testSet.testPlans << new TestPlan(uuid: UUID.randomUUID().toString(),
                         testSetUuid: testSet.uuid,
                         serviceUuid: service.uuid,
@@ -238,7 +292,13 @@ class PackageService {
                 status: confirmRequired ? TestPlanStatus.WAITING_FOR_CONFIRMATION : TestPlanStatus.SCHEDULED)
 
         List packageList = gatekeeper.getPackageByTag(tag)
-        log.info("getting packages with tag: ${tag}. Obtained ${packageList.size()} packages")
+
+        tangoLoggerType = "I";
+        tangoLoggerOperation = "PackageService.buildTestSetByTestingTag";
+        tangoLoggerMessage = ("getting packages with tag: ${tag}. Obtained ${packageList.size()} packages");
+        tangoLoggerStatus = "200";
+        tangoLogger.log(tangoLoggerType, tangoLoggerOperation, tangoLoggerMessage, tangoLoggerStatus)
+
         packageList?.each {
             it?.pd?.package_content?.each { resource ->
                 switch (resource.get('content-type')) {
@@ -259,11 +319,21 @@ class PackageService {
             }
         }
 
-        log.info("matched pairs:")
+        tangoLoggerType = "I";
+        tangoLoggerOperation = "PackageService.buildTestSetByTestingTag";
+        tangoLoggerMessage = ("matched pairs:");
+        tangoLoggerStatus = "200";
+        tangoLogger.log(tangoLoggerType, tangoLoggerOperation, tangoLoggerMessage, tangoLoggerStatus)
 
         matchedServices.each { service ->
             matchedTests.each { test ->
-                log.info("test: ${test.uuid} - service: ${service.uuid}")
+
+                tangoLoggerType = "I";
+                tangoLoggerOperation = "PackageService.buildTestSetByTestingTag";
+                tangoLoggerMessage = ("test: ${test.uuid} - service: ${service.uuid}");
+                tangoLoggerStatus = "200";
+                tangoLogger.log(tangoLoggerType, tangoLoggerOperation, tangoLoggerMessage, tangoLoggerStatus)
+
                 testSet.testPlans << new TestPlan(uuid: UUID.randomUUID().toString(),
                         testSetUuid: testSet.uuid,
                         serviceUuid: service.uuid,
