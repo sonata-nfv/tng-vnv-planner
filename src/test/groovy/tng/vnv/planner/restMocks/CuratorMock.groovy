@@ -34,7 +34,7 @@
 
 package tng.vnv.planner.restMocks
 
-import groovy.util.logging.Slf4j
+import tng.vnv.planner.utils.TangoLogger
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -47,21 +47,37 @@ import tng.vnv.planner.model.TestRequest
 import tng.vnv.planner.model.TestResponse
 import tng.vnv.planner.utils.TestPlanStatus
 
-@Slf4j
 @RestController
 @RequestMapping('/api/v1')
 class CuratorMock {
 
+  //Tango logger
+    def tangoLogger = new TangoLogger()
+    String tangoLoggerType = null;
+    String tangoLoggerOperation = null;
+    String tangoLoggerMessage = null;
+    String tangoLoggerStatus = null;
+
     @PostMapping('/test-preparations')
     ResponseEntity<TestResponse> testRequest(@RequestBody TestRequest testRequest){
-        log.info("Curator: received test execution request")
+        tangoLoggerType = "I";
+        tangoLoggerOperation = "CuratorMock.testRequest";
+        tangoLoggerMessage = ("Curator: received test execution request");
+        tangoLoggerStatus = "200";
+        tangoLogger.log(tangoLoggerType, tangoLoggerOperation, tangoLoggerMessage, tangoLoggerStatus)
+
         def testResponse = new TestResponse(status: TestPlanStatus.STARTING)
         ResponseEntity.status(HttpStatus.OK).body(testResponse)
     }
 
     @DeleteMapping('/test-preparations/{uuid}')
     ResponseEntity cancelTestRequest(@PathVariable('uuid') String uuid){
-        log.info("Curator: received test cancellation request")
+        tangoLoggerType = "I";
+        tangoLoggerOperation = "CuratorMock.cancelTestRequest";
+        tangoLoggerMessage = ("Curator: received test cancellation request");
+        tangoLoggerStatus = "200";
+        tangoLogger.log(tangoLoggerType, tangoLoggerOperation, tangoLoggerMessage, tangoLoggerStatus)
+
         def testResponse = new TestResponse(status: TestPlanStatus.CANCELLING)
         ResponseEntity.status(HttpStatus.OK).body(testResponse)
     }

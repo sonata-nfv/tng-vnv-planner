@@ -34,7 +34,7 @@
 
 package tng.vnv.planner.controller
 
-import groovy.util.logging.Slf4j
+import tng.vnv.planner.utils.TangoLogger
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
 import io.swagger.annotations.ApiResponse
@@ -51,7 +51,6 @@ import tng.vnv.planner.utils.TestPlanStatus
 
 import javax.validation.Valid
 
-@Slf4j
 @RestController
 @Api
 @RequestMapping('/api/v1/test-plans')
@@ -66,11 +65,23 @@ class TestPlanController {
     @Autowired
     NetworkService networkServiceService
 
+    //Tango logger
+    def tangoLogger = new TangoLogger()
+    String tangoLoggerType = null;
+    String tangoLoggerOperation = null;
+    String tangoLoggerMessage = null;
+    String tangoLoggerStatus = null;
+
     @GetMapping
     @ApiOperation(value="Find all test plan", notes="Finding all test plans")
     @ResponseBody
     List<TestPlan> listAllTestPlans() {
-        log.info("/api/v1/test-plans (find all test plans request received)")
+        tangoLoggerType = "I";
+        tangoLoggerOperation = "TestPlanController.listAllTestPlans";
+        tangoLoggerMessage = ("/api/v1/test-plans (find all test plans request received)");
+        tangoLoggerStatus = "200";
+        tangoLogger.log(tangoLoggerType, tangoLoggerOperation, tangoLoggerMessage, tangoLoggerStatus)
+
         testService.findAll()
     }
 
@@ -78,7 +89,12 @@ class TestPlanController {
     @ApiOperation(value="Find a test plan", notes="Finding test plan by uuid")
     @ResponseBody
     TestPlan findTestPlan(@PathVariable String uuid) {
-        log.info("/api/v1/test-plans/{uuid} (find test plan by uuid request received. UUID=${uuid})")
+        tangoLoggerType = "I";
+        tangoLoggerOperation = "TestPlanController.findTestPlan";
+        tangoLoggerMessage = ("/api/v1/test-plans/{uuid} (find test plan by uuid request received. UUID=${uuid})");
+        tangoLoggerStatus = "200";
+        tangoLogger.log(tangoLoggerType, tangoLoggerOperation, tangoLoggerMessage, tangoLoggerStatus)
+
         testService.findPlanByUuid(uuid)
     }
 
@@ -86,7 +102,12 @@ class TestPlanController {
     @ApiOperation(value="Cancel a test plan", notes="canceling test plan by uuid")
     @ResponseBody
     void deleteTestPlan(@PathVariable String uuid) {
-        log.info("/api/v1/test-plans/{uuid} (Cancel test plan by uuid request received. UUID=${uuid})")
+        tangoLoggerType = "I";
+        tangoLoggerOperation = "TestPlanController.deleteTestPlan";
+        tangoLoggerMessage = ("/api/v1/test-plans/{uuid} (Cancel test plan by uuid request received. UUID=${uuid})");
+        tangoLoggerStatus = "200";
+        tangoLogger.log(tangoLoggerType, tangoLoggerOperation, tangoLoggerMessage, tangoLoggerStatus)
+
         manager.deleteTestPlan(uuid)
         manager.testPlanUpdated(uuid)
     }
@@ -104,7 +125,12 @@ class TestPlanController {
     @PutMapping('{uuid}')
     @ResponseBody
     TestPlan update(@Valid @PathVariable String uuid, @RequestParam String status) {
-        log.info("/api/v1/test-plans/{uuid} (update test plan status by uuid request received. UUID=${uuid})")
+        tangoLoggerType = "I";
+        tangoLoggerOperation = "TestPlanController.update";
+        tangoLoggerMessage = ("/api/v1/test-plans/{uuid} (update test plan status by uuid request received. UUID=${uuid})");
+        tangoLoggerStatus = "200";
+        tangoLogger.log(tangoLoggerType, tangoLoggerOperation, tangoLoggerMessage, tangoLoggerStatus)
+
         scheduler.update(uuid, status)
         manager.testPlanUpdated(uuid)
     }
@@ -114,7 +140,12 @@ class TestPlanController {
     @PostMapping('/services')
     @ResponseBody
     List<TestPlan> buildTestPlansByService(@Valid @RequestParam String serviceUuid, @RequestParam(required = false) Boolean confirmRequired) {
-        log.info("/api/v1/test-plans/services (create a test plan by service uuid request received. Service UUID: ${serviceUuid})")
+        tangoLoggerType = "I";
+        tangoLoggerOperation = "TestPlanController.buildTestPlansByService";
+        tangoLoggerMessage = ("/api/v1/test-plans/services (create a test plan by service uuid request received. Service UUID: ${serviceUuid})");
+        tangoLoggerStatus = "200";
+        tangoLogger.log(tangoLoggerType, tangoLoggerOperation, tangoLoggerMessage, tangoLoggerStatus)
+
         testService.buildTestPlansByService(serviceUuid, confirmRequired).testPlans
     }
 
@@ -123,7 +154,12 @@ class TestPlanController {
     @PostMapping('/tests')
     @ResponseBody
     List<TestPlan> buildTestPlansByTest(@Valid @RequestParam String testUuid, @RequestParam(required = false) Boolean confirmRequired) {
-        log.info("/api/v1/test-plans/tests (create a test plan by test uuid request received. Test UUID: ${testUuid})")
+        tangoLoggerType = "I";
+        tangoLoggerOperation = "TestPlanController.buildTestPlansByTest";
+        tangoLoggerMessage = ("/api/v1/test-plans/tests (create a test plan by test uuid request received. Test UUID: ${testUuid})");
+        tangoLoggerStatus = "200";
+        tangoLogger.log(tangoLoggerType, tangoLoggerOperation, tangoLoggerMessage, tangoLoggerStatus)
+
         testService.buildTestPlansByTest(testUuid, confirmRequired).testPlans
     }
 
@@ -132,7 +168,12 @@ class TestPlanController {
     @PostMapping('/testing-tags')
     @ResponseBody
     List<TestPlan> buildTestPlansByTestingTag(@Valid @RequestParam String testingTag, @RequestParam(required = false) Boolean confirmRequired) {
-        log.info("/api/v1/test-plans/testing-tags (create a test plan by testing tag request received. Testing tag: ${testingTag})")
+        tangoLoggerType = "I";
+        tangoLoggerOperation = "TestPlanController.buildTestPlansByTestingTag";
+        tangoLoggerMessage = ("/api/v1/test-plans/testing-tags (create a test plan by testing tag request received. Testing tag: ${testingTag})");
+        tangoLoggerStatus = "200";
+        tangoLogger.log(tangoLoggerType, tangoLoggerOperation, tangoLoggerMessage, tangoLoggerStatus)
+
         testService.buildTestPlansByTestingTag(testingTag, confirmRequired).testPlans
     }
 
@@ -141,7 +182,12 @@ class TestPlanController {
     @PostMapping('/testAndServices')
     @ResponseBody
     List<TestPlan> buildTestPlansByNsTdPair(@Valid @RequestParam String testUuid, @RequestParam String serviceUuid, @RequestParam(required = false) Boolean confirmRequired) {
-        log.info("/api/v1/test-plans/testAndServices (create a test plan by service uuid and test uuid request received. Service UUID: ${serviceUuid}), test UUID=${testUuid}")
+        tangoLoggerType = "I";
+        tangoLoggerOperation = "TestPlanController.buildTestPlansByNsTdPair";
+        tangoLoggerMessage = ("/api/v1/test-plans/testAndServices (create a test plan by service uuid and test uuid request received. Service UUID: ${serviceUuid}), test UUID=${testUuid}");
+        tangoLoggerStatus = "200";
+        tangoLogger.log(tangoLoggerType, tangoLoggerOperation, tangoLoggerMessage, tangoLoggerStatus)
+
         testService.buildTestPlansByServiceAndTest(testUuid, serviceUuid, confirmRequired).testPlans
     }
 
@@ -155,10 +201,20 @@ class TestPlanController {
     @PostMapping('/on-change/completed')
     @ResponseBody
     void onChangeCompleted(@Valid @RequestBody CuratorCallback callback) {
-        log.info("/api/v1/test-plans/on-change/completed (test update notification received from curator. uuid=${callback.testPlanUuid} with status=${callback.status})")
+        tangoLoggerType = "I";
+        tangoLoggerOperation = "TestPlanController.onChangeCompleted";
+        tangoLoggerMessage = ("/api/v1/test-plans/on-change/completed (test update notification received from curator. uuid=${callback.testPlanUuid} with status=${callback.status})");
+        tangoLoggerStatus = "200";
+        tangoLogger.log(tangoLoggerType, tangoLoggerOperation, tangoLoggerMessage, tangoLoggerStatus)
+
         testService.updatePlanStatus(callback.testPlanUuid, callback.status)
         if (callback.status == TestPlanStatus.COMPLETED) {
-            log.info("test_result_uuid = ${callback.testResults.get(0).testResultUuid}")
+            tangoLoggerType = "I";
+            tangoLoggerOperation = "TestPlanController.onChangeCompleted";
+            tangoLoggerMessage = ("test_result_uuid = ${callback.testResults.get(0).testResultUuid}");
+            tangoLoggerStatus = "200";
+            tangoLogger.log(tangoLoggerType, tangoLoggerOperation, tangoLoggerMessage, tangoLoggerStatus)
+
             testService.updatePlanResultId(callback.testPlanUuid, callback.testResults.get(0).testResultUuid)
         }
         manager.testPlanUpdated(callback.testPlanUuid)
@@ -172,7 +228,12 @@ class TestPlanController {
     @PostMapping('/on-change/')
     @ResponseBody
     void onChange(@Valid @RequestBody CuratorCallback callback) {
-        log.info("/api/v1/test-plans/on-change (test update notification received from curator. uuid=${callback.testPlanUuid} with status=${callback.status})")
+        tangoLoggerType = "I";
+        tangoLoggerOperation = "TestPlanController.onChange";
+        tangoLoggerMessage = ("/api/v1/test-plans/on-change (test update notification received from curator. uuid=${callback.testPlanUuid} with status=${callback.status})");
+        tangoLoggerStatus = "200";
+        tangoLogger.log(tangoLoggerType, tangoLoggerOperation, tangoLoggerMessage, tangoLoggerStatus)
+
         testService.updatePlanStatus(callback.testPlanUuid, callback.status)
         manager.testPlanUpdated(callback.testPlanUuid)
     }
@@ -181,14 +242,24 @@ class TestPlanController {
     @ApiOperation(value="Find all tests related with a service uuid")
     @GetMapping('/services/{nsdUuid}/tests')
     List<Object> listTestsByService(@PathVariable('nsdUuid') String uuid) {
-        log.info("/api/v1/test-plans/services/{nsdUuid}/tests (list tests by service uuid request received. UUID=${uuid}")
+        tangoLoggerType = "I";
+        tangoLoggerOperation = "TestPlanController.listTestsByService";
+        tangoLoggerMessage = ("/api/v1/test-plans/services/{nsdUuid}/tests (list tests by service uuid request received. UUID=${uuid}");
+        tangoLoggerStatus = "200";
+        tangoLogger.log(tangoLoggerType, tangoLoggerOperation, tangoLoggerMessage, tangoLoggerStatus)
+
         networkServiceService.findTestsByService(uuid)
     }
 
     @ApiOperation(value="Find all tests related with a testing_tag")
     @GetMapping('/testing-tags/{tag}/tests')
     List<Object> listTestsByTag(@PathVariable('tag') String tag) {
-        log.info("/api/v1/test-plans/testing-tags/{tag}/tests (list tests by tag request received. Testing-tag=${tag}")
+        tangoLoggerType = "I";
+        tangoLoggerOperation = "TestPlanController.listTestsByTag";
+        tangoLoggerMessage = ("/api/v1/test-plans/testing-tags/{tag}/tests (list tests by tag request received. Testing-tag=${tag}");
+        tangoLoggerStatus = "200";
+        tangoLogger.log(tangoLoggerType, tangoLoggerOperation, tangoLoggerMessage, tangoLoggerStatus)
+
         networkServiceService.findTestsByTag(tag)
     }
 
@@ -197,14 +268,24 @@ class TestPlanController {
     @ApiOperation(value="Find all services related with a test")
     @GetMapping('/tests/{testdUuid}/services')
     List<Object> listServicesByTest(@PathVariable('testdUuid') String uuid) {
-        log.info("/api/v1/test-plans/tests/{testdUuid}/services (list services by test uuid request received. UUID=${uuid}")
+        tangoLoggerType = "I";
+        tangoLoggerOperation = "TestPlanController.listServicesByTest";
+        tangoLoggerMessage = ("/api/v1/test-plans/tests/{testdUuid}/services (list services by test uuid request received. UUID=${uuid}");
+        tangoLoggerStatus = "200";
+        tangoLogger.log(tangoLoggerType, tangoLoggerOperation, tangoLoggerMessage, tangoLoggerStatus)
+
         testService.findServicesByTest(uuid)
     }
 
     @ApiOperation(value="Find all services related with a tag")
     @GetMapping('/testing-tags/{tag}/services')
     List<Object> listServicesByTag(@PathVariable('tag') String tag) {
-        log.info("/api/v1/test-plans/tests/{tag}/services (list services by tag request received. Testing-tag=${tag}")
+        tangoLoggerType = "I";
+        tangoLoggerOperation = "TestPlanController.listServicesByTag";
+        tangoLoggerMessage = ("/api/v1/test-plans/tests/{tag}/services (list services by tag request received. Testing-tag=${tag}");
+        tangoLoggerStatus = "200";
+        tangoLogger.log(tangoLoggerType, tangoLoggerOperation, tangoLoggerMessage, tangoLoggerStatus)
+
         testService.findServicesByTag(tag)
     }
 }

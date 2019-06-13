@@ -34,7 +34,7 @@
 
 package tng.vnv.planner.controller
 
-import groovy.util.logging.Slf4j
+import tng.vnv.planner.utils.TangoLogger
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
 import org.springframework.beans.factory.annotation.Autowired
@@ -43,7 +43,6 @@ import tng.vnv.planner.WorkflowManager
 import tng.vnv.planner.model.TestSet
 import tng.vnv.planner.service.TestService
 
-@Slf4j
 @RestController
 @Api
 @RequestMapping('/api/v1/test-sets')
@@ -55,11 +54,23 @@ class TestSetController {
     @Autowired
     TestService testService
 
+    //Tango logger
+    def tangoLogger = new TangoLogger()
+    String tangoLoggerType = null;
+    String tangoLoggerOperation = null;
+    String tangoLoggerMessage = null;
+    String tangoLoggerStatus = null;
+
     @GetMapping
     @ApiOperation(value="Find all test sets", notes="Finding all test sets")
     @ResponseBody
     List<TestSet> listAllTestSets() {
-        log.info("/api/v1/test-sets (find all test sets request received)")
+        tangoLoggerType = "I";
+        tangoLoggerOperation = "TestSetController.listAllTestSets";
+        tangoLoggerMessage = ("/api/v1/test-sets (find all test sets request received)");
+        tangoLoggerStatus = "200";
+        tangoLogger.log(tangoLoggerType, tangoLoggerOperation, tangoLoggerMessage, tangoLoggerStatus)
+
         testService.findAllTestSets()
     }
 
@@ -67,7 +78,12 @@ class TestSetController {
     @ApiOperation(value="Find a test set", notes="Finding test set by uuid")
     @ResponseBody
     TestSet findTestSet(@PathVariable String uuid) {
-        log.info("/api/v1/test-sets/{uuid} (find test set by uuid request received. UUID=${uuid})")
+        tangoLoggerType = "I";
+        tangoLoggerOperation = "TestSetController.findTestSet";
+        tangoLoggerMessage = ("/api/v1/test-sets/{uuid} (find test set by uuid request received. UUID=${uuid})");
+        tangoLoggerStatus = "200";
+        tangoLogger.log(tangoLoggerType, tangoLoggerOperation, tangoLoggerMessage, tangoLoggerStatus)
+
         testService.findSetByUuid(uuid)
     }
 
@@ -75,7 +91,12 @@ class TestSetController {
     @ApiOperation(value="Cancell a test set", notes="Cancelling test set by uuid")
     @ResponseBody
     void cancelTestSet(@PathVariable String uuid) {
-        log.info("/api/v1/test-sets/{uuid} (cancel test set by uuid request received. UUID=${uuid})")
+        tangoLoggerType = "I";
+        tangoLoggerOperation = "TestSetController.cancelTestSet";
+        tangoLoggerMessage = ("/api/v1/test-sets/{uuid} (cancel test set by uuid request received. UUID=${uuid})");
+        tangoLoggerStatus = "200";
+        tangoLogger.log(tangoLoggerType, tangoLoggerOperation, tangoLoggerMessage, tangoLoggerStatus)
+
         manager.cancelTestSet(uuid)
     }
 }

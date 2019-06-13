@@ -35,7 +35,7 @@
 package tng.vnv.planner
 
 import groovy.transform.Synchronized
-import groovy.util.logging.Slf4j
+import tng.vnv.planner.utils.TangoLogger
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 import tng.vnv.planner.client.Curator
@@ -46,7 +46,6 @@ import tng.vnv.planner.model.TestSet
 import tng.vnv.planner.service.TestService
 import tng.vnv.planner.utils.TestPlanStatus
 
-@Slf4j
 @Component
 class WorkflowManager {
 
@@ -55,6 +54,13 @@ class WorkflowManager {
 
     @Autowired
     TestService testService
+
+    //Tango logger
+    def tangoLogger = new TangoLogger()
+    String tangoLoggerType = null;
+    String tangoLoggerOperation = null;
+    String tangoLoggerMessage = null;
+    String tangoLoggerStatus = null;
 
     @Synchronized
     void searchForScheduledSet() {
@@ -67,14 +73,25 @@ class WorkflowManager {
             if(currentExecutingTestSets != null && !currentExecutingTestSets.isEmpty()) {
                 def canTestSetBeExecuted = currentExecutingTestSets.every {testSet -> testSet.testPlans.every { testPlan -> !nextTestServices.contains(testPlan.serviceUuid) }}
                 if(!canTestSetBeExecuted) {
-                    log.info("There are currently executing test sets that contains the same service -- This test set have to wait")
+                    tangoLoggerType = "I";
+                    tangoLoggerOperation = "WorkflowManager.searchForScheduledSet";
+                    tangoLoggerMessage = ("There are currently executing test sets that contains the same service -- This test set have to wait");
+                    tangoLoggerStatus = "200";
+                    tangoLogger.log(tangoLoggerType, tangoLoggerOperation, tangoLoggerMessage, tangoLoggerStatus)
+
                     return
                 }
             }
 
             testService.updateSet(nextTestSet.uuid, TestPlanStatus.STARTING)
             def nextTextPlan = nextTestSet.testPlans[0]
-            log.info("Next testplan: ${nextTextPlan.uuid}. nsd: ${nextTextPlan.serviceUuid}, td: ${nextTextPlan.testUuid}")
+
+            tangoLoggerType = "I";
+            tangoLoggerOperation = "WorkflowManager.searchForScheduledSet";
+            tangoLoggerMessage = ("Next testplan: ${nextTextPlan.uuid}. nsd: ${nextTextPlan.serviceUuid}, td: ${nextTextPlan.testUuid}");
+            tangoLoggerStatus = "200";
+            tangoLogger.log(tangoLoggerType, tangoLoggerOperation, tangoLoggerMessage, tangoLoggerStatus)
+
             proceedWith(nextTextPlan)
 
         }
@@ -99,7 +116,12 @@ class WorkflowManager {
         }
         testplansStatus.unique()
         if (testplansStatus.size() == 1){
-            log.info("all testplans with ${testplansStatus[0]} status")
+            tangoLoggerType = "I";
+            tangoLoggerOperation = "WorkflowManager.testPlanUpdated";
+            tangoLoggerMessage = ("all testplans with ${testplansStatus[0]} status");
+            tangoLoggerStatus = "200";
+            tangoLogger.log(tangoLoggerType, tangoLoggerOperation, tangoLoggerMessage, tangoLoggerStatus)
+
             if (testplansStatus[0] == TestPlanStatus.COMPLETED || testplansStatus[0] == TestPlanStatus.CANCELLED){
                 completeTestSet(justUpdatedTestPlan.testSetUuid, testplansStatus[0])
             } else {
@@ -165,7 +187,12 @@ class WorkflowManager {
 
     void proceedWith(TestPlan testPlan) {
 
-        log.info("Starting TestPlan with UUID {}", testPlan.testUuid)
+        tangoLoggerType = "I";
+        tangoLoggerOperation = "WorkflowManager.proceedWith";
+        tangoLoggerMessage = ("Starting TestPlan with UUID ${testPlan.testUuid}");
+        tangoLoggerStatus = "200";
+        tangoLogger.log(tangoLoggerType, tangoLoggerOperation, tangoLoggerMessage, tangoLoggerStatus)
+
         testService.updatePlanStatus(testPlan.uuid, TestPlanStatus.STARTING)
 
         def testResponse = curator.post(new TestRequest(testPlanUuid: testPlan.uuid,
@@ -173,7 +200,12 @@ class WorkflowManager {
                 testdUuid: testPlan.testUuid)).body as TestResponse
 
         testService.updatePlanStatus(testPlan.uuid, testResponse.status)
-        log.info("TestPlan with UUID {}, received by the Curator, new testStatus: {}", testPlan.uuid, testResponse.status)
+        
+        tangoLoggerType = "I";
+        tangoLoggerOperation = "WorkflowManager.proceedWith";
+        tangoLoggerMessage = ("TestPlan with UUID ${testPlan.uuid}, received by the Curator, new testStatus: ${testResponse.status}");
+        tangoLoggerStatus = "200";
+        tangoLogger.log(tangoLoggerType, tangoLoggerOperation, tangoLoggerMessage, tangoLoggerStatus)
     }
 
     void cancelTestSet(String uuid){

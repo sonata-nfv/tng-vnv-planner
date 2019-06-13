@@ -34,13 +34,12 @@
 
 package tng.vnv.planner.service
 
-import groovy.util.logging.Slf4j
+import tng.vnv.planner.utils.TangoLogger
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import tng.vnv.planner.client.Gatekeeper
 import tng.vnv.planner.repository.TestSetRepository
 
-@Slf4j
 @Service
 class NetworkService {
 
@@ -50,19 +49,42 @@ class NetworkService {
     @Autowired
     TestSetRepository testSetRepository
 
+    //Tango logger
+    def tangoLogger = new TangoLogger()
+    String tangoLoggerType = null;
+    String tangoLoggerOperation = null;
+    String tangoLoggerMessage = null;
+    String tangoLoggerStatus = null;
+
     List findTestsByService(def serviceUuid){
-        log.info("Looking for Tests related with service_uuid: ${serviceUuid}")
+        tangoLoggerType = "I";
+        tangoLoggerOperation = "NetworkService.findTestsByService";
+        tangoLoggerMessage = ("Looking for Tests related with service_uuid: ${serviceUuid}");
+        tangoLoggerStatus = "200";
+        tangoLogger.log(tangoLoggerType, tangoLoggerOperation, tangoLoggerMessage, tangoLoggerStatus)
+
         def matchedTests = [] as HashSet<Object>
         def packs = gatekeeper.getPackageByUuid(serviceUuid)
         if(packs != null){
             packs.each { pack ->
-                if (pack == null) {log.info("pack null!!")}
+                if (pack == null) {
+                  tangoLoggerType = "I";
+                  tangoLoggerOperation = "NetworkService.findTestsByService";
+                  tangoLoggerMessage = ("pack null!!");
+                  tangoLoggerStatus = "200";
+                  tangoLogger.log(tangoLoggerType, tangoLoggerOperation, tangoLoggerMessage, tangoLoggerStatus)
+                }
                 pack.pd.package_content.each { resource ->
                     if (resource.get('content-type') == 'application/vnd.5gtango.nsd'
                             || resource.get('content-type') == 'application/vnd.etsi.osm.nsd') {
                         def testing_tag = resource.get('testing_tags')
                         testing_tag.each { tt ->
-                            log.info("including tests with tag: ${tt}")
+                            tangoLoggerType = "I";
+                            tangoLoggerOperation = "NetworkService.findTestsByService";
+                            tangoLoggerMessage = ("including tests with tag: ${tt}");
+                            tangoLoggerStatus = "200";
+                            tangoLogger.log(tangoLoggerType, tangoLoggerOperation, tangoLoggerMessage, tangoLoggerStatus)
+
                             matchedTests << findTestsByTag(tt)
                         }
                     }
@@ -73,17 +95,38 @@ class NetworkService {
     }
 
     List findTestsByTag(def tag){
-        log.info("Looking for Tests with tag: ${tag}")
+        tangoLoggerType = "I";
+        tangoLoggerOperation = "NetworkService.findTestsByTag";
+        tangoLoggerMessage = ("Looking for Tests with tag: ${tag}");
+        tangoLoggerStatus = "200";
+        tangoLogger.log(tangoLoggerType, tangoLoggerOperation, tangoLoggerMessage, tangoLoggerStatus)
+
         def matchedTests = [] as HashSet<Object>
         def packs = gatekeeper.getPackageByTag(tag)
         if(packs != null){
-            log.info("packs size: ${packs.size()}")
+            tangoLoggerType = "I";
+            tangoLoggerOperation = "NetworkService.findTestsByTag";
+            tangoLoggerMessage = ("packs size: ${packs.size()}");
+            tangoLoggerStatus = "200";
+            tangoLogger.log(tangoLoggerType, tangoLoggerOperation, tangoLoggerMessage, tangoLoggerStatus)
+
             packs.each { pack ->
-                if (pack == null) {log.info("pack null!!")}
+                if (pack == null) {
+                  tangoLoggerType = "I";
+                  tangoLoggerOperation = "NetworkService.findTestsByService";
+                  tangoLoggerMessage = ("pack null!!");
+                  tangoLoggerStatus = "200";
+                  tangoLogger.log(tangoLoggerType, tangoLoggerOperation, tangoLoggerMessage, tangoLoggerStatus)
+                }
                 pack.pd.package_content.each { resource ->
                     if (resource.get('content-type') == 'application/vnd.5gtango.tstd'
                             || resource.get('content-type') == 'application/vnd.etsi.osm.tstd') {
-                        log.info("including tests that match with test uuid: ${resource.uuid}")
+                        tangoLoggerType = "I";
+                        tangoLoggerOperation = "NetworkService.findTestsByTag";
+                        tangoLoggerMessage = ("including tests that match with test uuid: ${resource.uuid}");
+                        tangoLoggerStatus = "200";
+                        tangoLogger.log(tangoLoggerType, tangoLoggerOperation, tangoLoggerMessage, tangoLoggerStatus)
+
                         matchedTests << gatekeeper.getTest(resource.uuid)
                     }
                 }

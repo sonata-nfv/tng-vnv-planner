@@ -34,7 +34,7 @@
 
 package tng.vnv.planner.service
 
-import groovy.util.logging.Slf4j
+import tng.vnv.planner.utils.TangoLogger
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import org.springframework.web.client.RestClientException
@@ -46,7 +46,6 @@ import tng.vnv.planner.repository.TestPlanRepository
 import tng.vnv.planner.repository.TestSetRepository
 import tng.vnv.planner.utils.TestPlanStatus
 
-@Slf4j
 @Service
 class TestService {
 
@@ -64,6 +63,13 @@ class TestService {
 
     @Autowired
     Curator curator
+
+    //Tango logger
+    def tangoLogger = new TangoLogger()
+    String tangoLoggerType = null;
+    String tangoLoggerOperation = null;
+    String tangoLoggerMessage = null;
+    String tangoLoggerStatus = null;
 
     TestSet buildTestPlansByTest(def uuid, def confirmRequired) {
         packageService.buildTestPlansByTestPackage(uuid, confirmRequired)
@@ -168,7 +174,12 @@ class TestService {
 
 
     List findServicesByTest(def uuid){
-        log.info("Looking for Services related with test_uuid: ${uuid}")
+        tangoLoggerType = "I";
+        tangoLoggerOperation = "TestService.findServicesByTest";
+        tangoLoggerMessage = ("Looking for Services related with test_uuid: ${uuid}");
+        tangoLoggerStatus = "200";
+        tangoLogger.log(tangoLoggerType, tangoLoggerOperation, tangoLoggerMessage, tangoLoggerStatus)
+
         def matchedServices = [] as HashSet<Object>
         def packs = gatekeeper.getPackageByUuid(uuid)
         if(packs != null){
@@ -178,7 +189,13 @@ class TestService {
                             || resource.get('content-type') == 'application/vnd.etsi.osm.tstd') {
                         def testing_tag = resource.get('testing_tags')
                         testing_tag.each { tt ->
-                            log.info("including services with tag: ${tt}")
+
+                            tangoLoggerType = "I";
+                            tangoLoggerOperation = "TestService.findServicesByTest";
+                            tangoLoggerMessage = ("including services with tag: ${tt}");
+                            tangoLoggerStatus = "200";
+                            tangoLogger.log(tangoLoggerType, tangoLoggerOperation, tangoLoggerMessage, tangoLoggerStatus)
+
                             matchedServices << findServicesByTag(tt)
                         }
                     }
@@ -189,7 +206,12 @@ class TestService {
     }
 
     List findServicesByTag(def tag){
-        log.info("Looking for Services with testing_tag: ${tag}")
+        tangoLoggerType = "I";
+        tangoLoggerOperation = "TestService.findServicesByTag";
+        tangoLoggerMessage = ("Looking for Services with testing_tag: ${tag}");
+        tangoLoggerStatus = "200";
+        tangoLogger.log(tangoLoggerType, tangoLoggerOperation, tangoLoggerMessage, tangoLoggerStatus)
+
         def matchedServices = [] as HashSet<Object>
         def packs = gatekeeper.getPackageByTag(tag)
         if(packs != null){
@@ -197,7 +219,12 @@ class TestService {
                 pack.pd.package_content.each { resource ->
                     if (resource.get('content-type') == 'application/vnd.5gtango.nsd'
                             || resource.get('content-type') == 'application/vnd.etsi.osm.nsd') {
-                        log.info("including services with uuid: ${resource.uuid}")
+                        tangoLoggerType = "I";
+                        tangoLoggerOperation = "TestService.findServicesByTag";
+                        tangoLoggerMessage = ("including services with uuid: ${resource.uuid}");
+                        tangoLoggerStatus = "200";
+                        tangoLogger.log(tangoLoggerType, tangoLoggerOperation, tangoLoggerMessage, tangoLoggerStatus)
+
                         matchedServices << gatekeeper.getService(resource.uuid)
                     }
                 }
@@ -206,5 +233,3 @@ class TestService {
         new ArrayList(matchedServices)
     }
 }
-
-
