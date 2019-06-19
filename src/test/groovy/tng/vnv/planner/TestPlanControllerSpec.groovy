@@ -94,7 +94,7 @@ class TestPlanControllerSpec extends Specification {
         testPlanController.deleteTestPlan(testPlans[0].uuid)
         def testPlan = testPlanRepository.findByUuid(testPlans[0].uuid)
         then:
-        testPlan.testStatus == TestPlanStatus.CANCELLING
+        testPlan.testStatus == TestPlanStatus.CANCELLED
     }
 
     @Test
