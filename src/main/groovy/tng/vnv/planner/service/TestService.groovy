@@ -162,8 +162,13 @@ class TestService {
         def testPlans = testPlanRepository.findByTestSetUuid(testSetUuid)
 
         testPlans.each { testPlan ->
-            curator.delete(testPlan.uuid)
-            updatePlanStatus(testPlan.uuid, TestPlanStatus.CANCELLING)
+            if (testPlan.testStatus == TestPlanStatus.SCHEDULED){
+                updatePlanStatus(testPlan.uuid, TestPlanStatus.CANCELLED)
+            } else {
+                curator.delete(testPlan.uuid)
+                updatePlanStatus(testPlan.uuid, TestPlanStatus.CANCELLING)
+            }
+
 
         }
     }

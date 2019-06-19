@@ -35,6 +35,7 @@
 package tng.vnv.planner
 
 import groovy.transform.Synchronized
+import tng.vnv.planner.repository.TestPlanRepository
 import tng.vnv.planner.utils.TangoLogger
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
@@ -54,6 +55,9 @@ class WorkflowManager {
 
     @Autowired
     TestService testService
+
+    @Autowired
+    TestPlanRepository testPlanRepository
 
     //Tango logger
     def tangoLogger = new TangoLogger()
@@ -171,7 +175,10 @@ class WorkflowManager {
     }
 
     void deleteTestPlan(String uuid){
-        curator.delete(uuid)
+        def testPlan = testPlanRepository.findByUuid()
+        if (testPlan.testStatus != TestPlanStatus.SCHEDULED){
+            curator.delete(uuid)
+        }
         testService.deletePlan(uuid)
     }
 
