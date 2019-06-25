@@ -45,6 +45,7 @@ api:
 logging:
   pattern:
     file: msg%n
+    console: msg%n
 
 app:
   gatekeeper:
