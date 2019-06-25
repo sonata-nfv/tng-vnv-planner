@@ -69,6 +69,10 @@ app:
   NOT_MATCHING_TEST_TAGS: '[NOT MATCHING TEST TAGS]'
   NOT_AVAILABLE_DATA: '[NOT AVAILABLE DATA]'
 
+logging:
+  pattern:
+    console: "%msg%n"
+
 ---
 spring:
   profiles: docker
