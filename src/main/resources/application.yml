@@ -42,10 +42,6 @@ api:
     name: Apache License 2.0
     url: https://github.com/sonata-nfv/tng-vnv-planner/blob/master/LICENSE
 
-logging:
-  pattern:
-    file: msg%n
-
 app:
   gatekeeper:
     base.url: http://${CAT_VNV_HOST:localhost}:${CAT_VNV_PORT:6100}/catalogues
@@ -72,6 +68,10 @@ app:
 # STATIC MESSAGES:
   NOT_MATCHING_TEST_TAGS: '[NOT MATCHING TEST TAGS]'
   NOT_AVAILABLE_DATA: '[NOT AVAILABLE DATA]'
+
+logging:
+  pattern:
+    console: "%msg%n"
 
 ---
 spring:

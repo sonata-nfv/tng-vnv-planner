@@ -35,12 +35,13 @@
 package tng.vnv.planner.utils
 
 import groovy.util.logging.Slf4j
+import org.apache.logging.log4j.LogManager
+import org.apache.logging.log4j.Logger
 import org.springframework.stereotype.Component
 import java.sql.Timestamp;
 
 @Component
 @Slf4j
-
 class TangoLogger {
 
   /*
