@@ -42,11 +42,6 @@ api:
     name: Apache License 2.0
     url: https://github.com/sonata-nfv/tng-vnv-planner/blob/master/LICENSE
 
-logging:
-  pattern:
-    file: msg%n
-    console: msg%n
-
 app:
   gatekeeper:
     base.url: http://${CAT_VNV_HOST:localhost}:${CAT_VNV_PORT:6100}/catalogues
