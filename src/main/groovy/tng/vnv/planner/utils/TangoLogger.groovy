@@ -57,19 +57,13 @@ class TangoLogger {
     String timestamps = timestamp.toString();
 
     if(type == 'E'){
-      log.error(
-          "{\"type\":\"{}\",\"timestamp\":\"{}\",\"start_stop\":\"\",\"component\":\"tng-vnv-planner\",\"operation\":\"{}\",\"message\":\"{}\",\"status\":\"{}\",\"time_elapsed\":\"\"}",
-          type, timestamps, operation, message, status);
+      log.error("{\"type\":\"$type\",\"timestamp\":\"$timestamps\",\"start_stop\":\"\",\"component\":\"tng-vnv-planner\",\"operation\":\"$operation\",\"message\":\"$message\",\"status\":\"$status\",\"time_elapsed\":\"\"}")
     }
     else if (type == 'D'){
-      log.debug(
-          "{\"type\":\"{}\",\"timestamp\":\"{}\",\"start_stop\":\"\",\"component\":\"tng-vnv-planner\",\"operation\":\"{}\",\"message\":\"{}\",\"status\":\"{}\",\"time_elapsed\":\"\"}",
-          type, timestamps, operation, message, status);
+      log.debug("{\"type\":\"$type\",\"timestamp\":\"$timestamps\",\"start_stop\":\"\",\"component\":\"tng-vnv-planner\",\"operation\":\"$operation\",\"message\":\"$message\",\"status\":\"$status\",\"time_elapsed\":\"\"}")
     }
     else if (type == 'I'){
-      log.info(
-          "{\"type\":\"{}\",\"timestamp\":\"{}\",\"start_stop\":\"\",\"component\":\"tng-vnv-planner\",\"operation\":\"{}\",\"message\":\"{}\",\"status\":\"{}\",\"time_elapsed\":\"\"}",
-          type, timestamps, operation, message, status);
+      log.info("{\"type\":\"$type\",\"timestamp\":\"$timestamps\",\"start_stop\":\"\",\"component\":\"tng-vnv-planner\",\"operation\":\"$operation\",\"message\":\"$message\",\"status\":\"$status\",\"time_elapsed\":\"\"}")
     }
   }
 }
