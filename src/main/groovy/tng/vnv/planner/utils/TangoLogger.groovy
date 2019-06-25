@@ -35,12 +35,12 @@
 package tng.vnv.planner.utils
 
 import groovy.util.logging.Slf4j
+import org.apache.logging.log4j.LogManager
+import org.apache.logging.log4j.Logger
 import org.springframework.stereotype.Component
 import java.sql.Timestamp;
 
 @Component
-@Slf4j
-
 class TangoLogger {
 
   /*
@@ -52,21 +52,22 @@ class TangoLogger {
 
   def log(String type, String operation, String message, String status){
 
+    Logger logger = LogManager.getLogger(TangoLogger.class)
     Timestamp timestamp = new Timestamp(System.currentTimeMillis());
     String timestamps = timestamp.toString();
 
     if(type == 'E'){
-      log.error(
+      logger.error(
           "{\"type\":\"{}\",\"timestamp\":\"{}\",\"start_stop\":\"\",\"component\":\"tng-vnv-planner\",\"operation\":\"{}\",\"message\":\"{}\",\"status\":\"{}\",\"time_elapsed\":\"\"}",
           type, timestamps, operation, message, status);
     }
     else if (type == 'D'){
-      log.debug(
+      logger.debug(
           "{\"type\":\"{}\",\"timestamp\":\"{}\",\"start_stop\":\"\",\"component\":\"tng-vnv-planner\",\"operation\":\"{}\",\"message\":\"{}\",\"status\":\"{}\",\"time_elapsed\":\"\"}",
           type, timestamps, operation, message, status);
     }
     else if (type == 'I'){
-      log.info(
+      logger.info(
           "{\"type\":\"{}\",\"timestamp\":\"{}\",\"start_stop\":\"\",\"component\":\"tng-vnv-planner\",\"operation\":\"{}\",\"message\":\"{}\",\"status\":\"{}\",\"time_elapsed\":\"\"}",
           type, timestamps, operation, message, status);
     }
