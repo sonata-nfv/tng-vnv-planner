@@ -128,10 +128,10 @@ class WorkflowManager {
 
             if (testplansStatus[0] == TestPlanStatus.COMPLETED || testplansStatus[0] == TestPlanStatus.CANCELLED){
                 completeTestSet(justUpdatedTestPlan.testSetUuid, testplansStatus[0])
+                return
             } else {
                 testService.updateSet(justUpdatedTestPlan.testSetUuid as String, testplansStatus[0] as String)
             }
-            return
         }
 
         //def indexOfCompletedTestPlan = justExecutedTestSet.testPlans.indexOf(justUpdatedTestPlan)
