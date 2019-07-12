@@ -141,6 +141,21 @@ class WorkflowManager {
         while(indexOfNextTestPlan < justExecutedTestSet.testPlans.size()){
             def currentTestPlan = justExecutedTestSet.testPlans[indexOfNextTestPlan]
 
+            if(currentTestPlan.testStatus == TestPlanStatus.RETRIED) {
+
+                TestPlan newTestPlan = new TestPlan(uuid: UUID.randomUUID().toString(),
+                        testSetUuid: justExecutedTestSet.uuid,
+                        serviceUuid: justUpdatedTestPlan.serviceUuid,
+                        testUuid: justUpdatedTestPlan.testUuid,
+                        confirmRequired: justUpdatedTestPlan.confirmRequired,
+                        testStatus: TestPlanStatus.SCHEDULED)
+
+                justExecutedTestSet.testPlans << newTestPlan
+
+                nextTestPlan = newTestPlan
+                break
+            }
+
             if(currentTestPlan.testStatus == TestPlanStatus.SCHEDULED) {
                 nextTestPlan = currentTestPlan
                 break
