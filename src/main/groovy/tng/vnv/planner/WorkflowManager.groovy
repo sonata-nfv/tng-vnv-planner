@@ -36,6 +36,7 @@ package tng.vnv.planner
 
 import groovy.transform.Synchronized
 import tng.vnv.planner.repository.TestPlanRepository
+import tng.vnv.planner.repository.TestSetRepository
 import tng.vnv.planner.utils.TangoLogger
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
@@ -58,6 +59,9 @@ class WorkflowManager {
 
     @Autowired
     TestPlanRepository testPlanRepository
+
+    @Autowired
+    TestSetRepository testSetRepository
 
     //Tango logger
     def tangoLogger = new TangoLogger()
@@ -150,7 +154,11 @@ class WorkflowManager {
                         confirmRequired: justUpdatedTestPlan.confirmRequired,
                         testStatus: TestPlanStatus.SCHEDULED)
 
+                testPlanRepository.save(newTestPlan)
+
                 justExecutedTestSet.testPlans << newTestPlan
+
+                testSetRepository.save(justExecutedTestSet)
 
                 nextTestPlan = newTestPlan
                 break
