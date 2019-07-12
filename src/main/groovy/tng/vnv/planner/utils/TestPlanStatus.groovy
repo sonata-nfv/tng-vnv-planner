@@ -47,5 +47,5 @@ class TestPlanStatus {
     static def CANCELLING = 'CANCELLING'
     static def CANCELLED = 'CANCELLED'
     static def ERROR = 'ERROR'
-    static def RETRYING = 'RETRYING'
+    static def RETRIED = 'RETRIED'
 }
