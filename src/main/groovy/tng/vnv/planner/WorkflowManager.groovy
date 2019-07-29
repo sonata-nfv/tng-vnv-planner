@@ -72,7 +72,7 @@ class WorkflowManager {
 
     @Synchronized
     void searchForScheduledSet() {
-        TestSet nextTestSet = testService.findNextScheduledTestSet()
+        TestSet nextTestSet = testService.findLastScheduledTestSet()
         if (nextTestSet != null) {
 
             def nextTestServices = nextTestSet.testPlans?.collect {it.serviceUuid} as List
