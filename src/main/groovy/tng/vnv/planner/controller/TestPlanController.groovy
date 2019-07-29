@@ -131,8 +131,10 @@ class TestPlanController {
         tangoLoggerStatus = "200";
         tangoLogger.log(tangoLoggerType, tangoLoggerOperation, tangoLoggerMessage, tangoLoggerStatus)
 
-        scheduler.update(uuid, status)
+        def testPlan = scheduler.update(uuid, status)
         manager.testPlanUpdated(uuid)
+
+        return testPlan
     }
 
     @ApiOperation(value="Create a test plan by service uuid")
