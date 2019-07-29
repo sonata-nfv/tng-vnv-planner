@@ -134,6 +134,10 @@ class TestService {
         testSetRepository.findFirstByStatus(TestPlanStatus.SCHEDULED)
     }
 
+    TestSet findLastScheduledTestSet() {
+        testSetRepository.findLastByStatus(TestPlanStatus.SCHEDULED)
+    }
+
     List<TestSet> findExecutingTestSet() {
         testSetRepository.findByStatus(TestPlanStatus.STARTING)
     }
