@@ -221,7 +221,7 @@ class WorkflowManager {
 
         tangoLoggerType = "I";
         tangoLoggerOperation = "WorkflowManager.proceedWith";
-        tangoLoggerMessage = ("Starting TestPlan with UUID ${testPlan.testUuid}");
+        tangoLoggerMessage = ("Starting TestPlan with UUID ${testPlan.uuid}. Test UUID = ${testPlan.testUuid}");
         tangoLoggerStatus = "200";
         tangoLogger.log(tangoLoggerType, tangoLoggerOperation, tangoLoggerMessage, tangoLoggerStatus)
 
