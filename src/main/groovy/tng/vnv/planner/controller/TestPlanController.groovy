@@ -201,10 +201,16 @@ class TestPlanController {
     @PostMapping('/on-change/completed')
     @ResponseBody
     void onChangeCompleted(@Valid @RequestBody CuratorCallback callback) {
-        tangoLoggerType = "I";
+        if(callback.status == 'ERROR'){
+          tangoLoggerType = "E";
+          tangoLoggerStatus = "500";
+        }
+        else{
+          tangoLoggerType = "I";
+          tangoLoggerStatus = "200";
+        }
         tangoLoggerOperation = "TestPlanController.onChangeCompleted";
         tangoLoggerMessage = ("/api/v1/test-plans/on-change/completed (test update notification received from curator. uuid=${callback.testPlanUuid} with status=${callback.status})");
-        tangoLoggerStatus = "200";
         tangoLogger.log(tangoLoggerType, tangoLoggerOperation, tangoLoggerMessage, tangoLoggerStatus)
 
         testService.updatePlanStatus(callback.testPlanUuid, callback.status)
