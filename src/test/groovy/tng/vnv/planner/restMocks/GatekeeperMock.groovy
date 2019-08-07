@@ -126,7 +126,7 @@ class GatekeeperMock {
         tangoLoggerStatus = "200";
         tangoLogger.log(tangoLoggerType, tangoLoggerOperation, tangoLoggerMessage, tangoLoggerStatus)
 
-        body = mapper.readValue(getClass().getResource('/servicePackage.json').text, Object.class)
+        body = mapper.readValue(getClass().getResource('/service.json').text, Object.class)
         ResponseEntity.status(HttpStatus.OK).body(body)
     }
 
@@ -142,7 +142,7 @@ class GatekeeperMock {
         tangoLoggerStatus = "200";
         tangoLogger.log(tangoLoggerType, tangoLoggerOperation, tangoLoggerMessage, tangoLoggerStatus)
 
-        body = mapper.readValue(getClass().getResource('/testPackage.json').text, Object.class)
+        body = mapper.readValue(getClass().getResource('/test.json').text, Object.class)
         ResponseEntity.status(HttpStatus.OK).body(body)
     }
 }
