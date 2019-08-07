@@ -207,7 +207,7 @@ class TestPlanControllerSpec extends Specification {
         when:
         def testsByTag = testPlanController.listTestsByTag("eu.5gtango.testingtag.example")
         then:
-        testsByTag[0].pd.name == "generic-probes-test-pingonly"
+        testsByTag[0].testd.name == "generic-probes-test-pingonly"
     }
 
     @Test
@@ -215,7 +215,7 @@ class TestPlanControllerSpec extends Specification {
         when:
         def servicesByTag = testPlanController.listServicesByTag("eu.5gtango.testingtag.example")
         then:
-        servicesByTag[0].pd.name == "test-ns-nsid1v"
+        servicesByTag[0].nsd.name == "test-ns-nsid1v"
     }
 
     @Test
@@ -223,7 +223,7 @@ class TestPlanControllerSpec extends Specification {
         when:
         def servicesByTest = testPlanController.listServicesByTest('88f6c1c4-c614-4f4d-87e6-72ef0192956f')
         then:
-        servicesByTest[0].pd.name[0] == "test-ns-nsid1v"
+        servicesByTest[0].nsd.name[0] == "test-ns-nsid1v"
     }
 
     @Test
@@ -231,7 +231,7 @@ class TestPlanControllerSpec extends Specification {
         when:
         def testsByService = testPlanController.listTestsByService('57cebe79-96aa-4f41-af80-93050bfddd9f')
         then:
-        testsByService[0].pd.name[0] == "generic-probes-test-pingonly"
+        testsByService[0].testd.name[0] == "generic-probes-test-pingonly"
     }
 
     static String toCamelCase( String text, boolean capitalized = false ) {
