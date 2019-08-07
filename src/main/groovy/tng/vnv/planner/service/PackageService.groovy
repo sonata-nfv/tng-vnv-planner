@@ -131,7 +131,9 @@ class PackageService {
                     testSet.testPlans << new TestPlan(uuid: UUID.randomUUID().toString(),
                             testSetUuid: testSet.uuid,
                             serviceUuid: service.uuid,
+                            serviceName: service.id.name +"."+service.id.vendor+"."+service.id.version,
                             testUuid: test.uuid,
+                            testName: test.id.name +"."+test.id.vendor+"."+test.id.version,
                             confirmRequired: confirmRequired,
                             testStatus: confirmRequired ? TestPlanStatus.WAITING_FOR_CONFIRMATION : TestPlanStatus.SCHEDULED)
                 }
@@ -148,6 +150,7 @@ class PackageService {
             def matchedTests = [] as HashSet<Map>
 
             def pack = gatekeeper.getPackage(packageId)
+            def service = gatekeeper.getService(serviceUuid)
 
             def testSet = new TestSet(uuid: UUID.randomUUID().toString(),
                     requestUuid: packageId,
@@ -202,7 +205,9 @@ class PackageService {
                 testSet.testPlans << new TestPlan(uuid: UUID.randomUUID().toString(),
                         testSetUuid: testSet.uuid,
                         serviceUuid: serviceUuid,
+                        serviceName: service.nsd.name+"."+service.nsd.vendor+"."+service.nsd.version,
                         testUuid: test.uuid,
+                        testName: test.id.name +"."+test.id.vendor+"."+test.id.version,
                         confirmRequired: confirmRequired,
                         testStatus: confirmRequired ? TestPlanStatus.WAITING_FOR_CONFIRMATION : TestPlanStatus.SCHEDULED)
             }
@@ -218,6 +223,7 @@ class PackageService {
             def matchedServices = [] as HashSet<Map>
 
             def pack = gatekeeper.getPackage(packageId)
+            def test = gatekeeper.getTest(testUuid)
 
             def testSet = new TestSet(uuid: UUID.randomUUID().toString(),
                     requestUuid: packageId,
@@ -269,7 +275,9 @@ class PackageService {
                 testSet.testPlans << new TestPlan(uuid: UUID.randomUUID().toString(),
                         testSetUuid: testSet.uuid,
                         serviceUuid: service.uuid,
+                        serviceName: service.id.name +"."+service.id.vendor+"."+service.id.version,
                         testUuid: testUuid,
+                        testName: test.testd.name+"."+test.testd.vendor+"."+test.testd.version,
                         confirmRequired: confirmRequired,
                         testStatus: confirmRequired ? TestPlanStatus.WAITING_FOR_CONFIRMATION : TestPlanStatus.SCHEDULED)
             }
@@ -337,7 +345,9 @@ class PackageService {
                 testSet.testPlans << new TestPlan(uuid: UUID.randomUUID().toString(),
                         testSetUuid: testSet.uuid,
                         serviceUuid: service.uuid,
+                        serviceName: service.id.name +"."+service.id.vendor+"."+service.id.version,
                         testUuid: test.uuid,
+                        testName: test.id.name +"."+test.id.vendor+"."+test.id.version,
                         confirmRequired: confirmRequired,
                         testStatus: confirmRequired ? TestPlanStatus.WAITING_FOR_CONFIRMATION : TestPlanStatus.SCHEDULED)
             }
@@ -354,10 +364,15 @@ class PackageService {
                 confirmRequired: confirmRequired,
                 status: confirmRequired ? TestPlanStatus.WAITING_FOR_CONFIRMATION : TestPlanStatus.SCHEDULED)
 
+        def test = gatekeeper.getTest(testUuid)
+        def service = gatekeeper.getService(serviceUuid)
+
         testSet.testPlans << new TestPlan(uuid: UUID.randomUUID().toString(),
                 testSetUuid: testSet.uuid,
                 serviceUuid: serviceUuid,
+                serviceName: service.nsd.name+"."+service.nsd.vendor+"."+service.nsd.version,
                 testUuid: testUuid,
+                testName: test.testd.name+"."+test.testd.vendor+"."+test.testd.version,
                 confirmRequired: confirmRequired,
                 testStatus: confirmRequired ? TestPlanStatus.WAITING_FOR_CONFIRMATION : TestPlanStatus.SCHEDULED)
 

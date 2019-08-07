@@ -64,9 +64,19 @@ class TestPlan extends AuditModel implements Serializable {
     String serviceUuid
 
     @ApiModelProperty(
+            value = 'Network service name',
+            allowEmptyValue = false)
+    String serviceName
+
+    @ApiModelProperty(
             value = 'Test descriptor uuid',
             allowEmptyValue = false)
     String testUuid
+
+    @ApiModelProperty(
+            value = 'Test descriptor name',
+            allowEmptyValue = false)
+    String testName
 
     @ApiModelProperty(
             value = 'Test result uuid',
