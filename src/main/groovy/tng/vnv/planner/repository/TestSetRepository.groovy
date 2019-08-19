@@ -41,6 +41,6 @@ interface TestSetRepository extends JpaRepository<TestSet, Long> {
     TestSet findByUuid(String uuid)
     List<TestSet> findAll()
     TestSet findFirstByStatus(String status)
-    TestSet findLastByStatus(String status)
+    TestSet findTopByStatusOrderByCreatedAtDesc(String status)
     List<TestSet> findByStatus(String status)
 }
