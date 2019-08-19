@@ -135,7 +135,7 @@ class TestService {
     }
 
     TestSet findLastScheduledTestSet() {
-        testSetRepository.findLastByStatus(TestPlanStatus.SCHEDULED)
+        testSetRepository.findTopByStatusOrderByCreatedAtDesc(TestPlanStatus.SCHEDULED)
     }
 
     List<TestSet> findExecutingTestSet() {
