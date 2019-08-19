@@ -11,6 +11,7 @@ An outline of the architecture is shown below.
 
 ![Architecture](./src/main/resources/images/planner_architecture.png?raw=true "Architecture")
 
+More information available in the [wiki](https://github.com/sonata-nfv/tng-vnv-planner/wiki) section.
 ## Build from source code
 
 ```bash
@@ -40,11 +41,9 @@ For advanced build arguments, please checkout the [gradle-buildscript](https://g
 docker run -d --name tng-vnv-planner -p 6100:6100 registry.sonata-nfv.eu:5000/tng-vnv-planner
 ```
 
-### Swagger UI
+### Api Reference
 
-* local 
-    * http://localhost:6100/swagger-ui.html
-
+Please, check the API in this swagger file: [swagger.json](https://github.com/sonata-nfv/tng-vnv-planner/blob/master/doc/swagger.json)
 
 ## Dependencies
 
