@@ -76,9 +76,9 @@ class TestPlanController {
     @ApiOperation(value="Find all test plan", notes="Finding all test plans")
     @ResponseBody
     List<TestPlan> listAllTestPlans(
-            @RequestParam("testName") String testName,
-            @RequestParam("serviceName") String serviceName,
-            @RequestParam("status") String status
+            @RequestParam(name = "testName", required = false) String testName,
+            @RequestParam(name = "serviceName", required = false) String serviceName,
+            @RequestParam(name = "status", required = false) String status
     ) {
 
         tangoLoggerType = "I";

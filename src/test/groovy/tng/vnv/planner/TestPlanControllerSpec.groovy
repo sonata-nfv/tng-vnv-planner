@@ -35,6 +35,7 @@
 package tng.vnv.planner
 
 import groovy.json.JsonSlurper
+import groovy.util.logging.Slf4j
 import org.junit.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
@@ -50,6 +51,7 @@ import tng.vnv.planner.repository.TestSetRepository
 import tng.vnv.planner.utils.TestPlanStatus
 import tng.vnv.planner.utils.TestSetType
 
+@Slf4j
 @Transactional
 @SpringBootTest(classes = [Application.class], webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 class TestPlanControllerSpec extends Specification {
@@ -71,7 +73,41 @@ class TestPlanControllerSpec extends Specification {
         when:
         def packageCallback = new PackageCallback(packageId: '0d274a40-191a-4f6f-b6ef-2a6960c24bc2', confirmRequired: false)
         packageController.onChange(packageCallback).body
-        def tesPlanList = testPlanController.listAllTestPlans()
+        def tesPlanList = testPlanController.listAllTestPlans(null,null,null)
+        then:
+        log.info("testPlan: ")
+        log.info("testName: "+tesPlanList[0].getTestName())
+        log.info("serviceName: "+tesPlanList[0].getServiceName())
+        log.info("testStatus: "+tesPlanList[0].getTestStatus())
+        tesPlanList.size() > 0
+    }
+
+    @Test
+    def "Get all test plans by testName"() {
+        when:
+        def packageCallback = new PackageCallback(packageId: '0d274a40-191a-4f6f-b6ef-2a6960c24bc2', confirmRequired: false)
+        packageController.onChange(packageCallback).body
+        def tesPlanList = testPlanController.listAllTestPlans("test-generic-probes.eu.5gtango.optare.0.1",null,null)
+        then:
+        tesPlanList.size() > 0
+    }
+
+    @Test
+    def "Get all test plans by serviceName"() {
+        when:
+        def packageCallback = new PackageCallback(packageId: '0d274a40-191a-4f6f-b6ef-2a6960c24bc2', confirmRequired: false)
+        packageController.onChange(packageCallback).body
+        def tesPlanList = testPlanController.listAllTestPlans(null,"test-nsid1v.eu.5gtango.0.2",null)
+        then:
+        tesPlanList.size() > 0
+    }
+
+    @Test
+    def "Get all test plans by status"() {
+        when:
+        def packageCallback = new PackageCallback(packageId: '0d274a40-191a-4f6f-b6ef-2a6960c24bc2', confirmRequired: false)
+        packageController.onChange(packageCallback).body
+        def tesPlanList = testPlanController.listAllTestPlans(null,null,"SCHEDULED")
         then:
         tesPlanList.size() > 0
     }
