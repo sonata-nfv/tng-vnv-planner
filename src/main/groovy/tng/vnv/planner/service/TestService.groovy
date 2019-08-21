@@ -125,6 +125,17 @@ class TestService {
         updatePlanStatus(uuid, TestPlanStatus.CANCELLING)
     }
 
+    List<TestPlan> findPlansByTestName(String testName){
+        testPlanRepository.findByTestName(testName)
+    }
+
+    List<TestPlan> findPlansByServiceName(String serviceName){
+        testPlanRepository.findByServiceName(serviceName)
+    }
+
+    List<TestPlan> findPlansByStatus(String status){
+        testPlanRepository.findByTestStatus(status)
+    }
 
     TestPlan findPlanByUuid(String uuid){
         testPlanRepository.findByUuid(uuid)

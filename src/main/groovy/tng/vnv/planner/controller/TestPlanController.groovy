@@ -75,14 +75,33 @@ class TestPlanController {
     @GetMapping
     @ApiOperation(value="Find all test plan", notes="Finding all test plans")
     @ResponseBody
-    List<TestPlan> listAllTestPlans() {
+    List<TestPlan> listAllTestPlans(
+            @RequestParam("testName") String testName,
+            @RequestParam("serviceName") String serviceName,
+            @RequestParam("status") String status
+    ) {
+
         tangoLoggerType = "I";
         tangoLoggerOperation = "TestPlanController.listAllTestPlans";
-        tangoLoggerMessage = ("/api/v1/test-plans (find all test plans request received)");
         tangoLoggerStatus = "200";
-        tangoLogger.log(tangoLoggerType, tangoLoggerOperation, tangoLoggerMessage, tangoLoggerStatus)
 
-        testService.findAll()
+        if (testName != null) {
+            tangoLoggerMessage = ("/api/v1/test-plans?testName=$testName (find all test plans by testName=$testName request received)")
+            tangoLogger.log(tangoLoggerType, tangoLoggerOperation, tangoLoggerMessage, tangoLoggerStatus)
+            testService.findPlansByTestName(testName)
+        } else if (serviceName != null) {
+            tangoLoggerMessage = ("/api/v1/test-plans?serviceName=$serviceName (find all test plans by serviceName=$serviceName request received)")
+            tangoLogger.log(tangoLoggerType, tangoLoggerOperation, tangoLoggerMessage, tangoLoggerStatus)
+            testService.findPlansByServiceName(serviceName)
+        } else if (status != null) {
+            tangoLoggerMessage = ("/api/v1/test-plans?status=$status (find all test plans by status=$status request received)")
+            tangoLogger.log(tangoLoggerType, tangoLoggerOperation, tangoLoggerMessage, tangoLoggerStatus)
+            testService.findPlansByStatus(status)
+        } else {
+            tangoLoggerMessage = ("/api/v1/test-plans (find all test plans request received)")
+            tangoLogger.log(tangoLoggerType, tangoLoggerOperation, tangoLoggerMessage, tangoLoggerStatus)
+            testService.findAll()
+        }
     }
 
     @GetMapping('/{uuid}')
@@ -203,16 +222,10 @@ class TestPlanController {
     @PostMapping('/on-change/completed')
     @ResponseBody
     void onChangeCompleted(@Valid @RequestBody CuratorCallback callback) {
-        if(callback.status == 'ERROR'){
-          tangoLoggerType = "E";
-          tangoLoggerStatus = "500";
-        }
-        else{
-          tangoLoggerType = "I";
-          tangoLoggerStatus = "200";
-        }
+        tangoLoggerType = "I";
         tangoLoggerOperation = "TestPlanController.onChangeCompleted";
         tangoLoggerMessage = ("/api/v1/test-plans/on-change/completed (test update notification received from curator. uuid=${callback.testPlanUuid} with status=${callback.status})");
+        tangoLoggerStatus = "200";
         tangoLogger.log(tangoLoggerType, tangoLoggerOperation, tangoLoggerMessage, tangoLoggerStatus)
 
         testService.updatePlanStatus(callback.testPlanUuid, callback.status)

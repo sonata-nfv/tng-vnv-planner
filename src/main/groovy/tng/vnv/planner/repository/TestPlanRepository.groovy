@@ -42,4 +42,6 @@ interface TestPlanRepository extends JpaRepository<TestPlan, Long> {
     List<TestPlan> findAll()
     List<TestPlan> findByTestStatus(String status)
     List<TestPlan> findByTestSetUuid(String uuid)
+    List<TestPlan> findByTestName(String testName)
+    List<TestPlan> findByServiceName(String serviceName)
 }
