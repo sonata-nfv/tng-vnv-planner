@@ -137,6 +137,10 @@ class TestService {
         testPlanRepository.findByTestStatus(status)
     }
 
+    List<TestPlan> findPlansByTestUuid(String testUuid){
+        testPlanRepository.findByTestUuid(testUuid)
+    }
+
     TestPlan findPlanByUuid(String uuid){
         testPlanRepository.findByUuid(uuid)
     }
