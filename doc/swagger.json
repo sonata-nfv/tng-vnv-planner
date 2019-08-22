@@ -84,6 +84,29 @@
         "produces": [
           "*/*"
         ],
+        "parameters": [
+          {
+            "name": "serviceName",
+            "in": "query",
+            "description": "serviceName",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "description": "status",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "testName",
+            "in": "query",
+            "description": "testName",
+            "required": false,
+            "type": "string"
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK",
