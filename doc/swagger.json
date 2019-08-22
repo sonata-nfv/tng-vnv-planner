@@ -105,6 +105,13 @@
             "description": "testName",
             "required": false,
             "type": "string"
+          },
+          {
+            "name": "testUuid",
+            "in": "query",
+            "description": "testUuid",
+            "required": false,
+            "type": "string"
           }
         ],
         "responses": {
