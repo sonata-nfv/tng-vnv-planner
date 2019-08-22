@@ -78,7 +78,8 @@ class TestPlanController {
     List<TestPlan> listAllTestPlans(
             @RequestParam(name = "testName", required = false) String testName,
             @RequestParam(name = "serviceName", required = false) String serviceName,
-            @RequestParam(name = "status", required = false) String status
+            @RequestParam(name = "status", required = false) String status,
+            @RequestParam(name = "testUuid", required = false) String testUuid
     ) {
 
         tangoLoggerType = "I";
@@ -97,6 +98,10 @@ class TestPlanController {
             tangoLoggerMessage = ("/api/v1/test-plans?status=$status (find all test plans by status=$status request received)")
             tangoLogger.log(tangoLoggerType, tangoLoggerOperation, tangoLoggerMessage, tangoLoggerStatus)
             testService.findPlansByStatus(status)
+        } else if (testUuid != null) {
+            tangoLoggerMessage = ("/api/v1/test-plans?testUuid=$testUuid (find all test plans by testUuid=$testUuid request received)")
+            tangoLogger.log(tangoLoggerType, tangoLoggerOperation, tangoLoggerMessage, tangoLoggerStatus)
+            testService.findPlansByTestUuid(testUuid)
         } else {
             tangoLoggerMessage = ("/api/v1/test-plans (find all test plans request received)")
             tangoLogger.log(tangoLoggerType, tangoLoggerOperation, tangoLoggerMessage, tangoLoggerStatus)

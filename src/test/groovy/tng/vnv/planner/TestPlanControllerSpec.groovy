@@ -73,12 +73,13 @@ class TestPlanControllerSpec extends Specification {
         when:
         def packageCallback = new PackageCallback(packageId: '0d274a40-191a-4f6f-b6ef-2a6960c24bc2', confirmRequired: false)
         packageController.onChange(packageCallback).body
-        def tesPlanList = testPlanController.listAllTestPlans(null,null,null)
+        def tesPlanList = testPlanController.listAllTestPlans(null,null,null,null)
         then:
         log.info("testPlan: ")
         log.info("testName: "+tesPlanList[0].getTestName())
         log.info("serviceName: "+tesPlanList[0].getServiceName())
         log.info("testStatus: "+tesPlanList[0].getTestStatus())
+        log.info("testUuid: "+tesPlanList[0].getTestUuid())
         tesPlanList.size() > 0
     }
 
@@ -87,7 +88,7 @@ class TestPlanControllerSpec extends Specification {
         when:
         def packageCallback = new PackageCallback(packageId: '0d274a40-191a-4f6f-b6ef-2a6960c24bc2', confirmRequired: false)
         packageController.onChange(packageCallback).body
-        def tesPlanList = testPlanController.listAllTestPlans("test-generic-probes.eu.5gtango.optare.0.1",null,null)
+        def tesPlanList = testPlanController.listAllTestPlans("test-generic-probes.eu.5gtango.optare.0.1",null,null,null)
         then:
         tesPlanList.size() > 0
     }
@@ -97,7 +98,7 @@ class TestPlanControllerSpec extends Specification {
         when:
         def packageCallback = new PackageCallback(packageId: '0d274a40-191a-4f6f-b6ef-2a6960c24bc2', confirmRequired: false)
         packageController.onChange(packageCallback).body
-        def tesPlanList = testPlanController.listAllTestPlans(null,"test-nsid1v.eu.5gtango.0.2",null)
+        def tesPlanList = testPlanController.listAllTestPlans(null,"test-nsid1v.eu.5gtango.0.2",null, null)
         then:
         tesPlanList.size() > 0
     }
@@ -107,7 +108,17 @@ class TestPlanControllerSpec extends Specification {
         when:
         def packageCallback = new PackageCallback(packageId: '0d274a40-191a-4f6f-b6ef-2a6960c24bc2', confirmRequired: false)
         packageController.onChange(packageCallback).body
-        def tesPlanList = testPlanController.listAllTestPlans(null,null,"SCHEDULED")
+        def tesPlanList = testPlanController.listAllTestPlans(null,null,"SCHEDULED",null)
+        then:
+        tesPlanList.size() > 0
+    }
+
+    @Test
+    def "Get all test plans by testUuid"() {
+        when:
+        def packageCallback = new PackageCallback(packageId: '0d274a40-191a-4f6f-b6ef-2a6960c24bc2', confirmRequired: false)
+        packageController.onChange(packageCallback).body
+        def tesPlanList = testPlanController.listAllTestPlans(null,null,null, "88f6c1c4-c614-4f4d-87e6-72ef0192956f")
         then:
         tesPlanList.size() > 0
     }
