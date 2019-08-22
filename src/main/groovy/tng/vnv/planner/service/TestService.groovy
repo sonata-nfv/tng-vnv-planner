@@ -204,7 +204,7 @@ class TestService {
         tangoLoggerStatus = "200";
         tangoLogger.log(tangoLoggerType, tangoLoggerOperation, tangoLoggerMessage, tangoLoggerStatus)
 
-        def matchedServices = [] as HashSet<Object>
+        List matchedServices = []
         def packs = gatekeeper.getPackageByUuid(uuid)
         if(packs != null){
             packs.each { pack->
@@ -220,13 +220,13 @@ class TestService {
                             tangoLoggerStatus = "200";
                             tangoLogger.log(tangoLoggerType, tangoLoggerOperation, tangoLoggerMessage, tangoLoggerStatus)
 
-                            matchedServices << findServicesByTag(tt)
+                            matchedServices.addAll(findServicesByTag(tt))
                         }
                     }
                 }
             }
         }
-        new ArrayList(matchedServices)
+        matchedServices
     }
 
     List findServicesByTag(def tag){
