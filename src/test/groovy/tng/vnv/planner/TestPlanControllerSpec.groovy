@@ -270,7 +270,7 @@ class TestPlanControllerSpec extends Specification {
         when:
         def servicesByTest = testPlanController.listServicesByTest('88f6c1c4-c614-4f4d-87e6-72ef0192956f')
         then:
-        servicesByTest[0].nsd.name[0] == "test-ns-nsid1v"
+        servicesByTest[0].nsd.name == "test-ns-nsid1v"
     }
 
     @Test
