@@ -34,6 +34,8 @@
 
 package tng.vnv.planner.controller
 
+import org.apache.tomcat.util.json.JSONParser
+import springfox.documentation.spring.web.json.Json
 import tng.vnv.planner.utils.TangoLogger
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
@@ -75,22 +77,27 @@ class TestPlanController {
     @GetMapping('/count')
     @ApiOperation(value="Get number of test plans by status", notes="Getting the number of the test plan with a specific status")
     @ResponseBody
-    long countTestPlansByStatus(
+    HashMap<String, String> countTestPlansByStatus(
             @RequestParam(name = "status", required = false) String status
     ){
         tangoLoggerType = "I";
         tangoLoggerOperation = "TestPlanController.countTestPlansByStatus";
         tangoLoggerStatus = "200";
 
+        HashMap<String, String> response = new HashMap<>();
+        long count
+
         if (status != null) {
             tangoLoggerMessage = ("/api/v1/test-plans/count?status=$status (count test plans with status=$status request received)")
             tangoLogger.log(tangoLoggerType, tangoLoggerOperation, tangoLoggerMessage, tangoLoggerStatus)
-            testService.countTestPlansByStatus(status)
+            count = testService.countTestPlansByStatus(status)
         } else {
             tangoLoggerMessage = ("/api/v1/test-plans/count (count all test plans request received)")
             tangoLogger.log(tangoLoggerType, tangoLoggerOperation, tangoLoggerMessage, tangoLoggerStatus)
-            testService.countTestPlans()
+            count = testService.countTestPlans()
         }
+        response.put("count", count)
+        return response
     }
 
     @GetMapping

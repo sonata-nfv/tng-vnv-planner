@@ -41,6 +41,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.transaction.annotation.Transactional
 import spock.lang.Specification
+import springfox.documentation.spring.web.json.Json
 import tng.vnv.planner.controller.PackageController
 import tng.vnv.planner.controller.TestPlanController
 import tng.vnv.planner.model.CuratorCallback
@@ -138,9 +139,9 @@ class TestPlanControllerSpec extends Specification {
         when:
         def packageCallback = new PackageCallback(packageId: '0d274a40-191a-4f6f-b6ef-2a6960c24bc2', confirmRequired: false)
         packageController.onChange(packageCallback).body
-        def c = testPlanController.countTestPlansByStatus("SCHEDULED")
+        def countJson = testPlanController.countTestPlansByStatus("SCHEDULED")
         then:
-        c == 1
+        countJson["count"] == 1
     }
 
     @Test
@@ -148,9 +149,9 @@ class TestPlanControllerSpec extends Specification {
         when:
         def packageCallback = new PackageCallback(packageId: '0d274a40-191a-4f6f-b6ef-2a6960c24bc2', confirmRequired: false)
         packageController.onChange(packageCallback).body
-        def c = testPlanController.countTestPlansByStatus(null)
+        def countJson = testPlanController.countTestPlansByStatus(null)
         then:
-        c == 1
+        countJson["count"] == 1
     }
 
     @Test
