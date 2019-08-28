@@ -149,9 +149,9 @@ class TestPlanControllerSpec extends Specification {
         when:
         def packageCallback = new PackageCallback(packageId: '0d274a40-191a-4f6f-b6ef-2a6960c24bc2', confirmRequired: false)
         packageController.onChange(packageCallback).body
-        def countJson = testPlanController.countTestPlansByStatus(null)
+        def resp = testPlanController.countTestPlansByStatus(null)
         then:
-        countJson["count"] == 1
+        resp.count == 1
     }
 
     @Test
