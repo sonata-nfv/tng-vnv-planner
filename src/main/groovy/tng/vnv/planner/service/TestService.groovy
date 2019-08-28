@@ -187,8 +187,6 @@ class TestService {
                 curator.delete(testPlan.uuid)
                 updatePlanStatus(testPlan.uuid, TestPlanStatus.CANCELLING)
             }
-
-
         }
     }
 

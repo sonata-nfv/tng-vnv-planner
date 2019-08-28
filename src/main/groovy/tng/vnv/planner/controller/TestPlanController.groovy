@@ -34,12 +34,14 @@
 
 package tng.vnv.planner.controller
 
-import tng.vnv.planner.utils.TangoLogger
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
 import io.swagger.annotations.ApiResponse
 import io.swagger.annotations.ApiResponses
+import io.swagger.annotations.ResponseHeader
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.HttpHeaders
+import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import tng.vnv.planner.ScheduleManager
 import tng.vnv.planner.WorkflowManager
@@ -47,8 +49,10 @@ import tng.vnv.planner.model.CuratorCallback
 import tng.vnv.planner.model.TestPlan
 import tng.vnv.planner.service.NetworkService
 import tng.vnv.planner.service.TestService
+import tng.vnv.planner.utils.TangoLogger
 import tng.vnv.planner.utils.TestPlanStatus
 
+import javax.servlet.http.HttpServletResponse
 import javax.validation.Valid
 
 @RestController
@@ -74,8 +78,7 @@ class TestPlanController {
 
     @GetMapping
     @ApiOperation(value="Find all test plan", notes="Finding all test plans")
-    @ResponseBody
-    List<TestPlan> listAllTestPlans(
+    ResponseEntity<List<TestPlan>> listAllTestPlans(
             @RequestParam(name = "testName", required = false) String testName,
             @RequestParam(name = "serviceName", required = false) String serviceName,
             @RequestParam(name = "status", required = false) String status,
@@ -86,40 +89,55 @@ class TestPlanController {
         tangoLoggerOperation = "TestPlanController.listAllTestPlans";
         tangoLoggerStatus = "200";
 
+        List<TestPlan> responseBody = []
+
         if (testName != null) {
             tangoLoggerMessage = ("/api/v1/test-plans?testName=$testName (find all test plans by testName=$testName request received)")
             tangoLogger.log(tangoLoggerType, tangoLoggerOperation, tangoLoggerMessage, tangoLoggerStatus)
-            testService.findPlansByTestName(testName)
+            responseBody = testService.findPlansByTestName(testName)
         } else if (serviceName != null) {
             tangoLoggerMessage = ("/api/v1/test-plans?serviceName=$serviceName (find all test plans by serviceName=$serviceName request received)")
             tangoLogger.log(tangoLoggerType, tangoLoggerOperation, tangoLoggerMessage, tangoLoggerStatus)
-            testService.findPlansByServiceName(serviceName)
+            responseBody = testService.findPlansByServiceName(serviceName)
         } else if (status != null) {
             tangoLoggerMessage = ("/api/v1/test-plans?status=$status (find all test plans by status=$status request received)")
             tangoLogger.log(tangoLoggerType, tangoLoggerOperation, tangoLoggerMessage, tangoLoggerStatus)
-            testService.findPlansByStatus(status)
+            responseBody = testService.findPlansByStatus(status)
         } else if (testUuid != null) {
             tangoLoggerMessage = ("/api/v1/test-plans?testUuid=$testUuid (find all test plans by testUuid=$testUuid request received)")
             tangoLogger.log(tangoLoggerType, tangoLoggerOperation, tangoLoggerMessage, tangoLoggerStatus)
-            testService.findPlansByTestUuid(testUuid)
+            responseBody = testService.findPlansByTestUuid(testUuid)
         } else {
             tangoLoggerMessage = ("/api/v1/test-plans (find all test plans request received)")
             tangoLogger.log(tangoLoggerType, tangoLoggerOperation, tangoLoggerMessage, tangoLoggerStatus)
-            testService.findAll()
+            responseBody = testService.findAll()
         }
+
+        HttpHeaders responseHeaders = new HttpHeaders()
+        responseHeaders.set("Content-Length", responseBody.toString().length().toString())
+
+        return ResponseEntity.ok()
+                .headers(responseHeaders)
+                .body(responseBody)
     }
 
     @GetMapping('/{uuid}')
     @ApiOperation(value="Find a test plan", notes="Finding test plan by uuid")
-    @ResponseBody
-    TestPlan findTestPlan(@PathVariable String uuid) {
+    ResponseEntity<TestPlan> findTestPlan(@PathVariable String uuid) {
         tangoLoggerType = "I";
         tangoLoggerOperation = "TestPlanController.findTestPlan";
         tangoLoggerMessage = ("/api/v1/test-plans/{uuid} (find test plan by uuid request received. UUID=${uuid})");
         tangoLoggerStatus = "200";
         tangoLogger.log(tangoLoggerType, tangoLoggerOperation, tangoLoggerMessage, tangoLoggerStatus)
 
-        testService.findPlanByUuid(uuid)
+        TestPlan responseBody = testService.findPlanByUuid(uuid)
+
+        HttpHeaders responseHeaders = new HttpHeaders()
+        responseHeaders.set("Content-Length", responseBody.toString().length().toString())
+
+        return ResponseEntity.ok()
+                .headers(responseHeaders)
+                .body(responseBody)
     }
 
     @DeleteMapping('{uuid}')
@@ -139,16 +157,21 @@ class TestPlanController {
     @ApiOperation(value="Create a test plan", notes="Creating a test plan")
     @ApiResponses(value = [@ApiResponse(code = 400, message = 'Bad Request')])
     @PostMapping('')
-    @ResponseBody
-    TestPlan save(@Valid @RequestBody TestPlan testPlan) {
-        scheduler.scheduleNewTestSet(testPlan)
+    ResponseEntity<TestPlan> save(@Valid @RequestBody TestPlan testPlan) {
+        TestPlan responseBody = scheduler.scheduleNewTestSet(testPlan)
+
+        HttpHeaders responseHeaders = new HttpHeaders()
+        responseHeaders.set("Content-Length", responseBody.toString().length().toString())
+
+        return ResponseEntity.ok()
+                .headers(responseHeaders)
+                .body(responseBody)
     }
 
     @ApiOperation(value="Update a test plan status", notes="Updating a test plan status by uuid")
     @ApiResponses(value = [@ApiResponse(code = 400, message = 'Bad Request')])
     @PutMapping('{uuid}')
-    @ResponseBody
-    TestPlan update(@Valid @PathVariable String uuid, @RequestParam String status) {
+    ResponseEntity<TestPlan> update(@Valid @PathVariable String uuid, @RequestParam String status) {
         tangoLoggerType = "I";
         tangoLoggerOperation = "TestPlanController.update";
         tangoLoggerMessage = ("/api/v1/test-plans/{uuid} (update test plan status by uuid request received. UUID=${uuid})");
@@ -158,63 +181,88 @@ class TestPlanController {
         def testPlan = scheduler.update(uuid, status)
         manager.testPlanUpdated(uuid)
 
-        return testPlan
+        HttpHeaders responseHeaders = new HttpHeaders()
+        responseHeaders.set("Content-Length", testPlan.toString().length().toString())
+
+        return ResponseEntity.ok()
+                .headers(responseHeaders)
+                .body(testPlan)
     }
 
     @ApiOperation(value="Create a test plan by service uuid")
     @ApiResponses(value = [@ApiResponse(code = 400, message = 'Bad Request')])
     @PostMapping('/services')
-    @ResponseBody
-    List<TestPlan> buildTestPlansByService(@Valid @RequestParam String serviceUuid, @RequestParam(required = false) Boolean confirmRequired) {
+    ResponseEntity<List<TestPlan>> buildTestPlansByService(@Valid @RequestParam String serviceUuid, @RequestParam(required = false) Boolean confirmRequired) {
         tangoLoggerType = "I";
         tangoLoggerOperation = "TestPlanController.buildTestPlansByService";
         tangoLoggerMessage = ("/api/v1/test-plans/services (create a test plan by service uuid request received. Service UUID: ${serviceUuid})");
         tangoLoggerStatus = "200";
         tangoLogger.log(tangoLoggerType, tangoLoggerOperation, tangoLoggerMessage, tangoLoggerStatus)
 
-        testService.buildTestPlansByService(serviceUuid, confirmRequired).testPlans
+        List<TestPlan> responseBody = testService.buildTestPlansByService(serviceUuid, confirmRequired).testPlans
+        HttpHeaders responseHeaders = new HttpHeaders()
+        responseHeaders.set("Content-Length", responseBody.toString().length().toString())
+
+        return ResponseEntity.ok()
+                .headers(responseHeaders)
+                .body(responseBody)
     }
 
     @ApiOperation(value="Create a test plan by test uuid")
     @ApiResponses(value = [@ApiResponse(code = 400, message = 'Bad Request')])
     @PostMapping('/tests')
-    @ResponseBody
-    List<TestPlan> buildTestPlansByTest(@Valid @RequestParam String testUuid, @RequestParam(required = false) Boolean confirmRequired) {
+    ResponseEntity<List<TestPlan>> buildTestPlansByTest(@Valid @RequestParam String testUuid, @RequestParam(required = false) Boolean confirmRequired) {
         tangoLoggerType = "I";
         tangoLoggerOperation = "TestPlanController.buildTestPlansByTest";
         tangoLoggerMessage = ("/api/v1/test-plans/tests (create a test plan by test uuid request received. Test UUID: ${testUuid})");
         tangoLoggerStatus = "200";
         tangoLogger.log(tangoLoggerType, tangoLoggerOperation, tangoLoggerMessage, tangoLoggerStatus)
 
-        testService.buildTestPlansByTest(testUuid, confirmRequired).testPlans
+        List<TestPlan> responseBody = testService.buildTestPlansByTest(testUuid, confirmRequired).testPlans
+        HttpHeaders responseHeaders = new HttpHeaders()
+        responseHeaders.set("Content-Length", responseBody.toString().length().toString())
+
+        return ResponseEntity.ok()
+                .headers(responseHeaders)
+                .body(responseBody)
     }
 
     @ApiOperation(value="Create a test plan by testing tag")
     @ApiResponses(value = [@ApiResponse(code = 400, message = 'Bad Request')])
     @PostMapping('/testing-tags')
-    @ResponseBody
-    List<TestPlan> buildTestPlansByTestingTag(@Valid @RequestParam String testingTag, @RequestParam(required = false) Boolean confirmRequired) {
+    ResponseEntity<List<TestPlan>> buildTestPlansByTestingTag(@Valid @RequestParam String testingTag, @RequestParam(required = false) Boolean confirmRequired) {
         tangoLoggerType = "I";
         tangoLoggerOperation = "TestPlanController.buildTestPlansByTestingTag";
         tangoLoggerMessage = ("/api/v1/test-plans/testing-tags (create a test plan by testing tag request received. Testing tag: ${testingTag})");
         tangoLoggerStatus = "200";
         tangoLogger.log(tangoLoggerType, tangoLoggerOperation, tangoLoggerMessage, tangoLoggerStatus)
 
-        testService.buildTestPlansByTestingTag(testingTag, confirmRequired).testPlans
+        List<TestPlan> responseBody = testService.buildTestPlansByTestingTag(testingTag, confirmRequired).testPlans
+        HttpHeaders responseHeaders = new HttpHeaders()
+        responseHeaders.set("Content-Length", responseBody.toString().length().toString())
+
+        return ResponseEntity.ok()
+                .headers(responseHeaders)
+                .body(responseBody)
     }
 
     @ApiOperation(value="Create a test plan by test uuid and service uuid")
     @ApiResponses(value = [@ApiResponse(code = 400, message = 'Bad Request')])
     @PostMapping('/testAndServices')
-    @ResponseBody
-    List<TestPlan> buildTestPlansByNsTdPair(@Valid @RequestParam String testUuid, @RequestParam String serviceUuid, @RequestParam(required = false) Boolean confirmRequired) {
+    ResponseEntity<List<TestPlan>> buildTestPlansByNsTdPair(@Valid @RequestParam String testUuid, @RequestParam String serviceUuid, @RequestParam(required = false) Boolean confirmRequired) {
         tangoLoggerType = "I";
         tangoLoggerOperation = "TestPlanController.buildTestPlansByNsTdPair";
         tangoLoggerMessage = ("/api/v1/test-plans/testAndServices (create a test plan by service uuid and test uuid request received. Service UUID: ${serviceUuid}), test UUID=${testUuid}");
         tangoLoggerStatus = "200";
         tangoLogger.log(tangoLoggerType, tangoLoggerOperation, tangoLoggerMessage, tangoLoggerStatus)
 
-        testService.buildTestPlansByServiceAndTest(testUuid, serviceUuid, confirmRequired).testPlans
+        List<TestPlan> responseBody = testService.buildTestPlansByServiceAndTest(testUuid, serviceUuid, confirmRequired).testPlans
+        HttpHeaders responseHeaders = new HttpHeaders()
+        responseHeaders.set("Content-Length", responseBody.toString().length().toString())
+
+        return ResponseEntity.ok()
+                .headers(responseHeaders)
+                .body(responseBody)
     }
 
     // Curator
@@ -267,51 +315,81 @@ class TestPlanController {
     // Network Services
     @ApiOperation(value="Find all tests related with a service uuid")
     @GetMapping('/services/{nsdUuid}/tests')
-    List<Object> listTestsByService(@PathVariable('nsdUuid') String uuid) {
+    ResponseEntity<List<Object>> listTestsByService(@PathVariable('nsdUuid') String uuid) {
         tangoLoggerType = "I";
         tangoLoggerOperation = "TestPlanController.listTestsByService";
         tangoLoggerMessage = ("/api/v1/test-plans/services/{nsdUuid}/tests (list tests by service uuid request received. UUID=${uuid}");
         tangoLoggerStatus = "200";
         tangoLogger.log(tangoLoggerType, tangoLoggerOperation, tangoLoggerMessage, tangoLoggerStatus)
 
-        networkServiceService.findTestsByService(uuid)
+        List<Object> responseBody = []
+
+        responseBody = networkServiceService.findTestsByService(uuid)
+
+        HttpHeaders responseHeaders = new HttpHeaders()
+        responseHeaders.set("Content-Length", responseBody.toString().length().toString())
+
+        return ResponseEntity.ok()
+                .headers(responseHeaders)
+                .body(responseBody)
     }
 
     @ApiOperation(value="Find all tests related with a testing_tag")
     @GetMapping('/testing-tags/{tag}/tests')
-    List<Object> listTestsByTag(@PathVariable('tag') String tag) {
+    ResponseEntity<List<Object>> listTestsByTag(@PathVariable('tag') String tag) {
         tangoLoggerType = "I";
         tangoLoggerOperation = "TestPlanController.listTestsByTag";
         tangoLoggerMessage = ("/api/v1/test-plans/testing-tags/{tag}/tests (list tests by tag request received. Testing-tag=${tag}");
         tangoLoggerStatus = "200";
         tangoLogger.log(tangoLoggerType, tangoLoggerOperation, tangoLoggerMessage, tangoLoggerStatus)
 
-        networkServiceService.findTestsByTag(tag)
+        List<Object> responseBody = networkServiceService.findTestsByTag(tag)
+
+        HttpHeaders responseHeaders = new HttpHeaders()
+        responseHeaders.set("Content-Length", responseBody.toString().length().toString())
+
+        return ResponseEntity.ok()
+                .headers(responseHeaders)
+                .body(responseBody)
     }
 
     // Tests
 
     @ApiOperation(value="Find all services related with a test")
     @GetMapping('/tests/{testdUuid}/services')
-    List<Object> listServicesByTest(@PathVariable('testdUuid') String uuid) {
+    ResponseEntity<List<Object>> listServicesByTest(@PathVariable('testdUuid') String uuid) {
         tangoLoggerType = "I";
         tangoLoggerOperation = "TestPlanController.listServicesByTest";
         tangoLoggerMessage = ("/api/v1/test-plans/tests/{testdUuid}/services (list services by test uuid request received. UUID=${uuid}");
         tangoLoggerStatus = "200";
         tangoLogger.log(tangoLoggerType, tangoLoggerOperation, tangoLoggerMessage, tangoLoggerStatus)
 
-        testService.findServicesByTest(uuid)
+        List<Object> responseBody = testService.findServicesByTest(uuid)
+
+        HttpHeaders responseHeaders = new HttpHeaders()
+        responseHeaders.set("Content-Length", responseBody.toString().length().toString())
+
+        return ResponseEntity.ok()
+                .headers(responseHeaders)
+                .body(responseBody)
     }
 
     @ApiOperation(value="Find all services related with a tag")
     @GetMapping('/testing-tags/{tag}/services')
-    List<Object> listServicesByTag(@PathVariable('tag') String tag) {
+    ResponseEntity<List<Object>> listServicesByTag(@PathVariable('tag') String tag) {
         tangoLoggerType = "I";
         tangoLoggerOperation = "TestPlanController.listServicesByTag";
         tangoLoggerMessage = ("/api/v1/test-plans/tests/{tag}/services (list services by tag request received. Testing-tag=${tag}");
         tangoLoggerStatus = "200";
         tangoLogger.log(tangoLoggerType, tangoLoggerOperation, tangoLoggerMessage, tangoLoggerStatus)
 
-        testService.findServicesByTag(tag)
+        List<Object> responseBody = testService.findServicesByTag(tag)
+
+        HttpHeaders responseHeaders = new HttpHeaders()
+        responseHeaders.set("Content-Length", responseBody.toString().length().toString())
+
+        return ResponseEntity.ok()
+                .headers(responseHeaders)
+                .body(responseBody)
     }
 }

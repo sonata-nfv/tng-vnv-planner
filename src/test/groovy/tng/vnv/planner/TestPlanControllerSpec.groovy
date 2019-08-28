@@ -76,11 +76,11 @@ class TestPlanControllerSpec extends Specification {
         def tesPlanList = testPlanController.listAllTestPlans(null,null,null,null)
         then:
         log.info("testPlan: ")
-        log.info("testName: "+tesPlanList[0].getTestName())
-        log.info("serviceName: "+tesPlanList[0].getServiceName())
-        log.info("testStatus: "+tesPlanList[0].getTestStatus())
-        log.info("testUuid: "+tesPlanList[0].getTestUuid())
-        tesPlanList.size() > 0
+        log.info("testName: "+tesPlanList.body[0].getTestName())
+        log.info("serviceName: "+tesPlanList.body[0].getServiceName())
+        log.info("testStatus: "+tesPlanList.body[0].getTestStatus())
+        log.info("testUuid: "+tesPlanList.body[0].getTestUuid())
+        tesPlanList.body.size() > 0
     }
 
     @Test
@@ -90,7 +90,7 @@ class TestPlanControllerSpec extends Specification {
         packageController.onChange(packageCallback).body
         def tesPlanList = testPlanController.listAllTestPlans("test-generic-probes.eu.5gtango.optare.0.1",null,null,null)
         then:
-        tesPlanList.size() > 0
+        tesPlanList.body.size() > 0
     }
 
     @Test
@@ -100,7 +100,7 @@ class TestPlanControllerSpec extends Specification {
         packageController.onChange(packageCallback).body
         def tesPlanList = testPlanController.listAllTestPlans(null,"test-nsid1v.eu.5gtango.0.2",null, null)
         then:
-        tesPlanList.size() > 0
+        tesPlanList.body.size() > 0
     }
 
     @Test
@@ -110,7 +110,7 @@ class TestPlanControllerSpec extends Specification {
         packageController.onChange(packageCallback).body
         def tesPlanList = testPlanController.listAllTestPlans(null,null,"SCHEDULED",null)
         then:
-        tesPlanList.size() > 0
+        tesPlanList.body.size() > 0
     }
 
     @Test
@@ -120,7 +120,7 @@ class TestPlanControllerSpec extends Specification {
         packageController.onChange(packageCallback).body
         def tesPlanList = testPlanController.listAllTestPlans(null,null,null, "88f6c1c4-c614-4f4d-87e6-72ef0192956f")
         then:
-        tesPlanList.size() > 0
+        tesPlanList.body.size() > 0
     }
 
     @Test
@@ -130,7 +130,7 @@ class TestPlanControllerSpec extends Specification {
         def testPlans = packageController.onChange(packageCallback).body
         def testPlan = testPlanController.findTestPlan(testPlans[0].uuid)
         then:
-        testPlan.testUuid == '88f6c1c4-c614-4f4d-87e6-72ef0192956f'
+        testPlan.body.testUuid == '88f6c1c4-c614-4f4d-87e6-72ef0192956f'
     }
 
     @Test
@@ -224,7 +224,7 @@ class TestPlanControllerSpec extends Specification {
     def "Test plan completed by curator"() {
         when:
         def createdPlan = testPlanController.buildTestPlansByNsTdPair('88f6c1c4-c614-4f4d-87e6-72ef0192956f', '57cebe79-96aa-4f41-af80-93050bfddd9f', false)
-        def json="{\"event_actor\": \"Curator\", \"testPlanUuid\": \"${testPlanUuid: createdPlan[0].uuid}\", \"exception\": \"\", \"status\": \"COMPLETED\", \"test_results\": [{\"test_uuid\": \"cf8e1dd9-777f-4f96-9458-5a5fe0a86f7d\",\"test_result_uuid\": \"ff0a1530-c72e-49c3-815c-fa86fe3d952c\",\"test_status\": \"COMPLETED\"}]}"
+        def json="{\"event_actor\": \"Curator\", \"testPlanUuid\": \"${testPlanUuid: createdPlan.body[0].uuid}\", \"exception\": \"\", \"status\": \"COMPLETED\", \"test_results\": [{\"test_uuid\": \"cf8e1dd9-777f-4f96-9458-5a5fe0a86f7d\",\"test_result_uuid\": \"ff0a1530-c72e-49c3-815c-fa86fe3d952c\",\"test_status\": \"COMPLETED\"}]}"
         def jsonSlurper = new JsonSlurper()
         CuratorCallback curatorCallback = jsonSlurper.parseText(toCamelCase(json))
         testPlanController.onChangeCompleted(curatorCallback)
@@ -240,7 +240,7 @@ class TestPlanControllerSpec extends Specification {
         when:
         def createdPlan = testPlanController.buildTestPlansByNsTdPair('88f6c1c4-c614-4f4d-87e6-72ef0192956f', '57cebe79-96aa-4f41-af80-93050bfddd9f', false)
         def result = new TestResult(testUuid: "123", testResultUuid: "5678", testStatus: TestPlanStatus.STARTING)
-        def curatorCallback = new CuratorCallback(eventActor: 'Curator', status: TestPlanStatus.STARTING, testPlanUuid: createdPlan[0].uuid, testResults: [result])
+        def curatorCallback = new CuratorCallback(eventActor: 'Curator', status: TestPlanStatus.STARTING, testPlanUuid: createdPlan.body[0].uuid, testResults: [result])
         testPlanController.onChange(curatorCallback)
         def testSetList = testSetRepository.findAll()
         def testPlanList = testPlanRepository.findAll()
@@ -254,7 +254,7 @@ class TestPlanControllerSpec extends Specification {
         when:
         def testsByTag = testPlanController.listTestsByTag("eu.5gtango.testingtag.example")
         then:
-        testsByTag[0].testd.name == "generic-probes-test-pingonly"
+        testsByTag.body[0].testd.name == "generic-probes-test-pingonly"
     }
 
     @Test
@@ -262,7 +262,7 @@ class TestPlanControllerSpec extends Specification {
         when:
         def servicesByTag = testPlanController.listServicesByTag("eu.5gtango.testingtag.example")
         then:
-        servicesByTag[0].nsd.name == "test-ns-nsid1v"
+        servicesByTag.body[0].nsd.name == "test-ns-nsid1v"
     }
 
     @Test
@@ -270,7 +270,7 @@ class TestPlanControllerSpec extends Specification {
         when:
         def servicesByTest = testPlanController.listServicesByTest('88f6c1c4-c614-4f4d-87e6-72ef0192956f')
         then:
-        servicesByTest[0].nsd.name == "test-ns-nsid1v"
+        servicesByTest.body[0].nsd.name == "test-ns-nsid1v"
     }
 
     @Test
@@ -278,7 +278,7 @@ class TestPlanControllerSpec extends Specification {
         when:
         def testsByService = testPlanController.listTestsByService('57cebe79-96aa-4f41-af80-93050bfddd9f')
         then:
-        testsByService[0].testd.name[0] == "generic-probes-test-pingonly"
+        testsByService.body[0].testd.name[0] == "generic-probes-test-pingonly"
     }
 
     static String toCamelCase( String text, boolean capitalized = false ) {
