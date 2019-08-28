@@ -165,6 +165,38 @@
         "deprecated": false
       }
     },
+    "/api/v1/test-plans/count": {
+      "get": {
+        "tags": [
+          "test-plan-controller"
+        ],
+        "summary": "Get number of test plans by status",
+        "description": "Getting the number of the test plan with a specific status",
+        "operationId": "countTestPlansByStatusUsingGET",
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "status",
+            "in": "query",
+            "description": "status",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        },
+        "deprecated": false
+      }
+    },
     "/api/v1/test-plans/on-change/": {
       "post": {
         "tags": [
