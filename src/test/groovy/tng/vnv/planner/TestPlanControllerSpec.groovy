@@ -134,6 +134,26 @@ class TestPlanControllerSpec extends Specification {
     }
 
     @Test
+    def "Count all test plans with specific status"() {
+        when:
+        def packageCallback = new PackageCallback(packageId: '0d274a40-191a-4f6f-b6ef-2a6960c24bc2', confirmRequired: false)
+        packageController.onChange(packageCallback).body
+        def c = testPlanController.countTestPlansByStatus("SCHEDULED")
+        then:
+        c == 1
+    }
+
+    @Test
+    def "Count all test plans"() {
+        when:
+        def packageCallback = new PackageCallback(packageId: '0d274a40-191a-4f6f-b6ef-2a6960c24bc2', confirmRequired: false)
+        packageController.onChange(packageCallback).body
+        def c = testPlanController.countTestPlansByStatus(null)
+        then:
+        c == 1
+    }
+
+    @Test
     def "Cancel a test plan"() {
         when:
         def packageCallback = new PackageCallback(packageId: '0d274a40-191a-4f6f-b6ef-2a6960c24bc2', confirmRequired: false)

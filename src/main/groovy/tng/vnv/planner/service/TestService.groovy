@@ -256,4 +256,12 @@ class TestService {
         }
         new ArrayList(matchedServices)
     }
+
+    long countTestPlansByStatus(String status){
+        testPlanRepository.countByTestStatus(status)
+    }
+
+    long countTestPlans(){
+        testPlanRepository.count()
+    }
 }
