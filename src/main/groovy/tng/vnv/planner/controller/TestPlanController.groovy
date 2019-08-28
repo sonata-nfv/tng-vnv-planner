@@ -72,6 +72,27 @@ class TestPlanController {
     String tangoLoggerMessage = null;
     String tangoLoggerStatus = null;
 
+    @GetMapping('/count')
+    @ApiOperation(value="Get number of test plans by status", notes="Getting the number of the test plan with a specific status")
+    @ResponseBody
+    long countTestPlansByStatus(
+            @RequestParam(name = "status", required = false) String status
+    ){
+        tangoLoggerType = "I";
+        tangoLoggerOperation = "TestPlanController.countTestPlansByStatus";
+        tangoLoggerStatus = "200";
+
+        if (status != null) {
+            tangoLoggerMessage = ("/api/v1/test-plans/count?status=$status (count test plans with status=$status request received)")
+            tangoLogger.log(tangoLoggerType, tangoLoggerOperation, tangoLoggerMessage, tangoLoggerStatus)
+            testService.countTestPlansByStatus(status)
+        } else {
+            tangoLoggerMessage = ("/api/v1/test-plans/count (count all test plans request received)")
+            tangoLogger.log(tangoLoggerType, tangoLoggerOperation, tangoLoggerMessage, tangoLoggerStatus)
+            testService.countTestPlans()
+        }
+    }
+
     @GetMapping
     @ApiOperation(value="Find all test plan", notes="Finding all test plans")
     @ResponseBody
