@@ -34,11 +34,7 @@
 
 package tng.vnv.planner.controller
 
-import com.fasterxml.jackson.databind.util.JSONPObject
-import org.apache.tomcat.util.json.JSONParser
-import springfox.documentation.spring.web.json.Json
-import tng.vnv.planner.model.Counter
-import tng.vnv.planner.utils.TangoLogger
+
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
 import io.swagger.annotations.ApiResponse
@@ -47,10 +43,12 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
 import tng.vnv.planner.ScheduleManager
 import tng.vnv.planner.WorkflowManager
+import tng.vnv.planner.model.Counter
 import tng.vnv.planner.model.CuratorCallback
 import tng.vnv.planner.model.TestPlan
 import tng.vnv.planner.service.NetworkService
 import tng.vnv.planner.service.TestService
+import tng.vnv.planner.utils.TangoLogger
 import tng.vnv.planner.utils.TestPlanStatus
 
 import javax.validation.Valid
@@ -91,11 +89,11 @@ class TestPlanController {
         if (status != null) {
             tangoLoggerMessage = ("/api/v1/test-plans/count?status=$status (count test plans with status=$status request received)")
             tangoLogger.log(tangoLoggerType, tangoLoggerOperation, tangoLoggerMessage, tangoLoggerStatus)
-            response.count = testService.countTestPlansByStatus(status)
+            response.setCount(testService.countTestPlansByStatus(status))
         } else {
             tangoLoggerMessage = ("/api/v1/test-plans/count (count all test plans request received)")
             tangoLogger.log(tangoLoggerType, tangoLoggerOperation, tangoLoggerMessage, tangoLoggerStatus)
-            response.count = testService.countTestPlans()
+            response.setCount(testService.countTestPlans())
         }
         return response
     }
