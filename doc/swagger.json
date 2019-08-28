@@ -189,8 +189,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "type": "integer",
-              "format": "int64"
+              "$ref": "#/definitions/Counter"
             }
           }
         },
@@ -779,6 +778,16 @@
     }
   },
   "definitions": {
+    "Counter": {
+      "type": "object",
+      "properties": {
+        "count": {
+          "type": "integer",
+          "format": "int64"
+        }
+      },
+      "title": "Counter"
+    },
     "CuratorCallback": {
       "type": "object",
       "required": [
