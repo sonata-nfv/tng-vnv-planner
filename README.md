@@ -25,7 +25,7 @@ Please, do the following:
 ```bash
 $ git clone https://github.com/sonata-nfv/tng-vnv-planner.git # Clone this repository
 $ cd tng-vnv-planner
-$ gradlew bootJar
+$ gradlew bootRun
 ```
 
 ### Installing from Docker container
