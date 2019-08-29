@@ -1,4 +1,4 @@
-```[![Build Status](https://jenkins.sonata-nfv.eu/job/tng-vnv-planner/job/master/badge/icon)](https://jenkins.sonata-nfv.eu/job/tng-vnv-planner/job/master/)```
+[![Build Status](https://jenkins.sonata-nfv.eu/buildStatus/icon?job=tng-vnv-planner/master)](https://jenkins.sonata-nfv.eu/job/tng-vnv-planner/master/)
 
 <p align="center"><img src="https://github.com/sonata-nfv/tng-api-gtw/wiki/images/sonata-5gtango-logo-500px.png" /></p>
 
