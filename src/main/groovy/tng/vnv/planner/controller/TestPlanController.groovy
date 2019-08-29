@@ -151,7 +151,7 @@ class TestPlanController {
     @DeleteMapping('{uuid}')
     @ApiOperation(value="Cancel a test plan", notes="canceling test plan by uuid")
     @ResponseBody
-    void deleteTestPlan(@PathVariable String uuid) {
+    TestPlan deleteTestPlan(@PathVariable String uuid) {
         tangoLoggerType = "I";
         tangoLoggerOperation = "TestPlanController.deleteTestPlan";
         tangoLoggerMessage = ("/api/v1/test-plans/{uuid} (Cancel test plan by uuid request received. UUID=${uuid})");
@@ -160,6 +160,7 @@ class TestPlanController {
 
         manager.deleteTestPlan(uuid)
         manager.testPlanUpdated(uuid)
+        testService.findPlanByUuid(uuid)
     }
 
     @ApiOperation(value="Create a test plan", notes="Creating a test plan")
