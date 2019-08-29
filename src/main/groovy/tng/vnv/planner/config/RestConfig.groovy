@@ -35,9 +35,11 @@
 package tng.vnv.planner.config
 
 import org.springframework.boot.web.client.RestTemplateBuilder
+import org.springframework.boot.web.servlet.FilterRegistrationBean
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.web.client.RestTemplate
+import org.springframework.web.filter.ShallowEtagHeaderFilter
 
 @Configuration
 class RestConfig {
@@ -46,4 +48,13 @@ class RestConfig {
     RestTemplate restTemplateWithoutAuth(RestTemplateBuilder builder) {
         builder.build()
     }
+
+    @Bean
+    public FilterRegistrationBean filterRegistrationBean() {
+        FilterRegistrationBean filterBean = new FilterRegistrationBean();
+        filterBean.setFilter(new ShallowEtagHeaderFilter());
+        filterBean.setUrlPatterns(Arrays.asList("*"));
+        return filterBean;
+    }
+
 }
