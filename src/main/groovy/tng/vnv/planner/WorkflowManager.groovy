@@ -199,7 +199,7 @@ class WorkflowManager {
 
     void deleteTestPlan(String uuid){
         def testPlan = testPlanRepository.findByUuid(uuid)
-        if (testPlan.testStatus != TestPlanStatus.SCHEDULED){
+        if (testPlan.testStatus == TestPlanStatus.STARTING){
             curator.delete(uuid)
             testService.deletePlan(uuid)
         } else {
