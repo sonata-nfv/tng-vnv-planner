@@ -115,7 +115,7 @@ Attending to the profile set (docker/test), the planner will use two different d
 
 ## Api Reference
 
-Please, check the API in this swagger file: [swagger.json](https://github.com/sonata-nfv/tng-vnv-planner/blob/master/doc/swagger.json)
+Please, check the API in this swagger file: [swagger.json](https://github.com/sonata-nfv/tng-vnv-planner/blob/master/doc/swagger.json), or visit this [url](https://sonata-nfv.github.io/tng-doc/) and select the "5GTANGO V&V Planner API v1" spec in the drop down menu.
 
 ## Licensing
 
