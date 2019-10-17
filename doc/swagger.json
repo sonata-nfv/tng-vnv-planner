@@ -373,6 +373,13 @@
             "type": "boolean"
           },
           {
+            "name": "executionHost",
+            "in": "query",
+            "description": "executionHost",
+            "required": false,
+            "type": "string"
+          },
+          {
             "name": "serviceUuid",
             "in": "query",
             "description": "serviceUuid",

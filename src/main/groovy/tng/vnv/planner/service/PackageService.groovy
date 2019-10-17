@@ -357,11 +357,12 @@ class PackageService {
 
     }
 
-    TestSet buidTestSetByTestAndService(testUuid, serviceUuid, confirmRequired, type) {
+    TestSet buidTestSetByTestAndService(testUuid, serviceUuid, confirmRequired, executionHost, type) {
 
         def testSet = new TestSet(uuid: UUID.randomUUID().toString(),
                 requestType: type,
                 confirmRequired: confirmRequired,
+                executionHost: executionHost,
                 status: confirmRequired ? TestPlanStatus.WAITING_FOR_CONFIRMATION : TestPlanStatus.SCHEDULED)
 
         def test = gatekeeper.getTest(testUuid)
@@ -374,6 +375,7 @@ class PackageService {
                 testUuid: testUuid,
                 testName: test.testd.name+"."+test.testd.vendor+"."+test.testd.version,
                 confirmRequired: confirmRequired,
+                executionHost: executionHost,
                 testStatus: confirmRequired ? TestPlanStatus.WAITING_FOR_CONFIRMATION : TestPlanStatus.SCHEDULED)
 
         return testSet
@@ -428,8 +430,8 @@ class PackageService {
 
     }
 
-    TestSet buildTestPlansByServiceAndTest(def testUuid, def serviceUuid, def confirmRequired) {
-        def testSet = buidTestSetByTestAndService(testUuid, serviceUuid, confirmRequired, TestSetType.TEST_AND_SERVICE)
+    TestSet buildTestPlansByServiceAndTest(def testUuid, def serviceUuid, def confirmRequired, def executionHost) {
+        def testSet = buidTestSetByTestAndService(testUuid, serviceUuid, confirmRequired, executionHost, TestSetType.TEST_AND_SERVICE)
 
         testService.save(testSet)
 

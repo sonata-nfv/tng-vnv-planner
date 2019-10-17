@@ -229,7 +229,8 @@ class WorkflowManager {
 
         def testResponse = curator.post(new TestRequest(testPlanUuid: testPlan.uuid,
                 nsdUuid: testPlan.serviceUuid,
-                testdUuid: testPlan.testUuid)).body as TestResponse
+                testdUuid: testPlan.testUuid,
+                executionHost: testPlan.executionHost)).body as TestResponse
 
         testService.updatePlanStatus(testPlan.uuid, testResponse.status)
         

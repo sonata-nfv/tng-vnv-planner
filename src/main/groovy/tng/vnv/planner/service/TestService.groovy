@@ -83,8 +83,8 @@ class TestService {
         packageService.buildTestPlansByTestingTag(tag,confirmRequired)
     }
 
-    TestSet buildTestPlansByServiceAndTest(def testUuid, def serviceUuid, def confirmRequired){
-        packageService.buildTestPlansByServiceAndTest(testUuid, serviceUuid, confirmRequired)
+    TestSet buildTestPlansByServiceAndTest(def testUuid, def serviceUuid, def confirmRequired, def executionHost){
+        packageService.buildTestPlansByServiceAndTest(testUuid, serviceUuid, confirmRequired, executionHost)
     }
 
     TestSet buildTestPlansByPackage(def packageId, def confirmRequired) throws RestClientException{
@@ -117,6 +117,11 @@ class TestService {
         testPlanRepository.save(testPlan)
     }
 
+    TestPlan updatePlanDescription(String uuid, String description) {
+        def testPlan = findPlanByUuid(uuid)
+        testPlan.description = description
+        testPlanRepository.save(testPlan)
+    }
     void cancelTestSet(String uuid) {
         updateSet(uuid, TestPlanStatus.CANCELLING)
     }

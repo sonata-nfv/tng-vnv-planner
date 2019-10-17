@@ -234,14 +234,14 @@ class TestPlanController {
     @ApiResponses(value = [@ApiResponse(code = 400, message = 'Bad Request')])
     @PostMapping('/testAndServices')
     @ResponseBody
-    List<TestPlan> buildTestPlansByNsTdPair(@Valid @RequestParam String testUuid, @RequestParam String serviceUuid, @RequestParam(required = false) Boolean confirmRequired) {
+    List<TestPlan> buildTestPlansByNsTdPair(@Valid @RequestParam String testUuid, @RequestParam String serviceUuid, @RequestParam(required = false) Boolean confirmRequired, @RequestParam(required = false) String executionHost) {
         tangoLoggerType = "I";
         tangoLoggerOperation = "TestPlanController.buildTestPlansByNsTdPair";
         tangoLoggerMessage = ("/api/v1/test-plans/testAndServices (create a test plan by service uuid and test uuid request received. Service UUID: ${serviceUuid}), test UUID=${testUuid}");
         tangoLoggerStatus = "200";
         tangoLogger.log(tangoLoggerType, tangoLoggerOperation, tangoLoggerMessage, tangoLoggerStatus)
 
-        testService.buildTestPlansByServiceAndTest(testUuid, serviceUuid, confirmRequired).testPlans
+        testService.buildTestPlansByServiceAndTest(testUuid, serviceUuid, confirmRequired, executionHost).testPlans
     }
 
     // Curator
@@ -288,6 +288,29 @@ class TestPlanController {
         tangoLogger.log(tangoLoggerType, tangoLoggerOperation, tangoLoggerMessage, tangoLoggerStatus)
 
         testService.updatePlanStatus(callback.testPlanUuid, callback.status)
+
+        if (callback.status == TestPlanStatus.ERROR) {
+            if(callback.testResults.get(0).testResultUuid != null && !callback.testResults.get(0).testResultUuid.isEmpty()) {
+                tangoLoggerType = "I";
+                tangoLoggerOperation = "TestPlanController.onChange";
+                tangoLoggerMessage = ("test_result_uuid = ${callback.testResults.get(0).testResultUuid}");
+                tangoLoggerStatus = "200";
+                tangoLogger.log(tangoLoggerType, tangoLoggerOperation, tangoLoggerMessage, tangoLoggerStatus)
+
+                testService.updatePlanResultId(callback.testPlanUuid, callback.testResults.get(0).testResultUuid)
+                testService.updatePlanDescription(callback.testPlanUuid, "Service not complient with validation and verification conditions")
+            } else {
+                tangoLoggerType = "I";
+                tangoLoggerOperation = "TestPlanController.onChange";
+                tangoLoggerMessage = ("exception: ${callback.getException()}");
+                tangoLoggerStatus = "200";
+                tangoLogger.log(tangoLoggerType, tangoLoggerOperation, tangoLoggerMessage, tangoLoggerStatus)
+
+                testService.updatePlanDescription(callback.testPlanUuid, callback.getException())
+            }
+
+        }
+
         manager.testPlanUpdated(callback.testPlanUuid)
     }
 
