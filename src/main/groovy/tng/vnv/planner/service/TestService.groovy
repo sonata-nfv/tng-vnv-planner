@@ -71,16 +71,16 @@ class TestService {
     String tangoLoggerMessage = null;
     String tangoLoggerStatus = null;
 
-    TestSet buildTestPlansByTest(def uuid, def confirmRequired) {
-        packageService.buildTestPlansByTestPackage(uuid, confirmRequired)
+    TestSet buildTestPlansByTest(def uuid, def confirmRequired, def executionHost) {
+        packageService.buildTestPlansByTestPackage(uuid, confirmRequired, executionHost)
     }
 
-    TestSet buildTestPlansByService(def uuid, def confirmRequired) {
-        packageService.buildTestPlansByServicePackage(uuid, confirmRequired)
+    TestSet buildTestPlansByService(def uuid, def confirmRequired, def executionHost) {
+        packageService.buildTestPlansByServicePackage(uuid, confirmRequired, executionHost)
     }
 
-    TestSet buildTestPlansByTestingTag(def tag, def confirmRequired){
-        packageService.buildTestPlansByTestingTag(tag,confirmRequired)
+    TestSet buildTestPlansByTestingTag(def tag, def confirmRequired, def executionHost){
+        packageService.buildTestPlansByTestingTag(tag,confirmRequired, executionHost)
     }
 
     TestSet buildTestPlansByServiceAndTest(def testUuid, def serviceUuid, def confirmRequired, def executionHost){

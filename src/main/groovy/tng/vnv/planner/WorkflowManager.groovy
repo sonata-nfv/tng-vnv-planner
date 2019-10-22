@@ -152,6 +152,7 @@ class WorkflowManager {
                         serviceUuid: justUpdatedTestPlan.serviceUuid,
                         testUuid: justUpdatedTestPlan.testUuid,
                         confirmRequired: justUpdatedTestPlan.confirmRequired,
+                        executionHost: justUpdatedTestPlan.executionHost,
                         testStatus: TestPlanStatus.SCHEDULED)
 
                 testPlanRepository.save(newTestPlan)

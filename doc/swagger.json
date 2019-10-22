@@ -294,6 +294,13 @@
             "type": "boolean"
           },
           {
+            "name": "executionHost",
+            "in": "query",
+            "description": "executionHost",
+            "required": false,
+            "type": "string"
+          },
+          {
             "name": "serviceUuid",
             "in": "query",
             "description": "serviceUuid",
@@ -433,6 +440,13 @@
             "type": "boolean"
           },
           {
+            "name": "executionHost",
+            "in": "query",
+            "description": "executionHost",
+            "required": false,
+            "type": "string"
+          },
+          {
             "name": "testingTag",
             "in": "query",
             "description": "testingTag",
@@ -543,6 +557,13 @@
             "description": "confirmRequired",
             "required": false,
             "type": "boolean"
+          },
+          {
+            "name": "executionHost",
+            "in": "query",
+            "description": "executionHost",
+            "required": false,
+            "type": "string"
           },
           {
             "name": "testUuid",
