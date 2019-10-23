@@ -76,6 +76,11 @@ class TestSet extends AuditModel {
     String spName
 
     @ApiModelProperty(
+            value = 'Policy Id',
+            allowEmptyValue = true)
+    String policyId
+
+    @ApiModelProperty(
             value = 'Status',
             allowEmptyValue = false)
     String status

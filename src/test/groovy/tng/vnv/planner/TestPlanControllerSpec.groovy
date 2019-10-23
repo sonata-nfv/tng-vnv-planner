@@ -181,7 +181,7 @@ class TestPlanControllerSpec extends Specification {
     @Test
     def "Create a test plan by service uuid"() {
         when:
-        testPlanController.buildTestPlansByService('57cebe79-96aa-4f41-af80-93050bfddd9f', true, null, null)
+        testPlanController.buildTestPlansByService('57cebe79-96aa-4f41-af80-93050bfddd9f', true, null, null, null)
         def testSetList = testSetRepository.findAll()
         def testPlanList = testPlanRepository.findAll()
         then:
@@ -196,7 +196,7 @@ class TestPlanControllerSpec extends Specification {
     @Test
     def "Create a test plan by test uuid"() {
         when:
-        testPlanController.buildTestPlansByTest('88f6c1c4-c614-4f4d-87e6-72ef0192956f', true, null, null)
+        testPlanController.buildTestPlansByTest('88f6c1c4-c614-4f4d-87e6-72ef0192956f', true, null, null, null)
         def testSetList = testSetRepository.findAll()
         def testPlanList = testPlanRepository.findAll()
         then:
@@ -211,7 +211,7 @@ class TestPlanControllerSpec extends Specification {
     @Test
     def "Create a test plan by test uuid and service uuid"() {
         when:
-        testPlanController.buildTestPlansByNsTdPair('88f6c1c4-c614-4f4d-87e6-72ef0192956f', '57cebe79-96aa-4f41-af80-93050bfddd9f', false, null, null)
+        testPlanController.buildTestPlansByNsTdPair('88f6c1c4-c614-4f4d-87e6-72ef0192956f', '57cebe79-96aa-4f41-af80-93050bfddd9f', false, null, null, null)
         def testSetList = testSetRepository.findAll()
         def testPlanList = testPlanRepository.findAll()
         then:
@@ -227,7 +227,7 @@ class TestPlanControllerSpec extends Specification {
     @Test
     def "Create a test plan by test tag"() {
         when:
-        testPlanController.buildTestPlansByTestingTag('eu.5gtango.testingtag.example', false, null, null)
+        testPlanController.buildTestPlansByTestingTag('eu.5gtango.testingtag.example', false, null, null, null)
         def testSetList = testSetRepository.findAll()
         def testPlanList = testPlanRepository.findAll()
         then:
@@ -244,7 +244,7 @@ class TestPlanControllerSpec extends Specification {
     @Test
     def "Test plan completed by curator"() {
         when:
-        def createdPlan = testPlanController.buildTestPlansByNsTdPair('88f6c1c4-c614-4f4d-87e6-72ef0192956f', '57cebe79-96aa-4f41-af80-93050bfddd9f', false, null, null)
+        def createdPlan = testPlanController.buildTestPlansByNsTdPair('88f6c1c4-c614-4f4d-87e6-72ef0192956f', '57cebe79-96aa-4f41-af80-93050bfddd9f', false, null, null, null)
         def json="{\"event_actor\": \"Curator\", \"testPlanUuid\": \"${testPlanUuid: createdPlan[0].uuid}\", \"exception\": \"\", \"status\": \"COMPLETED\", \"test_results\": [{\"test_uuid\": \"cf8e1dd9-777f-4f96-9458-5a5fe0a86f7d\",\"test_result_uuid\": \"ff0a1530-c72e-49c3-815c-fa86fe3d952c\",\"test_status\": \"COMPLETED\"}]}"
         def jsonSlurper = new JsonSlurper()
         CuratorCallback curatorCallback = jsonSlurper.parseText(toCamelCase(json))
@@ -259,7 +259,7 @@ class TestPlanControllerSpec extends Specification {
     @Test
     def "Test plan status update by curator"() {
         when:
-        def createdPlan = testPlanController.buildTestPlansByNsTdPair('88f6c1c4-c614-4f4d-87e6-72ef0192956f', '57cebe79-96aa-4f41-af80-93050bfddd9f', false, null, null)
+        def createdPlan = testPlanController.buildTestPlansByNsTdPair('88f6c1c4-c614-4f4d-87e6-72ef0192956f', '57cebe79-96aa-4f41-af80-93050bfddd9f', false, null, null, null)
         def result = new TestResult(testUuid: "123", testResultUuid: "5678", testStatus: TestPlanStatus.STARTING)
         def curatorCallback = new CuratorCallback(eventActor: 'Curator', status: TestPlanStatus.STARTING, testPlanUuid: createdPlan[0].uuid, testResults: [result])
         testPlanController.onChange(curatorCallback)

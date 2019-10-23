@@ -154,6 +154,7 @@ class WorkflowManager {
                         confirmRequired: justUpdatedTestPlan.confirmRequired,
                         executionHost: justUpdatedTestPlan.executionHost,
                         spName: justUpdatedTestPlan.spName,
+                        policyId: justUpdatedTestPlan.policyId,
                         testStatus: TestPlanStatus.SCHEDULED)
 
                 testPlanRepository.save(newTestPlan)
@@ -233,7 +234,8 @@ class WorkflowManager {
                 nsdUuid: testPlan.serviceUuid,
                 testdUuid: testPlan.testUuid,
                 executionHost: testPlan.executionHost,
-                spName: testPlan.spName)).body as TestResponse
+                spName: testPlan.spName,
+                policyId: testPlan.policyId)).body as TestResponse
 
         testService.updatePlanStatus(testPlan.uuid, testResponse.status)
         

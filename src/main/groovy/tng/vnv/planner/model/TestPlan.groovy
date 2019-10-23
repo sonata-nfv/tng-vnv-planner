@@ -107,6 +107,11 @@ class TestPlan extends AuditModel implements Serializable {
             value = 'SP Name',
             allowEmptyValue = true)
     String spName
+
+    @ApiModelProperty(
+            value = 'Policy Id',
+            allowEmptyValue = true)
+    String policyId
 }
 
 

@@ -33,6 +33,11 @@ class TestRequest {
             allowEmptyValue = true)
     String spName
 
+    @ApiModelProperty(
+            value = 'Policy Id',
+            allowEmptyValue = true)
+    String policyId
+
     //@ApiModelProperty(value = 'is Last Test Plan')
     //Boolean lastTest = false
 

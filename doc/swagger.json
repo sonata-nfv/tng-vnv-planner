@@ -308,6 +308,13 @@
             "type": "string"
           },
           {
+            "name": "policyId",
+            "in": "query",
+            "description": "policyId",
+            "required": false,
+            "type": "string"
+          },
+          {
             "name": "serviceUuid",
             "in": "query",
             "description": "serviceUuid",
@@ -401,6 +408,13 @@
             "type": "string"
           },
           {
+            "name": "policyId",
+            "in": "query",
+            "description": "policyId",
+            "required": false,
+            "type": "string"
+          },
+          {
             "name": "serviceUuid",
             "in": "query",
             "description": "serviceUuid",
@@ -464,6 +478,13 @@
             "name": "spName",
             "in": "query",
             "description": "spName",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "policyId",
+            "in": "query",
+            "description": "policyId",
             "required": false,
             "type": "string"
           },
@@ -590,6 +611,13 @@
             "name": "spName",
             "in": "query",
             "description": "spName",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "policyId",
+            "in": "query",
+            "description": "policyId",
             "required": false,
             "type": "string"
           },
