@@ -301,6 +301,13 @@
             "type": "string"
           },
           {
+            "name": "spName",
+            "in": "query",
+            "description": "spName",
+            "required": false,
+            "type": "string"
+          },
+          {
             "name": "serviceUuid",
             "in": "query",
             "description": "serviceUuid",
@@ -387,6 +394,13 @@
             "type": "string"
           },
           {
+            "name": "spName",
+            "in": "query",
+            "description": "spName",
+            "required": false,
+            "type": "string"
+          },
+          {
             "name": "serviceUuid",
             "in": "query",
             "description": "serviceUuid",
@@ -443,6 +457,13 @@
             "name": "executionHost",
             "in": "query",
             "description": "executionHost",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "spName",
+            "in": "query",
+            "description": "spName",
             "required": false,
             "type": "string"
           },
@@ -562,6 +583,13 @@
             "name": "executionHost",
             "in": "query",
             "description": "executionHost",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "spName",
+            "in": "query",
+            "description": "spName",
             "required": false,
             "type": "string"
           },

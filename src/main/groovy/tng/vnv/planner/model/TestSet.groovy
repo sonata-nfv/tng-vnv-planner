@@ -69,7 +69,12 @@ class TestSet extends AuditModel {
             value = 'Execution Host',
             allowEmptyValue = true)
     String executionHost
-    
+
+    @ApiModelProperty(
+            value = 'SP Name',
+            allowEmptyValue = true)
+    String spName
+
     @ApiModelProperty(
             value = 'Status',
             allowEmptyValue = false)

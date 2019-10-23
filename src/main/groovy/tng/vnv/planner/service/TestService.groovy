@@ -71,20 +71,20 @@ class TestService {
     String tangoLoggerMessage = null;
     String tangoLoggerStatus = null;
 
-    TestSet buildTestPlansByTest(def uuid, def confirmRequired, def executionHost) {
-        packageService.buildTestPlansByTestPackage(uuid, confirmRequired, executionHost)
+    TestSet buildTestPlansByTest(def uuid, def confirmRequired, def executionHost, def spName) {
+        packageService.buildTestPlansByTestPackage(uuid, confirmRequired, executionHost, spName)
     }
 
-    TestSet buildTestPlansByService(def uuid, def confirmRequired, def executionHost) {
-        packageService.buildTestPlansByServicePackage(uuid, confirmRequired, executionHost)
+    TestSet buildTestPlansByService(def uuid, def confirmRequired, def executionHost, def spName) {
+        packageService.buildTestPlansByServicePackage(uuid, confirmRequired, executionHost, spName)
     }
 
-    TestSet buildTestPlansByTestingTag(def tag, def confirmRequired, def executionHost){
-        packageService.buildTestPlansByTestingTag(tag,confirmRequired, executionHost)
+    TestSet buildTestPlansByTestingTag(def tag, def confirmRequired, def executionHost, def spName){
+        packageService.buildTestPlansByTestingTag(tag,confirmRequired, executionHost, spName)
     }
 
-    TestSet buildTestPlansByServiceAndTest(def testUuid, def serviceUuid, def confirmRequired, def executionHost){
-        packageService.buildTestPlansByServiceAndTest(testUuid, serviceUuid, confirmRequired, executionHost)
+    TestSet buildTestPlansByServiceAndTest(def testUuid, def serviceUuid, def confirmRequired, def executionHost, def spName){
+        packageService.buildTestPlansByServiceAndTest(testUuid, serviceUuid, confirmRequired, executionHost, spName)
     }
 
     TestSet buildTestPlansByPackage(def packageId, def confirmRequired) throws RestClientException{

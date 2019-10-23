@@ -192,56 +192,56 @@ class TestPlanController {
     @ApiResponses(value = [@ApiResponse(code = 400, message = 'Bad Request')])
     @PostMapping('/services')
     @ResponseBody
-    List<TestPlan> buildTestPlansByService(@Valid @RequestParam String serviceUuid, @RequestParam(required = false) Boolean confirmRequired, @RequestParam(required = false) String executionHost) {
+    List<TestPlan> buildTestPlansByService(@Valid @RequestParam String serviceUuid, @RequestParam(required = false) Boolean confirmRequired, @RequestParam(required = false) String executionHost, @RequestParam(required = false) String spName) {
         tangoLoggerType = "I";
         tangoLoggerOperation = "TestPlanController.buildTestPlansByService";
         tangoLoggerMessage = ("/api/v1/test-plans/services (create a test plan by service uuid request received. Service UUID: ${serviceUuid})");
         tangoLoggerStatus = "200";
         tangoLogger.log(tangoLoggerType, tangoLoggerOperation, tangoLoggerMessage, tangoLoggerStatus)
 
-        testService.buildTestPlansByService(serviceUuid, confirmRequired, executionHost).testPlans
+        testService.buildTestPlansByService(serviceUuid, confirmRequired, executionHost, spName).testPlans
     }
 
     @ApiOperation(value="Create a test plan by test uuid")
     @ApiResponses(value = [@ApiResponse(code = 400, message = 'Bad Request')])
     @PostMapping('/tests')
     @ResponseBody
-    List<TestPlan> buildTestPlansByTest(@Valid @RequestParam String testUuid, @RequestParam(required = false) Boolean confirmRequired, @RequestParam(required = false) String executionHost) {
+    List<TestPlan> buildTestPlansByTest(@Valid @RequestParam String testUuid, @RequestParam(required = false) Boolean confirmRequired, @RequestParam(required = false) String executionHost, @RequestParam(required = false) String spName) {
         tangoLoggerType = "I";
         tangoLoggerOperation = "TestPlanController.buildTestPlansByTest";
         tangoLoggerMessage = ("/api/v1/test-plans/tests (create a test plan by test uuid request received. Test UUID: ${testUuid})");
         tangoLoggerStatus = "200";
         tangoLogger.log(tangoLoggerType, tangoLoggerOperation, tangoLoggerMessage, tangoLoggerStatus)
 
-        testService.buildTestPlansByTest(testUuid, confirmRequired, executionHost).testPlans
+        testService.buildTestPlansByTest(testUuid, confirmRequired, executionHost, spName).testPlans
     }
 
     @ApiOperation(value="Create a test plan by testing tag")
     @ApiResponses(value = [@ApiResponse(code = 400, message = 'Bad Request')])
     @PostMapping('/testing-tags')
     @ResponseBody
-    List<TestPlan> buildTestPlansByTestingTag(@Valid @RequestParam String testingTag, @RequestParam(required = false) Boolean confirmRequired, @RequestParam(required = false) String executionHost) {
+    List<TestPlan> buildTestPlansByTestingTag(@Valid @RequestParam String testingTag, @RequestParam(required = false) Boolean confirmRequired, @RequestParam(required = false) String executionHost, @RequestParam(required = false) String spName) {
         tangoLoggerType = "I";
         tangoLoggerOperation = "TestPlanController.buildTestPlansByTestingTag";
         tangoLoggerMessage = ("/api/v1/test-plans/testing-tags (create a test plan by testing tag request received. Testing tag: ${testingTag})");
         tangoLoggerStatus = "200";
         tangoLogger.log(tangoLoggerType, tangoLoggerOperation, tangoLoggerMessage, tangoLoggerStatus)
 
-        testService.buildTestPlansByTestingTag(testingTag, confirmRequired, executionHost).testPlans
+        testService.buildTestPlansByTestingTag(testingTag, confirmRequired, executionHost, spName).testPlans
     }
 
     @ApiOperation(value="Create a test plan by test uuid and service uuid")
     @ApiResponses(value = [@ApiResponse(code = 400, message = 'Bad Request')])
     @PostMapping('/testAndServices')
     @ResponseBody
-    List<TestPlan> buildTestPlansByNsTdPair(@Valid @RequestParam String testUuid, @RequestParam String serviceUuid, @RequestParam(required = false) Boolean confirmRequired, @RequestParam(required = false) String executionHost) {
+    List<TestPlan> buildTestPlansByNsTdPair(@Valid @RequestParam String testUuid, @RequestParam String serviceUuid, @RequestParam(required = false) Boolean confirmRequired, @RequestParam(required = false) String executionHost, @RequestParam(required = false) String spName) {
         tangoLoggerType = "I";
         tangoLoggerOperation = "TestPlanController.buildTestPlansByNsTdPair";
         tangoLoggerMessage = ("/api/v1/test-plans/testAndServices (create a test plan by service uuid and test uuid request received. Service UUID: ${serviceUuid}), test UUID=${testUuid}");
         tangoLoggerStatus = "200";
         tangoLogger.log(tangoLoggerType, tangoLoggerOperation, tangoLoggerMessage, tangoLoggerStatus)
 
-        testService.buildTestPlansByServiceAndTest(testUuid, serviceUuid, confirmRequired, executionHost).testPlans
+        testService.buildTestPlansByServiceAndTest(testUuid, serviceUuid, confirmRequired, executionHost, spName).testPlans
     }
 
     // Curator

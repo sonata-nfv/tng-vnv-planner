@@ -102,6 +102,11 @@ class TestPlan extends AuditModel implements Serializable {
             value = 'Execution Host',
             allowEmptyValue = true)
     String executionHost
+
+    @ApiModelProperty(
+            value = 'SP Name',
+            allowEmptyValue = true)
+    String spName
 }
 
 

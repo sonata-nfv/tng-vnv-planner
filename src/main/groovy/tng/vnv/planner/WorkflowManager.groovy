@@ -153,6 +153,7 @@ class WorkflowManager {
                         testUuid: justUpdatedTestPlan.testUuid,
                         confirmRequired: justUpdatedTestPlan.confirmRequired,
                         executionHost: justUpdatedTestPlan.executionHost,
+                        spName: justUpdatedTestPlan.spName,
                         testStatus: TestPlanStatus.SCHEDULED)
 
                 testPlanRepository.save(newTestPlan)
@@ -231,7 +232,8 @@ class WorkflowManager {
         def testResponse = curator.post(new TestRequest(testPlanUuid: testPlan.uuid,
                 nsdUuid: testPlan.serviceUuid,
                 testdUuid: testPlan.testUuid,
-                executionHost: testPlan.executionHost)).body as TestResponse
+                executionHost: testPlan.executionHost,
+                spName: testPlan.spName)).body as TestResponse
 
         testService.updatePlanStatus(testPlan.uuid, testResponse.status)
         
