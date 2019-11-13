@@ -145,7 +145,7 @@ class PackageService {
         throw new IllegalArgumentException("PackageUUID cannot be null")
     }
 
-    TestSet buildTestSetByServicePackage(packageId, confirmRequired, type = TestSetType.SERVICE, serviceUuid) throws RestClientException {
+    TestSet buildTestSetByServicePackage(packageId, confirmRequired, executionHost, spName, policyId, type = TestSetType.SERVICE, serviceUuid) throws RestClientException {
         if (packageId != null) {
             def matchedTests = [] as HashSet<Map>
 
@@ -156,6 +156,9 @@ class PackageService {
                     requestUuid: packageId,
                     requestType: type,
                     confirmRequired: confirmRequired,
+                    executionHost: executionHost,
+                    spName: spName,
+                    policyId: policyId,
                     status: confirmRequired ? TestPlanStatus.WAITING_FOR_CONFIRMATION : TestPlanStatus.SCHEDULED)
 
             def testingTags = pack.pd.package_content.collect { it.testing_tags }
@@ -209,6 +212,9 @@ class PackageService {
                         testUuid: test.uuid,
                         testName: test.id.name +"."+test.id.vendor+"."+test.id.version,
                         confirmRequired: confirmRequired,
+                        executionHost: executionHost,
+                        spName: spName,
+                        policyId: policyId,
                         testStatus: confirmRequired ? TestPlanStatus.WAITING_FOR_CONFIRMATION : TestPlanStatus.SCHEDULED)
             }
 
@@ -218,7 +224,7 @@ class PackageService {
         throw new IllegalArgumentException("PackageUUID cannot be null")
     }
 
-    TestSet buildTestSetByTestPackage(packageId, confirmRequired, type = TestSetType.SERVICE, testUuid) throws RestClientException {
+    TestSet buildTestSetByTestPackage(packageId, confirmRequired, executionHost, spName, policyId, type = TestSetType.SERVICE, testUuid) throws RestClientException {
         if (packageId != null) {
             def matchedServices = [] as HashSet<Map>
 
@@ -229,6 +235,9 @@ class PackageService {
                     requestUuid: packageId,
                     requestType: type,
                     confirmRequired: confirmRequired,
+                    executionHost: executionHost,
+                    spName: spName,
+                    policyId: policyId,
                     status: confirmRequired ? TestPlanStatus.WAITING_FOR_CONFIRMATION : TestPlanStatus.SCHEDULED)
 
             def testingTags = pack.pd.package_content.collect { it.testing_tags }
@@ -279,6 +288,9 @@ class PackageService {
                         testUuid: testUuid,
                         testName: test.testd.name+"."+test.testd.vendor+"."+test.testd.version,
                         confirmRequired: confirmRequired,
+                        executionHost: executionHost,
+                        spName: spName,
+                        policyId: policyId,
                         testStatus: confirmRequired ? TestPlanStatus.WAITING_FOR_CONFIRMATION : TestPlanStatus.SCHEDULED)
             }
 
@@ -288,7 +300,7 @@ class PackageService {
         throw new IllegalArgumentException("PackageUUID cannot be null")
     }
 
-    TestSet buildTestSetByTestingTag(tag, confirmRequired, type = TestSetType.TEST_AND_SERVICE) throws RestClientException {
+    TestSet buildTestSetByTestingTag(tag, confirmRequired, executionHost, spName, policyId, type = TestSetType.TEST_AND_SERVICE) throws RestClientException {
 
         def matchedServices = [] as HashSet<Map>
         def matchedTests = [] as HashSet<Map>
@@ -297,6 +309,9 @@ class PackageService {
                 requestUuid: UUID.randomUUID().toString(),
                 requestType: type,
                 confirmRequired: confirmRequired,
+                executionHost: executionHost,
+                spName: spName,
+                policyId: policyId,
                 status: confirmRequired ? TestPlanStatus.WAITING_FOR_CONFIRMATION : TestPlanStatus.SCHEDULED)
 
         List packageList = gatekeeper.getPackageByTag(tag)
@@ -349,6 +364,9 @@ class PackageService {
                         testUuid: test.uuid,
                         testName: test.id.name +"."+test.id.vendor+"."+test.id.version,
                         confirmRequired: confirmRequired,
+                        executionHost: executionHost,
+                        spName: spName,
+                        policyId: policyId,
                         testStatus: confirmRequired ? TestPlanStatus.WAITING_FOR_CONFIRMATION : TestPlanStatus.SCHEDULED)
             }
         }
@@ -357,11 +375,14 @@ class PackageService {
 
     }
 
-    TestSet buidTestSetByTestAndService(testUuid, serviceUuid, confirmRequired, type) {
+    TestSet buidTestSetByTestAndService(testUuid, serviceUuid, confirmRequired, executionHost, spName, policyId, type) {
 
         def testSet = new TestSet(uuid: UUID.randomUUID().toString(),
                 requestType: type,
                 confirmRequired: confirmRequired,
+                executionHost: executionHost,
+                spName: spName,
+                policyId: policyId,
                 status: confirmRequired ? TestPlanStatus.WAITING_FOR_CONFIRMATION : TestPlanStatus.SCHEDULED)
 
         def test = gatekeeper.getTest(testUuid)
@@ -374,14 +395,17 @@ class PackageService {
                 testUuid: testUuid,
                 testName: test.testd.name+"."+test.testd.vendor+"."+test.testd.version,
                 confirmRequired: confirmRequired,
+                executionHost: executionHost,
+                spName: spName,
+                policyId: policyId,
                 testStatus: confirmRequired ? TestPlanStatus.WAITING_FOR_CONFIRMATION : TestPlanStatus.SCHEDULED)
 
         return testSet
     }
 
-    TestSet buildTestPlansByTestPackage(def uuid, def confirmRequired) {
+    TestSet buildTestPlansByTestPackage(def uuid, def confirmRequired, def executionHost, def spName, def policyId) {
         def pack = gatekeeper.getPackageByUuid(uuid)
-        def testSet = buildTestSetByTestPackage(pack[0].uuid, confirmRequired, TestSetType.TEST, uuid)
+        def testSet = buildTestSetByTestPackage(pack[0].uuid, confirmRequired, executionHost, spName, policyId, TestSetType.TEST, uuid)
 
         testService.save(testSet)
 
@@ -395,9 +419,9 @@ class PackageService {
         testSet
     }
 
-    TestSet buildTestPlansByServicePackage(def uuid, def confirmRequired) {
+    TestSet buildTestPlansByServicePackage(def uuid, def confirmRequired, def executionHost, def spName, def policyId) {
         def pack = gatekeeper.getPackageByUuid(uuid)
-        def testSet = buildTestSetByServicePackage(pack[0].uuid, confirmRequired, TestSetType.SERVICE, uuid)
+        def testSet = buildTestSetByServicePackage(pack[0].uuid, confirmRequired, executionHost, spName, policyId, TestSetType.SERVICE, uuid)
 
         testService.save(testSet)
 
@@ -412,8 +436,8 @@ class PackageService {
 
     }
 
-    TestSet buildTestPlansByTestingTag(def tag, def confirmRequired) {
-        def testSet = buildTestSetByTestingTag(tag, confirmRequired, TestSetType.TEST_AND_SERVICE)
+    TestSet buildTestPlansByTestingTag(def tag, def confirmRequired, def executionHost, def spName, def policyId) {
+        def testSet = buildTestSetByTestingTag(tag, confirmRequired, executionHost, spName, policyId, TestSetType.TEST_AND_SERVICE)
 
         testService.save(testSet)
 
@@ -428,8 +452,8 @@ class PackageService {
 
     }
 
-    TestSet buildTestPlansByServiceAndTest(def testUuid, def serviceUuid, def confirmRequired) {
-        def testSet = buidTestSetByTestAndService(testUuid, serviceUuid, confirmRequired, TestSetType.TEST_AND_SERVICE)
+    TestSet buildTestPlansByServiceAndTest(def testUuid, def serviceUuid, def confirmRequired, def executionHost, def spName, def policyId) {
+        def testSet = buidTestSetByTestAndService(testUuid, serviceUuid, confirmRequired, executionHost, spName, policyId, TestSetType.TEST_AND_SERVICE)
 
         testService.save(testSet)
 

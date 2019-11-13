@@ -23,6 +23,21 @@ class TestRequest {
             allowEmptyValue = false)
     String testPlanUuid
 
+    @ApiModelProperty(
+            value = 'Execution Host',
+            allowEmptyValue = true)
+    String executionHost
+
+    @ApiModelProperty(
+            value = 'SP Name',
+            allowEmptyValue = true)
+    String spName
+
+    @ApiModelProperty(
+            value = 'Policy Id',
+            allowEmptyValue = true)
+    String policyId
+
     //@ApiModelProperty(value = 'is Last Test Plan')
     //Boolean lastTest = false
 

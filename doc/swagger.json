@@ -294,6 +294,27 @@
             "type": "boolean"
           },
           {
+            "name": "executionHost",
+            "in": "query",
+            "description": "executionHost",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "spName",
+            "in": "query",
+            "description": "spName",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "policyId",
+            "in": "query",
+            "description": "policyId",
+            "required": false,
+            "type": "string"
+          },
+          {
             "name": "serviceUuid",
             "in": "query",
             "description": "serviceUuid",
@@ -373,6 +394,27 @@
             "type": "boolean"
           },
           {
+            "name": "executionHost",
+            "in": "query",
+            "description": "executionHost",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "spName",
+            "in": "query",
+            "description": "spName",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "policyId",
+            "in": "query",
+            "description": "policyId",
+            "required": false,
+            "type": "string"
+          },
+          {
             "name": "serviceUuid",
             "in": "query",
             "description": "serviceUuid",
@@ -424,6 +466,27 @@
             "description": "confirmRequired",
             "required": false,
             "type": "boolean"
+          },
+          {
+            "name": "executionHost",
+            "in": "query",
+            "description": "executionHost",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "spName",
+            "in": "query",
+            "description": "spName",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "policyId",
+            "in": "query",
+            "description": "policyId",
+            "required": false,
+            "type": "string"
           },
           {
             "name": "testingTag",
@@ -536,6 +599,27 @@
             "description": "confirmRequired",
             "required": false,
             "type": "boolean"
+          },
+          {
+            "name": "executionHost",
+            "in": "query",
+            "description": "executionHost",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "spName",
+            "in": "query",
+            "description": "spName",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "policyId",
+            "in": "query",
+            "description": "policyId",
+            "required": false,
+            "type": "string"
           },
           {
             "name": "testUuid",

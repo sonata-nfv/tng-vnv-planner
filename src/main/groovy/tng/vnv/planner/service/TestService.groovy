@@ -71,20 +71,20 @@ class TestService {
     String tangoLoggerMessage = null;
     String tangoLoggerStatus = null;
 
-    TestSet buildTestPlansByTest(def uuid, def confirmRequired) {
-        packageService.buildTestPlansByTestPackage(uuid, confirmRequired)
+    TestSet buildTestPlansByTest(def uuid, def confirmRequired, def executionHost, def spName, def policyId) {
+        packageService.buildTestPlansByTestPackage(uuid, confirmRequired, executionHost, spName, policyId)
     }
 
-    TestSet buildTestPlansByService(def uuid, def confirmRequired) {
-        packageService.buildTestPlansByServicePackage(uuid, confirmRequired)
+    TestSet buildTestPlansByService(def uuid, def confirmRequired, def executionHost, def spName, def policyId) {
+        packageService.buildTestPlansByServicePackage(uuid, confirmRequired, executionHost, spName, policyId)
     }
 
-    TestSet buildTestPlansByTestingTag(def tag, def confirmRequired){
-        packageService.buildTestPlansByTestingTag(tag,confirmRequired)
+    TestSet buildTestPlansByTestingTag(def tag, def confirmRequired, def executionHost, def spName, def policyId){
+        packageService.buildTestPlansByTestingTag(tag,confirmRequired, executionHost, spName, policyId)
     }
 
-    TestSet buildTestPlansByServiceAndTest(def testUuid, def serviceUuid, def confirmRequired){
-        packageService.buildTestPlansByServiceAndTest(testUuid, serviceUuid, confirmRequired)
+    TestSet buildTestPlansByServiceAndTest(def testUuid, def serviceUuid, def confirmRequired, def executionHost, def spName, def policyId){
+        packageService.buildTestPlansByServiceAndTest(testUuid, serviceUuid, confirmRequired, executionHost, spName, policyId)
     }
 
     TestSet buildTestPlansByPackage(def packageId, def confirmRequired) throws RestClientException{
@@ -117,6 +117,11 @@ class TestService {
         testPlanRepository.save(testPlan)
     }
 
+    TestPlan updatePlanDescription(String uuid, String description) {
+        def testPlan = findPlanByUuid(uuid)
+        testPlan.description = description
+        testPlanRepository.save(testPlan)
+    }
     void cancelTestSet(String uuid) {
         updateSet(uuid, TestPlanStatus.CANCELLING)
     }
