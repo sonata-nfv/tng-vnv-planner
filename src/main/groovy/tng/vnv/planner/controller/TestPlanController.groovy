@@ -270,6 +270,25 @@ class TestPlanController {
 
             testService.updatePlanResultId(callback.testPlanUuid, callback.testResults.get(0).testResultUuid)
         }
+        if (callback.status == TestPlanStatus.ERROR) {
+            if(callback.testResults.get(0).testResultUuid != null && !callback.testResults.get(0).testResultUuid.isEmpty()) {
+                tangoLoggerType = "I";
+                tangoLoggerOperation = "TestPlanController.onChangeCompleted";
+                tangoLoggerMessage = ("test_result_uuid = ${callback.testResults.get(0).testResultUuid}");
+                tangoLoggerStatus = "200";
+                tangoLogger.log(tangoLoggerType, tangoLoggerOperation, tangoLoggerMessage, tangoLoggerStatus)
+
+                testService.updatePlanResultId(callback.testPlanUuid, callback.testResults.get(0).testResultUuid)
+            }
+            //if validation is not OK or docker-compose failed, then set exception message
+            tangoLoggerType = "I";
+            tangoLoggerOperation = "TestPlanController.onChangeCompleted";
+            tangoLoggerMessage = ("exception: ${callback.getException()}");
+            tangoLoggerStatus = "200";
+            tangoLogger.log(tangoLoggerType, tangoLoggerOperation, tangoLoggerMessage, tangoLoggerStatus)
+
+            testService.updatePlanDescription(callback.testPlanUuid, callback.getException())
+        }
         manager.testPlanUpdated(callback.testPlanUuid)
     }
 
@@ -288,29 +307,6 @@ class TestPlanController {
         tangoLogger.log(tangoLoggerType, tangoLoggerOperation, tangoLoggerMessage, tangoLoggerStatus)
 
         testService.updatePlanStatus(callback.testPlanUuid, callback.status)
-
-        if (callback.status == TestPlanStatus.ERROR) {
-            if(callback.testResults.get(0).testResultUuid != null && !callback.testResults.get(0).testResultUuid.isEmpty()) {
-                tangoLoggerType = "I";
-                tangoLoggerOperation = "TestPlanController.onChange";
-                tangoLoggerMessage = ("test_result_uuid = ${callback.testResults.get(0).testResultUuid}");
-                tangoLoggerStatus = "200";
-                tangoLogger.log(tangoLoggerType, tangoLoggerOperation, tangoLoggerMessage, tangoLoggerStatus)
-
-                testService.updatePlanResultId(callback.testPlanUuid, callback.testResults.get(0).testResultUuid)
-                testService.updatePlanDescription(callback.testPlanUuid, "Service not complient with validation and verification conditions")
-            } else {
-                tangoLoggerType = "I";
-                tangoLoggerOperation = "TestPlanController.onChange";
-                tangoLoggerMessage = ("exception: ${callback.getException()}");
-                tangoLoggerStatus = "200";
-                tangoLogger.log(tangoLoggerType, tangoLoggerOperation, tangoLoggerMessage, tangoLoggerStatus)
-
-                testService.updatePlanDescription(callback.testPlanUuid, callback.getException())
-            }
-
-        }
-
         manager.testPlanUpdated(callback.testPlanUuid)
     }
 
