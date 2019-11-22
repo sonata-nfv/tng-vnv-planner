@@ -301,13 +301,6 @@
             "type": "string"
           },
           {
-            "name": "spName",
-            "in": "query",
-            "description": "spName",
-            "required": false,
-            "type": "string"
-          },
-          {
             "name": "policyId",
             "in": "query",
             "description": "policyId",
@@ -319,6 +312,13 @@
             "in": "query",
             "description": "serviceUuid",
             "required": true,
+            "type": "string"
+          },
+          {
+            "name": "spName",
+            "in": "query",
+            "description": "spName",
+            "required": false,
             "type": "string"
           }
         ],
@@ -401,13 +401,6 @@
             "type": "string"
           },
           {
-            "name": "spName",
-            "in": "query",
-            "description": "spName",
-            "required": false,
-            "type": "string"
-          },
-          {
             "name": "policyId",
             "in": "query",
             "description": "policyId",
@@ -419,6 +412,13 @@
             "in": "query",
             "description": "serviceUuid",
             "required": true,
+            "type": "string"
+          },
+          {
+            "name": "spName",
+            "in": "query",
+            "description": "spName",
+            "required": false,
             "type": "string"
           },
           {
@@ -475,16 +475,16 @@
             "type": "string"
           },
           {
-            "name": "spName",
+            "name": "policyId",
             "in": "query",
-            "description": "spName",
+            "description": "policyId",
             "required": false,
             "type": "string"
           },
           {
-            "name": "policyId",
+            "name": "spName",
             "in": "query",
-            "description": "policyId",
+            "description": "spName",
             "required": false,
             "type": "string"
           },
@@ -608,16 +608,16 @@
             "type": "string"
           },
           {
-            "name": "spName",
+            "name": "policyId",
             "in": "query",
-            "description": "spName",
+            "description": "policyId",
             "required": false,
             "type": "string"
           },
           {
-            "name": "policyId",
+            "name": "spName",
             "in": "query",
-            "description": "policyId",
+            "description": "spName",
             "required": false,
             "type": "string"
           },
@@ -772,7 +772,10 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/TestPlan"
+            }
           }
         },
         "deprecated": false
@@ -951,6 +954,14 @@
           "type": "string",
           "description": "Description"
         },
+        "execution_host": {
+          "type": "string",
+          "description": "Execution Host"
+        },
+        "policy_id": {
+          "type": "string",
+          "description": "Policy Id"
+        },
         "service_name": {
           "type": "string",
           "description": "Network service name"
@@ -958,6 +969,10 @@
         "service_uuid": {
           "type": "string",
           "description": "Network service uuid"
+        },
+        "sp_name": {
+          "type": "string",
+          "description": "SP Name"
         },
         "test_name": {
           "type": "string",
@@ -1025,6 +1040,14 @@
           "type": "string",
           "format": "date-time"
         },
+        "execution_host": {
+          "type": "string",
+          "description": "Execution Host"
+        },
+        "policy_id": {
+          "type": "string",
+          "description": "Policy Id"
+        },
         "request_type": {
           "type": "string",
           "description": "Request type"
@@ -1032,6 +1055,10 @@
         "request_uuid": {
           "type": "string",
           "description": "Request uuid"
+        },
+        "sp_name": {
+          "type": "string",
+          "description": "SP Name"
         },
         "status": {
           "type": "string",
