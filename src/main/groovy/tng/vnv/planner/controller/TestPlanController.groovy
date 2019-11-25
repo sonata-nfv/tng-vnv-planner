@@ -271,14 +271,17 @@ class TestPlanController {
             testService.updatePlanResultId(callback.testPlanUuid, callback.testResults.get(0).testResultUuid)
         }
         if (callback.status == TestPlanStatus.ERROR) {
-            if(callback.testResults.get(0).testResultUuid != null && !callback.testResults.get(0).testResultUuid.isEmpty()) {
-                tangoLoggerType = "I";
-                tangoLoggerOperation = "TestPlanController.onChangeCompleted";
-                tangoLoggerMessage = ("test_result_uuid = ${callback.testResults.get(0).testResultUuid}");
-                tangoLoggerStatus = "200";
-                tangoLogger.log(tangoLoggerType, tangoLoggerOperation, tangoLoggerMessage, tangoLoggerStatus)
+            
+            if(callback.testResults != null && !callback.testResults.isEmpty()) {
+                if (callback.testResults.get(0).testResultUuid != null && !callback.testResults.get(0).testResultUuid.isEmpty()) {
+                    tangoLoggerType = "I";
+                    tangoLoggerOperation = "TestPlanController.onChangeCompleted";
+                    tangoLoggerMessage = ("test_result_uuid = ${callback.testResults.get(0).testResultUuid}");
+                    tangoLoggerStatus = "200";
+                    tangoLogger.log(tangoLoggerType, tangoLoggerOperation, tangoLoggerMessage, tangoLoggerStatus)
 
-                testService.updatePlanResultId(callback.testPlanUuid, callback.testResults.get(0).testResultUuid)
+                    testService.updatePlanResultId(callback.testPlanUuid, callback.testResults.get(0).testResultUuid)
+                }
             }
             //if validation is not OK or docker-compose failed, then set exception message
             tangoLoggerType = "I";
